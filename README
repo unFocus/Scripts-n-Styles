@@ -3,7 +3,7 @@ Contributors: wraithkenny, touvan
 Tags: admin, per-page CSS styles, per-page JavaScript
 Requires at least: 3.0.1
 Tested up to: 3.0.1
-Stable tag: 1.0
+Stable tag: 1.0.1
 
 This plugin allows Admin users to individually add custom CSS and JavaScript directly to Post, Pages or any other registered custom post types.
 
@@ -53,10 +53,16 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 == Changelog ==
 
+= 1.0.1 =
+* Some small plugin meta data updates.
+
 = 1.0 =
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Some small plugin meta data updates.
 
 = 1.0 =
 Initial Release, there is nothing to upgrade from.
