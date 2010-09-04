@@ -1,6 +1,5 @@
-=== Plugin Name ===
+=== Scripts n Styles ===
 Contributors: wraithkenny, touvan
-Donate link: http://www.unFocus.com/
 Tags: admin, per-page CSS styles, per-page JavaScript
 Requires at least: 3.0.1
 Tested up to: 3.0.1
