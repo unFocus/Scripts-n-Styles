@@ -1,12 +1,12 @@
 === Scripts n Styles ===
 Contributors: wraithkenny, touvan
+Donate link: 
 Tags: admin, per-page CSS styles, per-page JavaScript
 Requires at least: 3.0.1
 Tested up to: 3.0.1
 Stable tag: 1.0.1
 
 This plugin allows Admin users to individually add custom CSS and JavaScript directly to Post, Pages or any other registered custom post types.
-
 
 == Description ==
 
