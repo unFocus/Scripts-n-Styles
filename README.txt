@@ -1,16 +1,16 @@
 === Scripts n Styles ===
-Contributors: wraithkenny, touvan
-Donate link: 
-Tags: admin, per-page CSS styles, per-page JavaScript
+Contributors: WraithKenny, Touvan
+Donate link: http://wordpressfoundation.org/donate/
+Tags: admin, CSS, javascript, code, custom, Style
 Requires at least: 3.0.1
 Tested up to: 3.0.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 
-This plugin allows Admin users to individually add custom CSS and JavaScript directly to Post, Pages or any other registered custom post types.
+This plugin allows Admin users to individually add custom CSS, Classes and JavaScript directly to Post, Pages or any other custom post types.
 
 == Description ==
 
-This plugin allows Admin users the ability to add custom CSS (at the bottom of the 'head' tag) and JavaScript (at the bottom of the 'body' tag) directly into individual Post, Pages or any other registered custom post types.
+This plugin allows Admin users the ability to add custom CSS (at the bottom of the 'head' tag) and JavaScript (at the bottom of the 'body' tag) directly into individual Post, Pages or any other registered custom post types. You can also add classes to the body tag and the post container (if your theme supports `body_class()` and `post_class()` functions).
 
 Because only well trusted users should ever be allowed to insert JavaScript directly into the pages of your site, this plugin restricts usage to admin type users. Admin's have access to even more sensitive areas by definition, so that should be relatively safe ;)
 
@@ -20,14 +20,6 @@ A few notes about the implementation:
 *   CSS Styles are included inline, not linked, at the bottom of the `head` element with `style` tags by using `wp-head`. If your theme doesn't have this hook, this plugin (as well as most others) won't work.
 *   JavaScript is included inline, not linked, at the bottom of the `body` element with `script` tags by using `wp-footer`. If your theme doesn't have this hook, this plugin (as well as most others) won't work.
 *   **There is no input validation.** This plugin puts exactly what you type in the meta box directly into the `html` with no error checking. You are an Admin, and we trust you to be carefull. Try not to break anything.
-
-I plan on implementing the following in future releases:
-
-*   Syntax highlighting via CodeMirror or Skywriter (Bespin).
-*   Option of including JavaScript in `wp-head` instead of `wp-footer` (Not very typical).
-*   Ability to link .css and .js files.
-*   Some sort of input validation.
-*   Possibly add option to enable this functionality for Editor rolls. Admin would have to enable it **explicitly**. (Not so sure about this one. Are Editors generally trusted users?)
 
 == Installation ==
 
@@ -49,9 +41,16 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 == Screenshots ==
 
-1. I'll add a screenshot in the version with syntax highlighting, but for now, the plugin adds very simple Meta Boxes.
+1. The New and Improved Meta Box.
 
 == Changelog ==
+
+= 1.0.2 =
+* Added fields for body_class and post_class
+* Merged meta boxes
+* Cleaned up code
+* Improved compatibility
+* Added Screenshot
 
 = 1.0.1 =
 * Some small plugin meta data updates.
@@ -60,6 +59,9 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Minor update. Adds a few new features.
 
 = 1.0.1 =
 Some small plugin meta data updates.
