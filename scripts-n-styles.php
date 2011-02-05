@@ -54,7 +54,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		function add() {
 			if ( current_user_can( 'manage_options' ) ) {
 				$registered_post_types = get_post_types();
-				$post_type_defaults = array( 'mediapage', 'attachment', 'revision', 'nav_menu_item');
+				$post_type_defaults = array( 'attachment', 'revision', 'nav_menu_item');
 				$post_types = array_diff( $registered_post_types, $post_type_defaults );
 				foreach ($post_types as $post_type ) {
 					add_meta_box( self::PREFIX.'meta_box', 'Scripts n Styles', array( &$this, 'meta_box'), $post_type, 'normal', 'high' );
