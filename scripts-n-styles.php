@@ -124,7 +124,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			global $post;
 			$meta = get_post_meta( $post->ID , self::PREFIX.'styles', true );
 			if ( !empty( $meta ) && !empty( $meta['classes_body'] ) ) {
-				$classes = array_merge( $classes, explode($meta['classes_body']) );
+				$classes = array_merge( $classes, explode( " ", $meta['classes_body'] ) );
 			}
 			return $classes;
 		}
@@ -132,7 +132,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			global $post;
 			$meta = get_post_meta( $post->ID , self::PREFIX.'styles', true );
 			if ( !empty( $meta ) && !empty( $meta['classes_post'] ) ) {
-				$classes = array_merge( $classes, explode($meta['classes_post']) );
+				$classes = array_merge( $classes, explode( " ", $meta['classes_post'] ) );
 			}
 			return $classes;
 		}
