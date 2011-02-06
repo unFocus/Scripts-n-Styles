@@ -2,9 +2,9 @@
 Contributors: WraithKenny, Touvan
 Donate link: http://wordpressfoundation.org/donate/
 Tags: admin, CSS, javascript, code, custom, Style
-Requires at least: 3.0.1
-Tested up to: 3.0.1
-Stable tag: 1.0.2
+Requires at least: 3.1
+Tested up to: 3.1
+Stable tag: 1.0.3-alpha
 
 This plugin allows Admin users to individually add custom CSS, Classes and JavaScript directly to Post, Pages or any other custom post types.
 
@@ -45,6 +45,10 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 == Changelog ==
 
+= 1.0.3 =
+* Better selection of post_types to add Scripts-n-Styles
+* micro-optimization for storage of class names.
+
 = 1.0.2 =
 * Added fields for body_class and post_class
 * Merged meta boxes
@@ -59,6 +63,9 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Minor update. Adds a few new features.
 
 = 1.0.2 =
 Minor update. Adds a few new features.

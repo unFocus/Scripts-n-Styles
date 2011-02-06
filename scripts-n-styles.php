@@ -5,7 +5,7 @@ Plugin URI: http://www.unfocus.com/projects/scripts-n-styles/
 Description: Allows WordPress admin users the ability to add custom CSS and JavaScript directly to individual Post, Pages or custom post types.
 Author: unFocus Projects
 Author URI: http://www.unfocus.com/
-Version: 1.0.2
+Version: 1.0.3-alpha
 License: GPL2
 */
 /*  Copyright 2010  Ken Newman  www.unfocus.com
@@ -53,10 +53,11 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		}
 		function add() {
 			if ( current_user_can( 'manage_options' ) ) {
-				$registered_post_types = get_post_types();
-				$post_type_defaults = array( 'attachment', 'revision', 'nav_menu_item');
-				$post_types = array_diff( $registered_post_types, $post_type_defaults );
-				foreach ($post_types as $post_type ) {
+				// Better selection of appropriate post_types
+				$registered_post_types = get_post_types( array('show_ui' => true, 'publicly_queryable' => true) );
+				// $post_type_defaults = array( 'attachment', 'revision', 'nav_menu_item');
+				// $post_types = array_diff( $registered_post_types, $post_type_defaults );
+				foreach ($registered_post_types as $post_type ) {
 					add_meta_box( self::PREFIX.'meta_box', 'Scripts n Styles', array( &$this, 'meta_box'), $post_type, 'normal', 'high' );
 				}
 			}
