@@ -8,7 +8,7 @@ Author URI: http://www.unfocus.com/
 Version: 1.0.3-alpha
 License: GPL2
 */
-/*  Copyright 2010  Ken Newman  www.unfocus.com
+/*  Copyright 2010-2011  Ken Newman  www.unfocus.com
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -34,7 +34,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 	
 	/**
 	 * @package Scripts_n_Styles
-	 * @version 1.0.2
+	 * @version 1.0.3
 	 */
 	class Scripts_n_Styles
 	{

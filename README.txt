@@ -64,7 +64,7 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 == Upgrade Notice ==
 
-= 1.0.2 =
+= 1.0.3 =
 Minor update. Adds a few new features.
 
 = 1.0.2 =
