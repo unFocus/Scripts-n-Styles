@@ -130,7 +130,6 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<div class="wrap">
 				<?php screen_icon(); ?>
 				<h2><?php echo esc_html($title); ?></h2>
-				<p>Some optional text here explaining the overall purpose of the options and what they relate to etc.</p>
 				<form action="options.php" method="post">
 				<?php settings_fields( self::OPTION_GROUP ); ?>
 				<?php do_settings_sections( self::MENU_SLUG ); ?>
