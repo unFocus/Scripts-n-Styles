@@ -46,11 +46,15 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 == Changelog ==
 
 = 1.0.3 =
-* Better selection of post_types to add Scripts-n-Styles
+* Better selection of `post_types` to add Scripts-n-Styles
 * micro-optimization for storage of class names.
+* Adds option page for globally adding Scripts and Styles.
+* Defined a later priority for Scripts n Styles to print after other scripts and styles.
+* Added a box for Scripts to be included in the `head`.
+* Better adherence to coding standards.
 
 = 1.0.2 =
-* Added fields for body_class and post_class
+* Added fields for `body_clas`s and `post_class`
 * Merged meta boxes
 * Cleaned up code
 * Improved compatibility
@@ -65,7 +69,7 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 == Upgrade Notice ==
 
 = 1.0.3 =
-Minor update. Adds a few new features.
+Adds a few new features.
 
 = 1.0.2 =
 Minor update. Adds a few new features.
