@@ -10,4 +10,5 @@ foreach( $all_posts as $postinfo) {
 	delete_post_meta($postinfo->ID, 'uFp_styles');
 }
 delete_option('sns_options');
+delete_option('sns_enqueue_scripts');
 ?>
