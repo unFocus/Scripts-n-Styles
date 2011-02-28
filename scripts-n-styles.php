@@ -113,7 +113,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			add_management_page(
 					'Scripts n Styles Settings',	// $page_title (string) (required) The text to be displayed in the title tags of the page when the menu is selected
 					'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
-					'manage_options',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
+					'unfiltered_html',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
 					self::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
 					array( &$this, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
 				);
@@ -168,7 +168,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<?php
 		}
 		function add() {
-			if ( current_user_can( 'manage_options' ) ) {
+			if ( current_user_can( 'manage_options' ) && current_user_can( 'unfiltered_html' ) ) {
 				$registered_post_types = get_post_types( array('show_ui' => true, 'publicly_queryable' => true) );
 				foreach ($registered_post_types as $post_type ) {
 					add_meta_box( self::PREFIX.'meta_box', 'Scripts n Styles', array( &$this, 'meta_box' ), $post_type, 'normal', 'high' );
@@ -227,7 +227,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<?php
 		}
 		function save( $post_id ) {
-			if ( current_user_can( 'manage_options' ) ) {
+			if ( current_user_can( 'manage_options' ) && current_user_can( 'unfiltered_html' ) ) {
 				if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], __FILE__ ))
 					return $post_id;
 				if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
