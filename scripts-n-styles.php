@@ -38,6 +38,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 	 */
 	class Scripts_n_Styles
 	{
+		const VERSION = '1.0.3-alpha';
 		const PREFIX = 'uFp_'; // post meta data, and meta box feild names are prefixed with this to prevent collisions.
 		const OPTION_GROUP = 'scripts_n_styles';
 		const MENU_SLUG = 'Scripts-n-Styles';
@@ -48,7 +49,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 				add_action( 'save_post', array( &$this, 'save' ) );
 				add_action( 'admin_init', array( &$this, 'admin_init' ) );
 				add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
-				//register_activation_hook(__FILE__, array( &$this, 'activation' ) );
+				register_activation_hook( __FILE__, array( &$this, 'activation' ) );
 			} 
 			
 			add_filter( 'body_class', array( &$this, 'body_classes' ) );
@@ -60,9 +61,20 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			
 			add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_scripts' ) );
 		}
-		/*function activation() {
-			$placeholder = 'I might have use for a Activation routine, but I doubt it.';
-		}*/
+		function activation() {
+			$sns_options = get_option( 'sns_options' );
+			if ( ! isset( $sns_options[ 'show_meta_box' ] ) )
+				update_option( 'sns_options', array( 'show_meta_box' => true ) );
+		}
+		function upgrade_check() { // Not used yet.
+			$sns_options = get_option( 'sns_options' );
+			if ( ! isset( $sns_options[ 'version' ] ) || version_compare( self::VERSION, $sns_options[ 'version' ], '>' ) )
+				self::upgrade();
+			update_option( 'sns_options', array( 'version' => self::VERSION ) );
+		}
+		function upgrade() {
+			// Nothing to upgrade yet ;-)
+		}
 		function admin_init(){
 			register_setting(
 					self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
@@ -70,22 +82,34 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 					// array( &$this, 'options_validate' )	$sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
 				);
 			register_setting(
-					self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
-					'sns_enqueue_scripts'//,	 $option_name (string) (required) The name of an option to sanitize and save.
-					// array( &$this, 'options_validate' )	$sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
+					self::OPTION_GROUP,
+					'sns_enqueue_scripts'
 				);
 			add_settings_section(
-					'global',	// $id (string) (required) String for use in the 'id' attribute of tags.
-					'Global Scripts n Styles',	// $title (string) (required) Title of the section. 
-					array( &$this, 'global_section' ),	// $callback (string) (required) Function that fills the section with the desired content. The function should echo its output.
+					'general',	// $id (string) (required) String for use in the 'id' attribute of tags.
+					'General Settings',	// $title (string) (required) Title of the section. 
+					array( &$this, 'general_section' ),	// $callback (string) (required) Function that fills the section with the desired content. The function should echo its output.
 					self::MENU_SLUG	// $page (string) (required) The type of settings page on which to show the section (general, reading, writing, media etc.)
 				);
 			add_settings_field(
-					'scripts',	// $id (string) (required) String for use in the 'id' attribute of tags. 
-					'<label for="scripts"><strong>Scripts:</strong> </label>',	// $title (string) (required) Title of the field.
-					array( &$this, 'scripts_textarea' ),	// $callback (string) (required) Function that fills the field with the desired inputs as part of the larger form. Name and id of the input should match the $id given to this function. The function should echo its output.
+					'show_meta_box',	// $id (string) (required) String for use in the 'id' attribute of tags. 
+					'<label><strong>Display:</strong> </label>',	// $title (string) (required) Title of the field.
+					array( &$this, 'show_meta_box_setting' ),	// $callback (string) (required) Function that fills the field with the desired inputs as part of the larger form. Name and id of the input should match the $id given to this function. The function should echo its output.
 					self::MENU_SLUG,	// $page (string) (required) The type of settings page on which to show the field (general, reading, writing, ...).
-					'global'	// $section (string) (optional) The section of the settings page in which to show the box (default or a section you added with add_settings_section, look at the page in the source to see what the existing ones are.)
+					'general'	// $section (string) (optional) The section of the settings page in which to show the box (default or a section you added with add_settings_section, look at the page in the source to see what the existing ones are.)
+				);
+			add_settings_section(
+					'global',
+					'Global Scripts n Styles',
+					array( &$this, 'global_section' ),
+					self::MENU_SLUG
+				);
+			add_settings_field(
+					'scripts', 
+					'<label for="scripts"><strong>Scripts:</strong> </label>',
+					array( &$this, 'scripts_textarea' ),
+					self::MENU_SLUG,
+					'global'
 				);
 			add_settings_field(
 					'styles',
@@ -118,6 +142,11 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 					array( &$this, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
 				);
 		}
+		function general_section() {
+			?>
+			<p>These are the general configuration options.</p>
+			<?php
+		}
 		function global_section() {
 			?>
 			<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered for individual pages and posts, so that they can override those entered here.</p>
@@ -126,10 +155,15 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<p>The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</p>
 			<?php
 		}
+		function show_meta_box_setting() {
+			$sns_options = get_option( 'sns_options' );
+			?><input type="checkbox" name="sns_options[show_meta_box]" id="show_meta_box" <?php echo (isset( $sns_options[ 'show_meta_box' ] ) && $sns_options[ 'show_meta_box' ] ) ? 'checked' : ''; ?>/>
+			<label for="show_meta_box"><strong>Show Scripts n Styles on Edit Screens</strong></label><br />(Unchecking will simply remove the box. Your codes will still work.)<?php
+		}
 		function styles_textarea() {
 			$sns_options = get_option( 'sns_options' );
 			?><textarea class="code" rows="5" cols="40" name="sns_options[styles]" id="styles"><?php echo isset( $sns_options[ 'styles' ] ) ? $sns_options[ 'styles' ] : ''; ?></textarea><?php
-		}	
+		}
 		function scripts_textarea() {
 			$sns_options = get_option( 'sns_options' );
 			?><textarea class="code" rows="5" cols="40" name="sns_options[scripts]" id="scripts"><?php echo isset( $sns_options[ 'scripts' ] ) ? $sns_options[ 'scripts' ] : ''; ?></textarea><?php
@@ -142,7 +176,6 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			global $wp_scripts;
 			$registered_handles = array_keys( $wp_scripts->registered );
 			$sns_enqueue_scripts = get_option( 'sns_enqueue_scripts' );
-			$sns_options = get_option( 'sns_options' );
 			?><select name="sns_enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto; width:98%;"><?php
 				foreach ( $registered_handles as $handle ) echo '<option value="' . $handle . '">' . $handle . '</option>'; 
 			?></select>
@@ -168,7 +201,8 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<?php
 		}
 		function add() {
-			if ( current_user_can( 'manage_options' ) && current_user_can( 'unfiltered_html' ) ) {
+			$sns_options = get_option( 'sns_options' );			
+			if ( $sns_options[ 'show_meta_box' ] && current_user_can( 'manage_options' ) && current_user_can( 'unfiltered_html' ) ) {
 				$registered_post_types = get_post_types( array('show_ui' => true, 'publicly_queryable' => true) );
 				foreach ($registered_post_types as $post_type ) {
 					add_meta_box( self::PREFIX.'meta_box', 'Scripts n Styles', array( &$this, 'meta_box' ), $post_type, 'normal', 'high' );
