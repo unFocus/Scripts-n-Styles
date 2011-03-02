@@ -43,6 +43,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		const OPTION_GROUP = 'scripts_n_styles';
 		const MENU_SLUG = 'Scripts-n-Styles';
 		const NONCE_NAME = 'scripts_n_styles_noncename';
+		private $allow;
 		function Scripts_n_Styles() {
 			if ( is_admin() ) {
 				add_action( 'add_meta_boxes', array( &$this, 'add' ) );
@@ -65,6 +66,8 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			$sns_options = get_option( 'sns_options' );
 			if ( ! isset( $sns_options[ 'show_meta_box' ] ) )
 				update_option( 'sns_options', array( 'show_meta_box' => true ) );
+			if ( ! isset( $sns_options[ 'restrict' ] ) )
+				update_option( 'sns_options', array( 'restrict' => true ) );
 		}
 		function upgrade_check() { // Not used yet.
 			$sns_options = get_option( 'sns_options' );
@@ -94,9 +97,16 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			add_settings_field(
 					'show_meta_box',	// $id (string) (required) String for use in the 'id' attribute of tags. 
 					'<label><strong>Display:</strong> </label>',	// $title (string) (required) Title of the field.
-					array( &$this, 'show_meta_box_setting' ),	// $callback (string) (required) Function that fills the field with the desired inputs as part of the larger form. Name and id of the input should match the $id given to this function. The function should echo its output.
+					array( &$this, 'show_meta_box_field' ),	// $callback (string) (required) Function that fills the field with the desired inputs as part of the larger form. Name and id of the input should match the $id given to this function. The function should echo its output.
 					self::MENU_SLUG,	// $page (string) (required) The type of settings page on which to show the field (general, reading, writing, ...).
 					'general'	// $section (string) (optional) The section of the settings page in which to show the box (default or a section you added with add_settings_section, look at the page in the source to see what the existing ones are.)
+				);
+			add_settings_field(
+					'restrict', 
+					'<label><strong>Restriction:</strong> </label>',
+					array( &$this, 'restrict_field' ),
+					self::MENU_SLUG,
+					'general'
 				);
 			add_settings_section(
 					'global',
@@ -107,79 +117,102 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			add_settings_field(
 					'scripts', 
 					'<label for="scripts"><strong>Scripts:</strong> </label>',
-					array( &$this, 'scripts_textarea' ),
+					array( &$this, 'scripts_field' ),
 					self::MENU_SLUG,
 					'global'
 				);
 			add_settings_field(
 					'styles',
 					'<label for="styles"><strong>Styles:</strong> </label>',
-					array( &$this, 'styles_textarea' ),
+					array( &$this, 'styles_field' ),
 					self::MENU_SLUG,
 					'global'
 				);
 			add_settings_field(
 					'scripts_in_head',
 					'<label for="scripts_in_head"><strong>Scripts</strong><br />(for the <code>head</code> element): </label>',
-					array( &$this, 'scripts_in_head_textarea' ),
+					array( &$this, 'scripts_in_head_field' ),
 					self::MENU_SLUG,
 					'global'
 				);
 			add_settings_field(
 					'enqueue_scripts',
 					'<label for="enqueue_scripts"><strong>Enqueue Scripts</strong>: </label>',
-					array( &$this, 'enqueue_scripts_textarea' ),
+					array( &$this, 'enqueue_scripts_field' ),
 					self::MENU_SLUG,
 					'global'
 				);
 		}
 		function admin_menu() {
-			add_management_page(
-					'Scripts n Styles Settings',	// $page_title (string) (required) The text to be displayed in the title tags of the page when the menu is selected
-					'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
-					'unfiltered_html',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
-					self::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
-					array( &$this, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
-				);
+			if ( current_user_can( 'manage_options' ) ) {
+				add_management_page(
+						'Scripts n Styles Settings',	// $page_title (string) (required) The text to be displayed in the title tags of the page when the menu is selected
+						'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
+						'unfiltered_html',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
+						self::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
+						array( &$this, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
+					);
+			}
 		}
 		function general_section() {
 			?>
-			<p>These are the general configuration options.</p>
+			<div style="max-width: 500px;">
+				<p>These General Settings are for Convenience.</p>
+				<p>In default (non MultiSite) WordPress installs, Administrators and Editors have the 'unfiltered_html' capability. In MultiSite installs, only the super admin has this capabilty. </p>
+				<p>The "Restriction" option will require users to have 'manage_options' in addition to 'unfiltered_html' capabilities in order to access Scripts n Styles. When this option is on, Editors will not have access to options on this page or the Scripts n Styles box on Post and Page edit screens (unless another plugin grants them the 'unfiltered_html' capability). </p>
+				<p>If you trust Admins and Editors on a MultiSite install, you can grant them access with the <a href="http://wordpress.org/extend/plugins/unfiltered-mu/">Unfiltered MU</a> plugin (which this author has not tested or used). In such a configuration, enabling "Restriction" should still block Editor access, but not Administrators.</p>
+				<p>Even with "Restriction" enabled, Editors can still add unfiltered JavaScript (just not through this plugin) because Editors on non-MultiSite installs should be Trusted Users. Because Editors are Trusted, this author doesn't consider this option critical, just an added convenience feature. If you'd like to limit that capability, use the <a href="http://wordpress.org/extend/plugins/filtered-html-for-editors/">Filtered HTML</a> plugin (which this author has not tested or used).</p>
+			</div>
 			<?php
 		}
 		function global_section() {
 			?>
-			<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered for individual pages and posts, so that they can override those entered here.</p>
-			<p>The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</p>
-			<p>The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</p>
-			<p>The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</p>
+			<div style="max-width: 500px;">
+				<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered for individual pages and posts, so that they can override those entered here.</p>
+			</div>
 			<?php
 		}
-		function show_meta_box_setting() {
-			$sns_options = get_option( 'sns_options' );
-			?><input type="checkbox" name="sns_options[show_meta_box]" id="show_meta_box" <?php echo (isset( $sns_options[ 'show_meta_box' ] ) && $sns_options[ 'show_meta_box' ] ) ? 'checked' : ''; ?>/>
-			<label for="show_meta_box"><strong>Show Scripts n Styles on Edit Screens</strong></label><br />(Unchecking will simply remove the box. Your codes will still work.)<?php
+		function show_meta_box_field() {
+			if ( current_user_can( 'manage_options' ) ) {
+				$sns_options = get_option( 'sns_options' );
+				?><input type="checkbox" name="sns_options[show_meta_box]" id="show_meta_box" <?php echo (isset( $sns_options[ 'show_meta_box' ] ) && $sns_options[ 'show_meta_box' ] ) ? 'checked' : ''; ?>/>
+				<label for="show_meta_box"><strong>Show Scripts n Styles on Edit Screens</strong></label><br />
+				<span class="description" style="max-width: 500px; display: inline-block;">Unchecking will simply remove the box. Your codes will still work.</span><?php
+			} else {
+				?><p>Insuficient Permissions.</p><?php
+			}
 		}
-		function styles_textarea() {
+		function restrict_field() {
 			$sns_options = get_option( 'sns_options' );
-			?><textarea class="code" rows="5" cols="40" name="sns_options[styles]" id="styles"><?php echo isset( $sns_options[ 'styles' ] ) ? $sns_options[ 'styles' ] : ''; ?></textarea><?php
+			?><input type="checkbox" name="sns_options[restrict]" id="restrict" <?php echo (isset( $sns_options[ 'restrict' ] ) && $sns_options[ 'restrict' ] ) ? 'checked' : ''; ?>/>
+			<label for="restrict"><strong>Restict access to Scripts n Styles</strong></label><br />
+			<span class="description" style="max-width: 500px; display: inline-block;">Only show Scripts n Styles to users that have the 'manage_options' in addition to the 'unfiltered_html' capability.</span><?php
 		}
-		function scripts_textarea() {
+		function scripts_field() {
 			$sns_options = get_option( 'sns_options' );
-			?><textarea class="code" rows="5" cols="40" name="sns_options[scripts]" id="scripts"><?php echo isset( $sns_options[ 'scripts' ] ) ? $sns_options[ 'scripts' ] : ''; ?></textarea><?php
+			?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[scripts]" id="scripts"><?php echo isset( $sns_options[ 'scripts' ] ) ? $sns_options[ 'scripts' ] : ''; ?></textarea><br />
+			<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>
+			<?php
 		}
-		function scripts_in_head_textarea() {
+		function styles_field() {
 			$sns_options = get_option( 'sns_options' );
-			?><textarea class="code" rows="5" cols="40" name="sns_options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $sns_options[ 'scripts_in_head' ] ) ? $sns_options[ 'scripts_in_head' ] : ''; ?></textarea><?php
+			?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[styles]" id="styles"><?php echo isset( $sns_options[ 'styles' ] ) ? $sns_options[ 'styles' ] : ''; ?></textarea><br />
+			<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span><?php
 		}
-		function enqueue_scripts_textarea() {
+		function scripts_in_head_field() {
+			$sns_options = get_option( 'sns_options' );
+			?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $sns_options[ 'scripts_in_head' ] ) ? $sns_options[ 'scripts_in_head' ] : ''; ?></textarea><br />
+			<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>
+			<?php
+		}
+		function enqueue_scripts_field() {
 			global $wp_scripts;
 			$registered_handles = array_keys( $wp_scripts->registered );
 			$sns_enqueue_scripts = get_option( 'sns_enqueue_scripts' );
-			?><select name="sns_enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto; width:98%;"><?php
+			?><select name="sns_enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto;"><?php
 				foreach ( $registered_handles as $handle ) echo '<option value="' . $handle . '">' . $handle . '</option>'; 
 			?></select>
-			<?php if ( ! empty( $sns_enqueue_scripts[ 'enqueue_scripts' ] ) && is_array( $sns_enqueue_scripts[ 'enqueue_scripts' ] ) ) { ?>
+			<?php if ( ! empty( $sns_enqueue_scripts ) && is_array( $sns_enqueue_scripts ) ) { ?>
 				<p><?php
 				echo 'Currently Enqueued Scripts: ';
 				foreach ( $sns_enqueue_scripts as $handle )  echo '<code>' . $handle . '</code> ';
@@ -200,9 +233,21 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			</div>
 			<?php
 		}
+		
+		/* This function returns the value of the Restriction and caches the result */
+		private function check_restriction() {
+			if ( ! isset( $this->allow ) ) {
+				$sns_options = get_option( 'sns_options' );
+				if ( $sns_options[ 'restrict' ] )
+					$this->allow = current_user_can( 'manage_options' );
+				else
+					$this->allow = true;
+			}
+			return $this->allow;
+		}
 		function add() {
-			$sns_options = get_option( 'sns_options' );			
-			if ( $sns_options[ 'show_meta_box' ] && current_user_can( 'manage_options' ) && current_user_can( 'unfiltered_html' ) ) {
+			$sns_options = get_option( 'sns_options' );
+			if ( $sns_options[ 'show_meta_box' ] && self::check_restriction() && current_user_can( 'unfiltered_html' ) ) {
 				$registered_post_types = get_post_types( array('show_ui' => true, 'publicly_queryable' => true) );
 				foreach ($registered_post_types as $post_type ) {
 					add_meta_box( self::PREFIX.'meta_box', 'Scripts n Styles', array( &$this, 'meta_box' ), $post_type, 'normal', 'high' );
@@ -230,7 +275,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			
 			<p style="margin-top: 1.5em">
 				<label for="<?php echo self::PREFIX ?>scripts_in_head"><strong>Scripts</strong> (for the <code>head</code> element): </label>
-				<textarea class="code" name="<?php echo self::PREFIX ?>scripts_in_head" id="<?php echo self::PREFIX ?>scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $styles[ 'scripts_in_head' ] : ''; ?></textarea>
+				<textarea class="code" name="<?php echo self::PREFIX ?>scripts_in_head" id="<?php echo self::PREFIX ?>scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
 				<em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) <code>&lt;head></code> tag.</em>
 			</p>
 			
@@ -246,8 +291,8 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<p><em>These <strong>space separated</strong> class names will be pushed into the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).</em></p>
 			
 			<p style="margin-top: 1.5em">
-				<label for="<?php echo self::PREFIX ?>enqueue_scripts"><strong>Include Scripts</strong>: </label>
-				<select name="<?php echo self::PREFIX ?>enqueue_scripts[]" id="<?php echo self::PREFIX ?>enqueue_scripts" size="5" multiple="multiple" style="height: auto; width:98%;">
+				<label for="<?php echo self::PREFIX ?>enqueue_scripts"><strong>Include Scripts</strong>: </label><br />
+				<select name="<?php echo self::PREFIX ?>enqueue_scripts[]" id="<?php echo self::PREFIX ?>enqueue_scripts" size="5" multiple="multiple" style="height: auto;">
 					<?php foreach ( $registered_handles as $handle ) echo '<option value="' . $handle . '">' . $handle . '</option>'; ?>
 				</select>
 			</p>
@@ -261,11 +306,18 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<?php
 		}
 		function save( $post_id ) {
-			if ( current_user_can( 'manage_options' ) && current_user_can( 'unfiltered_html' ) ) {
-				if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], __FILE__ ))
-					return $post_id;
-				if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
-					return $post_id;
+			if ( self::check_restriction() && current_user_can( 'unfiltered_html' ) 
+					&&  isset( $_POST[ self::NONCE_NAME ] ) && wp_verify_nonce( $_POST[ self::NONCE_NAME ], __FILE__ ) 
+					&& ! ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
+				
+				/* 
+				 * NOTE: There is no current_user_can( 'edit_post' ) check here, because as far as I 
+				 * can tell, in /wp-admin/post.php the calls: edit_post(), write_post(), post_preview(),
+				 * wp_untrash_post, wp_trash_post, the check is already done, which is prior to the 
+				 * 'save_post' action, which is where this function is called, and other calls are from 
+				 * other pages so NONCE covers them, and that leaves autosave, which is checked.
+				 */
+				
 				$scripts = array();
 				$styles = array();
 				if ( ! empty( $_POST[ self::PREFIX.'scripts' ] ) )
