@@ -38,12 +38,15 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 	 */
 	class Scripts_n_Styles
 	{
-		const VERSION = '1.0.3-alpha';
 		const PREFIX = 'uFp_'; // post meta data, and meta box feild names are prefixed with this to prevent collisions.
 		const OPTION_GROUP = 'scripts_n_styles';
 		const MENU_SLUG = 'Scripts-n-Styles';
 		const NONCE_NAME = 'scripts_n_styles_noncename';
 		private $allow;
+		private $options;
+		private $scripts;
+		private $styles;
+		private $enqueue;
 		function Scripts_n_Styles() {
 			if ( is_admin() ) {
 				add_action( 'add_meta_boxes', array( &$this, 'add' ) );
@@ -51,6 +54,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 				add_action( 'admin_init', array( &$this, 'admin_init' ) );
 				add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 				register_activation_hook( __FILE__, array( &$this, 'activation' ) );
+				//self::upgrade_check();
 			} 
 			
 			add_filter( 'body_class', array( &$this, 'body_classes' ) );
@@ -65,18 +69,16 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		function activation() {
 			$sns_options = get_option( 'sns_options' );
 			if ( ! isset( $sns_options[ 'show_meta_box' ] ) )
-				update_option( 'sns_options', array( 'show_meta_box' => true ) );
+				$sns_options['show_meta_box' ] = true;
 			if ( ! isset( $sns_options[ 'restrict' ] ) )
-				update_option( 'sns_options', array( 'restrict' => true ) );
+				$sns_options[ 'restrict' ] = true;
+			$sns_options[ 'version' ] = '1.0.3-alpha';
+			update_option( 'sns_options', $sns_options );
 		}
-		function upgrade_check() { // Not used yet.
-			$sns_options = get_option( 'sns_options' );
-			if ( ! isset( $sns_options[ 'version' ] ) || version_compare( self::VERSION, $sns_options[ 'version' ], '>' ) )
-				self::upgrade();
-			update_option( 'sns_options', array( 'version' => self::VERSION ) );
-		}
-		function upgrade() {
-			// Nothing to upgrade yet ;-)
+		function upgrade_check() { 
+			$sns_options = self::get_options();
+			if ( ! isset( $sns_options[ 'version' ] ) || version_compare( '1.0.3-alpha', $sns_options[ 'version' ], '>' ) )
+				self::activation();
 		}
 		function admin_init(){
 			register_setting(
@@ -173,34 +175,30 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<?php
 		}
 		function show_meta_box_field() {
-			if ( current_user_can( 'manage_options' ) ) {
-				$sns_options = get_option( 'sns_options' );
-				?><input type="checkbox" name="sns_options[show_meta_box]" id="show_meta_box" <?php echo (isset( $sns_options[ 'show_meta_box' ] ) && $sns_options[ 'show_meta_box' ] ) ? 'checked' : ''; ?>/>
-				<label for="show_meta_box"><strong>Show Scripts n Styles on Edit Screens</strong></label><br />
-				<span class="description" style="max-width: 500px; display: inline-block;">Unchecking will simply remove the box. Your codes will still work.</span><?php
-			} else {
-				?><p>Insuficient Permissions.</p><?php
-			}
+			$sns_options = self::get_options();
+			?><input type="checkbox" name="sns_options[show_meta_box]" id="show_meta_box" <?php echo (isset( $sns_options[ 'show_meta_box' ] ) && $sns_options[ 'show_meta_box' ] ) ? 'checked' : ''; ?>/>
+<label for="show_meta_box"><strong>Show Scripts n Styles on Edit Screens</strong></label><br />
+			<span class="description" style="max-width: 500px; display: inline-block;">Unchecking will simply remove the box. Your codes will still work.</span><?php
 		}
 		function restrict_field() {
-			$sns_options = get_option( 'sns_options' );
+			$sns_options = self::get_options();
 			?><input type="checkbox" name="sns_options[restrict]" id="restrict" <?php echo (isset( $sns_options[ 'restrict' ] ) && $sns_options[ 'restrict' ] ) ? 'checked' : ''; ?>/>
 			<label for="restrict"><strong>Restict access to Scripts n Styles</strong></label><br />
 			<span class="description" style="max-width: 500px; display: inline-block;">Only show Scripts n Styles to users that have the 'manage_options' in addition to the 'unfiltered_html' capability.</span><?php
 		}
 		function scripts_field() {
-			$sns_options = get_option( 'sns_options' );
+			$sns_options = self::get_options();
 			?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[scripts]" id="scripts"><?php echo isset( $sns_options[ 'scripts' ] ) ? $sns_options[ 'scripts' ] : ''; ?></textarea><br />
 			<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>
 			<?php
 		}
 		function styles_field() {
-			$sns_options = get_option( 'sns_options' );
+			$sns_options = self::get_options();
 			?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[styles]" id="styles"><?php echo isset( $sns_options[ 'styles' ] ) ? $sns_options[ 'styles' ] : ''; ?></textarea><br />
 			<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span><?php
 		}
 		function scripts_in_head_field() {
-			$sns_options = get_option( 'sns_options' );
+			$sns_options = self::get_options();
 			?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $sns_options[ 'scripts_in_head' ] ) ? $sns_options[ 'scripts_in_head' ] : ''; ?></textarea><br />
 			<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>
 			<?php
@@ -208,7 +206,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		function enqueue_scripts_field() {
 			global $wp_scripts;
 			$registered_handles = array_keys( $wp_scripts->registered );
-			$sns_enqueue_scripts = get_option( 'sns_enqueue_scripts' );
+			$sns_enqueue_scripts = self::get_enqueue();
 			?><select name="sns_enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto;"><?php
 				foreach ( $registered_handles as $handle ) echo '<option value="' . $handle . '">' . $handle . '</option>'; 
 			?></select>
@@ -238,16 +236,42 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		private function check_restriction() {
 			if ( ! isset( $this->allow ) ) {
 				$sns_options = get_option( 'sns_options' );
-				if ( $sns_options[ 'restrict' ] )
+				if ( isset( $sns_options[ 'restrict' ] ) && $sns_options[ 'restrict' ] )
 					$this->allow = current_user_can( 'manage_options' );
 				else
 					$this->allow = true;
 			}
 			return $this->allow;
 		}
+		private function get_options() {
+			if ( ! isset( $this->options ) ) {
+				$this->options = get_option( 'sns_options' );
+			}
+			return $this->options;
+		}
+		private function get_scripts() {
+			if ( ! isset( $this->scripts ) ) {
+				global $post;
+				$this->scripts = get_post_meta( $post->ID, self::PREFIX.'scripts', true );
+			}
+			return $this->scripts;
+		}
+		private function get_styles() {
+			if ( ! isset( $this->styles ) ) {
+				global $post;
+				$this->styles = get_post_meta( $post->ID, self::PREFIX.'styles', true );
+			}
+			return $this->styles;
+		}
+		private function get_enqueue() {
+			if ( ! isset( $this->enqueue ) ) {
+				$this->enqueue = get_option( 'sns_enqueue_scripts' );
+			}
+			return $this->enqueue;
+		}
 		function add() {
 			$sns_options = get_option( 'sns_options' );
-			if ( $sns_options[ 'show_meta_box' ] && self::check_restriction() && current_user_can( 'unfiltered_html' ) ) {
+			if ( isset( $sns_options[ 'show_meta_box' ] ) && $sns_options[ 'show_meta_box' ] && self::check_restriction() && current_user_can( 'unfiltered_html' ) ) {
 				$registered_post_types = get_post_types( array('show_ui' => true, 'publicly_queryable' => true) );
 				foreach ($registered_post_types as $post_type ) {
 					add_meta_box( self::PREFIX.'meta_box', 'Scripts n Styles', array( &$this, 'meta_box' ), $post_type, 'normal', 'high' );
@@ -257,8 +281,8 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		function meta_box( $post ) {
 			global $wp_scripts;
 			$registered_handles = array_keys( $wp_scripts->registered );
-			$styles = get_post_meta( $post->ID, self::PREFIX.'styles', true );
-			$scripts = get_post_meta( $post->ID, self::PREFIX.'scripts', true );
+			$styles = self::get_styles();
+			$scripts = self::get_scripts();
 			?>
 			<input type="hidden" name="<?php echo self::NONCE_NAME ?>" id="<?php echo self::NONCE_NAME ?>" value="<?php echo wp_create_nonce( __FILE__ ) ?>" />
 			<p style="margin-top: 1.5em">
@@ -337,15 +361,14 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 		}
 		function styles() {
-			$option = get_option( 'sns_options' );
+			$option = self::get_options();
 			if ( ! empty( $option ) && ! empty( $option[ 'styles' ] ) ) {
 				?><style type="text/css"><?php
 				echo $option[ 'styles' ];
 				?></style><?php
 			}
 			if ( is_singular() ) {
-				global $post;
-				$meta = get_post_meta( $post->ID, self::PREFIX.'styles', true );
+				$meta = self::get_styles();
 				if ( ! empty( $meta ) && ! empty( $meta[ 'styles' ] ) ) {
 					?><style type="text/css"><?php
 					echo $meta[ 'styles' ];
@@ -354,15 +377,14 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 		}
 		function scripts() {
-			$option = get_option( 'sns_options' );
+			$option = self::get_options();
 			if ( ! empty( $option ) && ! empty( $option[ 'scripts' ] ) ) {
 				?><script type="text/javascript"><?php
 				echo $option[ 'scripts' ];
 				?></script><?php
 			}
 			if ( is_singular() ) {
-				global $post;
-				$meta = get_post_meta( $post->ID, self::PREFIX.'scripts', true );
+				$meta = self::get_scripts();
 				if ( ! empty( $meta ) && ! empty( $meta[ 'scripts' ] ) ) {
 					?><script type="text/javascript"><?php
 					echo $meta[ 'scripts' ];
@@ -371,15 +393,14 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 		}
 		function scripts_in_head() {
-			$option = get_option( 'sns_options' );
+			$option = self::get_options();
 			if ( ! empty( $option ) && ! empty($option[ 'scripts_in_head' ]) ) {
 				?><script type="text/javascript"><?php
 				echo $option[ 'scripts_in_head' ];
 				?></script><?php
 			}
 			if ( is_singular() ) {
-				global $post;
-				$meta = get_post_meta( $post->ID, self::PREFIX.'scripts', true );
+				$meta = self::get_scripts();
 				if ( ! empty( $meta ) && ! empty( $meta[ 'scripts_in_head' ] ) ) {
 					?><script type="text/javascript"><?php
 					echo $meta[ 'scripts_in_head' ];
@@ -388,29 +409,26 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 		}
 		function body_classes( $classes ) {
-			global $post;
-			$meta = get_post_meta( $post->ID , self::PREFIX.'styles', true );
+			$meta = self::get_styles();
 			if ( ! empty( $meta ) && ! empty( $meta[ 'classes_body' ] ) ) {
 				$classes = array_merge( $classes, explode( " ", $meta[ 'classes_body' ] ) );
 			}
 			return $classes;
 		}
 		function post_classes( $classes ) {
-			global $post;
-			$meta = get_post_meta( $post->ID , self::PREFIX.'styles', true );
+			$meta = self::get_styles();
 			if ( ! empty( $meta ) && ! empty( $meta[ 'classes_post' ] ) ) {
 				$classes = array_merge( $classes, explode( " ", $meta[ 'classes_post' ] ) );
 			}
 			return $classes;
 		}
 		function enqueue_scripts() {
-			global $post;
-			$meta = get_post_meta( $post->ID , self::PREFIX.'scripts', true );
+			$meta = self::get_scripts();
 			if ( ! empty( $meta ) && is_array( $meta[ 'enqueue_scripts' ] ) ) {
 				foreach ( $meta[ 'enqueue_scripts' ] as $handle )
 					wp_enqueue_script( $handle );
 			}
-			$sns_enqueue_scripts = get_option( 'sns_enqueue_scripts' );
+			$sns_enqueue_scripts = self::get_enqueue();
 			if ( ! empty( $sns_enqueue_scripts ) && is_array( $sns_enqueue_scripts ) ) {
 				foreach ( $sns_enqueue_scripts as $handle )
 					wp_enqueue_script( $handle );
