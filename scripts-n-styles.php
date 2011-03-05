@@ -69,6 +69,9 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			// ::TODO:: Create shortcode registration of html snippets on edit screens for single use.
 			// ::TODO:: Figure out and add Error messaging.
 			
+			// $hook_suffix = 'tools_page_Scripts-n-Styles'; // kept here for reference
+			// $plugin_file = 'scripts-n-styles/scripts-n-styles.php'; // kept here for reference
+			
 			if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERED_HTML ) ) {
 				/*
 				 * NOTE: Setting the DISALLOW_UNFILTERED_HTML constant to
@@ -78,11 +81,12 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 
 				add_action( 'add_meta_boxes', array( self::CLASS_NAME, 'add_meta_boxes' ) );
 				add_action( 'admin_menu', array( self::CLASS_NAME, 'admin_menu' ) );
+				
 				$plugin_file = plugin_basename(__FILE__); 
 				add_filter( "plugin_action_links_$plugin_file", array( self::CLASS_NAME, 'plugin_action_links') );
 				
-				//register_activation_hook( __FILE__, array( self::CLASS_NAME, 'activation' ) );
 				self::upgrade_check();
+				//register_activation_hook( __FILE__, array( self::CLASS_NAME, 'activation' ) );
 			} 
 			
 			add_filter( 'body_class', array( self::CLASS_NAME, 'body_classes' ) );
@@ -91,10 +95,8 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			add_action( 'wp_head', array( self::CLASS_NAME, 'styles' ), 11 );
 			add_action( 'wp_head', array( self::CLASS_NAME, 'scripts_in_head' ), 11 );
 			add_action( 'wp_footer', array( self::CLASS_NAME, 'scripts' ), 11 );
-			
-			//add_action( 'admin_enqueue_scripts', array( self::CLASS_NAME, 'admin_enqueue_scripts' ) );
 		}
-		function activation() {
+		function upgrade() {
 			$sns_options = self::get_options();
 			if ( ! isset( $sns_options[ 'show_meta_box' ] ) )
 				$sns_options['show_meta_box' ] = 'yes';
@@ -106,7 +108,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		function upgrade_check() { 
 			$sns_options = self::get_options();
 			if ( ! isset( $sns_options[ 'version' ] ) || version_compare( self::VERSION, $sns_options[ 'version' ], '>' ) )
-				self::activation();
+				self::upgrade();
 		}
 		
 		function plugin_action_links( $actions ) {
@@ -197,10 +199,10 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 				);
 		}
 		function options_styles() {
-			wp_enqueue_style( 'options-styles', plugins_url('options-styles.css', __FILE__), array(), self::VERSION );
+			wp_enqueue_style( 'sns-options-styles', plugins_url('options-styles.css', __FILE__), array(), self::VERSION );
 		}
 		function options_scripts() {
-			wp_enqueue_script( 'options-scripts', plugins_url('options-scripts.js', __FILE__), array( 'jquery' ), self::VERSION, true );
+			wp_enqueue_script( 'sns-options-scripts', plugins_url('options-scripts.js', __FILE__), array( 'jquery' ), self::VERSION, true );
 		}
 		
 		function general_section() {
@@ -216,10 +218,6 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<div style="max-width: 55em;">
 				<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.</p>
 			</div>
-			<?php
-			$hook_suffix = 'tools_page_Scripts-n-Styles'; // kept here for reference
-			$plugin_file = 'scripts-n-styles/scripts-n-styles.php'; // kept here for reference
-			?>
 			<?php
 		}
 		
@@ -411,10 +409,10 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<?php
 		}
 		function meta_box_styles() {
-			wp_enqueue_style( 'meta-box-styles', plugins_url('meta-box-styles.css', __FILE__), array(), self::VERSION );
+			wp_enqueue_style( 'sns-meta-box-styles', plugins_url('meta-box-styles.css', __FILE__), array(), self::VERSION );
 		}
 		function meta_box_scripts() {
-			wp_enqueue_script( 'meta-box-scripts', plugins_url('meta-box-scripts.js', __FILE__), array( 'jquery' ), self::VERSION, true );
+			wp_enqueue_script( 'sns-meta-box-scripts', plugins_url('meta-box-scripts.js', __FILE__), array( 'jquery' ), self::VERSION, true );
 		}
 		function save_post( $post_id ) {
 			if ( self::check_restriction() 
@@ -454,7 +452,6 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 				update_post_meta( $post_id, self::PREFIX.'styles', $styles );
 			}
 		}
-		
 		
 		function styles() {
 			// Global
