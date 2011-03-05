@@ -7,6 +7,7 @@ Author: unFocus Projects
 Author URI: http://www.unfocus.com/
 Version: 1.0.3-alpha
 License: GPL2
+Network: true
 */
 /*  Copyright 2010-2011  Ken Newman  www.unfocus.com
 
@@ -59,14 +60,12 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 			 
 			// ::TODO:: Add Post Type Selection on Options Page? Not sure that's usefull.
-			// ::TODO:: Apply check_strict_restriction() to Fields?
 			// ::TODO:: Add Conditional Tags support as alternative to Globally applying Scripts n Styles.
 			// ::TODO:: Create ability to add and register scripts and styles for enqueueing (via Options page).
 			// ::TODO:: Create selection on Option page of which to pick registered scripts to make available on edit screens.
 			// ::TODO:: Create shortcode to embed html/javascript snippets.
 			// ::TODO:: Create shortcode registration on Options page to make those snippets available on edit screens.
 			// ::TODO:: Create shortcode registration of html snippets on edit screens for single use.
-			// ::TODO:: Clean up General Text.
 			// ::TODO:: Figure out and add Error messaging.
 			
 			if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERED_HTML ) ) {
@@ -80,6 +79,12 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 				add_action( 'save_post', array( self::CLASS_NAME, 'save' ) );
 				add_action( 'admin_init', array( self::CLASS_NAME, 'admin_init' ) );
 				add_action( 'admin_menu', array( self::CLASS_NAME, 'admin_menu' ) );
+				$plugin_file = plugin_basename(__FILE__);
+				add_filter( "plugin_action_links_$plugin_file", array( self::CLASS_NAME, 'plugin_action_links') );
+
+				//add_action( 'admin_print_scripts', array(&$this,'admin_print_scripts'));
+				//add_action( 'admin_print_styles', array(&$this,'admin_print_styles'));	
+
 				//register_activation_hook( __FILE__, array( self::CLASS_NAME, 'activation' ) );
 				self::upgrade_check();
 			} 
@@ -188,10 +193,14 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 					);
 			}
 		}
+		function plugin_action_links( $actions ) {
+			$actions[ 'settings' ] = '<a href="' . menu_page_url( self::MENU_SLUG, false ) . '"/>Settings</a>';
+			return $actions;
+		}
 		
 		function general_section() {
 			?>
-			<div style="max-width: 500px;">
+			<div style="max-width: 55em;">
 				<p>Notes about Capabilities: In default (non MultiSite) WordPress installs, Administrators and Editors have the 'unfiltered_html' capability. In MultiSite installs, only the super admin has this capabilty. In both types of install, Admin users have 'manage_options' but in MultiSite, you need to be a Super Admin to access the options.php file.</p>
 				<p>The "Restriction" option will require users to have 'manage_options' in addition to 'unfiltered_html' capabilities in order to access Scripts n Styles. When this option is on, Editors will not have access to the Scripts n Styles box on Post and Page edit screens (unless another plugin grants them the 'unfiltered_html' capability). </p>
 			</div>
@@ -199,7 +208,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		}
 		function global_section() {
 			?>
-			<div style="max-width: 500px;">
+			<div style="max-width: 55em;">
 				<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.</p>
 			</div>
 			<?php
