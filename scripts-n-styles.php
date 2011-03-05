@@ -24,12 +24,6 @@ License: GPL2
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if ( !function_exists( 'add_action' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
-	exit();
-}
-
 if ( !class_exists( 'Scripts_n_Styles' ) ) {
 	
 	/**
@@ -42,149 +36,198 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		const OPTION_GROUP = 'scripts_n_styles';
 		const MENU_SLUG = 'Scripts-n-Styles';
 		const NONCE_NAME = 'scripts_n_styles_noncename';
-		private $allow;
-		private $options;
-		private $scripts;
-		private $styles;
-		private $enqueue;
-		function Scripts_n_Styles() {
-			if ( is_admin() ) {
-				add_action( 'add_meta_boxes', array( &$this, 'add' ) );
-				add_action( 'save_post', array( &$this, 'save' ) );
-				add_action( 'admin_init', array( &$this, 'admin_init' ) );
-				add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
-				register_activation_hook( __FILE__, array( &$this, 'activation' ) );
-				//self::upgrade_check();
+		const CLASS_NAME = 'Scripts_n_Styles';
+		const VERSION = '1.0.3-alpha';
+		private static $allow;
+		private static $allow_strict;
+		private static $options;
+		private static $scripts;
+		private static $styles;
+		private static $enqueue;
+		static function init() {
+			if ( is_multisite() ) { 
+				/*
+				 ::TODO::	No user except the "Super Admin" can use this plugin in MultiSite. I'll add features for MultiSite later, perhaps the ones below...
+				 			The "Super Admin" user has exclusive 'unfiltered_html' capabilities in MultiSite. Also, options.php checks for is_super_admin() 
+							so the 'manage_options' capability for blog admins is insufficient to pass the check to manage options directly. 
+							
+							The Tentative plan is for Super Admins to create Snippets or Shortcodes approved for use by users with certain capabilities 
+							('unfiltered_html' and/or 'manage_options'). The 'unfiltered_html' capability can be granted via another plugin. This plugin will
+							not deal with granting any capabilities.
+				 */
+			}
+			 
+			// ::TODO:: Add Post Type Selection on Options Page? Not sure that's usefull.
+			// ::TODO:: Apply check_strict_restriction() to Fields?
+			// ::TODO:: Add Conditional Tags support as alternative to Globally applying Scripts n Styles.
+			// ::TODO:: Create ability to add and register scripts and styles for enqueueing (via Options page).
+			// ::TODO:: Create selection on Option page of which to pick registered scripts to make available on edit screens.
+			// ::TODO:: Create shortcode to embed html/javascript snippets.
+			// ::TODO:: Create shortcode registration on Options page to make those snippets available on edit screens.
+			// ::TODO:: Create shortcode registration of html snippets on edit screens for single use.
+			// ::TODO:: Clean up General Text.
+			// ::TODO:: Figure out and add Error messaging.
+			
+			if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERED_HTML ) ) {
+				/*
+				 * NOTE: Setting the DISALLOW_UNFILTERED_HTML constant to
+				 * true in the wp-config.php would effectively disable this
+				 * plugin's admin because no user would have the capability.
+				 */
+
+				add_action( 'add_meta_boxes', array( self::CLASS_NAME, 'add' ) );
+				add_action( 'save_post', array( self::CLASS_NAME, 'save' ) );
+				add_action( 'admin_init', array( self::CLASS_NAME, 'admin_init' ) );
+				add_action( 'admin_menu', array( self::CLASS_NAME, 'admin_menu' ) );
+				//register_activation_hook( __FILE__, array( self::CLASS_NAME, 'activation' ) );
+				self::upgrade_check();
 			} 
 			
-			add_filter( 'body_class', array( &$this, 'body_classes' ) );
-			add_filter( 'post_class', array( &$this, 'post_classes' ) );
+			add_filter( 'body_class', array( self::CLASS_NAME, 'body_classes' ) );
+			add_filter( 'post_class', array( self::CLASS_NAME, 'post_classes' ) );
 			
-			add_action( 'wp_head', array( &$this, 'styles' ), 11 );
-			add_action( 'wp_head', array( &$this, 'scripts_in_head' ), 11 );
-			add_action( 'wp_footer', array( &$this, 'scripts' ), 11 );
+			add_action( 'wp_head', array( self::CLASS_NAME, 'styles' ), 11 );
+			add_action( 'wp_head', array( self::CLASS_NAME, 'scripts_in_head' ), 11 );
+			add_action( 'wp_footer', array( self::CLASS_NAME, 'scripts' ), 11 );
 			
-			add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_scripts' ) );
+			add_action( 'wp_enqueue_scripts', array( self::CLASS_NAME, 'enqueue_scripts' ) );
 		}
-		function activation() {
-			$sns_options = get_option( 'sns_options' );
+		static function activation() {
+			$sns_options = self::get_options();
 			if ( ! isset( $sns_options[ 'show_meta_box' ] ) )
-				$sns_options['show_meta_box' ] = true;
+				$sns_options['show_meta_box' ] = 'yes';
 			if ( ! isset( $sns_options[ 'restrict' ] ) )
-				$sns_options[ 'restrict' ] = true;
-			$sns_options[ 'version' ] = '1.0.3-alpha';
+				$sns_options[ 'restrict' ] = 'yes';
+			$sns_options[ 'version' ] = self::VERSION;
 			update_option( 'sns_options', $sns_options );
 		}
 		function upgrade_check() { 
 			$sns_options = self::get_options();
-			if ( ! isset( $sns_options[ 'version' ] ) || version_compare( '1.0.3-alpha', $sns_options[ 'version' ], '>' ) )
+			if ( ! isset( $sns_options[ 'version' ] ) || version_compare( self::VERSION, $sns_options[ 'version' ], '>' ) )
 				self::activation();
 		}
 		function admin_init(){
 			register_setting(
 					self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
-					'sns_options'//,	 $option_name (string) (required) The name of an option to sanitize and save.
-					// array( &$this, 'options_validate' )	$sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
+					'sns_options',	// $option_name (string) (required) The name of an option to sanitize and save.
+					array( self::CLASS_NAME, 'options_validate' )	// $sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
 				);
 			register_setting(
-					self::OPTION_GROUP,
-					'sns_enqueue_scripts'
+					self::OPTION_GROUP, 
+					'sns_enqueue_scripts', 
+					array( self::CLASS_NAME, 'enqueue_validate' )
 				);
 			add_settings_section(
 					'general',	// $id (string) (required) String for use in the 'id' attribute of tags.
 					'General Settings',	// $title (string) (required) Title of the section. 
-					array( &$this, 'general_section' ),	// $callback (string) (required) Function that fills the section with the desired content. The function should echo its output.
+					array( self::CLASS_NAME, 'general_section' ),	// $callback (string) (required) Function that fills the section with the desired content. The function should echo its output.
 					self::MENU_SLUG	// $page (string) (required) The type of settings page on which to show the section (general, reading, writing, media etc.)
 				);
 			add_settings_field(
 					'show_meta_box',	// $id (string) (required) String for use in the 'id' attribute of tags. 
 					'<label><strong>Display:</strong> </label>',	// $title (string) (required) Title of the field.
-					array( &$this, 'show_meta_box_field' ),	// $callback (string) (required) Function that fills the field with the desired inputs as part of the larger form. Name and id of the input should match the $id given to this function. The function should echo its output.
+					array( self::CLASS_NAME, 'show_meta_box_field' ),	// $callback (string) (required) Function that fills the field with the desired inputs as part of the larger form. Name and id of the input should match the $id given to this function. The function should echo its output.
 					self::MENU_SLUG,	// $page (string) (required) The type of settings page on which to show the field (general, reading, writing, ...).
 					'general'	// $section (string) (optional) The section of the settings page in which to show the box (default or a section you added with add_settings_section, look at the page in the source to see what the existing ones are.)
 				);
 			add_settings_field(
 					'restrict', 
 					'<label><strong>Restriction:</strong> </label>',
-					array( &$this, 'restrict_field' ),
+					array( self::CLASS_NAME, 'restrict_field' ),
 					self::MENU_SLUG,
 					'general'
 				);
 			add_settings_section(
 					'global',
 					'Global Scripts n Styles',
-					array( &$this, 'global_section' ),
+					array( self::CLASS_NAME, 'global_section' ),
 					self::MENU_SLUG
 				);
 			add_settings_field(
 					'scripts', 
 					'<label for="scripts"><strong>Scripts:</strong> </label>',
-					array( &$this, 'scripts_field' ),
+					array( self::CLASS_NAME, 'scripts_field' ),
 					self::MENU_SLUG,
 					'global'
 				);
 			add_settings_field(
 					'styles',
 					'<label for="styles"><strong>Styles:</strong> </label>',
-					array( &$this, 'styles_field' ),
+					array( self::CLASS_NAME, 'styles_field' ),
 					self::MENU_SLUG,
 					'global'
 				);
 			add_settings_field(
 					'scripts_in_head',
 					'<label for="scripts_in_head"><strong>Scripts</strong><br />(for the <code>head</code> element): </label>',
-					array( &$this, 'scripts_in_head_field' ),
+					array( self::CLASS_NAME, 'scripts_in_head_field' ),
 					self::MENU_SLUG,
 					'global'
 				);
 			add_settings_field(
 					'enqueue_scripts',
 					'<label for="enqueue_scripts"><strong>Enqueue Scripts</strong>: </label>',
-					array( &$this, 'enqueue_scripts_field' ),
+					array( self::CLASS_NAME, 'enqueue_scripts_field' ),
 					self::MENU_SLUG,
 					'global'
 				);
 		}
 		function admin_menu() {
-			if ( current_user_can( 'manage_options' ) ) {
+			/*
+			 * NOTE: Even when Scripts n Styles is not restricted by 'manage_options', Editors still can't submit the option page
+			 */
+			if ( self::check_strict_restriction() ) { // if they can't, they won't be able to save anyway.
 				add_management_page(
 						'Scripts n Styles Settings',	// $page_title (string) (required) The text to be displayed in the title tags of the page when the menu is selected
 						'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
 						'unfiltered_html',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
 						self::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
-						array( &$this, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
+						array( self::CLASS_NAME, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
 					);
 			}
 		}
 		function general_section() {
 			?>
 			<div style="max-width: 500px;">
-				<p>These General Settings are for Convenience.</p>
-				<p>In default (non MultiSite) WordPress installs, Administrators and Editors have the 'unfiltered_html' capability. In MultiSite installs, only the super admin has this capabilty. </p>
-				<p>The "Restriction" option will require users to have 'manage_options' in addition to 'unfiltered_html' capabilities in order to access Scripts n Styles. When this option is on, Editors will not have access to options on this page or the Scripts n Styles box on Post and Page edit screens (unless another plugin grants them the 'unfiltered_html' capability). </p>
-				<p>If you trust Admins and Editors on a MultiSite install, you can grant them access with the <a href="http://wordpress.org/extend/plugins/unfiltered-mu/">Unfiltered MU</a> plugin (which this author has not tested or used). In such a configuration, enabling "Restriction" should still block Editor access, but not Administrators.</p>
-				<p>Even with "Restriction" enabled, Editors can still add unfiltered JavaScript (just not through this plugin) because Editors on non-MultiSite installs should be Trusted Users. Because Editors are Trusted, this author doesn't consider this option critical, just an added convenience feature. If you'd like to limit that capability, use the <a href="http://wordpress.org/extend/plugins/filtered-html-for-editors/">Filtered HTML</a> plugin (which this author has not tested or used).</p>
+				<p>Notes about Capabilities: In default (non MultiSite) WordPress installs, Administrators and Editors have the 'unfiltered_html' capability. In MultiSite installs, only the super admin has this capabilty. In both types of install, Admin users have 'manage_options' but in MultiSite, you need to be a Super Admin to access the options.php file.</p>
+				<p>The "Restriction" option will require users to have 'manage_options' in addition to 'unfiltered_html' capabilities in order to access Scripts n Styles. When this option is on, Editors will not have access to the Scripts n Styles box on Post and Page edit screens (unless another plugin grants them the 'unfiltered_html' capability). </p>
 			</div>
 			<?php
 		}
 		function global_section() {
 			?>
 			<div style="max-width: 500px;">
-				<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered for individual pages and posts, so that they can override those entered here.</p>
+				<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.</p>
 			</div>
 			<?php
 		}
 		function show_meta_box_field() {
 			$sns_options = self::get_options();
-			?><input type="checkbox" name="sns_options[show_meta_box]" id="show_meta_box" <?php echo (isset( $sns_options[ 'show_meta_box' ] ) && $sns_options[ 'show_meta_box' ] ) ? 'checked' : ''; ?>/>
-<label for="show_meta_box"><strong>Show Scripts n Styles on Edit Screens</strong></label><br />
-			<span class="description" style="max-width: 500px; display: inline-block;">Unchecking will simply remove the box. Your codes will still work.</span><?php
+			?><label for="show_meta_box"><strong>Show Scripts n Styles on Edit Screens</strong></label><br />
+			<fieldset>
+				<label>
+					<input type="radio" name="sns_options[show_meta_box]" value="yes" id="show_meta_box_0" <?php echo (isset( $sns_options[ 'show_meta_box' ] ) && 'yes' == $sns_options[ 'show_meta_box' ] ) ? 'checked="checked" ' : ''; ?>/>
+					<span>Yes</span></label>
+				<br />
+				<label>
+					<input type="radio" name="sns_options[show_meta_box]" value="no" id="show_meta_box_1" <?php echo (isset( $sns_options[ 'show_meta_box' ] ) && 'no' == $sns_options[ 'show_meta_box' ] ) ? 'checked="checked" ' : ''; ?>/>
+					<span>No</span></label>
+			</fieldset>
+			<span class="description" style="max-width: 500px; display: inline-block;">"No" will reduce clutter on edit screens. (Your codes will still load.)</span><?php
 		}
 		function restrict_field() {
 			$sns_options = self::get_options();
-			?><input type="checkbox" name="sns_options[restrict]" id="restrict" <?php echo (isset( $sns_options[ 'restrict' ] ) && $sns_options[ 'restrict' ] ) ? 'checked' : ''; ?>/>
-			<label for="restrict"><strong>Restict access to Scripts n Styles</strong></label><br />
-			<span class="description" style="max-width: 500px; display: inline-block;">Only show Scripts n Styles to users that have the 'manage_options' in addition to the 'unfiltered_html' capability.</span><?php
+			?><label for="restrict"><strong>Restict access to Scripts n Styles</strong></label><br />
+			<fieldset>
+				<label>
+					<input type="radio" name="sns_options[restrict]" value="yes" id="restrict_0" <?php echo (isset( $sns_options[ 'restrict' ] ) && 'yes' == $sns_options[ 'restrict' ] ) ? 'checked="checked" ' : ''; ?>/>
+					<span>Yes</span></label>
+				<br />
+				<label>
+					<input type="radio" name="sns_options[restrict]" value="no" id="restrict_1" <?php echo (isset( $sns_options[ 'restrict' ] ) && 'no' == $sns_options[ 'restrict' ] ) ? 'checked="checked" ' : ''; ?>/>
+					<span>No</span></label>
+			</fieldset>
+			<span class="description" style="max-width: 500px; display: inline-block;">Apply a 'manage_options' check in addition to the 'unfiltered_html' check.</span><?php
 		}
 		function scripts_field() {
 			$sns_options = self::get_options();
@@ -223,7 +266,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<div class="wrap">
 				<?php screen_icon(); ?>
 				<h2><?php echo esc_html($title); ?></h2>
-				<form action="options.php" method="post">
+				<form action="options.php" method="post" autocomplete="off">
 				<?php settings_fields( self::OPTION_GROUP ); ?>
 				<?php do_settings_sections( self::MENU_SLUG ); ?>
 				<?php submit_button(); ?>
@@ -232,49 +275,55 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<?php
 		}
 		
-		/* This function returns the value of the Restriction and caches the result */
 		private function check_restriction() {
-			if ( ! isset( $this->allow ) ) {
-				$sns_options = get_option( 'sns_options' );
-				if ( isset( $sns_options[ 'restrict' ] ) && $sns_options[ 'restrict' ] )
-					$this->allow = current_user_can( 'manage_options' );
+			if ( ! isset( self::$allow ) ) {
+				$sns_options = self::get_options();
+				if ( isset( $sns_options[ 'restrict' ] ) && 'yes' == $sns_options[ 'restrict' ] )
+					self::$allow = current_user_can( 'manage_options' ) && current_user_can( 'unfiltered_html' );
 				else
-					$this->allow = true;
+					self::$allow = current_user_can( 'unfiltered_html' );
 			}
-			return $this->allow;
+			return self::$allow;
 		}
+		private function check_strict_restriction() {
+			// ::TODO:: Add MultiSite checks.
+			if ( ! isset( self::$allow_strict ) )
+				self::$allow_strict = current_user_can( 'manage_options' ) && current_user_can( 'unfiltered_html' );
+			return self::$allow_strict;
+		}
+		
 		private function get_options() {
-			if ( ! isset( $this->options ) ) {
-				$this->options = get_option( 'sns_options' );
+			if ( ! isset( self::$options ) ) {
+				self::$options = get_option( 'sns_options' );
 			}
-			return $this->options;
+			return self::$options;
 		}
 		private function get_scripts() {
-			if ( ! isset( $this->scripts ) ) {
+			if ( ! isset( self::$scripts ) ) {
 				global $post;
-				$this->scripts = get_post_meta( $post->ID, self::PREFIX.'scripts', true );
+				self::$scripts = get_post_meta( $post->ID, self::PREFIX.'scripts', true );
 			}
-			return $this->scripts;
+			return self::$scripts;
 		}
 		private function get_styles() {
-			if ( ! isset( $this->styles ) ) {
+			if ( ! isset( self::$styles ) ) {
 				global $post;
-				$this->styles = get_post_meta( $post->ID, self::PREFIX.'styles', true );
+				self::$styles = get_post_meta( $post->ID, self::PREFIX.'styles', true );
 			}
-			return $this->styles;
+			return self::$styles;
 		}
 		private function get_enqueue() {
-			if ( ! isset( $this->enqueue ) ) {
-				$this->enqueue = get_option( 'sns_enqueue_scripts' );
+			if ( ! isset( self::$enqueue ) ) {
+				self::$enqueue = get_option( 'sns_enqueue_scripts' );
 			}
-			return $this->enqueue;
+			return self::$enqueue;
 		}
 		function add() {
-			$sns_options = get_option( 'sns_options' );
-			if ( isset( $sns_options[ 'show_meta_box' ] ) && $sns_options[ 'show_meta_box' ] && self::check_restriction() && current_user_can( 'unfiltered_html' ) ) {
+			$sns_options = self::get_options();
+			if ( isset( $sns_options[ 'show_meta_box' ] ) && 'yes' == $sns_options[ 'show_meta_box' ] && self::check_restriction() ) {
 				$registered_post_types = get_post_types( array('show_ui' => true, 'publicly_queryable' => true) );
 				foreach ($registered_post_types as $post_type ) {
-					add_meta_box( self::PREFIX.'meta_box', 'Scripts n Styles', array( &$this, 'meta_box' ), $post_type, 'normal', 'high' );
+					add_meta_box( self::PREFIX.'meta_box', 'Scripts n Styles', array( self::CLASS_NAME, 'meta_box' ), $post_type, 'normal', 'high' );
 				}
 			}
 		}
@@ -330,43 +379,52 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<?php
 		}
 		function save( $post_id ) {
-			if ( self::check_restriction() && current_user_can( 'unfiltered_html' ) 
+			if ( self::check_restriction() 
 					&&  isset( $_POST[ self::NONCE_NAME ] ) && wp_verify_nonce( $_POST[ self::NONCE_NAME ], __FILE__ ) 
 					&& ! ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
 				
 				/* 
 				 * NOTE: There is no current_user_can( 'edit_post' ) check here, because as far as I 
-				 * can tell, in /wp-admin/post.php the calls: edit_post(), write_post(), post_preview(),
-				 * wp_untrash_post, wp_trash_post, the check is already done, which is prior to the 
-				 * 'save_post' action, which is where this function is called, and other calls are from 
-				 * other pages so NONCE covers them, and that leaves autosave, which is checked.
+				 * can tell, in /wp-admin/post.php the calls edit_post(), write_post(), post_preview(), 
+				 * wp_untrash_post(), etc., the check is already done prior to the 'save_post' action, 
+				 * which is where this function is called. Other calls are from other pages so the 
+				 * NONCE covers those cases, and that leaves autosave, which is also checked here. 
 				 */
 				
 				$scripts = array();
 				$styles = array();
+				
 				if ( ! empty( $_POST[ self::PREFIX.'scripts' ] ) )
 					$scripts[ 'scripts' ] = $_POST[ self::PREFIX.'scripts' ];
-				if ( ! empty( $_POST[ self::PREFIX.'scripts_in_head' ] ) )
-					$scripts[ 'scripts_in_head' ] = $_POST[ self::PREFIX.'scripts_in_head' ];
+					
 				if ( ! empty( $_POST[ self::PREFIX.'styles' ] ) )
 					$styles[ 'styles' ] = $_POST[ self::PREFIX.'styles' ];
+					
+				if ( ! empty( $_POST[ self::PREFIX.'scripts_in_head' ] ) )
+					$scripts[ 'scripts_in_head' ] = $_POST[ self::PREFIX.'scripts_in_head' ];
+					
 				if ( ! empty( $_POST[ self::PREFIX.'classes_body' ] ) )
 					$styles[ 'classes_body' ] = $_POST[ self::PREFIX.'classes_body' ];
+					
 				if ( ! empty( $_POST[ self::PREFIX.'classes_post' ] ) )
 					$styles[ 'classes_post' ] = $_POST[ self::PREFIX.'classes_post' ];
+					
 				if ( ! empty( $_POST[ self::PREFIX.'enqueue_scripts' ] ) )
 					$scripts[ 'enqueue_scripts' ] = $_POST[ self::PREFIX.'enqueue_scripts' ];
+					
 				update_post_meta( $post_id, self::PREFIX.'scripts', $scripts );
 				update_post_meta( $post_id, self::PREFIX.'styles', $styles );
 			}
 		}
 		function styles() {
+			// Global
 			$option = self::get_options();
 			if ( ! empty( $option ) && ! empty( $option[ 'styles' ] ) ) {
 				?><style type="text/css"><?php
 				echo $option[ 'styles' ];
 				?></style><?php
 			}
+			// Individual
 			if ( is_singular() ) {
 				$meta = self::get_styles();
 				if ( ! empty( $meta ) && ! empty( $meta[ 'styles' ] ) ) {
@@ -377,12 +435,14 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 		}
 		function scripts() {
+			// Global
 			$option = self::get_options();
 			if ( ! empty( $option ) && ! empty( $option[ 'scripts' ] ) ) {
 				?><script type="text/javascript"><?php
 				echo $option[ 'scripts' ];
 				?></script><?php
 			}
+			// Individual
 			if ( is_singular() ) {
 				$meta = self::get_scripts();
 				if ( ! empty( $meta ) && ! empty( $meta[ 'scripts' ] ) ) {
@@ -393,12 +453,14 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 		}
 		function scripts_in_head() {
+			// Global
 			$option = self::get_options();
 			if ( ! empty( $option ) && ! empty($option[ 'scripts_in_head' ]) ) {
 				?><script type="text/javascript"><?php
 				echo $option[ 'scripts_in_head' ];
 				?></script><?php
 			}
+			// Individual
 			if ( is_singular() ) {
 				$meta = self::get_scripts();
 				if ( ! empty( $meta ) && ! empty( $meta[ 'scripts_in_head' ] ) ) {
@@ -423,18 +485,32 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			return $classes;
 		}
 		function enqueue_scripts() {
+			// NOTE: Because of dependency, the order of the calls doesn't matter for 'wp_enqueue_script' 
+			// Individual
 			$meta = self::get_scripts();
 			if ( ! empty( $meta ) && is_array( $meta[ 'enqueue_scripts' ] ) ) {
 				foreach ( $meta[ 'enqueue_scripts' ] as $handle )
 					wp_enqueue_script( $handle );
 			}
+			// Global
 			$sns_enqueue_scripts = self::get_enqueue();
 			if ( ! empty( $sns_enqueue_scripts ) && is_array( $sns_enqueue_scripts ) ) {
 				foreach ( $sns_enqueue_scripts as $handle )
 					wp_enqueue_script( $handle );
 			}
 		}
+		function options_validate( $input ) {
+			// I'm not sure that users without the proper caps can get this far, but if they can...
+			if ( self::check_strict_restriction() ) 
+				return $input;
+			return self::get_options();
+		}
+		function enqueue_validate( $input ) {
+			if ( self::check_strict_restriction() ) 
+				return $input;
+			return self::get_enqueue();
+		}
 	}
-	$uFp_SnS = new Scripts_n_Styles;
+	Scripts_n_Styles::init();
 }
 ?>
