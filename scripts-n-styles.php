@@ -107,6 +107,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			if ( ! isset( $sns_options[ 'version' ] ) || version_compare( self::VERSION, $sns_options[ 'version' ], '>' ) )
 				self::activation();
 		}
+		
 		function admin_init(){
 			register_setting(
 					self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
@@ -187,6 +188,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 					);
 			}
 		}
+		
 		function general_section() {
 			?>
 			<div style="max-width: 500px;">
@@ -202,6 +204,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			</div>
 			<?php
 		}
+		
 		function show_meta_box_field() {
 			$sns_options = self::get_options();
 			?><label for="show_meta_box"><strong>Show Scripts n Styles on Edit Screens</strong></label><br />
@@ -260,6 +263,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 				?></p>
 			<?php }
 		}
+		
 		function options_page() {
 			global $title;
 			?>
@@ -325,6 +329,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 			return self::$wp_registered;
 		}
+		
 		function add() {
 			$sns_options = self::get_options();
 			if ( isset( $sns_options[ 'show_meta_box' ] ) && 'yes' == $sns_options[ 'show_meta_box' ] && self::check_restriction() ) {
@@ -386,8 +391,8 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		}
 		function save( $post_id ) {
 			if ( self::check_restriction() 
-					&&  isset( $_POST[ self::NONCE_NAME ] ) && wp_verify_nonce( $_POST[ self::NONCE_NAME ], __FILE__ ) 
-					&& ! ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
+				&&  isset( $_POST[ self::NONCE_NAME ] ) && wp_verify_nonce( $_POST[ self::NONCE_NAME ], __FILE__ ) 
+				&& ! ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
 				
 				/* 
 				 * NOTE: There is no current_user_can( 'edit_post' ) check here, because as far as I 
@@ -422,6 +427,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 				update_post_meta( $post_id, self::PREFIX.'styles', $styles );
 			}
 		}
+		
 		function styles() {
 			// Global
 			$option = self::get_options();
@@ -504,6 +510,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 					wp_enqueue_script( $handle );
 			}
 		}
+		
 		function options_validate( $input ) {
 			// I'm not sure that users without the proper caps can get this far, but if they can...
 			if ( self::check_strict_restriction() ) 
