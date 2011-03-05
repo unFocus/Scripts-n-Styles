@@ -46,6 +46,8 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		private static $styles;
 		private static $enqueue;
 		private static $wp_registered;
+		private static $plugin_file;
+		private static $hook_suffix;
 		static function init() {
 			if ( is_multisite() ) { 
 				/*
@@ -77,14 +79,10 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 
 				add_action( 'add_meta_boxes', array( self::CLASS_NAME, 'add' ) );
 				add_action( 'save_post', array( self::CLASS_NAME, 'save' ) );
-				add_action( 'admin_init', array( self::CLASS_NAME, 'admin_init' ) );
 				add_action( 'admin_menu', array( self::CLASS_NAME, 'admin_menu' ) );
-				$plugin_file = plugin_basename(__FILE__);
+				$plugin_file = self::$plugin_file = plugin_basename(__FILE__); 
 				add_filter( "plugin_action_links_$plugin_file", array( self::CLASS_NAME, 'plugin_action_links') );
-
-				//add_action( 'admin_print_scripts', array(&$this,'admin_print_scripts'));
-				//add_action( 'admin_print_styles', array(&$this,'admin_print_styles'));	
-
+				
 				//register_activation_hook( __FILE__, array( self::CLASS_NAME, 'activation' ) );
 				self::upgrade_check();
 			} 
@@ -96,9 +94,9 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			add_action( 'wp_head', array( self::CLASS_NAME, 'scripts_in_head' ), 11 );
 			add_action( 'wp_footer', array( self::CLASS_NAME, 'scripts' ), 11 );
 			
-			add_action( 'wp_enqueue_scripts', array( self::CLASS_NAME, 'enqueue_scripts' ) );
+			//add_action( 'admin_enqueue_scripts', array( self::CLASS_NAME, 'admin_enqueue_scripts' ) );
 		}
-		static function activation() {
+		function activation() {
 			$sns_options = self::get_options();
 			if ( ! isset( $sns_options[ 'show_meta_box' ] ) )
 				$sns_options['show_meta_box' ] = 'yes';
@@ -113,7 +111,28 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 				self::activation();
 		}
 		
-		function admin_init(){
+		function plugin_action_links( $actions ) {
+			$actions[ 'settings' ] = '<a href="' . menu_page_url( self::MENU_SLUG, false ) . '"/>Settings</a>';
+			return $actions;
+		}
+		function admin_menu() {
+			/*
+			 * NOTE: Even when Scripts n Styles is not restricted by 'manage_options', Editors still can't submit the option page
+			 */
+			if ( self::check_strict_restriction() ) { // if they can't, they won't be able to save anyway.
+				$hook_suffix = self::$hook_suffix = add_management_page(
+						'Scripts n Styles Settings',	// $page_title (string) (required) The text to be displayed in the title tags of the page when the menu is selected
+						'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
+						'unfiltered_html',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
+						self::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
+						array( self::CLASS_NAME, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
+					);
+				add_action( "load-$hook_suffix", array( self::CLASS_NAME, 'init_options_page' ) );
+				add_action( "admin_print_styles-$hook_suffix", array( self::CLASS_NAME, 'options_styles'));
+				add_action( "admin_print_scripts-$hook_suffix", array( self::CLASS_NAME, 'options_scripts'));
+			}
+		}
+		function init_options_page(){
 			register_setting(
 					self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
 					'sns_options',	// $option_name (string) (required) The name of an option to sanitize and save.
@@ -179,23 +198,11 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 					'global'
 				);
 		}
-		function admin_menu() {
-			/*
-			 * NOTE: Even when Scripts n Styles is not restricted by 'manage_options', Editors still can't submit the option page
-			 */
-			if ( self::check_strict_restriction() ) { // if they can't, they won't be able to save anyway.
-				add_management_page(
-						'Scripts n Styles Settings',	// $page_title (string) (required) The text to be displayed in the title tags of the page when the menu is selected
-						'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
-						'unfiltered_html',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
-						self::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
-						array( self::CLASS_NAME, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
-					);
-			}
+		function options_styles() {
+			wp_enqueue_style( 'options-styles', plugins_url('options-styles.css', __FILE__), array(), self::VERSION );
 		}
-		function plugin_action_links( $actions ) {
-			$actions[ 'settings' ] = '<a href="' . menu_page_url( self::MENU_SLUG, false ) . '"/>Settings</a>';
-			return $actions;
+		function options_scripts() {
+			wp_enqueue_script( 'options-scripts', plugins_url('options-scripts.js', __FILE__), array( 'jquery' ), self::VERSION, true );
 		}
 		
 		function general_section() {
@@ -211,6 +218,10 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<div style="max-width: 55em;">
 				<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.</p>
 			</div>
+			<?php
+			echo self::$hook_suffix . '<br />'; // 'tools_page_Scripts-n-Styles'
+			echo self::$plugin_file . '<br />'; // 'scripts-n-styles/scripts-n-styles.php'
+			?>
 			<?php
 		}
 		
