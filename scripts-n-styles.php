@@ -136,12 +136,12 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			register_setting(
 					self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
 					'sns_options',	// $option_name (string) (required) The name of an option to sanitize and save.
-					array( self::CLASS_NAME, 'options_validate' )	// $sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
+					array( self::CLASS_NAME, 'check_options' )	// $sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
 				);
 			register_setting(
 					self::OPTION_GROUP, 
 					'sns_enqueue_scripts', 
-					array( self::CLASS_NAME, 'enqueue_validate' )
+					array( self::CLASS_NAME, 'check_enqueue' )
 				);
 			add_settings_section(
 					'general',	// $id (string) (required) String for use in the 'id' attribute of tags.
@@ -536,15 +536,15 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 		}
 		
-		function options_validate( $input ) {
+		function check_options( $value ) {
 			// I'm not sure that users without the proper caps can get this far, but if they can...
 			if ( self::check_strict_restriction() ) 
-				return $input;
+				return $value;
 			return self::get_options();
 		}
-		function enqueue_validate( $input ) {
+		function check_enqueue( $value ) {
 			if ( self::check_strict_restriction() ) 
-				return $input;
+				return $value;
 			return self::get_enqueue();
 		}
 	}
