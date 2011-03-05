@@ -44,6 +44,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		private static $scripts;
 		private static $styles;
 		private static $enqueue;
+		private static $wp_registered;
 		static function init() {
 			if ( is_multisite() ) { 
 				/*
@@ -247,8 +248,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			<?php
 		}
 		function enqueue_scripts_field() {
-			global $wp_scripts;
-			$registered_handles = array_keys( $wp_scripts->registered );
+			$registered_handles = self::get_wp_registered();
 			$sns_enqueue_scripts = self::get_enqueue();
 			?><select name="sns_enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto;"><?php
 				foreach ( $registered_handles as $handle ) echo '<option value="' . $handle . '">' . $handle . '</option>'; 
@@ -286,7 +286,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			return self::$allow;
 		}
 		private function check_strict_restriction() {
-			// ::TODO:: Add MultiSite checks.
+			// ::TODO:: Add MultiSite checks?
 			if ( ! isset( self::$allow_strict ) )
 				self::$allow_strict = current_user_can( 'manage_options' ) && current_user_can( 'unfiltered_html' );
 			return self::$allow_strict;
@@ -318,6 +318,13 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 			return self::$enqueue;
 		}
+		private function get_wp_registered() {
+			if ( ! isset( self::$wp_registered ) ) {
+				global $wp_scripts;
+				self::$wp_registered = array_keys( $wp_scripts->registered );
+			}
+			return self::$wp_registered;
+		}
 		function add() {
 			$sns_options = self::get_options();
 			if ( isset( $sns_options[ 'show_meta_box' ] ) && 'yes' == $sns_options[ 'show_meta_box' ] && self::check_restriction() ) {
@@ -328,8 +335,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 		}
 		function meta_box( $post ) {
-			global $wp_scripts;
-			$registered_handles = array_keys( $wp_scripts->registered );
+			$registered_handles = self::get_wp_registered();
 			$styles = self::get_styles();
 			$scripts = self::get_scripts();
 			?>
@@ -485,17 +491,16 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			return $classes;
 		}
 		function enqueue_scripts() {
-			// NOTE: Because of dependency, the order of the calls doesn't matter for 'wp_enqueue_script' 
+			// Global
+			$sns_enqueue_scripts = self::get_enqueue();
+			if ( is_array( $sns_enqueue_scripts ) ) {
+				foreach ( $sns_enqueue_scripts as $handle )
+					wp_enqueue_script( $handle );
+			}
 			// Individual
 			$meta = self::get_scripts();
 			if ( ! empty( $meta ) && is_array( $meta[ 'enqueue_scripts' ] ) ) {
 				foreach ( $meta[ 'enqueue_scripts' ] as $handle )
-					wp_enqueue_script( $handle );
-			}
-			// Global
-			$sns_enqueue_scripts = self::get_enqueue();
-			if ( ! empty( $sns_enqueue_scripts ) && is_array( $sns_enqueue_scripts ) ) {
-				foreach ( $sns_enqueue_scripts as $handle )
 					wp_enqueue_script( $handle );
 			}
 		}
