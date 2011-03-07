@@ -9,7 +9,7 @@ Version: 1.0.3-alpha
 License: GPL2
 Network: true
 */
-/*  Copyright 2010-2011  Ken Newman  www.unfocus.com
+/*  Copyright 2010-2011  Kenneth Newman  www.unfocus.com
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 2, as 
@@ -28,9 +28,41 @@ Network: true
 if ( !class_exists( 'Scripts_n_Styles' ) ) {
 	
 	/**
+	 * Scripts n Styles
+	 * 
+	 * Allows WordPress admin users the ability to add custom CSS
+	 * and JavaScript directly to individual Post, Pages or custom
+	 * post types.
+	 * 
+	 * NOTE: No user except the "Super Admin" can use this plugin in MultiSite. I'll add features for MultiSite later, perhaps the ones below...
+	 * The "Super Admin" user has exclusive 'unfiltered_html' capabilities in MultiSite. Also, options.php checks for is_super_admin() 
+	 * so the 'manage_options' capability for blog admins is insufficient to pass the check to manage options directly. 
+	 * 
+	 * The Tentative plan is for Super Admins to create Snippets or Shortcodes approved for use by users with certain capabilities 
+	 * ('unfiltered_html' and/or 'manage_options'). The 'unfiltered_html' capability can be granted via another plugin. This plugin will
+	 * not deal with granting any capabilities.
+	 * 
 	 * @package Scripts_n_Styles
-	 * @version 1.0.3
+	 * @link http://www.unfocus.com/projects/scripts-n-styles/ Plugin URI
+	 * @author unFocus Projects
+	 * @link http://www.unfocus.com/ Author URI
+	 * @version 1.0.3-alpha
+	 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+	 * @copyright Copyright (c) 2002, Kenneth Newman
+	 * @todo finish 
+	 * @todo Add Post Type Selection on Options Page? Not sure that's usefull.
+	 * @todo Add Conditional Tags support as alternative to Globally applying Scripts n Styles.
+	 * @todo Create ability to add and register scripts and styles for enqueueing (via Options page).
+	 * @todo Create selection on Option page of which to pick registered scripts to make available on edit screens.
+	 * @todo Create shortcode to embed html/javascript snippets. See http://scribu.net/wordpress/optimal-script-loading.html in which this is already figured out :-)
+	 * @todo Create shortcode registration on Options page to make those snippets available on edit screens.
+	 * @todo Create shortcode registration of html snippets on edit screens for single use.
+	 * @todo Figure out and add Error messaging.
 	 */
+	
+	// $hook_suffix = 'tools_page_Scripts-n-Styles'; // kept here for reference
+	// $plugin_file = 'scripts-n-styles/scripts-n-styles.php'; // kept here for reference
+			
 	class Scripts_n_Styles
 	{
 		const PREFIX = 'uFp_'; // post meta data, and meta box feild names are prefixed with this to prevent collisions.
@@ -48,30 +80,8 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 		private static $wp_registered;
 		static function init() {
 			if ( is_multisite() ) { 
-				/*
-				 ::TODO::	No user except the "Super Admin" can use this plugin in MultiSite. I'll add features for MultiSite later, perhaps the ones below...
-				 			The "Super Admin" user has exclusive 'unfiltered_html' capabilities in MultiSite. Also, options.php checks for is_super_admin() 
-							so the 'manage_options' capability for blog admins is insufficient to pass the check to manage options directly. 
-							
-							The Tentative plan is for Super Admins to create Snippets or Shortcodes approved for use by users with certain capabilities 
-							('unfiltered_html' and/or 'manage_options'). The 'unfiltered_html' capability can be granted via another plugin. This plugin will
-							not deal with granting any capabilities.
-				 */
 			}
 			 
-			// ::TODO:: Add Post Type Selection on Options Page? Not sure that's usefull.
-			// ::TODO:: Add Conditional Tags support as alternative to Globally applying Scripts n Styles.
-			// ::TODO:: Create ability to add and register scripts and styles for enqueueing (via Options page).
-			// ::TODO:: Create selection on Option page of which to pick registered scripts to make available on edit screens.
-			// ::TODO:: Create shortcode to embed html/javascript snippets.
-			//			See http://scribu.net/wordpress/optimal-script-loading.html in which this is already figured out :-)
-			// ::TODO:: Create shortcode registration on Options page to make those snippets available on edit screens.
-			// ::TODO:: Create shortcode registration of html snippets on edit screens for single use.
-			// ::TODO:: Figure out and add Error messaging.
-			
-			// $hook_suffix = 'tools_page_Scripts-n-Styles'; // kept here for reference
-			// $plugin_file = 'scripts-n-styles/scripts-n-styles.php'; // kept here for reference
-			
 			if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERED_HTML ) ) {
 				/*
 				 * NOTE: Setting the DISALLOW_UNFILTERED_HTML constant to
