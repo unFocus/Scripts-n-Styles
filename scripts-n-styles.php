@@ -80,6 +80,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 				 */
 
 				add_action( 'add_meta_boxes', array( self::CLASS_NAME, 'add_meta_boxes' ) );
+				add_action( 'save_post', array( self::CLASS_NAME, 'save_post' ) );
 				add_action( 'admin_menu', array( self::CLASS_NAME, 'admin_menu' ) );
 				
 				$plugin_file = plugin_basename(__FILE__); 
@@ -93,6 +94,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			add_filter( 'post_class', array( self::CLASS_NAME, 'post_classes' ) );
 			
 			add_action( 'wp_head', array( self::CLASS_NAME, 'styles' ), 11 );
+			add_action( 'wp_enqueue_scripts', array( self::CLASS_NAME, 'enqueue_scripts' ), 11 );
 			add_action( 'wp_head', array( self::CLASS_NAME, 'scripts_in_head' ), 11 );
 			add_action( 'wp_footer', array( self::CLASS_NAME, 'scripts' ), 11 );
 		}
@@ -128,6 +130,7 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 						array( self::CLASS_NAME, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
 					);
 				add_action( "load-$hook_suffix", array( self::CLASS_NAME, 'init_options_page' ) );
+				add_action( "load-options.php", array( self::CLASS_NAME, 'init_options_page' ) );
 				add_action( "admin_print_styles-$hook_suffix", array( self::CLASS_NAME, 'options_styles'));
 				add_action( "admin_print_scripts-$hook_suffix", array( self::CLASS_NAME, 'options_scripts'));
 			}
@@ -136,12 +139,12 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			register_setting(
 					self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
 					'sns_options',	// $option_name (string) (required) The name of an option to sanitize and save.
-					array( self::CLASS_NAME, 'check_options' )	// $sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
+					array( self::CLASS_NAME, 'options_validate' )	// $sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
 				);
 			register_setting(
 					self::OPTION_GROUP, 
 					'sns_enqueue_scripts', 
-					array( self::CLASS_NAME, 'check_enqueue' )
+					array( self::CLASS_NAME, 'enqueue_validate' )
 				);
 			add_settings_section(
 					'general',	// $id (string) (required) String for use in the 'id' attribute of tags.
@@ -353,7 +356,6 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 				foreach ($registered_post_types as $post_type ) {
 					add_meta_box( self::PREFIX.'meta_box', 'Scripts n Styles', array( self::CLASS_NAME, 'meta_box' ), $post_type, 'normal', 'high' );
 				}
-				add_action( 'save_post', array( self::CLASS_NAME, 'save_post' ) );
 				add_action( "admin_print_styles", array( self::CLASS_NAME, 'meta_box_styles'));
 				add_action( "admin_print_scripts", array( self::CLASS_NAME, 'meta_box_scripts'));
 			}
@@ -536,13 +538,13 @@ if ( !class_exists( 'Scripts_n_Styles' ) ) {
 			}
 		}
 		
-		function check_options( $value ) {
+		function options_validate( $value ) {
 			// I'm not sure that users without the proper caps can get this far, but if they can...
 			if ( self::check_strict_restriction() ) 
 				return $value;
 			return self::get_options();
 		}
-		function check_enqueue( $value ) {
+		function enqueue_validate( $value ) {
 			if ( self::check_strict_restriction() ) 
 				return $value;
 			return self::get_enqueue();
