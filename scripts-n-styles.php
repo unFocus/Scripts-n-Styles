@@ -23,7 +23,8 @@ Network: true
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/	
+*/
+
 /**
  * Scripts n Styles
  * 
@@ -61,13 +62,24 @@ Network: true
 		
 class Scripts_n_Styles
 {
-	const PREFIX = 'uFp_'; // post meta data, and meta box feild names are prefixed with this to prevent collisions.
+    /**#@+
+     * Constants
+     */
+    /**
+	 * Post meta data, and meta box feild names are prefixed with this to prevent collisions.
+     */
+	const PREFIX = 'uFp_';
 	const OPTION_GROUP = 'scripts_n_styles';
 	const MENU_SLUG = 'Scripts-n-Styles';
 	const NONCE_NAME = 'scripts_n_styles_noncename';
 	const CLASS_NAME = 'Scripts_n_Styles';
 	const VERSION = '1.0.3-alpha';
+    /**#@-*/
 	
+    /**#@+
+     * @access private
+     * @static
+     */
 	private static $allow;
 	private static $allow_strict;
 	private static $options;
@@ -75,9 +87,15 @@ class Scripts_n_Styles
 	private static $styles;
 	private static $enqueue;
 	private static $wp_registered;
+    /**#@-*/
 	
+    /**
+	 * Initializing method. Checks if is_admin() and registers action hooks for admin if true. Sets filters and actions for Theme side functions.
+     * @static
+     */
 	static function init() {
-		if ( is_multisite() ) { 
+		if ( is_multisite() ) {
+			// 
 		}
 		 
 		if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERED_HTML ) ) {
@@ -106,6 +124,9 @@ class Scripts_n_Styles
 		add_action( 'wp_footer', array( self::CLASS_NAME, 'scripts' ), 11 );
 	}
 	
+    /**
+	 * Utility Method: Sets default 'restrict' and 'show_meta_box' if not previously set. Sets stored 'version' to VERSION.
+     */
 	function upgrade() {
 		$sns_options = self::get_options();
 		if ( ! isset( $sns_options[ 'show_meta_box' ] ) )
@@ -116,17 +137,29 @@ class Scripts_n_Styles
 		update_option( 'sns_options', $sns_options );
 	}
 	
+    /**
+	 * Utility Method: Compares VERSION to stored 'version' value.
+     */
 	function upgrade_check() { 
 		$sns_options = self::get_options();
 		if ( ! isset( $sns_options[ 'version' ] ) || version_compare( self::VERSION, $sns_options[ 'version' ], '>' ) )
 			self::upgrade();
 	}
 	
+    /**
+	 * Adds link to the Settings Page in the WordPress "Plugin Action Links" array.
+	 * @param array $actions
+	 * @return array
+     */
 	function plugin_action_links( $actions ) {
 		$actions[ 'settings' ] = '<a href="' . menu_page_url( self::MENU_SLUG, false ) . '"/>Settings</a>';
 		return $actions;
 	}
 	
+    /**
+	 * Settings Page
+	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
+     */
 	function admin_menu() {
 		/* NOTE: Even when Scripts n Styles is not restricted by 'manage_options', Editors still can't submit the option page */
 		if ( self::check_strict_restriction() ) { // if they can't, they won't be able to save anyway.
@@ -144,7 +177,11 @@ class Scripts_n_Styles
 		}
 	}
 	
-	function init_options_page(){
+    /**
+	 * Settings Page
+	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
+     */
+	function init_options_page() {
 		register_setting(
 				self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
 				'sns_options',	// $option_name (string) (required) The name of an option to sanitize and save.
@@ -211,14 +248,26 @@ class Scripts_n_Styles
 			);
 	}
 	
+    /**
+	 * Settings Page
+	 * Adds CSS styles to the Scripts n Styles Admin Page.
+     */
 	function options_styles() {
 		wp_enqueue_style( 'sns-options-styles', plugins_url('options-styles.css', __FILE__), array(), self::VERSION );
 	}
 	
+    /**
+	 * Settings Page
+	 * Adds JavaScript to the Scripts n Styles Admin Page.
+     */
 	function options_scripts() {
 		wp_enqueue_script( 'sns-options-scripts', plugins_url('options-scripts.js', __FILE__), array( 'jquery' ), self::VERSION, true );
 	}
 	
+    /**
+	 * Settings Page
+	 * Outputs Description text for the General Section.
+     */
 	function general_section() {
 		?>
 		<div style="max-width: 55em;">
@@ -228,6 +277,10 @@ class Scripts_n_Styles
 		<?php
 	}
 	
+    /**
+	 * Settings Page
+	 * Outputs Description text for the Global Section.
+     */
 	function global_section() {
 		?>
 		<div style="max-width: 55em;">
@@ -236,6 +289,10 @@ class Scripts_n_Styles
 		<?php
 	}
 	
+    /**
+	 * Settings Page
+	 * Outputs a Yes/No Radio option group for setting 'show_meta_box'.
+     */
 	function show_meta_box_field() {
 		$sns_options = self::get_options();
 		?><label for="show_meta_box"><strong>Show Scripts n Styles on Edit Screens</strong></label><br />
@@ -251,6 +308,10 @@ class Scripts_n_Styles
 		<span class="description" style="max-width: 500px; display: inline-block;">"No" will reduce clutter on edit screens. (Your codes will still load.)</span><?php
 	}
 	
+    /**
+	 * Settings Page
+	 * Outputs a Yes/No Radio option group for setting 'restrict'.
+     */
 	function restrict_field() {
 		$sns_options = self::get_options();
 		?><label for="restrict"><strong>Restict access to Scripts n Styles</strong></label><br />
@@ -266,6 +327,10 @@ class Scripts_n_Styles
 		<span class="description" style="max-width: 500px; display: inline-block;">Apply a 'manage_options' check in addition to the 'unfiltered_html' check.</span><?php
 	}
 	
+    /**
+	 * Settings Page
+	 * Outputs a textarea for setting 'scripts'.
+     */
 	function scripts_field() {
 		$sns_options = self::get_options();
 		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[scripts]" id="scripts"><?php echo isset( $sns_options[ 'scripts' ] ) ? $sns_options[ 'scripts' ] : ''; ?></textarea><br />
@@ -273,12 +338,20 @@ class Scripts_n_Styles
 		<?php
 	}
 	
+    /**
+	 * Settings Page
+	 * Outputs a textarea for setting 'styles'.
+     */
 	function styles_field() {
 		$sns_options = self::get_options();
 		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[styles]" id="styles"><?php echo isset( $sns_options[ 'styles' ] ) ? $sns_options[ 'styles' ] : ''; ?></textarea><br />
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span><?php
 	}
 	
+    /**
+	 * Settings Page
+	 * Outputs a textarea for setting 'scripts_in_head'.
+     */
 	function scripts_in_head_field() {
 		$sns_options = self::get_options();
 		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $sns_options[ 'scripts_in_head' ] ) ? $sns_options[ 'scripts_in_head' ] : ''; ?></textarea><br />
@@ -286,6 +359,10 @@ class Scripts_n_Styles
 		<?php
 	}
 	
+    /**
+	 * Settings Page
+	 * Outputs a select element for selecting options to set $sns_enqueue_scripts.
+     */
 	function enqueue_scripts_field() {
 		$registered_handles = self::get_wp_registered();
 		$sns_enqueue_scripts = self::get_enqueue();
@@ -300,6 +377,10 @@ class Scripts_n_Styles
 		<?php }
 	}
 	
+    /**
+	 * Settings Page
+	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
+     */
 	function options_page() {
 		global $title;
 		?>
@@ -315,6 +396,10 @@ class Scripts_n_Styles
 		<?php
 	}
 	
+    /**
+	 * Utility Method: Returns the value of $allow if it is set, and if not, sets it according the current users capabilties as configured on the admin page.
+	 * @return bool Whether or not current user can set options. 
+     */
 	private function check_restriction() {
 		if ( ! isset( self::$allow ) ) {
 			$sns_options = self::get_options();
@@ -326,6 +411,10 @@ class Scripts_n_Styles
 		return self::$allow;
 	}
 	
+    /**
+	 * Utility Method: Returns the value of $allow_strict if it is set, and if not, sets it according the current users capabilties, 'manage_options' and 'unfiltered_html'.
+	 * @return bool Whether or not current user can set options. 
+     */
 	private function check_strict_restriction() {
 		// ::TODO:: Add MultiSite checks?
 		if ( ! isset( self::$allow_strict ) )
@@ -333,6 +422,10 @@ class Scripts_n_Styles
 		return self::$allow_strict;
 	}
 	
+    /**
+	 * Utility Method: Returns the value of $options if it is set, and if not, sets it via a call to the database.
+	 * @return array $options is the 'sns_options' settings collection. 
+     */
 	private function get_options() {
 		if ( ! isset( self::$options ) ) {
 			self::$options = get_option( 'sns_options' );
@@ -340,6 +433,10 @@ class Scripts_n_Styles
 		return self::$options;
 	}
 	
+    /**
+	 * Utility Method: Returns the value of $scripts if it is set, and if not, sets it via a call to the database.
+	 * @return array $scripts is the 'ufp_script's meta data entry.
+     */
 	private function get_scripts() {
 		if ( ! isset( self::$scripts ) ) {
 			global $post;
@@ -348,6 +445,10 @@ class Scripts_n_Styles
 		return self::$scripts;
 	}
 	
+    /**
+	 * Utility Method: Returns the value of $styles if it is set, and if not, sets it via a call to the database.
+	 * @return array $styles is the 'ufp_styles' meta data entry.
+     */
 	private function get_styles() {
 		if ( ! isset( self::$styles ) ) {
 			global $post;
@@ -356,6 +457,10 @@ class Scripts_n_Styles
 		return self::$styles;
 	}
 	
+    /**
+	 * Utility Method: Returns the value of $enqueue if it is set, and if not, sets it via a call to the database.
+	 * @return array $enqueue is the 'sns_enqueue_scripts' settings collection.
+     */
 	private function get_enqueue() {
 		if ( ! isset( self::$enqueue ) ) {
 			self::$enqueue = get_option( 'sns_enqueue_scripts' );
@@ -363,6 +468,10 @@ class Scripts_n_Styles
 		return self::$enqueue;
 	}
 	
+    /**
+	 * Utility Method: Returns the $enqueue array if it is set, and if not, sets it via a call to the database.
+	 * @return array $enqueue is the 'sns_enqueue_scripts' setting.
+     */
 	private function get_wp_registered() {
 		if ( ! isset( self::$wp_registered ) ) {
 			global $wp_scripts;
@@ -371,6 +480,10 @@ class Scripts_n_Styles
 		return self::$wp_registered;
 	}
 	
+    /**
+	 * Action: 'add_meta_boxes'
+	 * Main Meta Box function. Checks restriction options and display options, calls add_meta_box() and adds actions for adding admin CSS and JavaScript.
+     */
 	function add_meta_boxes() {
 		$sns_options = self::get_options();
 		if ( isset( $sns_options[ 'show_meta_box' ] ) && 'yes' == $sns_options[ 'show_meta_box' ] && self::check_restriction() ) {
@@ -383,6 +496,11 @@ class Scripts_n_Styles
 		}
 	}
 	
+    /**
+	 * Admin Action: 'add_meta_boxes'
+	 * Outputs the Meta Box. Only called on callback from add_meta_box() during the add_meta_boxes action.
+	 * @param unknown_type WordPress Post object.
+     */
 	function meta_box( $post ) {
 		$registered_handles = self::get_wp_registered();
 		$styles = self::get_styles();
@@ -434,14 +552,27 @@ class Scripts_n_Styles
 		<?php
 	}
 	
+    /**
+	 * Admin Action: 'admin_print_styles' Action added during 'add_meta_boxes' (which restricts output to Edit Screens).
+	 * Enqueues the CSS for admin styling of the Meta Box.
+     */
 	function meta_box_styles() {
 		wp_enqueue_style( 'sns-meta-box-styles', plugins_url('meta-box-styles.css', __FILE__), array(), self::VERSION );
 	}
 	
+    /**
+	 * Admin Action: 'admin_print_styles' Action added during 'add_meta_boxes' (which restricts output to Edit Screens).
+	 * Enqueues the JavaScript for the admin Meta Box.
+     */
 	function meta_box_scripts() {
 		wp_enqueue_script( 'sns-meta-box-scripts', plugins_url('meta-box-scripts.js', __FILE__), array( 'jquery' ), self::VERSION, true );
 	}
 	
+    /**
+	 * Admin Action: 'save_post'
+	 * Saves the values entered in the Meta Box when a post is saved (on the Edit Screen only, excluding autosaves) if the user has permission.
+	 * @param int $post_id ID value of the WordPress post.
+     */
 	function save_post( $post_id ) {
 		if ( self::check_restriction() 
 			&&  isset( $_POST[ self::NONCE_NAME ] ) && wp_verify_nonce( $_POST[ self::NONCE_NAME ], __FILE__ ) 
@@ -481,6 +612,10 @@ class Scripts_n_Styles
 		}
 	}
 	
+    /**
+	 * Theme Action: 'wp_head()'
+	 * Outputs the globally and individually set Styles in the Theme's head element.
+     */
 	function styles() {
 		// Global
 		$option = self::get_options();
@@ -499,6 +634,11 @@ class Scripts_n_Styles
 			}
 		}
 	}
+	
+    /**
+	 * Theme Action: 'wp_footer()'
+	 * Outputs the globally and individually set Scripts at the end of the Theme's body element.
+     */
 	function scripts() {
 		// Global
 		$option = self::get_options();
@@ -517,6 +657,11 @@ class Scripts_n_Styles
 			}
 		}
 	}
+	
+    /**
+	 * Theme Action: 'wp_head()'
+	 * Outputs the globally and individually set Scripts in the Theme's head element.
+     */
 	function scripts_in_head() {
 		// Global
 		$option = self::get_options();
@@ -535,6 +680,11 @@ class Scripts_n_Styles
 			}
 		}
 	}
+	
+    /**
+	 * Theme Filter: 'body_class()'
+	 * Adds classes to the Theme's body tag.
+     */
 	function body_classes( $classes ) {
 		$meta = self::get_styles();
 		if ( ! empty( $meta ) && ! empty( $meta[ 'classes_body' ] ) ) {
@@ -542,6 +692,11 @@ class Scripts_n_Styles
 		}
 		return $classes;
 	}
+	
+    /**
+	 * Theme Filter: 'post_class()'
+	 * Adds classes to the Theme's post container.
+     */
 	function post_classes( $classes ) {
 		$meta = self::get_styles();
 		if ( ! empty( $meta ) && ! empty( $meta[ 'classes_post' ] ) ) {
@@ -549,6 +704,11 @@ class Scripts_n_Styles
 		}
 		return $classes;
 	}
+	
+    /**
+	 * Theme Action: 'wp_enqueue_scripts'
+	 * Enqueues chosen Scripts.
+     */
 	function enqueue_scripts() {
 		// Global
 		$sns_enqueue_scripts = self::get_enqueue();
@@ -564,6 +724,14 @@ class Scripts_n_Styles
 		}
 	}
 	
+    /**
+	 * Settings Page
+	 * Filters: the register_setting() return value for the 'sns_options' setting
+	 * Checks capabilities, returns the updated values for the options if passed, returns original values if not.
+	 * This isn't the typical use of this filter. No data validation is needed, as 'unfiltered_html' implies a Trusted User.
+	 * @param array the submitted array of values.
+	 * @return array $value Either the array of new values or the originals if the check failed.
+     */
 	function options_validate( $value ) {
 		// I'm not sure that users without the proper caps can get this far, but if they can...
 		if ( self::check_strict_restriction() ) 
@@ -571,6 +739,14 @@ class Scripts_n_Styles
 		return self::get_options();
 	}
 	
+    /**
+	 * Settings Page
+	 * Filters: the register_setting() return value for the 'sns_enqueue_scripts' setting
+	 * Checks capabilities, returns the updated values for the options if passed, returns original values if not.
+	 * This isn't the typical use of this filter. No data validation is needed, as 'unfiltered_html' implies a Trusted User.
+	 * @param array the submitted array of values.
+	 * @return array $value Either the array of new values or the originals if the check failed.
+     */
 	function enqueue_validate( $value ) {
 		if ( self::check_strict_restriction() ) 
 			return $value;
