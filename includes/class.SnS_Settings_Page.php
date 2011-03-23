@@ -107,6 +107,19 @@ class SnS_Settings_Page
 				SnS_Admin::MENU_SLUG,
 				'global'
 			);
+		add_settings_section(
+				'usage',
+				'Scripts n Styles Usage',
+				array( __class__, 'usage_section' ),
+				SnS_Admin::MENU_SLUG
+			);
+		add_settings_field(
+				'show_usage', 
+				'<label><strong>Show Usage:</strong> </label>',
+				array( __class__, 'show_usage_field' ),
+				SnS_Admin::MENU_SLUG,
+				'usage'
+			);
 	}
 	
     /**
@@ -148,6 +161,56 @@ class SnS_Settings_Page
 			<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.</p>
 		</div>
 		<?php
+	}
+	
+    /**
+	 * Settings Page
+	 * Outputs the Usage Section.
+     */
+	static function usage_section() {
+		$sns_options = Scripts_n_Styles::get_options();
+		if ( $sns_options['show_usage'] == 'no' ) { ?>
+			<div style="max-width: 55em;">
+				<p>This Option, when active, will show a list here of all Content that has Scripts n Styles data.</p>
+			</div>
+		<?php } else { ?>
+			<table cellspacing="0" class="widefat">
+				<thead>
+					<tr>
+						<th>Title</th>
+						<th>ID</th>
+						<th>Status</th>
+						<th>Post Type</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php $all_posts = get_posts( array( 'numberposts' => -1, 'post_type' => 'any', 'post_status' => 'any' ) );
+				foreach( $all_posts as $post) {
+					$temp_styles = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'styles', true );
+					$temp_scripts = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'styles', true );
+					if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) ) { ?>
+						<tr>
+							<td>
+								<strong><a class="row-title" title="Edit &#8220;<?php echo esc_attr( $post->post_title ); ?>&#8221;" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>"><?php echo $post->post_title; ?></a></strong>
+								<div class="row-actions"><span class="edit"><a title="Edit this item" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>">Edit</a></span></div>
+							</td>
+							<td><?php echo $post->ID; ?></td>
+							<td><?php echo $post->post_status; ?></td>
+							<td><?php echo $post->post_type; ?></td>
+						</tr>
+					<?php }
+				} ?>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th>Title</th>
+						<th>ID</th>
+						<th>Status</th>
+						<th>Post Type</th>
+					</tr>
+				</tfoot>
+			</table>
+		<?php }
 	}
 	
     /**
@@ -237,6 +300,25 @@ class SnS_Settings_Page
 			<?php foreach ( $sns_enqueue_scripts as $handle )  echo '<code>' . $handle . '</code> '; ?>
 			</p>
 		<?php }
+	}
+	
+    /**
+	 * Settings Page
+	 * Outputs a select element for selecting options to set $sns_enqueue_scripts.
+     */
+	static function show_usage_field() {
+		$sns_options = Scripts_n_Styles::get_options();
+		?><label for="show_meta_box"><strong>Show the list</strong></label><br />
+		<fieldset>
+			<label>
+				<input type="radio" name="sns_options[show_usage]" value="yes" id="show_usage_0" <?php checked( $sns_options['show_usage'], 'yes' ); ?>/>
+				<span>Yes</span></label>
+			<br />
+			<label>
+				<input type="radio" name="sns_options[show_usage]" value="no" id="show_usage_1" <?php checked( $sns_options['show_usage'], 'no' ); ?>/>
+				<span>No</span></label>
+		</fieldset>
+		<span class="description" style="max-width: 500px; display: inline-block;">"Yes" will show a list of Content that use Scripts n Styles</span><?php
 	}
 	
     /**

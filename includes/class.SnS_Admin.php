@@ -13,7 +13,7 @@ class SnS_Admin
      * Constants
      */
 	const MENU_SLUG = 'Scripts-n-Styles';
-	const VERSION = '1.0.3-alpha';
+	const VERSION = '1.0.3-beta';
     /**#@-*/
 	
     /**
@@ -40,6 +40,8 @@ class SnS_Admin
 			$sns_options['show_meta_box' ] = 'yes';
 		if ( ! isset( $sns_options[ 'restrict' ] ) )
 			$sns_options[ 'restrict' ] = 'yes';
+		if ( ! isset( $sns_options[ 'show_usage' ] ) )
+			$sns_options[ 'show_usage' ] = 'no';
 		$sns_options[ 'version' ] = self::VERSION;
 		update_option( 'sns_options', $sns_options );
 	}
