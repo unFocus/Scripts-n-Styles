@@ -1,20 +1,5 @@
 
-jQuery(document).ready(function($){
-	var h = wpCookies.getHash('TinyMCE_content_size');
-
-	if ( getUserSetting( 'editor' ) == 'html' ) {
-		if ( h )
-			$('#content').css('height', h.ch - 15 + 'px');
-	} else {
-		if ( typeof tinyMCE != 'object' ) {
-			$('#content').css('color', '#000');
-		} else {
-			$('#quicktags').hide();
-		}
-	}
-});
-
-var switchEditors = {
+switchEditors = {
 
 	mode : '',
 
