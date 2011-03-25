@@ -200,7 +200,7 @@ class SnS_Settings_Page
 				<?php $all_posts = get_posts( array( 'numberposts' => -1, 'post_type' => 'any', 'post_status' => 'any' ) );
 				foreach( $all_posts as $post) {
 					$temp_styles = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'styles', true );
-					$temp_scripts = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'styles', true );
+					$temp_scripts = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'scripts', true );
 					if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) ) { ?>
 						<tr>
 							<td>

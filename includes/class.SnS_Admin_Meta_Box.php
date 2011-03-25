@@ -24,19 +24,34 @@ class SnS_Admin_Meta_Box
 	static function init() {
 		add_action( 'add_meta_boxes', array( __class__, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( __class__, 'save_post' ) );
-		
-		add_filter( 'tiny_mce_before_init', array( __class__, 'remove_tinymce_plugin' ), 11 );
-		add_filter( 'mce_external_plugins', array( __class__, 'add_tinymce_plugin' ), 11 );
+		add_action( 'admin_init', array( __class__, 'tinymce_plugin' ) );
+	}
+	
+    /**
+	 * Handle the TinyMCE plugin.
+     */
+	static function tinymce_plugin() {
+		$options = Scripts_n_Styles::get_options();
+		if ( isset( $options[ 'new_tinymce' ] ) && 'yes' == $options[ 'new_tinymce' ] ) {
+			add_filter( 'tiny_mce_before_init', array( __class__, 'remove_tinymce_plugin' ), 11 );
+			add_filter( 'mce_external_plugins', array( __class__, 'add_tinymce_plugin' ), 11 );
+			// seems to be the best hook.
+			add_action( 'add_meta_boxes', array( __class__, 'add_switchEditors' ) );
+		}
+	}
+	
+    /**
+	 * Replace switchEditors.
+     */
+	static function add_switchEditors( $initArray ) {
+		wp_enqueue_script( 'sns_editor', plugins_url('/js/editor.dev.js', Scripts_n_Styles::$file), array( 'editor' ) );
 	}
 	
     /**
 	 * Removes the "wordpress" TinyMCE plugin.
      */
 	static function remove_tinymce_plugin( $initArray ) {
-		$options = Scripts_n_Styles::get_options();
-		if ( isset( $options[ 'new_tinymce' ] ) && 'yes' == $options[ 'new_tinymce' ] ) {
-			$initArray['plugins'] = preg_replace( '/,wordpress,/', ',', $initArray['plugins'] );
-		}
+		$initArray['plugins'] = preg_replace( '/,wordpress,/', ',', $initArray['plugins'] );
 		return $initArray;
 	}
 	
@@ -44,10 +59,7 @@ class SnS_Admin_Meta_Box
 	 * Adds our external "wordpress" TinyMCE plugin.
      */
 	static function add_tinymce_plugin( $tinymce_plugin ) {
-		$options = Scripts_n_Styles::get_options();
-		if ( isset( $options[ 'new_tinymce' ] ) && 'yes' == $options[ 'new_tinymce' ] ) {
-			$tinymce_plugin['wordpress'] = plugins_url('/js/wordpress/editor_plugin.js', Scripts_n_Styles::$file);
-		}
+		$tinymce_plugin['wordpress'] = plugins_url('/js/wordpress/editor_plugin.js', Scripts_n_Styles::$file);
 		return $tinymce_plugin;
 	}
 	
