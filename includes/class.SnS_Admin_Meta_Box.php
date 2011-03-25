@@ -44,7 +44,7 @@ class SnS_Admin_Meta_Box
 	 * Replace switchEditors.
      */
 	static function add_switchEditors( $initArray ) {
-		wp_enqueue_script( 'sns_editor', plugins_url('/js/editor.dev.js', Scripts_n_Styles::$file), array( 'editor' ) );
+		wp_enqueue_script( 'switchEditors', plugins_url('/js/switchEditors.dev.js', Scripts_n_Styles::$file), array( 'editor' ) );
 	}
 	
     /**
@@ -59,7 +59,7 @@ class SnS_Admin_Meta_Box
 	 * Adds our external "wordpress" TinyMCE plugin.
      */
 	static function add_tinymce_plugin( $tinymce_plugin ) {
-		$tinymce_plugin['wordpress'] = plugins_url('/js/wordpress/editor_plugin.js', Scripts_n_Styles::$file);
+		$tinymce_plugin['wordpress'] = plugins_url('/js/wordpress/editor_plugin.dev.js', Scripts_n_Styles::$file);
 		return $tinymce_plugin;
 	}
 	
