@@ -34,6 +34,7 @@ class SnS_Admin
 	 * Utility Method: Sets default 'restrict' and 'show_meta_box' if not previously set. Sets stored 'version' to VERSION.
      */
 	static function upgrade() {
+		$options = Scripts_n_Styles::get_options();
 		if ( ! isset( $options[ 'show_meta_box' ] ) )
 			$options['show_meta_box' ] = 'yes';
 		if ( ! isset( $options[ 'new_tinymce' ] ) )
@@ -50,7 +51,6 @@ class SnS_Admin
 	 * Utility Method: Compares VERSION to stored 'version' value.
      */
 	static function upgrade_check() {
-		$options = Scripts_n_Styles::get_options();
 		if ( ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) )
 			self::upgrade();
 	}
