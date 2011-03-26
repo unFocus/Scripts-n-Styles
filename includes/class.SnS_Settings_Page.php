@@ -45,12 +45,12 @@ class SnS_Settings_Page
 	static function init_options_page() {
 		register_setting(
 				self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
-				'sns_options',	// $option_name (string) (required) The name of an option to sanitize and save.
+				Scripts_n_Styles::OPTION_PREFIX.'options',	// $option_name (string) (required) The name of an option to sanitize and save.
 				array( __class__, 'options_validate' )	// $sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
 			);
 		register_setting(
 				self::OPTION_GROUP, 
-				'sns_enqueue_scripts', 
+				Scripts_n_Styles::OPTION_PREFIX.'enqueue_scripts', 
 				array( __class__, 'enqueue_validate' )
 			);
 		add_settings_section(
@@ -370,6 +370,7 @@ class SnS_Settings_Page
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
      */
 	static function options_page() {
+		SnS_Admin::upgrade_check();
 		global $title;
 		?>
 		<div class="wrap">
@@ -398,7 +399,7 @@ class SnS_Settings_Page
 	
     /**
 	 * Settings Page
-	 * Filters: the register_setting() return value for the 'sns_options' setting
+	 * Filters: the register_setting() return value for the Scripts_n_Styles::OPTION_PREFIX.'options' setting
 	 * Checks capabilities 'manage_options' and 'unfiltered_html', returns the updated values for the options if passed, returns original values if not.
 	 * This isn't the typical use of this filter since no data validation is needed; 'unfiltered_html' implies a Trusted User.
 	 * @param array the submitted array of values.
@@ -413,7 +414,7 @@ class SnS_Settings_Page
 	
     /**
 	 * Settings Page
-	 * Filters: the register_setting() return value for the 'sns_enqueue_scripts' setting
+	 * Filters: the register_setting() return value for the Scripts_n_Styles::OPTION_PREFIX.'enqueue_scripts' setting
 	 * Checks capabilities 'manage_options' and 'unfiltered_html', returns the updated values for the options if passed, returns original values if not.
 	 * This isn't the typical use of this filter since no data validation is needed; 'unfiltered_html' implies a Trusted User.
 	 * @param array the submitted array of values.

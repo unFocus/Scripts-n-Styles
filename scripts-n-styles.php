@@ -58,6 +58,7 @@ Network: true
  * @todo Add ability to push class names into the TinyMCE editor Style Dropdown.
  * @todo Replace Multi-Select element with something better.
  * @todo Clean up Usage Table, paginate, don't display when empty.
+ * @todo Fix wpautop js.
  */
 
 class Scripts_n_Styles
@@ -67,6 +68,7 @@ class Scripts_n_Styles
 	 * Post meta data, and meta box feild names are prefixed with this to prevent collisions.
      */
 	const PREFIX = 'uFp_';
+	const OPTION_PREFIX = 'SnS_';
 	
     /**#@+
      * @static
@@ -110,12 +112,12 @@ class Scripts_n_Styles
 	
     /**
 	 * Utility Method: Returns the value of $options if it is set, and if not, sets it via a call to the database.
-	 * @return array $options is the 'sns_options' settings collection. 
+	 * @return array $options is the self::OPTION_PREFIX.'options' settings collection. 
 	 * @uses self::$options
      */
 	static function get_options() {
 		if ( ! isset( self::$options ) ) {
-			self::$options = get_option( 'sns_options' );
+			self::$options = get_option( self::OPTION_PREFIX.'options' );
 		}
 		return self::$options;
 	}
@@ -148,12 +150,12 @@ class Scripts_n_Styles
 	
     /**
 	 * Utility Method: Returns the value of $enqueue if it is set, and if not, sets it via a call to the database.
-	 * @return array $enqueue is the 'sns_enqueue_scripts' settings collection.
+	 * @return array $enqueue is the self::OPTION_PREFIX.'enqueue_scripts' settings collection.
 	 * @uses self::$enqueue
      */
 	static function get_enqueue() {
 		if ( ! isset( self::$enqueue ) ) {
-			self::$enqueue = get_option( 'sns_enqueue_scripts' );
+			self::$enqueue = get_option( self::OPTION_PREFIX.'enqueue_scripts' );
 			if ( ! is_array( self::$enqueue ) ) self::$enqueue = array();
 		}
 		return self::$enqueue;
@@ -161,18 +163,11 @@ class Scripts_n_Styles
 	
     /**
 	 * Utility Method: Returns the $enqueue array if it is set, and if not, sets it via a call to the database.
-	 * @return array $enqueue is the 'sns_enqueue_scripts' setting.
+	 * @return array $enqueue is the self::OPTION_PREFIX.'enqueue_scripts' setting.
 	 * @uses self::$wp_registered
 	 * @global array $wp_scripts
      */
 	static function get_wp_registered() {
-		/* Original Function: too clunky.
-		if ( ! isset( self::$wp_registered ) ) {
-			global $wp_scripts;
-			self::$wp_registered = array_keys( $wp_scripts->registered );
-		}
-		return self::$wp_registered;
-		*/
 		if ( ! isset( self::$wp_registered ) ) {
 			self::$wp_registered = array(
 				// Starting with the list of Scripts registered by default on the Theme side (index page of twentyten).

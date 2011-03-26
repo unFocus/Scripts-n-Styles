@@ -27,15 +27,13 @@ class SnS_Admin
 		$plugin_file = plugin_basename( Scripts_n_Styles::$file ); 
 		add_filter( "plugin_action_links_$plugin_file", array( __class__, 'plugin_action_links') );
 		
-		self::upgrade_check();
-		//register_activation_hook( Scripts_n_Styles::$file, array( __class__, 'activation' ) );
+		register_activation_hook( Scripts_n_Styles::$file, array( __class__, 'upgrade' ) );
 	}
 	
     /**
 	 * Utility Method: Sets default 'restrict' and 'show_meta_box' if not previously set. Sets stored 'version' to VERSION.
      */
 	static function upgrade() {
-		$options = Scripts_n_Styles::get_options();
 		if ( ! isset( $options[ 'show_meta_box' ] ) )
 			$options['show_meta_box' ] = 'yes';
 		if ( ! isset( $options[ 'new_tinymce' ] ) )
@@ -45,7 +43,7 @@ class SnS_Admin
 		if ( ! isset( $options[ 'show_usage' ] ) )
 			$options[ 'show_usage' ] = 'no';
 		$options[ 'version' ] = self::VERSION;
-		update_option( 'sns_options', $options );
+		update_option( Scripts_n_Styles::OPTION_PREFIX.'options', $options );
 	}
 	
     /**
