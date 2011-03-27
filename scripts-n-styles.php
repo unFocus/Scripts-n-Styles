@@ -68,7 +68,7 @@ class Scripts_n_Styles
 	 * Post meta data, and meta box feild names are prefixed with this to prevent collisions.
      */
 	const PREFIX = 'uFp_';
-	const OPTION_PREFIX = 'SnS_';
+	const OPTION_PREFIX = 'sns_';
 	
     /**#@+
      * @static
@@ -112,8 +112,8 @@ class Scripts_n_Styles
 	
     /**
 	 * Utility Method: Returns the value of $options if it is set, and if not, sets it via a call to the database.
-	 * @return array $options is the self::OPTION_PREFIX.'options' settings collection. 
-	 * @uses self::$options
+	 * @return array $options is the 'sns_options' settings collection. 
+	 * @uses Scripts_n_Styles::$options
      */
 	static function get_options() {
 		if ( ! isset( self::$options ) ) {
@@ -125,7 +125,7 @@ class Scripts_n_Styles
     /**
 	 * Utility Method: Returns the value of $scripts if it is set, and if not, sets it via a call to the database.
 	 * @return array $scripts is the 'ufp_script' meta data entry.
-	 * @uses self::$scripts
+	 * @uses Scripts_n_Styles::$scripts
      */
 	static function get_scripts() {
 		if ( ! isset( self::$scripts ) ) {
@@ -138,7 +138,7 @@ class Scripts_n_Styles
     /**
 	 * Utility Method: Returns the value of $styles if it is set, and if not, sets it via a call to the database.
 	 * @return array $styles is the 'ufp_styles' meta data entry.
-	 * @uses self::$styles
+	 * @uses Scripts_n_Styles::$styles
      */
 	static function get_styles() {
 		if ( ! isset( self::$styles ) ) {
@@ -150,8 +150,8 @@ class Scripts_n_Styles
 	
     /**
 	 * Utility Method: Returns the value of $enqueue if it is set, and if not, sets it via a call to the database.
-	 * @return array $enqueue is the self::OPTION_PREFIX.'enqueue_scripts' settings collection.
-	 * @uses self::$enqueue
+	 * @return array $enqueue is the 'sns_enqueue_scripts' settings collection.
+	 * @uses Scripts_n_Styles::$enqueue
      */
 	static function get_enqueue() {
 		if ( ! isset( self::$enqueue ) ) {
@@ -163,8 +163,8 @@ class Scripts_n_Styles
 	
     /**
 	 * Utility Method: Returns the $enqueue array if it is set, and if not, sets it via a call to the database.
-	 * @return array $enqueue is the self::OPTION_PREFIX.'enqueue_scripts' setting.
-	 * @uses self::$wp_registered
+	 * @return array $enqueue is the 'sns_enqueue_scripts' setting.
+	 * @uses Scripts_n_Styles::$wp_registered
 	 * @global array $wp_scripts
      */
 	static function get_wp_registered() {
@@ -243,18 +243,18 @@ class Scripts_n_Styles
      */
 	static function styles() {
 		// Global
-		$option = self::get_options();
-		if ( ! empty( $option ) && ! empty( $option[ 'styles' ] ) ) {
+		$options = self::get_options();
+		if ( ! empty( $options ) && ! empty( $options[ 'styles' ] ) ) {
 			?><style type="text/css"><?php
-			echo $option[ 'styles' ];
+			echo $options[ 'styles' ];
 			?></style><?php
 		}
 		// Individual
 		if ( is_singular() ) {
-			$meta = self::get_styles();
-			if ( ! empty( $meta ) && ! empty( $meta[ 'styles' ] ) ) {
+			$styles = self::get_styles();
+			if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) {
 				?><style type="text/css"><?php
-				echo $meta[ 'styles' ];
+				echo $styles[ 'styles' ];
 				?></style><?php
 			}
 		}
@@ -268,18 +268,18 @@ class Scripts_n_Styles
      */
 	static function scripts() {
 		// Global
-		$option = self::get_options();
-		if ( ! empty( $option ) && ! empty( $option[ 'scripts' ] ) ) {
+		$options = self::get_options();
+		if ( ! empty( $options ) && ! empty( $options[ 'scripts' ] ) ) {
 			?><script type="text/javascript"><?php
-			echo $option[ 'scripts' ];
+			echo $options[ 'scripts' ];
 			?></script><?php
 		}
 		// Individual
 		if ( is_singular() ) {
-			$meta = self::get_scripts();
-			if ( ! empty( $meta ) && ! empty( $meta[ 'scripts' ] ) ) {
+			$scripts = self::get_scripts();
+			if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts' ] ) ) {
 				?><script type="text/javascript"><?php
-				echo $meta[ 'scripts' ];
+				echo $scripts[ 'scripts' ];
 				?></script><?php
 			}
 		}
@@ -293,18 +293,18 @@ class Scripts_n_Styles
      */
 	static function scripts_in_head() {
 		// Global
-		$option = self::get_options();
-		if ( ! empty( $option ) && ! empty($option[ 'scripts_in_head' ]) ) {
+		$options = self::get_options();
+		if ( ! empty( $options ) && ! empty($options[ 'scripts_in_head' ]) ) {
 			?><script type="text/javascript"><?php
-			echo $option[ 'scripts_in_head' ];
+			echo $options[ 'scripts_in_head' ];
 			?></script><?php
 		}
 		// Individual
 		if ( is_singular() ) {
-			$meta = self::get_scripts();
-			if ( ! empty( $meta ) && ! empty( $meta[ 'scripts_in_head' ] ) ) {
+			$scripts = self::get_scripts();
+			if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts_in_head' ] ) ) {
 				?><script type="text/javascript"><?php
-				echo $meta[ 'scripts_in_head' ];
+				echo $scripts[ 'scripts_in_head' ];
 				?></script><?php
 			}
 		}
@@ -318,9 +318,9 @@ class Scripts_n_Styles
 	 * @return array $classes 
      */
 	static function body_classes( $classes ) {
-		$meta = self::get_styles();
-		if ( ! empty( $meta ) && ! empty( $meta[ 'classes_body' ] ) ) {
-			$classes = array_merge( $classes, explode( " ", $meta[ 'classes_body' ] ) );
+		$styles = self::get_styles();
+		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_body' ] ) ) {
+			$classes = array_merge( $classes, explode( " ", $styles[ 'classes_body' ] ) );
 		}
 		return $classes;
 	}
@@ -333,9 +333,9 @@ class Scripts_n_Styles
 	 * @return array $classes 
      */
 	static function post_classes( $classes ) {
-		$meta = self::get_styles();
-		if ( ! empty( $meta ) && ! empty( $meta[ 'classes_post' ] ) ) {
-			$classes = array_merge( $classes, explode( " ", $meta[ 'classes_post' ] ) );
+		$styles = self::get_styles();
+		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_post' ] ) ) {
+			$classes = array_merge( $classes, explode( " ", $styles[ 'classes_post' ] ) );
 		}
 		return $classes;
 	}
@@ -348,15 +348,15 @@ class Scripts_n_Styles
      */
 	static function enqueue_scripts() {
 		// Global
-		$sns_enqueue_scripts = self::get_enqueue();
-		if ( is_array( $sns_enqueue_scripts ) ) {
-			foreach ( $sns_enqueue_scripts as $handle )
+		$enqueue_scripts = self::get_enqueue();
+		if ( is_array( $enqueue_scripts ) ) {
+			foreach ( $enqueue_scripts as $handle )
 				wp_enqueue_script( $handle );
 		}
 		// Individual
-		$meta = self::get_scripts();
-		if ( ! empty( $meta[ 'enqueue_scripts' ] ) && is_array( $meta[ 'enqueue_scripts' ] ) ) {
-			foreach ( $meta[ 'enqueue_scripts' ] as $handle )
+		$scripts = self::get_scripts();
+		if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) {
+			foreach ( $scripts[ 'enqueue_scripts' ] as $handle )
 				wp_enqueue_script( $handle );
 		}
 	}
