@@ -120,18 +120,12 @@ class SnS_Settings_Page
 				SnS_Admin::MENU_SLUG,
 				'usage'
 			);
-		add_settings_section(
-				'tinymce',
-				'Scripts n Styles TinyMCE',
-				array( __class__, 'new_tinymce_section' ),
-				SnS_Admin::MENU_SLUG
-			);
 		add_settings_field(
 				'new_tinymce', 
 				'<label><strong>New TinyMCE:</strong> </label>',
 				array( __class__, 'new_tinymce_field' ),
 				SnS_Admin::MENU_SLUG,
-				'tinymce'
+				'general'
 			);
 	}
 	
@@ -244,7 +238,7 @@ class SnS_Settings_Page
      */
 	static function show_meta_box_field() {
 		$options = Scripts_n_Styles::get_options();
-		?><label for="show_meta_box"><strong>Show Scripts n Styles on Edit Screens</strong></label><br />
+		?><label><strong>Show Scripts n Styles on Edit Screens</strong></label><br />
 		<fieldset>
 			<label>
 				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[show_meta_box]" value="yes" id="show_meta_box_0" <?php checked( $options['show_meta_box'], 'yes' ); ?>/>
@@ -263,7 +257,7 @@ class SnS_Settings_Page
      */
 	static function restrict_field() {
 		$options = Scripts_n_Styles::get_options();
-		?><label for="restrict"><strong>Restict access to Scripts n Styles</strong></label><br />
+		?><label><strong>Restict access to Scripts n Styles on Edit screens</strong></label><br />
 		<fieldset>
 			<label>
 				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[restrict]" value="yes" id="restrict_0" <?php checked( $options['restrict'], 'yes' ); ?>/>
@@ -333,7 +327,7 @@ class SnS_Settings_Page
      */
 	static function show_usage_field() {
 		$options = Scripts_n_Styles::get_options();
-		?><label for="show_meta_box"><strong>Show the list</strong></label><br />
+		?><label><strong>Show the list</strong></label><br />
 		<fieldset>
 			<label>
 				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[show_usage]" value="yes" id="show_usage_0" <?php checked( $options['show_usage'], 'yes' ); ?>/>
@@ -352,7 +346,7 @@ class SnS_Settings_Page
      */
 	static function new_tinymce_field() {
 		$options = Scripts_n_Styles::get_options();
-		?><label for="new_tinymce"><strong>Show the list</strong></label><br />
+		?><label><strong>Replace TinyMCE</strong></label><br />
 		<fieldset>
 			<label>
 				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[new_tinymce]" value="yes" id="new_tinymce_0" <?php checked( $options['new_tinymce'], 'yes' ); ?>/>
@@ -362,7 +356,7 @@ class SnS_Settings_Page
 				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[new_tinymce]" value="no" id="new_tinymce_1" <?php checked( $options['new_tinymce'], 'no' ); ?>/>
 				<span>No</span></label>
 		</fieldset>
-		<span class="description" style="max-width: 500px; display: inline-block;">"Yes" will use our newer script.</span><?php
+		<span class="description" style="max-width: 500px; display: inline-block;">"Yes" will replace the "wordpress" TinyMCE plugin and use our newer script.</span><?php
 	}
 	
     /**
