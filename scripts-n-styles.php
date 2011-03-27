@@ -68,7 +68,7 @@ class Scripts_n_Styles
 	 * Post meta data, and meta box feild names are prefixed with this to prevent collisions.
      */
 	const PREFIX = 'uFp_';
-	const OPTION_PREFIX = 'sns_';
+	const OPTION_PREFIX = 'SnS_';
 	
     /**#@+
      * @static

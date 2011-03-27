@@ -247,11 +247,11 @@ class SnS_Settings_Page
 		?><label for="show_meta_box"><strong>Show Scripts n Styles on Edit Screens</strong></label><br />
 		<fieldset>
 			<label>
-				<input type="radio" name="sns_options[show_meta_box]" value="yes" id="show_meta_box_0" <?php checked( $options['show_meta_box'], 'yes' ); ?>/>
+				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[show_meta_box]" value="yes" id="show_meta_box_0" <?php checked( $options['show_meta_box'], 'yes' ); ?>/>
 				<span>Yes</span></label>
 			<br />
 			<label>
-				<input type="radio" name="sns_options[show_meta_box]" value="no" id="show_meta_box_1" <?php checked( $options['show_meta_box'], 'no' ); ?>/>
+				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[show_meta_box]" value="no" id="show_meta_box_1" <?php checked( $options['show_meta_box'], 'no' ); ?>/>
 				<span>No</span></label>
 		</fieldset>
 		<span class="description" style="max-width: 500px; display: inline-block;">"No" will reduce clutter on edit screens. (Your codes will still load.)</span><?php
@@ -266,11 +266,11 @@ class SnS_Settings_Page
 		?><label for="restrict"><strong>Restict access to Scripts n Styles</strong></label><br />
 		<fieldset>
 			<label>
-				<input type="radio" name="sns_options[restrict]" value="yes" id="restrict_0" <?php checked( $options['restrict'], 'yes' ); ?>/>
+				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[restrict]" value="yes" id="restrict_0" <?php checked( $options['restrict'], 'yes' ); ?>/>
 				<span>Yes</span></label>
 			<br />
 			<label>
-				<input type="radio" name="sns_options[restrict]" value="no" id="restrict_1" <?php checked( $options['restrict'], 'no' ); ?>/>
+				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[restrict]" value="no" id="restrict_1" <?php checked( $options['restrict'], 'no' ); ?>/>
 				<span>No</span></label>
 		</fieldset>
 		<span class="description" style="max-width: 500px; display: inline-block;">Apply a 'manage_options' check in addition to the 'unfiltered_html' check.</span><?php
@@ -282,7 +282,7 @@ class SnS_Settings_Page
      */
 	static function scripts_field() {
 		$options = Scripts_n_Styles::get_options();
-		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[scripts]" id="scripts"><?php echo isset( $options[ 'scripts' ] ) ? $options[ 'scripts' ] : ''; ?></textarea><br />
+		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[scripts]" id="scripts"><?php echo isset( $options[ 'scripts' ] ) ? $options[ 'scripts' ] : ''; ?></textarea><br />
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>
 		<?php
 	}
@@ -293,7 +293,7 @@ class SnS_Settings_Page
      */
 	static function styles_field() {
 		$options = Scripts_n_Styles::get_options();
-		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[styles]" id="styles"><?php echo isset( $options[ 'styles' ] ) ? $options[ 'styles' ] : ''; ?></textarea><br />
+		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[styles]" id="styles"><?php echo isset( $options[ 'styles' ] ) ? $options[ 'styles' ] : ''; ?></textarea><br />
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span><?php
 	}
 	
@@ -303,7 +303,7 @@ class SnS_Settings_Page
      */
 	static function scripts_in_head_field() {
 		$options = Scripts_n_Styles::get_options();
-		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="sns_options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $options[ 'scripts_in_head' ] ) ? $options[ 'scripts_in_head' ] : ''; ?></textarea><br />
+		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $options[ 'scripts_in_head' ] ) ? $options[ 'scripts_in_head' ] : ''; ?></textarea><br />
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>
 		<?php
 	}
@@ -315,7 +315,7 @@ class SnS_Settings_Page
 	static function enqueue_scripts_field() {
 		$registered_handles = Scripts_n_Styles::get_wp_registered();
 		$sns_enqueue_scripts = Scripts_n_Styles::get_enqueue(); ?>
-		<select name="sns_enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto;">
+		<select name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto;">
 			<?php foreach ( $registered_handles as $value ) { ?>
 				<option value="<?php echo $value ?>"<?php foreach ( $sns_enqueue_scripts as $handle ) selected( $handle, $value ); ?>><?php echo $value ?></option> 
 			<?php } ?>
@@ -336,11 +336,11 @@ class SnS_Settings_Page
 		?><label for="show_meta_box"><strong>Show the list</strong></label><br />
 		<fieldset>
 			<label>
-				<input type="radio" name="sns_options[show_usage]" value="yes" id="show_usage_0" <?php checked( $options['show_usage'], 'yes' ); ?>/>
+				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[show_usage]" value="yes" id="show_usage_0" <?php checked( $options['show_usage'], 'yes' ); ?>/>
 				<span>Yes</span></label>
 			<br />
 			<label>
-				<input type="radio" name="sns_options[show_usage]" value="no" id="show_usage_1" <?php checked( $options['show_usage'], 'no' ); ?>/>
+				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[show_usage]" value="no" id="show_usage_1" <?php checked( $options['show_usage'], 'no' ); ?>/>
 				<span>No</span></label>
 		</fieldset>
 		<span class="description" style="max-width: 500px; display: inline-block;">"Yes" will show a list of Content that use Scripts n Styles</span><?php
@@ -355,11 +355,11 @@ class SnS_Settings_Page
 		?><label for="new_tinymce"><strong>Show the list</strong></label><br />
 		<fieldset>
 			<label>
-				<input type="radio" name="sns_options[new_tinymce]" value="yes" id="new_tinymce_0" <?php checked( $options['new_tinymce'], 'yes' ); ?>/>
+				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[new_tinymce]" value="yes" id="new_tinymce_0" <?php checked( $options['new_tinymce'], 'yes' ); ?>/>
 				<span>Yes</span></label>
 			<br />
 			<label>
-				<input type="radio" name="sns_options[new_tinymce]" value="no" id="new_tinymce_1" <?php checked( $options['new_tinymce'], 'no' ); ?>/>
+				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[new_tinymce]" value="no" id="new_tinymce_1" <?php checked( $options['new_tinymce'], 'no' ); ?>/>
 				<span>No</span></label>
 		</fieldset>
 		<span class="description" style="max-width: 500px; display: inline-block;">"Yes" will use our newer script.</span><?php
