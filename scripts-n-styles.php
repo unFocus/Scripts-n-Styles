@@ -128,8 +128,8 @@ class Scripts_n_Styles
 	 * @uses Scripts_n_Styles::$scripts
      */
 	static function get_scripts() {
-		if ( ! isset( self::$scripts ) ) {
-			global $post;
+		global $post;
+		if ( ! isset( self::$scripts ) && ! empty( $post ) ) {
 			self::$scripts = get_post_meta( $post->ID, self::PREFIX.'scripts', true );
 		}
 		return self::$scripts;
@@ -141,8 +141,8 @@ class Scripts_n_Styles
 	 * @uses Scripts_n_Styles::$styles
      */
 	static function get_styles() {
-		if ( ! isset( self::$styles ) ) {
-			global $post;
+		global $post;
+		if ( ! isset( self::$styles ) && ! empty( $post ) ) {
 			self::$styles = get_post_meta( $post->ID, self::PREFIX.'styles', true );
 		}
 		return self::$styles;
