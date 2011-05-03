@@ -184,8 +184,8 @@ class SnS_Admin_Meta_Box
 	 * @param int $post_id ID value of the WordPress post.
      */
 	static function save_post( $post_id ) {
-		if ( self::check_restriction() 
-			&&  isset( $_POST[ self::NONCE_NAME ] ) && wp_verify_nonce( $_POST[ self::NONCE_NAME ], Scripts_n_Styles::$file ) 
+		if ( isset( $_POST[ self::NONCE_NAME ] ) && wp_verify_nonce( $_POST[ self::NONCE_NAME ], Scripts_n_Styles::$file )
+			&& self::check_restriction() 
 			&& ! ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
 			
 			/* 
