@@ -22,9 +22,9 @@ class SnS_Admin_Meta_Box
      * @static
      */
 	static function init() {
-		add_action( 'add_meta_boxes', array( __class__, 'add_meta_boxes' ) );
-		add_action( 'save_post', array( __class__, 'save_post' ) );
-		add_action( 'admin_init', array( __class__, 'tinymce_plugin' ) );
+		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ) );
+		add_action( 'save_post', array( __CLASS__, 'save_post' ) );
+		add_action( 'admin_init', array( __CLASS__, 'tinymce_plugin' ) );
 	}
 	
     /**
@@ -33,10 +33,11 @@ class SnS_Admin_Meta_Box
 	static function tinymce_plugin() {
 		$options = Scripts_n_Styles::get_options();
 		if ( isset( $options[ 'new_tinymce' ] ) && 'yes' == $options[ 'new_tinymce' ] ) {
-			add_filter( 'tiny_mce_before_init', array( __class__, 'remove_tinymce_plugin' ), 11 );
-			add_filter( 'mce_external_plugins', array( __class__, 'add_tinymce_plugin' ), 11 );
+			add_filter( 'tiny_mce_before_init', array( __CLASS__, 'remove_tinymce_plugin' ), 11 );
+			add_filter( 'mce_external_plugins', array( __CLASS__, 'add_tinymce_plugin' ), 11 );
 			// seems to be the best hook.
-			add_action( 'add_meta_boxes', array( __class__, 'add_switchEditors' ) );
+			add_action( 'add_meta_boxes', array( __CLASS__, 'add_switchEditors' ) );
+			add_filter( 'default_hidden_meta_boxes', array( __CLASS__, 'default_hidden_meta_boxes' ) );
 		}
 	}
 	
@@ -89,11 +90,15 @@ class SnS_Admin_Meta_Box
 		if ( isset( $options[ 'show_meta_box' ] ) && 'yes' == $options[ 'show_meta_box' ] && self::check_restriction() ) {
 			$registered_post_types = get_post_types( array('show_ui' => true, 'publicly_queryable' => true) );
 			foreach ($registered_post_types as $post_type ) {
-				add_meta_box( Scripts_n_Styles::PREFIX.'meta_box', 'Scripts n Styles', array( __class__, 'meta_box' ), $post_type, 'normal', 'high' );
+				add_meta_box( Scripts_n_Styles::PREFIX.'meta_box', 'Scripts n Styles', array( __CLASS__, 'meta_box' ), $post_type, 'normal', 'high' );
 			}
-			add_action( "admin_print_styles", array( __class__, 'meta_box_styles'));
-			add_action( "admin_print_scripts", array( __class__, 'meta_box_scripts'));
+			add_action( "admin_print_styles", array( __CLASS__, 'meta_box_styles'));
+			add_action( "admin_print_scripts", array( __CLASS__, 'meta_box_scripts'));
 		}
+	}
+	static function default_hidden_meta_boxes() {
+		$hidden[] = Scripts_n_Styles::PREFIX.'meta_box';
+    	return $hidden;
 	}
 	
     /**

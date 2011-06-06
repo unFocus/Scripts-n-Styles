@@ -29,12 +29,12 @@ class SnS_Settings_Page
 					'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
 					'unfiltered_html',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
 					SnS_Admin::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
-					array( __class__, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
+					array( __CLASS__, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
 				);
-			add_action( "load-$hook_suffix", array( __class__, 'init_options_page' ) );
-			add_action( "load-options.php", array( __class__, 'init_options_page' ) );
-			add_action( "admin_print_styles-$hook_suffix", array( __class__, 'options_styles'));
-			add_action( "admin_print_scripts-$hook_suffix", array( __class__, 'options_scripts'));
+			add_action( "load-$hook_suffix", array( __CLASS__, 'init_options_page' ) );
+			add_action( "load-options.php", array( __CLASS__, 'init_options_page' ) );
+			add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'options_styles'));
+			add_action( "admin_print_scripts-$hook_suffix", array( __CLASS__, 'options_scripts'));
 		}
 	}
 	
@@ -46,84 +46,84 @@ class SnS_Settings_Page
 		register_setting(
 				self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
 				Scripts_n_Styles::OPTION_PREFIX.'options',	// $option_name (string) (required) The name of an option to sanitize and save.
-				array( __class__, 'options_validate' )	// $sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
+				array( __CLASS__, 'options_validate' )	// $sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
 			);
 		register_setting(
 				self::OPTION_GROUP, 
 				Scripts_n_Styles::OPTION_PREFIX.'enqueue_scripts', 
-				array( __class__, 'enqueue_validate' )
+				array( __CLASS__, 'enqueue_validate' )
 			);
 		add_settings_section(
 				'general',	// $id (string) (required) String for use in the 'id' attribute of tags.
 				'General Settings',	// $title (string) (required) Title of the section. 
-				array( __class__, 'general_section' ),	// $callback (string) (required) Function that fills the section with the desired content. The function should echo its output.
+				array( __CLASS__, 'general_section' ),	// $callback (string) (required) Function that fills the section with the desired content. The function should echo its output.
 				SnS_Admin::MENU_SLUG	// $page (string) (required) The type of settings page on which to show the section (general, reading, writing, media etc.)
 			);
 		add_settings_field(
 				'show_meta_box',	// $id (string) (required) String for use in the 'id' attribute of tags. 
 				'<label><strong>Display:</strong> </label>',	// $title (string) (required) Title of the field.
-				array( __class__, 'show_meta_box_field' ),	// $callback (string) (required) Function that fills the field with the desired inputs as part of the larger form. Name and id of the input should match the $id given to this function. The function should echo its output.
+				array( __CLASS__, 'show_meta_box_field' ),	// $callback (string) (required) Function that fills the field with the desired inputs as part of the larger form. Name and id of the input should match the $id given to this function. The function should echo its output.
 				SnS_Admin::MENU_SLUG,	// $page (string) (required) The type of settings page on which to show the field (general, reading, writing, ...).
 				'general'	// $section (string) (optional) The section of the settings page in which to show the box (default or a section you added with add_settings_section, look at the page in the source to see what the existing ones are.)
 			);
 		add_settings_field(
 				'restrict', 
 				'<label><strong>Restriction:</strong> </label>',
-				array( __class__, 'restrict_field' ),
+				array( __CLASS__, 'restrict_field' ),
 				SnS_Admin::MENU_SLUG,
 				'general'
 			);
 		add_settings_section(
 				'global',
 				'Global Scripts n Styles',
-				array( __class__, 'global_section' ),
+				array( __CLASS__, 'global_section' ),
 				SnS_Admin::MENU_SLUG
 			);
 		add_settings_field(
 				'scripts', 
 				'<label for="scripts"><strong>Scripts:</strong> </label>',
-				array( __class__, 'scripts_field' ),
+				array( __CLASS__, 'scripts_field' ),
 				SnS_Admin::MENU_SLUG,
 				'global'
 			);
 		add_settings_field(
 				'styles',
 				'<label for="styles"><strong>Styles:</strong> </label>',
-				array( __class__, 'styles_field' ),
+				array( __CLASS__, 'styles_field' ),
 				SnS_Admin::MENU_SLUG,
 				'global'
 			);
 		add_settings_field(
 				'scripts_in_head',
 				'<label for="scripts_in_head"><strong>Scripts</strong><br />(for the <code>head</code> element): </label>',
-				array( __class__, 'scripts_in_head_field' ),
+				array( __CLASS__, 'scripts_in_head_field' ),
 				SnS_Admin::MENU_SLUG,
 				'global'
 			);
 		add_settings_field(
 				'enqueue_scripts',
 				'<label for="enqueue_scripts"><strong>Enqueue Scripts</strong>: </label>',
-				array( __class__, 'enqueue_scripts_field' ),
+				array( __CLASS__, 'enqueue_scripts_field' ),
 				SnS_Admin::MENU_SLUG,
 				'global'
 			);
 		add_settings_section(
 				'usage',
 				'Scripts n Styles Usage',
-				array( __class__, 'usage_section' ),
+				array( __CLASS__, 'usage_section' ),
 				SnS_Admin::MENU_SLUG
 			);
 		add_settings_field(
 				'show_usage', 
 				'<label><strong>Show Usage:</strong> </label>',
-				array( __class__, 'show_usage_field' ),
+				array( __CLASS__, 'show_usage_field' ),
 				SnS_Admin::MENU_SLUG,
 				'usage'
 			);
 		add_settings_field(
 				'new_tinymce', 
 				'<label><strong>New TinyMCE:</strong> </label>',
-				array( __class__, 'new_tinymce_field' ),
+				array( __CLASS__, 'new_tinymce_field' ),
 				SnS_Admin::MENU_SLUG,
 				'general'
 			);

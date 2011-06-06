@@ -101,13 +101,13 @@ class Scripts_n_Styles
 			
 		}
 		
-		add_filter( 'body_class', array( __class__, 'body_classes' ) );
-		add_filter( 'post_class', array( __class__, 'post_classes' ) );
+		add_filter( 'body_class', array( __CLASS__, 'body_classes' ) );
+		add_filter( 'post_class', array( __CLASS__, 'post_classes' ) );
 		
-		add_action( 'wp_head', array( __class__, 'styles' ), 11 );
-		add_action( 'wp_enqueue_scripts', array( __class__, 'enqueue_scripts' ), 11 );
-		add_action( 'wp_head', array( __class__, 'scripts_in_head' ), 11 );
-		add_action( 'wp_footer', array( __class__, 'scripts' ), 11 );
+		add_action( 'wp_head', array( __CLASS__, 'styles' ), 11 );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ), 11 );
+		add_action( 'wp_head', array( __CLASS__, 'scripts_in_head' ), 11 );
+		add_action( 'wp_footer', array( __CLASS__, 'scripts' ), 11 );
 	}
 	
     /**

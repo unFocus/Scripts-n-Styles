@@ -21,13 +21,13 @@ class SnS_Admin
      * @static
      */
 	static function init() {
-		add_action( 'admin_menu', array( __class__, 'admin_meta_box' ) );
-		add_action( 'admin_menu', array( __class__, 'settings_page' ) );
+		add_action( 'admin_menu', array( __CLASS__, 'admin_meta_box' ) );
+		add_action( 'admin_menu', array( __CLASS__, 'settings_page' ) );
 		
 		$plugin_file = plugin_basename( Scripts_n_Styles::$file ); 
-		add_filter( "plugin_action_links_$plugin_file", array( __class__, 'plugin_action_links') );
+		add_filter( "plugin_action_links_$plugin_file", array( __CLASS__, 'plugin_action_links') );
 		
-		register_activation_hook( Scripts_n_Styles::$file, array( __class__, 'upgrade' ) );
+		register_activation_hook( Scripts_n_Styles::$file, array( __CLASS__, 'upgrade' ) );
 	}
 	
     /**
