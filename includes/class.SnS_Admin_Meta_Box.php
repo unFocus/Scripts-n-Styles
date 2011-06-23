@@ -49,7 +49,7 @@ class SnS_Admin_Meta_Box
      */
 	static function add_meta_boxes() {
 		$options = Scripts_n_Styles::get_options();
-		if ( isset( $options[ 'show_meta_box' ] ) && 'yes' == $options[ 'show_meta_box' ] && self::check_restriction() ) {
+		if ( self::check_restriction() ) {
 			$registered_post_types = get_post_types( array('show_ui' => true, 'publicly_queryable' => true) );
 			foreach ($registered_post_types as $post_type ) {
 				add_meta_box( Scripts_n_Styles::PREFIX.'meta_box', 'Scripts n Styles', array( __CLASS__, 'meta_box' ), $post_type, 'normal', 'high' );

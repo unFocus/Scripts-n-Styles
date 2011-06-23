@@ -31,12 +31,10 @@ class SnS_Admin
 	}
 	
     /**
-	 * Utility Method: Sets default 'restrict' and 'show_meta_box' if not previously set. Sets stored 'version' to VERSION.
+	 * Utility Method: Sets default 'restrict' if not previously set. Sets stored 'version' to VERSION.
      */
 	static function upgrade() {
 		$options = Scripts_n_Styles::get_options();
-		if ( ! isset( $options[ 'show_meta_box' ] ) )
-			$options['show_meta_box' ] = 'yes';
 		if ( ! isset( $options[ 'restrict' ] ) )
 			$options[ 'restrict' ] = 'yes';
 		if ( ! isset( $options[ 'show_usage' ] ) )
