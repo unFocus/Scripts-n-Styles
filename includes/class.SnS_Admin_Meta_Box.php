@@ -27,32 +27,14 @@ class SnS_Admin_Meta_Box
 	}
 	
     /**
-	 * Utility Method: Returns the value of $allow if it is set, and if not, sets it according the current users capabilties as configured on the admin page.
-	 * @return bool Whether or not current user can set options. 
-	 * @uses Scripts_n_Styles::get_options()
-	 * @uses Scripts_n_Styles::$allow
-     */
-	static function check_restriction() {
-		if ( ! isset( Scripts_n_Styles::$allow ) ) {
-			$options = Scripts_n_Styles::get_options();
-			if ( isset( $options[ 'restrict' ] ) && 'yes' == $options[ 'restrict' ] )
-				Scripts_n_Styles::$allow = current_user_can( 'manage_options' ) && current_user_can( 'unfiltered_html' );
-			else
-				Scripts_n_Styles::$allow = current_user_can( 'unfiltered_html' );
-		}
-		return Scripts_n_Styles::$allow;
-	}
-	
-    /**
 	 * Admin Action: 'add_meta_boxes'
 	 * Main Meta Box function. Checks restriction options and display options, calls add_meta_box() and adds actions for adding admin CSS and JavaScript.
      */
 	static function add_meta_boxes() {
-		$options = Scripts_n_Styles::get_options();
-		if ( self::check_restriction() ) {
+		if ( current_user_can( 'unfiltered_html' ) ) {
 			$registered_post_types = get_post_types( array('show_ui' => true, 'publicly_queryable' => true) );
 			foreach ($registered_post_types as $post_type ) {
-				add_meta_box( Scripts_n_Styles::PREFIX.'meta_box', 'Scripts n Styles', array( __CLASS__, 'meta_box' ), $post_type, 'normal', 'high' );
+				add_meta_box( 'uFp_meta_box', 'Scripts n Styles', array( __CLASS__, 'meta_box' ), $post_type, 'normal', 'high' );
 				add_filter( 'default_hidden_meta_boxes', array( __CLASS__,  'default_hidden_meta_boxes' )  );
 			}
 			add_action( "admin_print_styles", array( __CLASS__, 'meta_box_styles'));
@@ -60,7 +42,7 @@ class SnS_Admin_Meta_Box
 		}
 	}
 	static function default_hidden_meta_boxes( $hidden ) {
-		$hidden[] = Scripts_n_Styles::PREFIX.'meta_box';
+		$hidden[] = 'uFp_meta_box';
     	return $hidden;
 	}
 	
@@ -76,37 +58,37 @@ class SnS_Admin_Meta_Box
 		?>
 		<input type="hidden" name="<?php echo self::NONCE_NAME ?>" id="<?php echo self::NONCE_NAME ?>" value="<?php echo wp_create_nonce( Scripts_n_Styles::$file ) ?>" />
 		<p style="margin-top: 1.5em">
-			<label for="<?php echo Scripts_n_Styles::PREFIX ?>scripts"><strong>Scripts</strong>: </label>
-			<textarea class="code" name="<?php echo Scripts_n_Styles::PREFIX ?>scripts" id="<?php echo Scripts_n_Styles::PREFIX ?>scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
+			<label for="uFp_scripts"><strong>Scripts</strong>: </label>
+			<textarea class="code" name="uFp_scripts" id="uFp_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
 			<em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) <code>&lt;body></code> tag.</em>
 		</p>
 		
 		<p style="margin-top: 1.5em">
-			<label for="<?php echo Scripts_n_Styles::PREFIX ?>styles"><strong>Styles</strong>: </label>
-			<textarea class="code" name="<?php echo Scripts_n_Styles::PREFIX ?>styles" id="<?php echo Scripts_n_Styles::PREFIX ?>styles" rows="5" cols="40" style="width: 98%;"><?php echo isset( $styles[ 'styles' ] ) ? $styles[ 'styles' ] : ''; ?></textarea>
+			<label for="uFp_styles"><strong>Styles</strong>: </label>
+			<textarea class="code" name="uFp_styles" id="uFp_styles" rows="5" cols="40" style="width: 98%;"><?php echo isset( $styles[ 'styles' ] ) ? $styles[ 'styles' ] : ''; ?></textarea>
 			<em>This code will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> tag of your page (or post).</em>
 		</p>
 		
 		<p style="margin-top: 1.5em">
-			<label for="<?php echo Scripts_n_Styles::PREFIX ?>scripts_in_head"><strong>Scripts</strong> (for the <code>head</code> element): </label>
-			<textarea class="code" name="<?php echo Scripts_n_Styles::PREFIX ?>scripts_in_head" id="<?php echo Scripts_n_Styles::PREFIX ?>scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
+			<label for="uFp_scripts_in_head"><strong>Scripts</strong> (for the <code>head</code> element): </label>
+			<textarea class="code" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
 			<em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) <code>&lt;head></code> tag.</em>
 		</p>
 		
 		<p style="margin-top: 1.5em"><strong>Classes: </strong></p>
 		<p>
-			<label style="width: 15%; min-width: 85px; display: inline-block;" for="<?php echo Scripts_n_Styles::PREFIX ?>classes_body">body classes: </label>
-			<input style="width: 84%;" name="<?php echo Scripts_n_Styles::PREFIX ?>classes_body" id="<?php echo Scripts_n_Styles::PREFIX ?>classes_body" value="<?php echo isset( $styles[ 'classes_body' ] ) ? $styles[ 'classes_body' ] : ''; ?>" type="text" class="code" />
+			<label style="width: 15%; min-width: 85px; display: inline-block;" for="uFp_classes_body">body classes: </label>
+			<input style="width: 84%;" name="uFp_classes_body" id="uFp_classes_body" value="<?php echo isset( $styles[ 'classes_body' ] ) ? $styles[ 'classes_body' ] : ''; ?>" type="text" class="code" />
 		</p>
 		<p>
-			<label style="width: 15%; min-width: 85px; display: inline-block;" for="<?php echo Scripts_n_Styles::PREFIX ?>classes_post">post classes: </label>
-			<input style="width: 84%;" name="<?php echo Scripts_n_Styles::PREFIX ?>classes_post" id="<?php echo Scripts_n_Styles::PREFIX ?>classes_post" value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" type="text" class="code" />
+			<label style="width: 15%; min-width: 85px; display: inline-block;" for="uFp_classes_post">post classes: </label>
+			<input style="width: 84%;" name="uFp_classes_post" id="uFp_classes_post" value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" type="text" class="code" />
 		</p>
 		<p><em>These <strong>space separated</strong> class names will be pushed into the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).</em></p>
 		
 		<p style="margin-top: 1.5em">
-			<label for="<?php echo Scripts_n_Styles::PREFIX ?>enqueue_scripts"><strong>Include Scripts</strong>: </label><br />
-			<select name="<?php echo Scripts_n_Styles::PREFIX ?>enqueue_scripts[]" id="<?php echo Scripts_n_Styles::PREFIX ?>enqueue_scripts" size="5" multiple="multiple" style="height: auto;">
+			<label for="uFp_enqueue_scripts"><strong>Include Scripts</strong>: </label><br />
+			<select name="uFp_enqueue_scripts[]" id="uFp_enqueue_scripts" size="5" multiple="multiple" style="height: auto;">
 				<?php // This is a bit intense here...
 				if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) {
 					foreach ( $registered_handles as $value ) { ?>
@@ -153,7 +135,7 @@ class SnS_Admin_Meta_Box
      */
 	static function save_post( $post_id ) {
 		if ( isset( $_POST[ self::NONCE_NAME ] ) && wp_verify_nonce( $_POST[ self::NONCE_NAME ], Scripts_n_Styles::$file )
-			&& self::check_restriction() 
+			&& current_user_can( 'unfiltered_html' ) 
 			&& ! ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
 			
 			/* 
@@ -167,26 +149,26 @@ class SnS_Admin_Meta_Box
 			$scripts = array();
 			$styles = array();
 			
-			if ( ! empty( $_POST[ Scripts_n_Styles::PREFIX.'scripts' ] ) )
-				$scripts[ 'scripts' ] = $_POST[ Scripts_n_Styles::PREFIX.'scripts' ];
+			if ( ! empty( $_POST[ 'uFp_scripts' ] ) )
+				$scripts[ 'scripts' ] = $_POST[ 'uFp_scripts' ];
 				
-			if ( ! empty( $_POST[ Scripts_n_Styles::PREFIX.'styles' ] ) )
-				$styles[ 'styles' ] = $_POST[ Scripts_n_Styles::PREFIX.'styles' ];
+			if ( ! empty( $_POST[ 'uFp_styles' ] ) )
+				$styles[ 'styles' ] = $_POST[ 'uFp_styles' ];
 				
-			if ( ! empty( $_POST[ Scripts_n_Styles::PREFIX.'scripts_in_head' ] ) )
-				$scripts[ 'scripts_in_head' ] = $_POST[ Scripts_n_Styles::PREFIX.'scripts_in_head' ];
+			if ( ! empty( $_POST[ 'uFp_scripts_in_head' ] ) )
+				$scripts[ 'scripts_in_head' ] = $_POST[ 'uFp_scripts_in_head' ];
 				
-			if ( ! empty( $_POST[ Scripts_n_Styles::PREFIX.'classes_body' ] ) )
-				$styles[ 'classes_body' ] = $_POST[ Scripts_n_Styles::PREFIX.'classes_body' ];
+			if ( ! empty( $_POST[ 'uFp_classes_body' ] ) )
+				$styles[ 'classes_body' ] = $_POST[ 'uFp_classes_body' ];
 				
-			if ( ! empty( $_POST[ Scripts_n_Styles::PREFIX.'classes_post' ] ) )
-				$styles[ 'classes_post' ] = $_POST[ Scripts_n_Styles::PREFIX.'classes_post' ];
+			if ( ! empty( $_POST[ 'uFp_classes_post' ] ) )
+				$styles[ 'classes_post' ] = $_POST[ 'uFp_classes_post' ];
 				
-			if ( ! empty( $_POST[ Scripts_n_Styles::PREFIX.'enqueue_scripts' ] ) )
-				$scripts[ 'enqueue_scripts' ] = $_POST[ Scripts_n_Styles::PREFIX.'enqueue_scripts' ];
+			if ( ! empty( $_POST[ 'uFp_enqueue_scripts' ] ) )
+				$scripts[ 'enqueue_scripts' ] = $_POST[ 'uFp_enqueue_scripts' ];
 			
-			update_post_meta( $post_id, Scripts_n_Styles::PREFIX.'scripts', $scripts );
-			update_post_meta( $post_id, Scripts_n_Styles::PREFIX.'styles', $styles );
+			update_post_meta( $post_id, 'uFp_scripts', $scripts );
+			update_post_meta( $post_id, 'uFp_styles', $styles );
 		}
 	}
 }

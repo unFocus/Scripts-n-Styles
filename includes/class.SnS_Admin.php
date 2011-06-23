@@ -34,13 +34,15 @@ class SnS_Admin
 	 * Utility Method: Sets default 'restrict' if not previously set. Sets stored 'version' to VERSION.
      */
 	static function upgrade() {
-		$options = Scripts_n_Styles::get_options();
+		$options = get_option( 'SnS_options' );
+		
 		if ( ! isset( $options[ 'restrict' ] ) )
 			$options[ 'restrict' ] = 'yes';
 		if ( ! isset( $options[ 'show_usage' ] ) )
 			$options[ 'show_usage' ] = 'no';
 		$options[ 'version' ] = self::VERSION;
-		update_option( Scripts_n_Styles::OPTION_PREFIX.'options', $options );
+		
+		update_option( 'SnS_options', $options );
 	}
 	
     /**

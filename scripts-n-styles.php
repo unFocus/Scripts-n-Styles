@@ -63,26 +63,12 @@ Network: true
 
 class Scripts_n_Styles
 {
-    /**
-     * Constant
-	 * Post meta data, and meta box feild names are prefixed with this to prevent collisions.
-     */
-	const PREFIX = 'uFp_';
-	const OPTION_PREFIX = 'SnS_';
-	
     /**#@+
      * @static
      */
-	static $allow;
-	static $allow_strict;
-	static $enqueue;
 	static $file = __FILE__;
 	static $hook_suffix; // 'tools_page_Scripts-n-Styles'; kept here for reference
-	static $options;
 	static $plugin_file; // 'scripts-n-styles/scripts-n-styles.php'; kept here for reference
-	static $scripts;
-	static $styles;
-	static $wp_registered;
     /**#@-*/
 	
     /**
@@ -111,65 +97,30 @@ class Scripts_n_Styles
 	}
 	
     /**
-	 * Utility Method: Returns the value of $options if it is set, and if not, sets it via a call to the database.
-	 * @return array $options is the 'sns_options' settings collection. 
-	 * @uses Scripts_n_Styles::$options
-     */
-	static function get_options() {
-		if ( ! isset( self::$options ) ) {
-			self::$options = get_option( self::OPTION_PREFIX.'options' );
-		}
-		return self::$options;
-	}
-	
-    /**
 	 * Utility Method: Returns the value of $scripts if it is set, and if not, sets it via a call to the database.
 	 * @return array $scripts is the 'ufp_script' meta data entry.
-	 * @uses Scripts_n_Styles::$scripts
      */
 	static function get_scripts() {
 		global $post;
-		if ( ! isset( self::$scripts ) && ! empty( $post ) ) {
-			self::$scripts = get_post_meta( $post->ID, self::PREFIX.'scripts', true );
-		}
-		return self::$scripts;
+		if ( ! empty( $post ) )
+			return get_post_meta( $post->ID, 'uFp_scripts', true );
 	}
 	
     /**
 	 * Utility Method: Returns the value of $styles if it is set, and if not, sets it via a call to the database.
 	 * @return array $styles is the 'ufp_styles' meta data entry.
-	 * @uses Scripts_n_Styles::$styles
      */
 	static function get_styles() {
 		global $post;
-		if ( ! isset( self::$styles ) && ! empty( $post ) ) {
-			self::$styles = get_post_meta( $post->ID, self::PREFIX.'styles', true );
-		}
-		return self::$styles;
+		if ( ! empty( $post ) )
+			return get_post_meta( $post->ID, 'uFp_styles', true );
 	}
 	
     /**
-	 * Utility Method: Returns the value of $enqueue if it is set, and if not, sets it via a call to the database.
-	 * @return array $enqueue is the 'sns_enqueue_scripts' settings collection.
-	 * @uses Scripts_n_Styles::$enqueue
-     */
-	static function get_enqueue() {
-		if ( ! isset( self::$enqueue ) ) {
-			self::$enqueue = get_option( self::OPTION_PREFIX.'enqueue_scripts' );
-			if ( ! is_array( self::$enqueue ) ) self::$enqueue = array();
-		}
-		return self::$enqueue;
-	}
-	
-    /**
-	 * Utility Method: Returns the $enqueue array if it is set, and if not, sets it via a call to the database.
-	 * @return array $enqueue is the 'sns_enqueue_scripts' setting.
-	 * @uses Scripts_n_Styles::$wp_registered
-	 * @global array $wp_scripts
+	 * Utility Method
      */
 	static function get_wp_registered() {
-		if ( ! isset( self::$wp_registered ) ) {
-			self::$wp_registered = array(
+		return array(
 				// Starting with the list of Scripts registered by default on the Theme side (index page of twentyten).
 				// This list should be trimmed down, as some probably aren't apporpriate for Theme enqueueing.
 				'l10n',
@@ -231,19 +182,15 @@ class Scripts_n_Styles
 				'wplink',
 				'wpdialogs-popup'
 			);
-		}
-		return self::$wp_registered;
 	}
 	
     /**
 	 * Theme Action: 'wp_head()'
 	 * Outputs the globally and individually set Styles in the Theme's head element.
-	 * @uses self::get_options()
-	 * @uses self::get_styles()
      */
 	static function styles() {
 		// Global
-		$options = self::get_options();
+		$options = get_option( 'SnS_options' );
 		if ( ! empty( $options ) && ! empty( $options[ 'styles' ] ) ) {
 			?><style type="text/css"><?php
 			echo $options[ 'styles' ];
@@ -263,12 +210,10 @@ class Scripts_n_Styles
     /**
 	 * Theme Action: 'wp_footer()'
 	 * Outputs the globally and individually set Scripts at the end of the Theme's body element.
-	 * @uses self::get_options()
-	 * @uses self::get_scripts()
      */
 	static function scripts() {
 		// Global
-		$options = self::get_options();
+		$options = get_option( 'SnS_options' );
 		if ( ! empty( $options ) && ! empty( $options[ 'scripts' ] ) ) {
 			?><script type="text/javascript"><?php
 			echo $options[ 'scripts' ];
@@ -288,12 +233,10 @@ class Scripts_n_Styles
     /**
 	 * Theme Action: 'wp_head()'
 	 * Outputs the globally and individually set Scripts in the Theme's head element.
-	 * @uses self::get_options()
-	 * @uses self::get_scripts()
      */
 	static function scripts_in_head() {
 		// Global
-		$options = self::get_options();
+		$options = get_option( 'SnS_options' );
 		if ( ! empty( $options ) && ! empty($options[ 'scripts_in_head' ]) ) {
 			?><script type="text/javascript"><?php
 			echo $options[ 'scripts_in_head' ];
@@ -319,9 +262,9 @@ class Scripts_n_Styles
      */
 	static function body_classes( $classes ) {
 		$styles = self::get_styles();
-		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_body' ] ) ) {
+		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_body' ] ) )
 			$classes = array_merge( $classes, explode( " ", $styles[ 'classes_body' ] ) );
-		}
+		
 		return $classes;
 	}
 	
@@ -334,9 +277,9 @@ class Scripts_n_Styles
      */
 	static function post_classes( $classes ) {
 		$styles = self::get_styles();
-		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_post' ] ) ) {
+		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_post' ] ) )
 			$classes = array_merge( $classes, explode( " ", $styles[ 'classes_post' ] ) );
-		}
+		
 		return $classes;
 	}
 	
@@ -348,7 +291,8 @@ class Scripts_n_Styles
      */
 	static function enqueue_scripts() {
 		// Global
-		$enqueue_scripts = self::get_enqueue();
+		$enqueue_scripts = get_option( 'SnS_enqueue_scripts' );
+
 		if ( is_array( $enqueue_scripts ) ) {
 			foreach ( $enqueue_scripts as $handle )
 				wp_enqueue_script( $handle );

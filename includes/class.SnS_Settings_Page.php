@@ -23,7 +23,7 @@ class SnS_Settings_Page
      */
 	static function init() {
 		/* NOTE: Even when Scripts n Styles is not restricted by 'manage_options', Editors still can't submit the option page */
-		if ( self::check_strict_restriction() ) { // if they can't, they won't be able to save anyway.
+		if ( current_user_can( 'manage_options' ) ) { // if they can't, they won't be able to save anyway.
 			$hook_suffix = add_management_page(
 					'Scripts n Styles Settings',	// $page_title (string) (required) The text to be displayed in the title tags of the page when the menu is selected
 					'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
@@ -47,13 +47,11 @@ class SnS_Settings_Page
 	static function init_options_page() {
 		register_setting(
 				self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
-				Scripts_n_Styles::OPTION_PREFIX.'options',	// $option_name (string) (required) The name of an option to sanitize and save.
-				array( __CLASS__, 'options_validate' )	// $sanitize_callback (string) (optional) A callback function that sanitizes the option's value.
+				'SnS_options'	// $option_name (string) (required) The name of an option to sanitize and save.
 			);
 		register_setting(
 				self::OPTION_GROUP, 
-				Scripts_n_Styles::OPTION_PREFIX.'enqueue_scripts', 
-				array( __CLASS__, 'enqueue_validate' )
+				'SnS_enqueue_scripts'
 			);
 		add_settings_section(
 				'general',	// $id (string) (required) String for use in the 'id' attribute of tags.
@@ -163,7 +161,7 @@ class SnS_Settings_Page
 	 * Outputs the Usage Section.
      */
 	static function usage_section() {
-		$options = Scripts_n_Styles::get_options();
+		$options = get_option( 'SnS_options' );
 		if ( $options['show_usage'] == 'no' ) {
 			?>
 			<div style="max-width: 55em;">
@@ -174,8 +172,8 @@ class SnS_Settings_Page
 			$all_posts = get_posts( array( 'numberposts' => -1, 'post_type' => 'any', 'post_status' => 'any' ) );
 			$sns_posts = array();
 			foreach( $all_posts as $post) {
-				$temp_styles = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'styles', true );
-				$temp_scripts = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'scripts', true );
+				$temp_styles = get_post_meta( $post->ID, 'uFp_styles', true );
+				$temp_scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
 				if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) )
 					$sns_posts[] = $post;
 			}
@@ -193,8 +191,8 @@ class SnS_Settings_Page
 					</thead>
 					<tbody>
 					<?php foreach( $sns_posts as $post) {
-						$temp_styles = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'styles', true );
-						$temp_scripts = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'scripts', true );
+						$temp_styles = get_post_meta( $post->ID, 'uFp_styles', true );
+						$temp_scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
 						if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) ) { ?>
 							<tr>
 								<td>
@@ -233,15 +231,15 @@ class SnS_Settings_Page
 	 * Outputs a Yes/No Radio option group for setting 'restrict'.
      */
 	static function restrict_field() {
-		$options = Scripts_n_Styles::get_options();
+		$options = get_option( 'SnS_options' );
 		?><label><strong>Restict access to Scripts n Styles on Edit screens</strong></label><br />
 		<fieldset>
 			<label>
-				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[restrict]" value="yes" id="restrict_0" <?php checked( $options['restrict'], 'yes' ); ?>/>
+				<input type="radio" name="SnS_options[restrict]" value="yes" id="restrict_0" <?php checked( $options['restrict'], 'yes' ); ?>/>
 				<span>Yes</span></label>
 			<br />
 			<label>
-				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[restrict]" value="no" id="restrict_1" <?php checked( $options['restrict'], 'no' ); ?>/>
+				<input type="radio" name="SnS_options[restrict]" value="no" id="restrict_1" <?php checked( $options['restrict'], 'no' ); ?>/>
 				<span>No</span></label>
 		</fieldset>
 		<span class="description" style="max-width: 500px; display: inline-block;">Apply a 'manage_options' check in addition to the 'unfiltered_html' check.</span><?php
@@ -252,8 +250,8 @@ class SnS_Settings_Page
 	 * Outputs a textarea for setting 'scripts'.
      */
 	static function scripts_field() {
-		$options = Scripts_n_Styles::get_options();
-		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[scripts]" id="scripts"><?php echo isset( $options[ 'scripts' ] ) ? $options[ 'scripts' ] : ''; ?></textarea><br />
+		$options = get_option( 'SnS_options' );
+		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="SnS_options[scripts]" id="scripts"><?php echo isset( $options[ 'scripts' ] ) ? $options[ 'scripts' ] : ''; ?></textarea><br />
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>
 		<?php
 	}
@@ -263,8 +261,8 @@ class SnS_Settings_Page
 	 * Outputs a textarea for setting 'styles'.
      */
 	static function styles_field() {
-		$options = Scripts_n_Styles::get_options();
-		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[styles]" id="styles"><?php echo isset( $options[ 'styles' ] ) ? $options[ 'styles' ] : ''; ?></textarea><br />
+		$options = get_option( 'SnS_options' );
+		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="SnS_options[styles]" id="styles"><?php echo isset( $options[ 'styles' ] ) ? $options[ 'styles' ] : ''; ?></textarea><br />
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span><?php
 	}
 	
@@ -273,8 +271,8 @@ class SnS_Settings_Page
 	 * Outputs a textarea for setting 'scripts_in_head'.
      */
 	static function scripts_in_head_field() {
-		$options = Scripts_n_Styles::get_options();
-		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $options[ 'scripts_in_head' ] ) ? $options[ 'scripts_in_head' ] : ''; ?></textarea><br />
+		$options = get_option( 'SnS_options' );
+		?><textarea style="min-width: 500px; width:97%;" class="code" rows="5" cols="40" name="SnS_options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $options[ 'scripts_in_head' ] ) ? $options[ 'scripts_in_head' ] : ''; ?></textarea><br />
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>
 		<?php
 	}
@@ -285,8 +283,10 @@ class SnS_Settings_Page
      */
 	static function enqueue_scripts_field() {
 		$registered_handles = Scripts_n_Styles::get_wp_registered();
-		$sns_enqueue_scripts = Scripts_n_Styles::get_enqueue(); ?>
-		<select name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto;">
+		$sns_enqueue_scripts = get_option( 'SnS_enqueue_scripts' );
+		if ( ! is_array( $sns_enqueue_scripts ) ) $sns_enqueue_scripts = array();
+		?>
+		<select name="SnS_enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto;">
 			<?php foreach ( $registered_handles as $value ) { ?>
 				<option value="<?php echo $value ?>"<?php foreach ( $sns_enqueue_scripts as $handle ) selected( $handle, $value ); ?>><?php echo $value ?></option> 
 			<?php } ?>
@@ -303,15 +303,15 @@ class SnS_Settings_Page
 	 * Outputs a select element for selecting options to set $sns_enqueue_scripts.
      */
 	static function show_usage_field() {
-		$options = Scripts_n_Styles::get_options();
+		$options = get_option( 'SnS_options' );
 		?><label><strong>Show the list</strong></label><br />
 		<fieldset>
 			<label>
-				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[show_usage]" value="yes" id="show_usage_0" <?php checked( $options['show_usage'], 'yes' ); ?>/>
+				<input type="radio" name="SnS_options[show_usage]" value="yes" id="show_usage_0" <?php checked( $options['show_usage'], 'yes' ); ?>/>
 				<span>Yes</span></label>
 			<br />
 			<label>
-				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[show_usage]" value="no" id="show_usage_1" <?php checked( $options['show_usage'], 'no' ); ?>/>
+				<input type="radio" name="SnS_options[show_usage]" value="no" id="show_usage_1" <?php checked( $options['show_usage'], 'no' ); ?>/>
 				<span>No</span></label>
 		</fieldset>
 		<span class="description" style="max-width: 500px; display: inline-block;">"Yes" will show a list of Content that use Scripts n Styles</span><?php
@@ -335,47 +335,6 @@ class SnS_Settings_Page
 			</form>
 		</div>
 		<?php
-	}
-	
-    /**
-	 * Utility Method: Returns the value of $allow_strict if it is set, and if not, sets it according the current users capabilties, 'manage_options' and 'unfiltered_html'.
-	 * @return bool Whether or not current user can set options. 
-	 * @uses Scripts_n_Styles::$allow_strict
-     */
-	static function check_strict_restriction() {
-		// ::TODO:: Add MultiSite checks?
-		if ( ! isset( Scripts_n_Styles::$allow_strict ) )
-			Scripts_n_Styles::$allow_strict = current_user_can( 'manage_options' ) && current_user_can( 'unfiltered_html' );
-		return Scripts_n_Styles::$allow_strict;
-	}
-	
-    /**
-	 * Settings Page
-	 * Filters: the register_setting() return value for the Scripts_n_Styles::OPTION_PREFIX.'options' setting
-	 * Checks capabilities 'manage_options' and 'unfiltered_html', returns the updated values for the options if passed, returns original values if not.
-	 * This isn't the typical use of this filter since no data validation is needed; 'unfiltered_html' implies a Trusted User.
-	 * @param array the submitted array of values.
-	 * @return array $value Either the array of new values or the originals if the check failed.
-     */
-	function options_validate( $value ) {
-		// I'm not sure that users without the proper caps can get this far, but if they can...
-		if ( self::check_strict_restriction() ) 
-			return $value;
-		return Scripts_n_Styles::get_options();
-	}
-	
-    /**
-	 * Settings Page
-	 * Filters: the register_setting() return value for the Scripts_n_Styles::OPTION_PREFIX.'enqueue_scripts' setting
-	 * Checks capabilities 'manage_options' and 'unfiltered_html', returns the updated values for the options if passed, returns original values if not.
-	 * This isn't the typical use of this filter since no data validation is needed; 'unfiltered_html' implies a Trusted User.
-	 * @param array the submitted array of values.
-	 * @return array $value Either the array of new values or the originals if the check failed.
-     */
-	function enqueue_validate( $value ) {
-		if ( self::check_strict_restriction() ) 
-			return $value;
-		return Scripts_n_Styles::get_enqueue();
 	}
 }
 ?>
