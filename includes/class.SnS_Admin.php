@@ -37,8 +37,6 @@ class SnS_Admin
 		$options = Scripts_n_Styles::get_options();
 		if ( ! isset( $options[ 'show_meta_box' ] ) )
 			$options['show_meta_box' ] = 'yes';
-		if ( ! isset( $options[ 'new_tinymce' ] ) )
-			$options['new_tinymce' ] = 'no';
 		if ( ! isset( $options[ 'restrict' ] ) )
 			$options[ 'restrict' ] = 'yes';
 		if ( ! isset( $options[ 'show_usage' ] ) )

@@ -60,13 +60,6 @@ class SnS_Settings_Page
 				SnS_Admin::MENU_SLUG	// $page (string) (required) The type of settings page on which to show the section (general, reading, writing, media etc.)
 			);
 		add_settings_field(
-				'show_meta_box',	// $id (string) (required) String for use in the 'id' attribute of tags. 
-				'<label><strong>Display:</strong> </label>',	// $title (string) (required) Title of the field.
-				array( __CLASS__, 'show_meta_box_field' ),	// $callback (string) (required) Function that fills the field with the desired inputs as part of the larger form. Name and id of the input should match the $id given to this function. The function should echo its output.
-				SnS_Admin::MENU_SLUG,	// $page (string) (required) The type of settings page on which to show the field (general, reading, writing, ...).
-				'general'	// $section (string) (optional) The section of the settings page in which to show the box (default or a section you added with add_settings_section, look at the page in the source to see what the existing ones are.)
-			);
-		add_settings_field(
 				'restrict', 
 				'<label><strong>Restriction:</strong> </label>',
 				array( __CLASS__, 'restrict_field' ),
@@ -119,13 +112,6 @@ class SnS_Settings_Page
 				array( __CLASS__, 'show_usage_field' ),
 				SnS_Admin::MENU_SLUG,
 				'usage'
-			);
-		add_settings_field(
-				'new_tinymce', 
-				'<label><strong>New TinyMCE:</strong> </label>',
-				array( __CLASS__, 'new_tinymce_field' ),
-				SnS_Admin::MENU_SLUG,
-				'general'
 			);
 	}
 	
@@ -222,37 +208,6 @@ class SnS_Settings_Page
 	
     /**
 	 * Settings Page
-	 * Outputs Description text for the TinyMCE Section.
-     */
-	static function new_tinymce_section() {
-		?>
-		<div style="max-width: 55em;">
-			<p>Replace the WordPress TinyMCE plugin (WPAutoP JavaScript) with a better version.</p>
-		</div>
-		<?php
-	}
-	
-    /**
-	 * Settings Page
-	 * Outputs a Yes/No Radio option group for setting 'show_meta_box'.
-     */
-	static function show_meta_box_field() {
-		$options = Scripts_n_Styles::get_options();
-		?><label><strong>Show Scripts n Styles on Edit Screens</strong></label><br />
-		<fieldset>
-			<label>
-				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[show_meta_box]" value="yes" id="show_meta_box_0" <?php checked( $options['show_meta_box'], 'yes' ); ?>/>
-				<span>Yes</span></label>
-			<br />
-			<label>
-				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[show_meta_box]" value="no" id="show_meta_box_1" <?php checked( $options['show_meta_box'], 'no' ); ?>/>
-				<span>No</span></label>
-		</fieldset>
-		<span class="description" style="max-width: 500px; display: inline-block;">"No" will reduce clutter on edit screens. (Your codes will still load.)</span><?php
-	}
-	
-    /**
-	 * Settings Page
 	 * Outputs a Yes/No Radio option group for setting 'restrict'.
      */
 	static function restrict_field() {
@@ -338,25 +293,6 @@ class SnS_Settings_Page
 				<span>No</span></label>
 		</fieldset>
 		<span class="description" style="max-width: 500px; display: inline-block;">"Yes" will show a list of Content that use Scripts n Styles</span><?php
-	}
-	
-    /**
-	 * Settings Page
-	 * Outputs a select element for selecting options to set $sns_enqueue_scripts.
-     */
-	static function new_tinymce_field() {
-		$options = Scripts_n_Styles::get_options();
-		?><label><strong>Replace TinyMCE</strong></label><br />
-		<fieldset>
-			<label>
-				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[new_tinymce]" value="yes" id="new_tinymce_0" <?php checked( $options['new_tinymce'], 'yes' ); ?>/>
-				<span>Yes</span></label>
-			<br />
-			<label>
-				<input type="radio" name="<?php echo Scripts_n_Styles::OPTION_PREFIX ?>options[new_tinymce]" value="no" id="new_tinymce_1" <?php checked( $options['new_tinymce'], 'no' ); ?>/>
-				<span>No</span></label>
-		</fieldset>
-		<span class="description" style="max-width: 500px; display: inline-block;">"Yes" will replace the "wordpress" TinyMCE plugin and use our newer script.</span><?php
 	}
 	
     /**
