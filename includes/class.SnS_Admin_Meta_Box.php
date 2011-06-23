@@ -125,7 +125,6 @@ class SnS_Admin_Meta_Box
      */
 	static function meta_box_scripts() {
 		wp_enqueue_script( 'sns-meta-box-scripts', plugins_url('/meta-box-scripts.js', Scripts_n_Styles::$file), array( 'jquery' ), SnS_Admin::VERSION, true );
-		//wp_enqueue_script( 'unwpautop', plugins_url( 'js/unwpautop.js', Scripts_n_Styles::$file ), 'jquery' );
 	}
 	
     /**

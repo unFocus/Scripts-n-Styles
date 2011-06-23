@@ -31,13 +31,11 @@ class SnS_Admin
 	}
 	
     /**
-	 * Utility Method: Sets default 'restrict' if not previously set. Sets stored 'version' to VERSION.
+	 * Utility Method: Sets defaults if not previously set. Sets stored 'version' to VERSION.
      */
 	static function upgrade() {
 		$options = get_option( 'SnS_options' );
 		
-		if ( ! isset( $options[ 'restrict' ] ) )
-			$options[ 'restrict' ] = 'yes';
 		if ( ! isset( $options[ 'show_usage' ] ) )
 			$options[ 'show_usage' ] = 'no';
 		$options[ 'version' ] = self::VERSION;

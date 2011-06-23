@@ -55,16 +55,9 @@ class SnS_Settings_Page
 			);
 		add_settings_section(
 				'general',	// $id (string) (required) String for use in the 'id' attribute of tags.
-				'General Settings',	// $title (string) (required) Title of the section. 
+				'',	// $title (string) (required) Title of the section. 
 				array( __CLASS__, 'general_section' ),	// $callback (string) (required) Function that fills the section with the desired content. The function should echo its output.
 				SnS_Admin::MENU_SLUG	// $page (string) (required) The type of settings page on which to show the section (general, reading, writing, media etc.)
-			);
-		add_settings_field(
-				'restrict', 
-				'<label><strong>Restriction:</strong> </label>',
-				array( __CLASS__, 'restrict_field' ),
-				SnS_Admin::MENU_SLUG,
-				'general'
 			);
 		add_settings_section(
 				'global',
@@ -106,13 +99,6 @@ class SnS_Settings_Page
 				array( __CLASS__, 'usage_section' ),
 				SnS_Admin::MENU_SLUG
 			);
-		add_settings_field(
-				'show_usage', 
-				'<label><strong>Show Usage:</strong> </label>',
-				array( __CLASS__, 'show_usage_field' ),
-				SnS_Admin::MENU_SLUG,
-				'usage'
-			);
 	}
 	
     /**
@@ -134,12 +120,17 @@ class SnS_Settings_Page
     /**
 	 * Settings Page
 	 * Outputs Description text for the General Section.
+	 *
+	 * This should be moved to help
      */
 	static function general_section() {
 		?>
 		<div style="max-width: 55em;">
-			<p>Notes about Capabilities: In default (non MultiSite) WordPress installs, Administrators and Editors have the 'unfiltered_html' capability. In MultiSite installs, only the super admin has this capabilty. In both types of install, Admin users have 'manage_options' but in MultiSite, you need to be a Super Admin to access the options.php file.</p>
-			<p>The "Restriction" option will require users to have 'manage_options' in addition to 'unfiltered_html' capabilities in order to access Scripts n Styles. When this option is on, Editors will not have access to the Scripts n Styles box on Post and Page edit screens (unless another plugin grants them the 'unfiltered_html' capability). </p>
+			<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
+			<em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. 
+			Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either
+			<em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically 'unfiltered_html'), 
+			other users can be granted access.</p>
 		</div>
 		<?php
 	}
@@ -162,87 +153,61 @@ class SnS_Settings_Page
      */
 	static function usage_section() {
 		$options = get_option( 'SnS_options' );
-		if ( $options['show_usage'] == 'no' ) {
+		
+		$all_posts = get_posts( array( 'numberposts' => -1, 'post_type' => 'any', 'post_status' => 'any' ) );
+		$sns_posts = array();
+		foreach( $all_posts as $post) {
+			$temp_styles = get_post_meta( $post->ID, 'uFp_styles', true );
+			$temp_scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
+			if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) )
+				$sns_posts[] = $post;
+		}
+		
+		if ( ! empty( $sns_posts ) ) {
 			?>
-			<div style="max-width: 55em;">
-				<p>This Option, when active, will show a list here of all Content that has Scripts n Styles data.</p>
-			</div>
+			<table cellspacing="0" class="widefat">
+				<thead>
+					<tr>
+						<th>Title</th>
+						<th>ID</th>
+						<th>Status</th>
+						<th>Post Type</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php foreach( $sns_posts as $post) {
+					$temp_styles = get_post_meta( $post->ID, 'uFp_styles', true );
+					$temp_scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
+					if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) ) { ?>
+						<tr>
+							<td>
+								<strong><a class="row-title" title="Edit &#8220;<?php echo esc_attr( $post->post_title ); ?>&#8221;" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>"><?php echo $post->post_title; ?></a></strong>
+								<div class="row-actions"><span class="edit"><a title="Edit this item" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>">Edit</a></span></div>
+							</td>
+							<td><?php echo $post->ID; ?></td>
+							<td><?php echo $post->post_status; ?></td>
+							<td><?php echo $post->post_type; ?></td>
+						</tr>
+					<?php }
+				} ?>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th>Title</th>
+						<th>ID</th>
+						<th>Status</th>
+						<th>Post Type</th>
+					</tr>
+				</tfoot>
+			</table>
 			<?php
 		} else {
-			$all_posts = get_posts( array( 'numberposts' => -1, 'post_type' => 'any', 'post_status' => 'any' ) );
-			$sns_posts = array();
-			foreach( $all_posts as $post) {
-				$temp_styles = get_post_meta( $post->ID, 'uFp_styles', true );
-				$temp_scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
-				if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) )
-					$sns_posts[] = $post;
-			}
-			
-			if ( ! empty( $sns_posts ) ) {
-				?>
-				<table cellspacing="0" class="widefat">
-					<thead>
-						<tr>
-							<th>Title</th>
-							<th>ID</th>
-							<th>Status</th>
-							<th>Post Type</th>
-						</tr>
-					</thead>
-					<tbody>
-					<?php foreach( $sns_posts as $post) {
-						$temp_styles = get_post_meta( $post->ID, 'uFp_styles', true );
-						$temp_scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
-						if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) ) { ?>
-							<tr>
-								<td>
-									<strong><a class="row-title" title="Edit &#8220;<?php echo esc_attr( $post->post_title ); ?>&#8221;" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>"><?php echo $post->post_title; ?></a></strong>
-									<div class="row-actions"><span class="edit"><a title="Edit this item" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>">Edit</a></span></div>
-								</td>
-								<td><?php echo $post->ID; ?></td>
-								<td><?php echo $post->post_status; ?></td>
-								<td><?php echo $post->post_type; ?></td>
-							</tr>
-						<?php }
-					} ?>
-					</tbody>
-					<tfoot>
-						<tr>
-							<th>Title</th>
-							<th>ID</th>
-							<th>Status</th>
-							<th>Post Type</th>
-						</tr>
-					</tfoot>
-				</table>
-				<?php
-			} else {
-				?>
-				<div style="max-width: 55em;">
-					<p>No content items are currently using Scripts-n-Styles data.</p>
-				</div>
-				<?php
-			}
+			?>
+			<div style="max-width: 55em;">
+				<p>No content items are currently using Scripts-n-Styles data.</p>
+			</div>
+			<?php
 		}
-	}
-	
-    /**
-	 * Settings Page
-	 * Outputs a Yes/No Radio option group for setting 'restrict'.
-     */
-	static function restrict_field() {
-		$options = get_option( 'SnS_options' );
-		?><label><strong>Restict access to Scripts n Styles on Edit screens</strong></label><br />
-		<fieldset>
-			<label>
-				<input type="radio" name="SnS_options[restrict]" value="yes" id="restrict_0" <?php checked( $options['restrict'], 'yes' ); ?>/>
-				<span>Yes</span></label>
-			<br />
-			<label>
-				<input type="radio" name="SnS_options[restrict]" value="no" id="restrict_1" <?php checked( $options['restrict'], 'no' ); ?>/>
-				<span>No</span></label>
-		</fieldset>
-		<span class="description" style="max-width: 500px; display: inline-block;">Apply a 'manage_options' check in addition to the 'unfiltered_html' check.</span><?php
 	}
 	
     /**
@@ -296,25 +261,6 @@ class SnS_Settings_Page
 			<?php foreach ( $sns_enqueue_scripts as $handle )  echo '<code>' . $handle . '</code> '; ?>
 			</p>
 		<?php }
-	}
-	
-    /**
-	 * Settings Page
-	 * Outputs a select element for selecting options to set $sns_enqueue_scripts.
-     */
-	static function show_usage_field() {
-		$options = get_option( 'SnS_options' );
-		?><label><strong>Show the list</strong></label><br />
-		<fieldset>
-			<label>
-				<input type="radio" name="SnS_options[show_usage]" value="yes" id="show_usage_0" <?php checked( $options['show_usage'], 'yes' ); ?>/>
-				<span>Yes</span></label>
-			<br />
-			<label>
-				<input type="radio" name="SnS_options[show_usage]" value="no" id="show_usage_1" <?php checked( $options['show_usage'], 'no' ); ?>/>
-				<span>No</span></label>
-		</fieldset>
-		<span class="description" style="max-width: 500px; display: inline-block;">"Yes" will show a list of Content that use Scripts n Styles</span><?php
 	}
 	
     /**
