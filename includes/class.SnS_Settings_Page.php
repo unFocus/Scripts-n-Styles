@@ -31,8 +31,10 @@ class SnS_Settings_Page
 					SnS_Admin::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
 					array( __CLASS__, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
 				);
+			
 			add_action( "load-$hook_suffix", array( __CLASS__, 'init_options_page' ) );
 			add_action( "load-options.php", array( __CLASS__, 'init_options_page' ) );
+			
 			add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'options_styles'));
 			add_action( "admin_print_scripts-$hook_suffix", array( __CLASS__, 'options_scripts'));
 		}
@@ -162,48 +164,68 @@ class SnS_Settings_Page
      */
 	static function usage_section() {
 		$options = Scripts_n_Styles::get_options();
-		if ( $options['show_usage'] == 'no' ) { ?>
+		if ( $options['show_usage'] == 'no' ) {
+			?>
 			<div style="max-width: 55em;">
 				<p>This Option, when active, will show a list here of all Content that has Scripts n Styles data.</p>
 			</div>
-		<?php } else { ?>
-			<table cellspacing="0" class="widefat">
-				<thead>
-					<tr>
-						<th>Title</th>
-						<th>ID</th>
-						<th>Status</th>
-						<th>Post Type</th>
-					</tr>
-				</thead>
-				<tbody>
-				<?php $all_posts = get_posts( array( 'numberposts' => -1, 'post_type' => 'any', 'post_status' => 'any' ) );
-				foreach( $all_posts as $post) {
-					$temp_styles = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'styles', true );
-					$temp_scripts = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'scripts', true );
-					if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) ) { ?>
+			<?php
+		} else {
+			$all_posts = get_posts( array( 'numberposts' => -1, 'post_type' => 'any', 'post_status' => 'any' ) );
+			$sns_posts = array();
+			foreach( $all_posts as $post) {
+				$temp_styles = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'styles', true );
+				$temp_scripts = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'scripts', true );
+				if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) )
+					$sns_posts[] = $post;
+			}
+			
+			if ( ! empty( $sns_posts ) ) {
+				?>
+				<table cellspacing="0" class="widefat">
+					<thead>
 						<tr>
-							<td>
-								<strong><a class="row-title" title="Edit &#8220;<?php echo esc_attr( $post->post_title ); ?>&#8221;" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>"><?php echo $post->post_title; ?></a></strong>
-								<div class="row-actions"><span class="edit"><a title="Edit this item" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>">Edit</a></span></div>
-							</td>
-							<td><?php echo $post->ID; ?></td>
-							<td><?php echo $post->post_status; ?></td>
-							<td><?php echo $post->post_type; ?></td>
+							<th>Title</th>
+							<th>ID</th>
+							<th>Status</th>
+							<th>Post Type</th>
 						</tr>
-					<?php }
-				} ?>
-				</tbody>
-				<tfoot>
-					<tr>
-						<th>Title</th>
-						<th>ID</th>
-						<th>Status</th>
-						<th>Post Type</th>
-					</tr>
-				</tfoot>
-			</table>
-		<?php }
+					</thead>
+					<tbody>
+					<?php foreach( $sns_posts as $post) {
+						$temp_styles = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'styles', true );
+						$temp_scripts = get_post_meta( $post->ID, Scripts_n_Styles::PREFIX.'scripts', true );
+						if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) ) { ?>
+							<tr>
+								<td>
+									<strong><a class="row-title" title="Edit &#8220;<?php echo esc_attr( $post->post_title ); ?>&#8221;" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>"><?php echo $post->post_title; ?></a></strong>
+									<div class="row-actions"><span class="edit"><a title="Edit this item" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>">Edit</a></span></div>
+								</td>
+								<td><?php echo $post->ID; ?></td>
+								<td><?php echo $post->post_status; ?></td>
+								<td><?php echo $post->post_type; ?></td>
+							</tr>
+						<?php }
+					} ?>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Title</th>
+							<th>ID</th>
+							<th>Status</th>
+							<th>Post Type</th>
+						</tr>
+					</tfoot>
+				</table>
+				<?php
+			} else {
+				?>
+				<div style="max-width: 55em;">
+					<p>No content items are currently using Scripts-n-Styles data.</p>
+				</div>
+				<?php
+			}
+		}
 	}
 	
     /**
