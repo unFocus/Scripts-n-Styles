@@ -53,8 +53,8 @@ class SnS_Admin_Meta_Box
      */
 	static function meta_box( $post ) {
 		$registered_handles = Scripts_n_Styles::get_wp_registered();
-		$styles = Scripts_n_Styles::get_styles();
-		$scripts = Scripts_n_Styles::get_scripts();
+		$styles = get_post_meta( $post->ID, 'uFp_styles', true );
+		$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
 		?>
 		<input type="hidden" name="<?php echo self::NONCE_NAME ?>" id="<?php echo self::NONCE_NAME ?>" value="<?php echo wp_create_nonce( Scripts_n_Styles::$file ) ?>" />
 		<p style="margin-top: 1.5em">

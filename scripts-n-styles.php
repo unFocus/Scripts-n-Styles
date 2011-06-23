@@ -98,22 +98,20 @@ class Scripts_n_Styles
 	
     /**
 	 * Utility Method: Returns the value of $scripts if it is set, and if not, sets it via a call to the database.
-	 * @return array $scripts is the 'ufp_script' meta data entry.
+	 * @return array 'ufp_script' meta data entry.
      */
 	static function get_scripts() {
 		global $post;
-		if ( ! empty( $post ) )
-			return get_post_meta( $post->ID, 'uFp_scripts', true );
+		return get_post_meta( $post->ID, 'uFp_scripts', true );
 	}
 	
     /**
 	 * Utility Method: Returns the value of $styles if it is set, and if not, sets it via a call to the database.
-	 * @return array $styles is the 'ufp_styles' meta data entry.
+	 * @return array 'ufp_styles' meta data entry.
      */
 	static function get_styles() {
 		global $post;
-		if ( ! empty( $post ) )
-			return get_post_meta( $post->ID, 'uFp_styles', true );
+		return get_post_meta( $post->ID, 'uFp_styles', true );
 	}
 	
     /**
@@ -196,14 +194,14 @@ class Scripts_n_Styles
 			echo $options[ 'styles' ];
 			?></style><?php
 		}
+		
+		if ( ! is_singular() ) return;
 		// Individual
-		if ( is_singular() ) {
-			$styles = self::get_styles();
-			if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) {
-				?><style type="text/css"><?php
-				echo $styles[ 'styles' ];
-				?></style><?php
-			}
+		$styles = self::get_styles();
+		if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) {
+			?><style type="text/css"><?php
+			echo $styles[ 'styles' ];
+			?></style><?php
 		}
 	}
 	
@@ -219,14 +217,14 @@ class Scripts_n_Styles
 			echo $options[ 'scripts' ];
 			?></script><?php
 		}
+		
+		if ( ! is_singular() ) return;
 		// Individual
-		if ( is_singular() ) {
-			$scripts = self::get_scripts();
-			if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts' ] ) ) {
-				?><script type="text/javascript"><?php
-				echo $scripts[ 'scripts' ];
-				?></script><?php
-			}
+		$scripts = self::get_scripts();
+		if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts' ] ) ) {
+			?><script type="text/javascript"><?php
+			echo $scripts[ 'scripts' ];
+			?></script><?php
 		}
 	}
 	
@@ -242,14 +240,14 @@ class Scripts_n_Styles
 			echo $options[ 'scripts_in_head' ];
 			?></script><?php
 		}
+		
+		if ( ! is_singular() ) return;
 		// Individual
-		if ( is_singular() ) {
-			$scripts = self::get_scripts();
-			if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts_in_head' ] ) ) {
-				?><script type="text/javascript"><?php
-				echo $scripts[ 'scripts_in_head' ];
-				?></script><?php
-			}
+		$scripts = self::get_scripts();
+		if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts_in_head' ] ) ) {
+			?><script type="text/javascript"><?php
+			echo $scripts[ 'scripts_in_head' ];
+			?></script><?php
 		}
 	}
 	
@@ -261,6 +259,8 @@ class Scripts_n_Styles
 	 * @return array $classes 
      */
 	static function body_classes( $classes ) {
+		if ( ! is_singular() ) return $classes;
+		
 		$styles = self::get_styles();
 		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_body' ] ) )
 			$classes = array_merge( $classes, explode( " ", $styles[ 'classes_body' ] ) );
@@ -276,6 +276,8 @@ class Scripts_n_Styles
 	 * @return array $classes 
      */
 	static function post_classes( $classes ) {
+		if ( ! is_singular() ) return $classes;
+		
 		$styles = self::get_styles();
 		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_post' ] ) )
 			$classes = array_merge( $classes, explode( " ", $styles[ 'classes_post' ] ) );
@@ -297,6 +299,8 @@ class Scripts_n_Styles
 			foreach ( $enqueue_scripts as $handle )
 				wp_enqueue_script( $handle );
 		}
+		
+		if ( ! is_singular() ) return;
 		// Individual
 		$scripts = self::get_scripts();
 		if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) {
