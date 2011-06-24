@@ -5,7 +5,7 @@ Plugin URI: http://www.unfocus.com/projects/scripts-n-styles/
 Description: Allows WordPress admin users the ability to add custom CSS and JavaScript directly to individual Post, Pages or custom post types.
 Author: unFocus Projects
 Author URI: http://www.unfocus.com/
-Version: 3-alpha
+Version: 3.alpha
 License: GPL2
 Network: true
 */
@@ -44,7 +44,7 @@ Network: true
  * @link http://www.unfocus.com/projects/scripts-n-styles/ Plugin URI
  * @author unFocus Projects
  * @link http://www.unfocus.com/ Author URI
- * @version 2
+ * @version 3.alpha
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2010, Kenneth Newman
  * @todo Add Post Type Selection on Options Page? Not sure that's usefull.

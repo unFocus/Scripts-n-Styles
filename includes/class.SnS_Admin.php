@@ -13,7 +13,7 @@ class SnS_Admin
      * Constants
      */
 	const MENU_SLUG = 'Scripts-n-Styles';
-	const VERSION = '1.0.3-beta';
+	const VERSION = '3.alpha';
     /**#@-*/
 	
     /**
@@ -35,11 +35,7 @@ class SnS_Admin
      */
 	static function upgrade() {
 		$options = get_option( 'SnS_options' );
-		
-		if ( ! isset( $options[ 'show_usage' ] ) )
-			$options[ 'show_usage' ] = 'no';
 		$options[ 'version' ] = self::VERSION;
-		
 		update_option( 'SnS_options', $options );
 	}
 	
