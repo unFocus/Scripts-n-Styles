@@ -31,13 +31,27 @@ class SnS_Settings_Page
 					SnS_Admin::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
 					array( __CLASS__, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
 				);
-			
+			Scripts_n_Styles::$hook_suffix = $hook_suffix;
 			add_action( "load-$hook_suffix", array( __CLASS__, 'init_options_page' ) );
 			add_action( "load-options.php", array( __CLASS__, 'init_options_page' ) );
 			
 			add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'options_styles'));
 			add_action( "admin_print_scripts-$hook_suffix", array( __CLASS__, 'options_scripts'));
+			
+			add_contextual_help( $hook_suffix, self::contextual_help() );
 		}
+	}
+	
+    /**
+	 * Settings Page help
+     */
+	function contextual_help() {
+		$contextual_help = '<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
+			<em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. 
+			Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either
+			<em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically "unfiltered_html"), 
+			other users can be granted access.</p>';
+		return $contextual_help;
 	}
 	
     /**
@@ -52,12 +66,6 @@ class SnS_Settings_Page
 		register_setting(
 				self::OPTION_GROUP, 
 				'SnS_enqueue_scripts'
-			);
-		add_settings_section(
-				'general',	// $id (string) (required) String for use in the 'id' attribute of tags.
-				'',	// $title (string) (required) Title of the section. 
-				array( __CLASS__, 'general_section' ),	// $callback (string) (required) Function that fills the section with the desired content. The function should echo its output.
-				SnS_Admin::MENU_SLUG	// $page (string) (required) The type of settings page on which to show the section (general, reading, writing, media etc.)
 			);
 		add_settings_section(
 				'global',
@@ -115,24 +123,6 @@ class SnS_Settings_Page
      */
 	static function options_scripts() {
 		wp_enqueue_script( 'sns-options-scripts', plugins_url('js/options-scripts.js', Scripts_n_Styles::$file), array( 'jquery' ), SnS_Admin::VERSION, true );
-	}
-	
-    /**
-	 * Settings Page
-	 * Outputs Description text for the General Section.
-	 *
-	 * This should be moved to help
-     */
-	static function general_section() {
-		?>
-		<div style="max-width: 55em;">
-			<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
-			<em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. 
-			Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either
-			<em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically 'unfiltered_html'), 
-			other users can be granted access.</p>
-		</div>
-		<?php
 	}
 	
     /**

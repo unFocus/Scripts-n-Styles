@@ -67,7 +67,7 @@ class Scripts_n_Styles
      * @static
      */
 	static $file = __FILE__;
-	static $hook_suffix; // 'tools_page_Scripts-n-Styles'; kept here for reference
+	static $hook_suffix; // 'tools_page_Scripts-n-Styles';
 	static $plugin_file; // 'scripts-n-styles/scripts-n-styles.php'; kept here for reference
     /**#@-*/
 	

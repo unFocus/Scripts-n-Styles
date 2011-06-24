@@ -1,1 +1,101 @@
 /* MetaBox.css */
+
+#uFp_meta_box .title {
+	display: block;
+	margin-top: 1.5em;
+}
+#uFp_meta_box .tabs-vertical .title,
+#uFp_meta_box .tabs-horizontal .title {
+	display: none;
+}
+
+#uFp_meta_box .tabs-vertical,
+#uFp_meta_box .tabs-horizontal,
+#uFp_meta_box .ui-tabs-panel {
+	overflow: hidden;
+}
+
+#uFp_meta_box .tabs-vertical .wp-tab-bar {
+	margin-bottom: 3px;
+}
+#uFp_meta_box .tabs-vertical .wp-tab-bar li {
+	display: inline;
+	line-height: 1.35em;
+}
+#uFp_meta_box .tabs-vertical .wp-tab-bar .ui-state-active {
+	background-color: #FFFFFF;
+	border-color: #DFDFDF;
+	border-style: solid solid none;
+	border-width: 1px 1px 0;
+}
+#uFp_meta_box .tabs-vertical .wp-tab-bar .ui-state-active a {
+	color: #333333;
+}
+#uFp_meta_box .tabs-vertical .ui-tabs-panel {
+	border-style: solid;
+	border-width: 1px;
+	padding: 0.5em 0.9em;
+	background-color: #FFFFFF;
+	border-color: #DFDFDF;
+}
+
+
+#uFp_meta_box .tabs-horizontal .wp-tab-bar {
+	float: left;
+	margin: 0 -120px 0 5px;
+	padding: 0;
+	text-align: right;
+	width: 120px;
+}
+#uFp_meta_box .tabs-horizontal .wp-tab-bar li {
+	padding: 8px;
+	display: block;
+}
+#uFp_meta_box .tabs-horizontal .wp-tab-bar li a {
+	display: block;
+}
+#uFp_meta_box .tabs-horizontal .wp-tab-bar .ui-state-active {
+	background-color: #FFFFFF;
+	border-color: #DFDFDF;
+	border-style: solid none solid solid;
+	border-width: 1px 0 1px 1px;
+	margin-right: -1px;
+	border-radius: 3px 0 0 3px;
+	font-weight: bold;
+	text-decoration: none;
+}
+#uFp_meta_box .tabs-horizontal .wp-tab-bar .ui-state-active a {
+	color: #333333;
+}
+#uFp_meta_box .tabs-horizontal .ui-tabs-panel {
+	background-color: #FFFFFF;
+	border-color: #DFDFDF;
+	border-style: solid;
+	border-width: 1px;
+	min-height: 200px;
+	margin: 0 5px 0 125px;
+	overflow: hidden;
+	padding: 0.5em 0.9em;
+}
+#uFp_meta_box .tabs-horizontal .inside div {
+	overflow: hidden;
+}
+
+.ui-tabs .ui-tabs-hide {
+    position: absolute;
+    left: -10000px;
+	display: block;
+}
+
+.CodeMirror {
+	border: 1px solid #DFDFDF;
+	background-color: white;
+	border-radius: 3px;
+	margin: 8px 0;
+}
+.CodeMirror-scroll {
+	height: auto;
+	min-height: 100px;
+	max-height: 500px;
+	overflow: auto;
+}
