@@ -1,5 +1,8 @@
 /* Options.css */
 
+textarea.code {
+	display: block;
+}
 .CodeMirror {
 	border: 1px solid #DFDFDF;
 	background-color: white;

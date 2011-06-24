@@ -45,7 +45,7 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 == Changelog ==
 
-= 2 =
+= 2.0.1 =
 * Better selection of `post_types` to add Scripts-n-Styles
 * micro-optimization for storage of class names.
 * Adds option page for globally adding Scripts and Styles.

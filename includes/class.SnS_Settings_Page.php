@@ -211,7 +211,7 @@ class SnS_Settings_Page
      */
 	static function scripts_field() {
 		$options = get_option( 'SnS_options' );
-		?><textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="SnS_options[scripts]" id="scripts"><?php echo isset( $options[ 'scripts' ] ) ? $options[ 'scripts' ] : ''; ?></textarea><br />
+		?><textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="SnS_options[scripts]" id="scripts"><?php echo isset( $options[ 'scripts' ] ) ? $options[ 'scripts' ] : ''; ?></textarea>
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>
 		<?php
 	}
@@ -222,7 +222,7 @@ class SnS_Settings_Page
      */
 	static function styles_field() {
 		$options = get_option( 'SnS_options' );
-		?><textarea style="min-width: 500px; width:97%;" class="code css" rows="5" cols="40" name="SnS_options[styles]" id="styles"><?php echo isset( $options[ 'styles' ] ) ? $options[ 'styles' ] : ''; ?></textarea><br />
+		?><textarea style="min-width: 500px; width:97%;" class="code css" rows="5" cols="40" name="SnS_options[styles]" id="styles"><?php echo isset( $options[ 'styles' ] ) ? $options[ 'styles' ] : ''; ?></textarea>
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span><?php
 	}
 	
@@ -232,7 +232,7 @@ class SnS_Settings_Page
      */
 	static function scripts_in_head_field() {
 		$options = get_option( 'SnS_options' );
-		?><textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="SnS_options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $options[ 'scripts_in_head' ] ) ? $options[ 'scripts_in_head' ] : ''; ?></textarea><br />
+		?><textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="SnS_options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $options[ 'scripts_in_head' ] ) ? $options[ 'scripts_in_head' ] : ''; ?></textarea>
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>
 		<?php
 	}
