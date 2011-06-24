@@ -81,6 +81,9 @@
 	overflow: hidden;
 }
 
+/*#side-sortables
+#post-body
+*/
 .ui-tabs .ui-tabs-hide {
     position: absolute;
     left: -10000px;

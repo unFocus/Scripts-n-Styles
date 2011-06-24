@@ -71,17 +71,15 @@ class SnS_Admin_Meta_Box
 		$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
 		?>
 		<div class="tabs-horizontal">
-			<ul class="wp-tab-bar" style="display: none;">
-				<li><a href="#uFp_scripts-tab">Scripts (bottom)</a></li>
-				<li><a href="#uFp_styles-tab">Styles</a></li>
-				<li><a href="#uFp_scripts_in_head-tab">Scripts (top)</a></li>
-				<li><a href="#uFp_classes_body-tab">Classes</a></li>
-				<?php /** / ?>
-				<li><a href="#uFp_enqueue_scripts-tab">Include Scripts</a></li>
-				<?php /**/ ?>
+			<ul class="wp-tab-bar">
+				<li class="wp-tab-active tabs"><a href="#uFp_scripts-tab">Scripts (bottom)</a></li>
+				<li class="tabs"><a href="#uFp_styles-tab">Styles</a></li>
+				<li class="tabs"><a href="#uFp_scripts_in_head-tab">Scripts (top)</a></li>
+				<li class="tabs"><a href="#uFp_classes_body-tab">Classes</a></li>
+				<li class="tabs"><a href="#uFp_enqueue_scripts-tab">Include Scripts</a></li>
 			</ul>
 			
-			<div id="uFp_scripts-tab">
+			<div class="wp-tab-panel tabs-panel" id="uFp_scripts-tab">
 				<input type="hidden" name="<?php echo self::NONCE_NAME ?>" id="<?php echo self::NONCE_NAME ?>" value="<?php echo wp_create_nonce( Scripts_n_Styles::$file ) ?>" />
 				<p>
 					<label for="uFp_scripts" class="title"><strong>Scripts</strong>: </label>
@@ -90,7 +88,7 @@ class SnS_Admin_Meta_Box
 				</p>
 			</div>
 			
-			<div id="uFp_styles-tab">
+			<div class="wp-tab-panel" id="uFp_styles-tab">
 				<p>
 					<label for="uFp_styles" class="title"><strong>Styles</strong>: </label>
 					<textarea class="code css" name="uFp_styles" id="uFp_styles" rows="5" cols="40" style="width: 98%;"><?php echo isset( $styles[ 'styles' ] ) ? $styles[ 'styles' ] : ''; ?></textarea>
@@ -98,7 +96,7 @@ class SnS_Admin_Meta_Box
 				</p>
 			</div>
 			
-			<div id="uFp_scripts_in_head-tab">
+			<div class="wp-tab-panel" id="uFp_scripts_in_head-tab">
 				<p>
 					<label for="uFp_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
 					<textarea class="codemirror js" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
@@ -106,7 +104,7 @@ class SnS_Admin_Meta_Box
 				</p>
 			</div>
 			
-			<div id="uFp_classes_body-tab">
+			<div class="wp-tab-panel" id="uFp_classes_body-tab">
 				<strong class="title">Classes</strong>
 				<p>
 					<label for="uFp_classes_body">body classes: </label>
@@ -119,8 +117,7 @@ class SnS_Admin_Meta_Box
 				<p><em>These <strong>space separated</strong> class names will be pushed into the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).</em></p>
 			</div>
 			
-			<?php /** / ?>
-			<div id="uFp_enqueue_scripts-tab">
+			<div class="wp-tab-panel" id="uFp_enqueue_scripts-tab">
 				<strong class="title">Include Scripts</strong>
 				<select name="uFp_enqueue_scripts[]" id="uFp_enqueue_scripts" size="5" multiple="multiple" style="height: auto; float: left; margin: 6px 10px 8px 0;">
 					<?php // This is a bit intense here...
@@ -142,7 +139,6 @@ class SnS_Admin_Meta_Box
 				<p><em>The chosen scripts will be enqueued and placed before your codes if your code is dependant on certain scripts (like jQuery).</em></p>
 				<p>NOTE: Not all Scripts in the list are appropriate for use in themes. This is merely a generated list of all currently available registered scripts. It's possible some scripts could be registered only on the "front end" and therefore not listed here.</p>
 			</div>
-			<?php /**/ ?>
 		</div>
 		<?php
 	}
