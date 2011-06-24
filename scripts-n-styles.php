@@ -5,7 +5,7 @@ Plugin URI: http://www.unfocus.com/projects/scripts-n-styles/
 Description: Allows WordPress admin users the ability to add custom CSS and JavaScript directly to individual Post, Pages or custom post types.
 Author: unFocus Projects
 Author URI: http://www.unfocus.com/
-Version: 1.0.3-beta
+Version: 2
 License: GPL2
 Network: true
 */
@@ -44,7 +44,7 @@ Network: true
  * @link http://www.unfocus.com/projects/scripts-n-styles/ Plugin URI
  * @author unFocus Projects
  * @link http://www.unfocus.com/ Author URI
- * @version 1.0.3-beta
+ * @version 2
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2010, Kenneth Newman
  * @todo Add Post Type Selection on Options Page? Not sure that's usefull.
@@ -58,7 +58,7 @@ Network: true
  * @todo Add ability to push class names into the TinyMCE editor Style Dropdown.
  * @todo Replace Multi-Select element with something better.
  * @todo Clean up Usage Table, paginate, don't display when empty.
- * @todo Fix wpautop js.
+ * @todo "Include Scripts" will be reintroduced when registing is finished.
  */
 
 class Scripts_n_Styles
@@ -91,7 +91,7 @@ class Scripts_n_Styles
 		add_filter( 'post_class', array( __CLASS__, 'post_classes' ) );
 		
 		add_action( 'wp_head', array( __CLASS__, 'styles' ), 11 );
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ), 11 );
+		//add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ), 11 );
 		add_action( 'wp_head', array( __CLASS__, 'scripts_in_head' ), 11 );
 		add_action( 'wp_footer', array( __CLASS__, 'scripts' ), 11 );
 	}

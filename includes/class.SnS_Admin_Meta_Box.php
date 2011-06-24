@@ -76,7 +76,9 @@ class SnS_Admin_Meta_Box
 				<li><a href="#uFp_styles-tab">Styles</a></li>
 				<li><a href="#uFp_scripts_in_head-tab">Scripts (top)</a></li>
 				<li><a href="#uFp_classes_body-tab">Classes</a></li>
+				<?php /** / ?>
 				<li><a href="#uFp_enqueue_scripts-tab">Include Scripts</a></li>
+				<?php /**/ ?>
 			</ul>
 			
 			<div id="uFp_scripts-tab">
@@ -117,6 +119,7 @@ class SnS_Admin_Meta_Box
 				<p><em>These <strong>space separated</strong> class names will be pushed into the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).</em></p>
 			</div>
 			
+			<?php /** / ?>
 			<div id="uFp_enqueue_scripts-tab">
 				<strong class="title">Include Scripts</strong>
 				<select name="uFp_enqueue_scripts[]" id="uFp_enqueue_scripts" size="5" multiple="multiple" style="height: auto; float: left; margin: 6px 10px 8px 0;">
@@ -139,6 +142,7 @@ class SnS_Admin_Meta_Box
 				<p><em>The chosen scripts will be enqueued and placed before your codes if your code is dependant on certain scripts (like jQuery).</em></p>
 				<p>NOTE: Not all Scripts in the list are appropriate for use in themes. This is merely a generated list of all currently available registered scripts. It's possible some scripts could be registered only on the "front end" and therefore not listed here.</p>
 			</div>
+			<?php /**/ ?>
 		</div>
 		<?php
 	}

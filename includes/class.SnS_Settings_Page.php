@@ -94,13 +94,13 @@ class SnS_Settings_Page
 				SnS_Admin::MENU_SLUG,
 				'global'
 			);
-		add_settings_field(
+		/*add_settings_field(
 				'enqueue_scripts',
 				'<label for="enqueue_scripts"><strong>Enqueue Scripts</strong>: </label>',
 				array( __CLASS__, 'enqueue_scripts_field' ),
 				SnS_Admin::MENU_SLUG,
 				'global'
-			);
+			);*/
 		add_settings_section(
 				'usage',
 				'Scripts n Styles Usage',
