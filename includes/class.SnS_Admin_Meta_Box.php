@@ -149,8 +149,8 @@ class SnS_Admin_Meta_Box
      */
 	static function meta_box_styles() {
 		wp_enqueue_style( 'sns-meta-box-styles', plugins_url( 'css/meta-box-styles.css', Scripts_n_Styles::$file), array( 'codemirror-default' ), SnS_Admin::VERSION );
-		wp_enqueue_style( 'codemirror', plugins_url( '/libraries/codemirror/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.1' );
-		wp_enqueue_style( 'codemirror-default', plugins_url( '/libraries/codemirror/theme/default.css', Scripts_n_Styles::$file), array( 'codemirror' ), '2.1' );
+		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.1' );
+		wp_enqueue_style( 'codemirror-default', plugins_url( 'libraries/codemirror/theme/default.css', Scripts_n_Styles::$file), array( 'codemirror' ), '2.1' );
 	}
 	
     /**
@@ -159,9 +159,9 @@ class SnS_Admin_Meta_Box
      */
 	static function meta_box_scripts() {
 		wp_enqueue_script( 'sns-meta-box-scripts', plugins_url( 'js/meta-box-scripts.js', Scripts_n_Styles::$file), array( 'jquery-ui-tabs', 'codemirror-css', 'codemirror-javascript' ), SnS_Admin::VERSION, true );
-		wp_enqueue_script( 'codemirror', plugins_url( '/libraries/codemirror/lib/codemirror.js', Scripts_n_Styles::$file), array(), '2.1' );
-		wp_enqueue_script( 'codemirror-css', plugins_url( '/libraries/codemirror/mode/css.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.1' );
-		wp_enqueue_script( 'codemirror-javascript', plugins_url( '/libraries/codemirror/mode/javascript.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.1' );
+		wp_enqueue_script( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.js', Scripts_n_Styles::$file), array(), '2.1' );
+		wp_enqueue_script( 'codemirror-css', plugins_url( 'libraries/codemirror/mode/css.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.1' );
+		wp_enqueue_script( 'codemirror-javascript', plugins_url( 'libraries/codemirror/mode/javascript.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.1' );
 	}
 	
     /**

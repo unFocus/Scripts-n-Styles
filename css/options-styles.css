@@ -1,1 +1,14 @@
 /* Options.css */
+
+.CodeMirror {
+	border: 1px solid #DFDFDF;
+	background-color: white;
+	border-radius: 3px;
+	margin: 8px 0;
+}
+.CodeMirror-scroll {
+	height: auto;
+	min-height: 50px;
+	max-height: 300px;
+	overflow: auto;
+}
