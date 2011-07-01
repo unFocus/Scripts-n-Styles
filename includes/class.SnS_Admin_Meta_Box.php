@@ -70,16 +70,15 @@ class SnS_Admin_Meta_Box
 		$styles = get_post_meta( $post->ID, 'uFp_styles', true );
 		$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
 		?>
-		<div class="tabs-horizontal">
 			<ul class="wp-tab-bar">
-				<li class="wp-tab-active tabs"><a href="#uFp_scripts-tab">Scripts (bottom)</a></li>
-				<li class="tabs"><a href="#uFp_styles-tab">Styles</a></li>
-				<li class="tabs"><a href="#uFp_scripts_in_head-tab">Scripts (top)</a></li>
-				<li class="tabs"><a href="#uFp_classes_body-tab">Classes</a></li>
-				<li class="tabs"><a href="#uFp_enqueue_scripts-tab">Include Scripts</a></li>
+				<li class="wp-tab-active "><a href="#uFp_scripts-tab">Scripts (bottom)</a></li>
+				<li><a href="#uFp_styles-tab">Styles</a></li>
+				<li><a href="#uFp_scripts_in_head-tab">Scripts (top)</a></li>
+				<li><a href="#uFp_classes_body-tab">Classes</a></li>
+				<li><a href="#uFp_enqueue_scripts-tab">Include Scripts</a></li>
 			</ul>
 			
-			<div class="wp-tab-panel tabs-panel" id="uFp_scripts-tab">
+			<div class="wp-tab-panel" id="uFp_scripts-tab">
 				<input type="hidden" name="<?php echo self::NONCE_NAME ?>" id="<?php echo self::NONCE_NAME ?>" value="<?php echo wp_create_nonce( Scripts_n_Styles::$file ) ?>" />
 				<p>
 					<label for="uFp_scripts" class="title"><strong>Scripts</strong>: </label>
@@ -139,7 +138,6 @@ class SnS_Admin_Meta_Box
 				<p><em>The chosen scripts will be enqueued and placed before your codes if your code is dependant on certain scripts (like jQuery).</em></p>
 				<p>NOTE: Not all Scripts in the list are appropriate for use in themes. This is merely a generated list of all currently available registered scripts. It's possible some scripts could be registered only on the "front end" and therefore not listed here.</p>
 			</div>
-		</div>
 		<?php
 	}
 	
