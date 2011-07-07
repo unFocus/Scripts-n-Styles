@@ -80,27 +80,21 @@ class SnS_Admin_Meta_Box
 			
 			<div class="wp-tab-panel" id="uFp_scripts-tab">
 				<input type="hidden" name="<?php echo self::NONCE_NAME ?>" id="<?php echo self::NONCE_NAME ?>" value="<?php echo wp_create_nonce( Scripts_n_Styles::$file ) ?>" />
-				<p>
-					<label for="uFp_scripts" class="title"><strong>Scripts</strong>: </label>
-					<textarea class="code js" name="uFp_scripts" id="uFp_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
-					<em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) <code>&lt;body></code> tag.</em>
-				</p>
+				<label for="uFp_scripts" class="title"><strong>Scripts</strong>: </label>
+				<textarea class="code js" name="uFp_scripts" id="uFp_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
+				<em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) <code>&lt;body></code> tag.</em>
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_styles-tab">
-				<p>
-					<label for="uFp_styles" class="title"><strong>Styles</strong>: </label>
-					<textarea class="code css" name="uFp_styles" id="uFp_styles" rows="5" cols="40" style="width: 98%;"><?php echo isset( $styles[ 'styles' ] ) ? $styles[ 'styles' ] : ''; ?></textarea>
-					<em>This code will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> tag of your page (or post).</em>
-				</p>
+				<label for="uFp_styles" class="title"><strong>Styles</strong>: </label>
+				<textarea class="code css" name="uFp_styles" id="uFp_styles" rows="5" cols="40" style="width: 98%;"><?php echo isset( $styles[ 'styles' ] ) ? $styles[ 'styles' ] : ''; ?></textarea>
+				<em>This code will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> tag of your page (or post).</em>
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_scripts_in_head-tab">
-				<p>
-					<label for="uFp_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
-					<textarea class="codemirror php" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
-					<em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) <code>&lt;head></code> tag.</em>
-				</p>
+				<label for="uFp_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
+				<textarea class="codemirror js" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
+				<em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) <code>&lt;head></code> tag.</em>
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_classes_body-tab">
@@ -146,9 +140,9 @@ class SnS_Admin_Meta_Box
 	 * Enqueues the CSS for admin styling of the Meta Box.
      */
 	static function meta_box_styles() {
-		wp_enqueue_style( 'sns-meta-box-styles', plugins_url( 'css/meta-box-styles.css', Scripts_n_Styles::$file), array( 'codemirror-default' ), SnS_Admin::VERSION );
 		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.11' );
 		wp_enqueue_style( 'codemirror-default', plugins_url( 'libraries/codemirror/theme/default.css', Scripts_n_Styles::$file), array( 'codemirror' ), '2.11' );
+		wp_enqueue_style( 'sns-meta-box-styles', plugins_url( 'css/meta-box-styles.css', Scripts_n_Styles::$file), array( 'codemirror-default' ), SnS_Admin::VERSION );
 	}
 	
     /**
@@ -156,14 +150,58 @@ class SnS_Admin_Meta_Box
 	 * Enqueues the JavaScript for the admin Meta Box.
      */
 	static function meta_box_scripts() {
-		wp_enqueue_script( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.js', Scripts_n_Styles::$file), array(), '2.11' );
-		wp_enqueue_script( 'codemirror-xml', plugins_url( 'libraries/codemirror/mode/xml.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.11' );
-		wp_enqueue_script( 'codemirror-css', plugins_url( 'libraries/codemirror/mode/css.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.11' );
-		wp_enqueue_script( 'codemirror-javascript', plugins_url( 'libraries/codemirror/mode/javascript.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.11' );
-		wp_enqueue_script( 'codemirror-clike', plugins_url( 'libraries/codemirror/mode/clike.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.11' );
-		wp_enqueue_script( 'codemirror-htmlmixed', plugins_url( 'libraries/codemirror/mode/htmlmixed.js', Scripts_n_Styles::$file), array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript' ), '2.11' );
-		wp_enqueue_script( 'codemirror-php', plugins_url( 'libraries/codemirror/mode/php.js', Scripts_n_Styles::$file), array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript', 'codemirror-clike' ), '2.11' );
-		wp_enqueue_script( 'sns-meta-box-scripts', plugins_url( 'js/meta-box-scripts.js', Scripts_n_Styles::$file), array( 'jquery-ui-tabs', 'codemirror-htmlmixed', 'codemirror-php' ), SnS_Admin::VERSION, true );
+		wp_enqueue_script(
+			'codemirror',
+			plugins_url( 'libraries/codemirror/lib/codemirror.js', Scripts_n_Styles::$file),
+			array(),
+			'2.11' );
+		wp_enqueue_script(
+			'codemirror-css',
+			plugins_url( 'libraries/codemirror/mode/css.js', Scripts_n_Styles::$file),
+			array(  'codemirror' ),
+			'2.11' );
+		wp_enqueue_script(
+			'codemirror-javascript',
+			plugins_url( 'libraries/codemirror/mode/javascript.js', Scripts_n_Styles::$file),
+			array(  'codemirror' ),
+			'2.11' );
+		/*wp_register_script(
+			'codemirror-xml',
+			plugins_url( 'libraries/codemirror/mode/xml.js', Scripts_n_Styles::$file),
+			array(  'codemirror' ),
+			'2.11' );*/
+		/*wp_register_script(
+			'codemirror-htmlmixed',
+			plugins_url( 'libraries/codemirror/mode/htmlmixed.js', Scripts_n_Styles::$file),
+			array( 	'codemirror-xml',
+					'codemirror-css',
+					'codemirror-javascript'
+				),
+			'2.11' );*/
+		/*wp_register_script(
+			'codemirror-clike',
+			plugins_url( 'libraries/codemirror/mode/clike.js', Scripts_n_Styles::$file),
+			array(  'codemirror' ),
+			'2.11' );
+		wp_register_script(
+			'codemirror-php',
+			plugins_url( 'libraries/codemirror/mode/php.js', Scripts_n_Styles::$file),
+			array( 	'codemirror-xml',
+					'codemirror-css',
+					'codemirror-javascript',
+					'codemirror-clike'
+				),
+			'2.11' );*/
+		wp_enqueue_script(
+			'sns-meta-box-scripts',
+			plugins_url( 'js/meta-box-scripts.js', Scripts_n_Styles::$file),
+			array( 	'jquery-ui-tabs',
+					'codemirror-javascript',
+					'codemirror-css'//,
+					//'codemirror-htmlmixed',
+					//'codemirror-php'
+				),
+			SnS_Admin::VERSION, true );
 	}
 	
     /**
