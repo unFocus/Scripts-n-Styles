@@ -75,6 +75,9 @@ body.js .wp-tab-bar {
 	border-radius: 3px;
 	margin: 8px 0;
 }
+.CodeMirror, #editorcontainer #content {
+	font-family: "Courier New", Courier, monospace;
+}
 .CodeMirror-scroll {
 	height: auto;
 	min-height: 50px;
