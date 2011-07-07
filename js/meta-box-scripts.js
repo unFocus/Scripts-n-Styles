@@ -3,6 +3,7 @@
 jQuery( document ).ready( function( $ ) {
 	
 	context = $( '#uFp_meta_box' );
+	
 	$( '.wp-tab-bar', context ).show();
 	$( '.wp-tab-bar li:first-child', context ).addClass( 'wp-tab-active' );
 	$( '.wp-panel-heading', context ).remove();
@@ -14,6 +15,10 @@ jQuery( document ).ready( function( $ ) {
 		$( this ).parent().addClass( 'wp-tab-active' );
 		$( '.wp-tab-panel', context ).removeClass( 'wp-tabs-panel-active ' ).addClass( 'wp-tabs-panel-inactive ' );
 		$( $( this ).attr( 'href' ) ).removeClass( 'wp-tabs-panel-inactive ' ).addClass( 'wp-tabs-panel-active ' );
+	});
+	
+	$( "textarea.htmlmixed" ).each( function() {
+		CodeMirror.fromTextArea( this, { mode: "text/html", tabMode: "indent" } );
 	});
 	
 	$( "textarea.js" ).each( function() {
