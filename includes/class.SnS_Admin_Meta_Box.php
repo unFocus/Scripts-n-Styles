@@ -98,7 +98,7 @@ class SnS_Admin_Meta_Box
 			<div class="wp-tab-panel" id="uFp_scripts_in_head-tab">
 				<p>
 					<label for="uFp_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
-					<textarea class="codemirror js" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
+					<textarea class="codemirror php" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
 					<em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) <code>&lt;head></code> tag.</em>
 				</p>
 			</div>
@@ -162,7 +162,7 @@ class SnS_Admin_Meta_Box
 		wp_enqueue_script( 'codemirror-javascript', plugins_url( 'libraries/codemirror/mode/javascript.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.11' );
 		wp_enqueue_script( 'codemirror-clike', plugins_url( 'libraries/codemirror/mode/clike.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.11' );
 		wp_enqueue_script( 'codemirror-htmlmixed', plugins_url( 'libraries/codemirror/mode/htmlmixed.js', Scripts_n_Styles::$file), array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript' ), '2.11' );
-		wp_enqueue_script( 'codemirror-php', plugins_url( 'libraries/codemirror/mode/php.js', Scripts_n_Styles::$file), array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript', 'codemirror-php' ), '2.11' );
+		wp_enqueue_script( 'codemirror-php', plugins_url( 'libraries/codemirror/mode/php.js', Scripts_n_Styles::$file), array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript', 'codemirror-clike' ), '2.11' );
 		wp_enqueue_script( 'sns-meta-box-scripts', plugins_url( 'js/meta-box-scripts.js', Scripts_n_Styles::$file), array( 'jquery-ui-tabs', 'codemirror-htmlmixed', 'codemirror-php' ), SnS_Admin::VERSION, true );
 	}
 	
