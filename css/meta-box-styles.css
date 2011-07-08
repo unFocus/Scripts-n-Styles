@@ -14,11 +14,27 @@ body.js .wp-tab-bar {
 	display: block;
 }
 
-/* temp fix border-bottom rounding error problem. */
+.CodeMirror {
+	border: 1px solid #DFDFDF;
+	background-color: white;
+	border-radius: 3px;
+	margin: 8px 0;
+}
+.CodeMirror, #editorcontainer #content {
+	font-family: "Courier New", Courier, monospace;
+}
+.CodeMirror-scroll {
+	height: auto;
+	min-height: 50px;
+	max-height: 300px;
+	overflow: auto;
+}
+
+/* temp fix border-bottom rounding error problem. 
 #side-sortables .wp-tab-bar {
 	margin-bottom: 0px;
 	min-height: 19px;
-}
+}*/
 
 /* core styles */
 #post-body .wp-tab-bar a {
@@ -58,29 +74,4 @@ body.js .wp-tab-bar {
 #post-body .wp-tab-panel {
 	height: auto;
 	min-height: 200px;
-}
-
-.wp-tabs-panel-inactive {
-    position: absolute;
-    left: -10000px;
-	display: block;
-}
-.wp-tabs-panel-active {
-    position: static;
-}
-
-.CodeMirror {
-	border: 1px solid #DFDFDF;
-	background-color: white;
-	border-radius: 3px;
-	margin: 8px 0;
-}
-.CodeMirror, #editorcontainer #content {
-	font-family: "Courier New", Courier, monospace;
-}
-.CodeMirror-scroll {
-	height: auto;
-	min-height: 50px;
-	max-height: 300px;
-	overflow: auto;
 }

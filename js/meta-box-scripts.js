@@ -7,7 +7,7 @@ jQuery( document ).ready( function( $ ) {
 	var currentCodeMirror = false;
 	
 	$( '.wp-tab-bar li:first-child', context ).addClass( 'wp-tab-active' );
-	$( '.wp-tab-panel', context ).addClass( 'wp-tabs-panel-inactive' );
+	$( '.wp-tab-panel', context ).hide();
 	
 	// Refresh when panel becomes unhidden
 	$( '#uFp_meta_box-hide, #uFp_meta_box .hndle, #uFp_meta_box .handlediv ' ).live( 'click', function( event ){
@@ -23,9 +23,9 @@ jQuery( document ).ready( function( $ ) {
 		
 		$( '.wp-tab-active', context ).removeClass( 'wp-tab-active' );
 		$( this ).parents( 'li' ).addClass( 'wp-tab-active' );
-		
-		$( '.wp-tabs-panel-active', context ).removeClass( 'wp-tabs-panel-active' ).addClass( 'wp-tabs-panel-inactive' );
-		$( $( this ).attr( 'href' ) ).removeClass( 'wp-tabs-panel-inactive' ).addClass( 'wp-tabs-panel-active' );
+				
+		$( '.wp-tabs-panel-active', context ).hide().removeClass( 'wp-tabs-panel-active' );
+		$( $( this ).attr( 'href' ) ).show().addClass( 'wp-tabs-panel-active' );
 		
 		var targetCode = $( '.wp-tabs-panel-active textarea.codemirror', context );
 		var targetSet;
