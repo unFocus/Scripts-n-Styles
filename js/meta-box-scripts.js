@@ -4,7 +4,7 @@ jQuery( document ).ready( function( $ ) {
 	
 	var context = $( '#uFp_meta_box' );
 	var CodeMirrors = new Array();
-	var currentCodeMirror;
+	var currentCodeMirror = false;
 	
 	$( '.wp-tab-bar li:first-child', context ).addClass( 'wp-tab-active' );
 	$( '.wp-tab-panel', context ).addClass( 'wp-tabs-panel-inactive' );
@@ -19,6 +19,7 @@ jQuery( document ).ready( function( $ ) {
 		event.preventDefault();
 		
 		if ( currentCodeMirror ) currentCodeMirror.toTextArea();
+		currentCodeMirror = false;
 		
 		$( '.wp-tab-active', context ).removeClass( 'wp-tab-active' );
 		$( this ).parents( 'li' ).addClass( 'wp-tab-active' );

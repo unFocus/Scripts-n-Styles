@@ -6,9 +6,6 @@
  * and JavaScript directly to individual Post, Pages or custom
  * post types.
  */
-
-// $hook_suffix = 'tools_page_Scripts-n-Styles'; // kept here for reference
-// $plugin_file = 'scripts-n-styles/scripts-n-styles.php'; // kept here for reference
 		
 class SnS_Admin_Meta_Box
 {
