@@ -1,16 +1,20 @@
 /* MetaBox.css */
 
-#uFp_meta_box .title {
-	margin-top: 1.5em;
-}
-body.js #uFp_meta_box .title {
-	display: none;
-}
 
 .wp-tab-bar {
 	display: none;
 }
 body.js .wp-tab-bar {
+	display: block;
+}
+#uFp_meta_box .title {
+	margin-top: 1.5em;
+}
+body.js #uFp_meta_box .title,
+body.js .wp-tab-panel {
+	display: none;
+}
+body.js .wp-tab-bar + .wp-tab-panel {
 	display: block;
 }
 
@@ -71,7 +75,14 @@ body.js .wp-tab-bar {
 }
 /* end core styles */
 
-#post-body .wp-tab-panel {
+#uFp_meta_box .wp-tab-bar li {
+	padding: 0px;
+}
+#uFp_meta_box .wp-tab-bar a {
+	padding: 8px;
+	display: block;
+}
+#uFp_meta_box .wp-tab-panel {
 	height: auto;
 	min-height: 200px;
 }
