@@ -58,7 +58,7 @@ Network: true
  * @todo Add ability to push class names into the TinyMCE editor Style Dropdown.
  * @todo Replace Multi-Select element with something better.
  * @todo Clean up Usage Table, paginate, don't display when empty.
- * @todo "Include Scripts" will be reintroduced when registing is finished.
+ * @todo "Include Scripts" will be reintroduced when registering is finished.
  */
 
 class Scripts_n_Styles

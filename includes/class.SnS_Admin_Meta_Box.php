@@ -67,31 +67,29 @@ class SnS_Admin_Meta_Box
 		$styles = get_post_meta( $post->ID, 'uFp_styles', true );
 		$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
 		?>
+			<input type="hidden" name="<?php echo self::NONCE_NAME ?>" id="<?php echo self::NONCE_NAME ?>" value="<?php echo wp_create_nonce( Scripts_n_Styles::$file ) ?>" />
 			<ul class="wp-tab-bar">
-				<li class="wp-tab-active "><a href="#uFp_scripts-tab">Scripts (bottom)</a></li>
+				<li class="wp-tab-active "><a href="#uFp_scripts-tab">Scripts</a></li>
 				<li><a href="#uFp_styles-tab">Styles</a></li>
-				<li><a href="#uFp_scripts_in_head-tab">Scripts (top)</a></li>
 				<li><a href="#uFp_classes_body-tab">Classes</a></li>
 				<li><a href="#uFp_enqueue_scripts-tab">Include Scripts</a></li>
 			</ul>
 			
 			<div class="wp-tab-panel" id="uFp_scripts-tab">
-				<input type="hidden" name="<?php echo self::NONCE_NAME ?>" id="<?php echo self::NONCE_NAME ?>" value="<?php echo wp_create_nonce( Scripts_n_Styles::$file ) ?>" />
+				<p><em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) ...</em></p>
+				<label for="uFp_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
+				<textarea class="codemirror js" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
+				<p><em>... <code>&lt;/head></code> tag.</em></p>
+				
 				<label for="uFp_scripts" class="title"><strong>Scripts</strong>: </label>
 				<textarea class="codemirror js" name="uFp_scripts" id="uFp_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
-				<p><em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) <code>&lt;body></code> tag.</em></p>
+				<p><em>... <code>&lt;/body></code> tag.</em></p>
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_styles-tab">
 				<label for="uFp_styles" class="title"><strong>Styles</strong>: </label>
 				<textarea class="codemirror css" name="uFp_styles" id="uFp_styles" rows="5" cols="40" style="width: 98%;"><?php echo isset( $styles[ 'styles' ] ) ? $styles[ 'styles' ] : ''; ?></textarea>
 				<p><em>This code will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> tag of your page (or post).</em></p>
-			</div>
-			
-			<div class="wp-tab-panel" id="uFp_scripts_in_head-tab">
-				<label for="uFp_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
-				<textarea class="codemirror js" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
-				<p><em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) <code>&lt;head></code> tag.</em></p>
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_classes_body-tab">

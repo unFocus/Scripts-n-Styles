@@ -75,10 +75,10 @@ body.js .wp-tab-bar + .wp-tab-panel {
 }
 /* end core styles */
 
-#uFp_meta_box .wp-tab-bar li {
+#post-body #uFp_meta_box .wp-tab-bar li {
 	padding: 0px;
 }
-#uFp_meta_box .wp-tab-bar a {
+#post-body #uFp_meta_box .wp-tab-bar a {
 	padding: 8px;
 	display: block;
 }
