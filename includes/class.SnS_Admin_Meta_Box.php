@@ -23,8 +23,55 @@ class SnS_Admin_Meta_Box
 	static function init() {
 		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( __CLASS__, 'save_post' ) );
+		
+		add_filter( 'mce_buttons_2', array( __CLASS__, 'mce_buttons_2' ) );
+		add_filter( 'tiny_mce_before_init', array( __CLASS__, 'tiny_mce_before_init' ) );
+		add_filter( 'mce_css', array( __CLASS__, 'mce_css' ) );
 	}
+	function mce_buttons_2( $buttons ) {
+		array_unshift( $buttons, 'styleselect' );
+		return $buttons;
+	}
+	function tiny_mce_before_init( $settings ) {
 	
+		$style_formats = array(
+			array(
+				'title' => 'Button',
+				'selector' => 'a',
+				'classes' => 'button'
+			),
+			array(
+				'title' => 'Paragraph',
+				'selector' => 'p',
+				'classes' => 'parag'
+			),
+			array(
+				'title' => 'Callout Box',
+				'block' => 'div',
+				'classes' => 'callout',
+				'wrapper' => true
+			),
+			array(
+				'title' => 'Bold Red Text',
+				'inline' => 'span',
+				'styles' => array(
+					'color' => '#f00',
+					'fontWeight' => 'bold'
+				)
+			)
+		);
+	
+		$settings['style_formats'] = json_encode( $style_formats );
+	
+		return $settings;
+	
+	}
+	static function mce_css( $mce_css ) {
+		$options = get_option( 'PlatformX_Base_options' );
+		$mce_css .= ',' . admin_url( 'admin-ajax.php?v=' . $options[ 'timestamp' ] );
+		return $mce_css;
+	}
+
     /**
 	 * Admin Action: 'add_meta_boxes'
 	 * Main Meta Box function. Checks restriction options and display options, calls add_meta_box() and adds actions for adding admin CSS and JavaScript.
@@ -103,6 +150,12 @@ class SnS_Admin_Meta_Box
 					<input style="width: 99%;" name="uFp_classes_post" id="uFp_classes_post" value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" type="text" class="code" />
 				</p>
 				<p><em>These <strong>space separated</strong> class names will be pushed into the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).</em></p>
+				<p>Add a class to the TinyMCE drop-down:<br />
+					<label for="uFp_classes_mce_title">Title:</label>
+					<input name="uFp_classes_mce_title" id="uFp_classes_mce_title" value="<?php echo isset( $styles[ 'classes_mce_title' ] ) ? $styles[ 'classes_mce_title' ] : ''; ?>" type="text" class="code" />
+					<label for="uFp_classes_mce_name">CSS Class Name:</label>
+					<input name="uFp_classes_mce_name" id="uFp_classes_mce_name" value="<?php echo isset( $styles[ 'classes_mce_name' ] ) ? $styles[ 'classes_mce_name' ] : ''; ?>" type="text" class="code" />
+				</p>
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_enqueue_scripts-tab">
