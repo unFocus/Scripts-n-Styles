@@ -51,7 +51,7 @@ class SnS_Admin
 		if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) 
 			echo $styles[ 'styles' ];
 		
-		die( 'success' );
+		die();
 		break;
 	}
 	function update_current_sns_tab() {

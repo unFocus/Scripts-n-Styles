@@ -30,7 +30,12 @@ class SnS_Admin_Meta_Box
 	}
 	
 	function mce_buttons_2( $buttons ) {
-		array_unshift( $buttons, 'styleselect' );
+		global $post;
+		$styles = get_post_meta( $post->ID, 'uFp_styles', true );
+		
+		if ( ! empty( $styles[ 'classes_mce' ] ) )
+			array_unshift( $buttons, 'styleselect' );
+		
 		return $buttons;
 	}
 	function tiny_mce_before_init( $initArray ) {
@@ -40,27 +45,24 @@ class SnS_Admin_Meta_Box
 		// Add div as a format option, should probably use a string replace thing here.
 		$initArray['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div";
 		
-		if ( isset( $styles[ 'classes_mce' ] ) ) {
+		// In case Themes or plugins have added style_formats
+		if ( isset( $initArray['style_formats'] ) ) $style_formats = json_decode( $initArray['style_formats'], true );
+		else $style_formats = array();
 			
-			// In case Themes or plugins have added style_formats
-			if ( isset( $initArray['style_formats'] ) )
-				$style_formats = json_decode( $initArray['style_formats'], true );
-			else
-				$style_formats = array();
-			
-			$scripts_n_style_formats = array();
-			
+		$formats = array();
+		
+		if ( ! empty( $styles[ 'classes_mce' ] ) )
 			foreach ( $styles[ 'classes_mce' ] as $label => $mce_class ) {
-				$scripts_n_style_formats[] = array(
+				$class = array(
 					'title' => $label,
 					$mce_class[ 'type' ] => $mce_class[ 'element' ],
 					'classes' => $mce_class[ 'name' ]
 				);
+				if ( $mce_class[ 'wrap' ] ) $class[ 'wrapper' ] = true;
+				$formats[] = $class;
 			}
-			$style_formats = array_merge( $style_formats, $scripts_n_style_formats );
 		
-			$initArray['style_formats'] = json_encode( $style_formats );
-		}
+		$initArray['style_formats'] = json_encode( array_merge( $style_formats, $formats ) );
 		
 		return $initArray;
 	
@@ -172,15 +174,18 @@ class SnS_Admin_Meta_Box
 						<label for="uFp_classes_mce_name">Class:</label>
 						<input name="uFp_classes_mce_name" id="uFp_classes_mce_name"
 							placeholder="e.g., class-name" value="" type="text" class="code" style="width: 80px;" />
+						
+						<label for="uFp_classes_mce_wrap">Wrap:</label>
+						<input name="uFp_classes_mce_wrap" id="uFp_classes_mce_wrap" type="checkbox" />
 					</p>
 				</div>
-				<?php if ( isset( $styles[ 'classes_mce' ] ) ) { ?>
+				<?php if ( ! empty( $styles[ 'classes_mce' ] ) ) { ?>
 				<div>
 					<p>The following classes have been added. Check the box next to the Classes if you'd like to delete them.</p>
 					<?php foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
 						<p>
 						<input type="checkbox" name="uFp_classes_mce_delete[<?php echo $label ?>]" value="delete" id="uFp_classes_mce_delete[<?php echo $label ?>]" />
-						<label for="uFp_classes_mce_delete[<?php echo $label ?>]"><?php echo $label ?> (<?php echo $mce_class[ 'name' ] ?>, <?php echo $mce_class[ 'type' ] ?>, <?php echo $mce_class[ 'element' ] ?>)</label>
+						<label for="uFp_classes_mce_delete[<?php echo $label ?>]"><?php echo $label ?> (<?php echo $mce_class[ 'name' ] ?>, <?php echo $mce_class[ 'type' ] ?>, <?php echo $mce_class[ 'element' ] ?><?php echo ( $mce_class[ 'wrap' ] ) ? ', wrapper': ''; ?>)</label>
 						</p>
 					<?php } ?>
 				</div>
@@ -334,11 +339,13 @@ class SnS_Admin_Meta_Box
 				$type = $_POST[ 'uFp_classes_mce_type' ];
 				$element = $_POST[ 'uFp_classes_mce_element' ];
 				$name = $_POST[ 'uFp_classes_mce_name' ];
+				$wrap = ( isset( $_POST[ 'uFp_classes_mce_wrap' ] ) && 'block' == $type ) ? true: false;
 				
 				$mce_class = array();
 				$mce_class[ 'type' ] = $type;
 				$mce_class[ 'element' ] = $element;
 				$mce_class[ 'name' ] = $name;
+				$mce_class[ 'wrap' ] = $wrap;
 				
 				$temp_styles[ 'classes_mce' ][ $label ] = $mce_class;
 			}
