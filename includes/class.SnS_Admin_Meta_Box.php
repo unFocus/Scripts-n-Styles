@@ -28,42 +28,53 @@ class SnS_Admin_Meta_Box
 		add_filter( 'tiny_mce_before_init', array( __CLASS__, 'tiny_mce_before_init' ) );
 		add_filter( 'mce_css', array( __CLASS__, 'mce_css' ) );
 	}
+	
 	function mce_buttons_2( $buttons ) {
 		array_unshift( $buttons, 'styleselect' );
 		return $buttons;
 	}
-	function tiny_mce_before_init( $settings ) {
-	
-		$style_formats = array(
-			array(
+	function tiny_mce_before_init( $initArray ) {
+		// Add div as a format option
+		$initArray['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div";
+		
+		// In case Themes or plugins have added style_formats
+		if ( isset( $initArray['style_formats'] ) )
+			$style_formats = json_decode( $initArray['style_formats'], true );
+		else
+			$style_formats = array();
+		
+		$scripts_n_style_formats = array();
+		
+		$scripts_n_style_formats[] = array(
 				'title' => 'Button',
 				'selector' => 'a',
 				'classes' => 'button'
-			),
-			array(
+			);
+		$scripts_n_style_formats[] = array(
 				'title' => 'Paragraph',
 				'selector' => 'p',
 				'classes' => 'parag'
-			),
-			array(
+			);
+		$scripts_n_style_formats[] = array(
 				'title' => 'Callout Box',
 				'block' => 'div',
 				'classes' => 'callout',
 				'wrapper' => true
-			),
-			array(
+			);
+		$scripts_n_style_formats[] = array(
 				'title' => 'Bold Red Text',
 				'inline' => 'span',
 				'styles' => array(
 					'color' => '#f00',
 					'fontWeight' => 'bold'
 				)
-			)
-		);
+			);
+		
+		$style_formats = array_merge( $style_formats, $scripts_n_style_formats );
 	
-		$settings['style_formats'] = json_encode( $style_formats );
+		$initArray['style_formats'] = json_encode( $style_formats );
 	
-		return $settings;
+		return $initArray;
 	
 	}
 	static function mce_css( $mce_css ) {
@@ -78,7 +89,7 @@ class SnS_Admin_Meta_Box
      */
 	static function add_meta_boxes() {
 		if ( current_user_can( 'unfiltered_html' ) ) {
-			self::$post_types = get_post_types( array('show_ui' => true, 'publicly_queryable' => true) );
+			self::$post_types = get_post_types( array('show_ui' => true, 'public' => true) ); // updated for http://core.trac.wordpress.org/changeset/18234
 			foreach ( self::$post_types as $post_type ) {
 				add_meta_box( 'uFp_meta_box', 'Scripts n Styles', array( __CLASS__, 'meta_box' ), $post_type, 'normal', 'high' );
 			}
@@ -113,13 +124,16 @@ class SnS_Admin_Meta_Box
 		$registered_handles = Scripts_n_Styles::get_wp_registered();
 		$styles = get_post_meta( $post->ID, 'uFp_styles', true );
 		$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
+		
+		$screen = get_current_screen();
+		$position = get_user_option( "update-current-sns-tab_{$screen->id}" );
 		?>
 			<input type="hidden" name="<?php echo self::NONCE_NAME ?>" id="<?php echo self::NONCE_NAME ?>" value="<?php echo wp_create_nonce( Scripts_n_Styles::$file ) ?>" />
 			<ul class="wp-tab-bar">
-				<li class="wp-tab-active "><a href="#uFp_scripts-tab">Scripts</a></li>
-				<li><a href="#uFp_styles-tab">Styles</a></li>
-				<li><a href="#uFp_classes_body-tab">Classes</a></li>
-				<li><a href="#uFp_enqueue_scripts-tab">Include Scripts</a></li>
+				<li<?php echo ( 0 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#uFp_scripts-tab">Scripts</a></li>
+				<li<?php echo ( 1 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#uFp_styles-tab">Styles</a></li>
+				<li<?php echo ( 2 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#uFp_classes_body-tab">Classes</a></li>
+				<li<?php echo ( 3 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#uFp_enqueue_scripts-tab">Include Scripts</a></li>
 			</ul>
 			
 			<div class="wp-tab-panel" id="uFp_scripts-tab">
@@ -150,12 +164,39 @@ class SnS_Admin_Meta_Box
 					<input style="width: 99%;" name="uFp_classes_post" id="uFp_classes_post" value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" type="text" class="code" />
 				</p>
 				<p><em>These <strong>space separated</strong> class names will be pushed into the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).</em></p>
-				<p>Add a class to the TinyMCE drop-down:<br />
-					<label for="uFp_classes_mce_title">Title:</label>
-					<input name="uFp_classes_mce_title" id="uFp_classes_mce_title" value="<?php echo isset( $styles[ 'classes_mce_title' ] ) ? $styles[ 'classes_mce_title' ] : ''; ?>" type="text" class="code" />
-					<label for="uFp_classes_mce_name">CSS Class Name:</label>
-					<input name="uFp_classes_mce_name" id="uFp_classes_mce_name" value="<?php echo isset( $styles[ 'classes_mce_name' ] ) ? $styles[ 'classes_mce_name' ] : ''; ?>" type="text" class="code" />
-				</p>
+				<div id="add-mce-dropdown-names">
+					<p>Add (or update) a class for the TinyMCE "Style" drop-down:<br />
+						<label for="uFp_classes_mce_label">Label:</label>
+						<input name="uFp_classes_mce_label" id="uFp_classes_mce_label"
+							placeholder="e.g., Style Name" value="" type="text" class="code" style="width: 80px;" />
+						
+						<label for="uFp_classes_mce_type">Type:</label>
+						<select name="uFp_classes_mce_type" id="uFp_classes_mce_type">
+							<option value="inline">Inline</option>
+							<option value="block">Block</option>
+							<option value="selector">Selector</option>
+						</select>
+						
+						<label for="uFp_classes_mce_element">Element:</label>
+						<input name="uFp_classes_mce_element" id="uFp_classes_mce_element"
+							placeholder="e.g., div" value="" type="text" class="code" style="width: 80px;" />
+						
+						<label for="uFp_classes_mce_name">Class:</label>
+						<input name="uFp_classes_mce_name" id="uFp_classes_mce_name"
+							placeholder="e.g., class-name" value="" type="text" class="code" style="width: 80px;" />
+					</p>
+				</div>
+				<div>
+					<?php //echo '<pre>'; print_r( $styles[ 'classes_mce' ] ); echo $post->ID . '</pre>';
+					?>
+					<p>The following classes have been added. Check the box next to the Classes if you'd like to delete them.</p>
+					<?php foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
+						<p>
+						<input type="checkbox" name="uFp_classes_mce_delete[<?php echo $label ?>]" value="delete" id="uFp_classes_mce_delete[<?php echo $label ?>]" />
+						<label for="uFp_classes_mce_delete[<?php echo $label ?>]"><?php echo $label ?> (<?php echo $mce_class[ 'name' ] ?>, <?php echo $mce_class[ 'type' ] ?>, <?php echo $mce_class[ 'element' ] ?>)</label>
+						</p>
+					<?php } ?>
+				</div>
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_enqueue_scripts-tab">
@@ -260,6 +301,7 @@ class SnS_Admin_Meta_Box
 	static function save_post( $post_id ) {
 		if ( isset( $_POST[ self::NONCE_NAME ] ) && wp_verify_nonce( $_POST[ self::NONCE_NAME ], Scripts_n_Styles::$file )
 			&& current_user_can( 'unfiltered_html' ) 
+			&& ! wp_is_post_revision( $post_id ) // is needed for get_post_meta compatibility.
 			&& ! ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
 			
 			/* 
@@ -275,21 +317,44 @@ class SnS_Admin_Meta_Box
 			
 			if ( ! empty( $_POST[ 'uFp_scripts' ] ) )
 				$scripts[ 'scripts' ] = $_POST[ 'uFp_scripts' ];
-				
+			
 			if ( ! empty( $_POST[ 'uFp_styles' ] ) )
 				$styles[ 'styles' ] = $_POST[ 'uFp_styles' ];
-				
+			
 			if ( ! empty( $_POST[ 'uFp_scripts_in_head' ] ) )
 				$scripts[ 'scripts_in_head' ] = $_POST[ 'uFp_scripts_in_head' ];
-				
+			
 			if ( ! empty( $_POST[ 'uFp_classes_body' ] ) )
 				$styles[ 'classes_body' ] = $_POST[ 'uFp_classes_body' ];
-				
+			
 			if ( ! empty( $_POST[ 'uFp_classes_post' ] ) )
 				$styles[ 'classes_post' ] = $_POST[ 'uFp_classes_post' ];
-				
+			
 			if ( ! empty( $_POST[ 'uFp_enqueue_scripts' ] ) )
 				$scripts[ 'enqueue_scripts' ] = $_POST[ 'uFp_enqueue_scripts' ];
+			
+			$temp_styles = get_post_meta( $post_id, 'uFp_styles', true );
+			if ( ! isset( $temp_styles[ 'classes_mce' ] ) )
+				$temp_styles[ 'classes_mce' ] = array();
+				
+			if ( ! empty( $_POST[ 'uFp_classes_mce_label' ] )
+				&& ! empty( $_POST[ 'uFp_classes_mce_type' ] )
+				&& ! empty( $_POST[ 'uFp_classes_mce_element' ] )
+				&& ! empty( $_POST[ 'uFp_classes_mce_name' ] )
+			) {
+				$label = $_POST[ 'uFp_classes_mce_label' ];
+				$type = $_POST[ 'uFp_classes_mce_type' ];
+				$element = $_POST[ 'uFp_classes_mce_element' ];
+				$name = $_POST[ 'uFp_classes_mce_name' ];
+				
+				$mce_class = array();
+				$mce_class[ 'type' ] = $type;
+				$mce_class[ 'element' ] = $element;
+				$mce_class[ 'name' ] = $name;
+				
+				$temp_styles[ 'classes_mce' ][ $label ] = $mce_class;
+			}
+			$styles[ 'classes_mce' ] = $temp_styles[ 'classes_mce' ];
 			
 			update_post_meta( $post_id, 'uFp_scripts', $scripts );
 			update_post_meta( $post_id, 'uFp_styles', $styles );

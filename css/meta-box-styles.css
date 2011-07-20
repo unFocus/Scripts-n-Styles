@@ -14,7 +14,7 @@ body.js #uFp_meta_box .title,
 body.js .wp-tab-panel {
 	display: none;
 }
-body.js .wp-tab-bar + .wp-tab-panel {
+body.js .wp-tabs-panel-active {
 	display: block;
 }
 
@@ -85,4 +85,11 @@ body.js .wp-tab-bar + .wp-tab-panel {
 #uFp_meta_box .wp-tab-panel {
 	height: auto;
 	min-height: 200px;
+}
+
+/**/
+#add-mce-dropdown-names {
+	border: 1px solid;
+	border-radius: 3px;
+	padding: 3px 6px;
 }

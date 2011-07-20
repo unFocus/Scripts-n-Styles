@@ -23,11 +23,31 @@ class SnS_Admin
 	static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'admin_meta_box' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'settings_page' ) );
+		add_action( 'admin_init', array( __CLASS__, 'ajax_handlers' ) );
 		
 		$plugin_file = plugin_basename( Scripts_n_Styles::$file ); 
 		add_filter( "plugin_action_links_$plugin_file", array( __CLASS__, 'plugin_action_links') );
 		
 		register_activation_hook( Scripts_n_Styles::$file, array( __CLASS__, 'upgrade' ) );
+	}
+	
+	function ajax_handlers() {
+		add_action( 'wp_ajax_update-current-sns-tab', array( __CLASS__, 'update_current_sns_tab' ) );
+	}
+	function update_current_sns_tab() {
+		check_ajax_referer( Scripts_n_Styles::$file );
+		
+		$active_tab = isset( $_POST[ 'active_tab' ] ) ? (int)$_POST[ 'active_tab' ] : 0;
+		$page = isset( $_POST[ 'page' ] ) ? $_POST[ 'page' ] : '';
+		
+		if ( !preg_match( '/^[a-z_-]+$/', $page ) )
+			die( 'Bad Page' );
+		if ( ! $user = wp_get_current_user() )
+			die( 'Bad User' );
+		
+		$success = update_user_option( $user->ID, "update-current-sns-tab_$page", $active_tab, true);
+		die( $success );
+		break;
 	}
 	
     /**

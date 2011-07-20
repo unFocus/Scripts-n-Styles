@@ -21,7 +21,7 @@ jQuery( document ).ready( function( $ ) {
 		
 		// switch active classes
 		$( '.wp-tab-active', context ).removeClass( 'wp-tab-active' );
-		$( this ).parents( 'li' ).addClass( 'wp-tab-active' );
+		$( this ).parent( 'li' ).addClass( 'wp-tab-active' );
 				
 		$( '.wp-tabs-panel-active', context ).hide().removeClass( 'wp-tabs-panel-active' );
 		$( $( this ).attr( 'href' ) ).show().addClass( 'wp-tabs-panel-active' );
@@ -74,10 +74,17 @@ jQuery( document ).ready( function( $ ) {
 			// store active codemirrors
 			currentCodeMirror.push( CodeMirror.fromTextArea( this, targetSet ) );
 		});
+		
+		$.post( ajaxurl, {
+				action: 'update-current-sns-tab',
+				_ajax_nonce: $('#scripts_n_styles_noncename').val(),
+				active_tab:  $( '.wp-tab-bar li', context ).index( $( this ).parent( 'li' ).get(0) ),
+				page: pagenow
+			}
+		);
 	});
 	
 	// activate first run
-	$( '.wp-tab-bar li:first-child', context ).addClass( 'wp-tab-active' );
 	$( '.wp-tab-active a', context ).trigger( 'click' );
 	
 });
