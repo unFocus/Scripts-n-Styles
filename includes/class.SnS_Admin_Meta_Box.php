@@ -146,10 +146,11 @@ class SnS_Admin_Meta_Box
 			<div class="wp-tab-panel" id="uFp_classes_body-tab">
 				<strong class="title">Classes</strong>
 				<p>
-					<label for="uFp_classes_body">body classes: </label>
-					<input style="width: 99%;" name="uFp_classes_body" id="uFp_classes_body" value="<?php echo isset( $styles[ 'classes_body' ] ) ? $styles[ 'classes_body' ] : ''; ?>" type="text" class="code" />
+					<label for="uFp_classes_body">&lt;body class="<?php self::current_classes( 'body', $post->ID ); ?>
+					<input style="width: auto;" name="uFp_classes_body" id="uFp_classes_body" value="<?php echo isset( $styles[ 'classes_body' ] ) ? $styles[ 'classes_body' ] : ''; ?>" type="text" class="code" />"></label>
 				</p>
 				<p>
+					<span>WordPress post classes: <?php self::current_classes( 'post', $post->ID ); ?></span>
 					<label for="uFp_classes_post">post classes: </label>
 					<input style="width: 99%;" name="uFp_classes_post" id="uFp_classes_post" value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" type="text" class="code" />
 				</p>
@@ -215,6 +216,18 @@ class SnS_Admin_Meta_Box
 				<p>NOTE: Not all Scripts in the list are appropriate for use in themes. This is merely a generated list of all currently available registered scripts. It's possible some scripts could be registered only on the "front end" and therefore not listed here.</p>
 			</div>
 		<?php
+	}
+	function current_classes( $type, $post_id ) {
+		if ( 'body' == $type ) {
+			global $wp_query;
+			$save = $wp_query;
+			$param = ( 'page' == get_post_type( $post_id ) ) ? 'page_id': 'p';
+			$wp_query = new WP_Query( "$param=$post_id" );
+			echo join( ' ', get_body_class( '', $post_id ) );
+			$wp_query = $save;
+		} else {
+			echo join( ' ', get_post_class( '', $post_id ) );
+		}
 	}
 	
     /**

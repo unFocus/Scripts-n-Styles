@@ -259,7 +259,7 @@ class Scripts_n_Styles
 	 * @return array $classes 
      */
 	static function body_classes( $classes ) {
-		if ( ! is_singular() ) return $classes;
+		if ( ! is_singular() || is_admin() ) return $classes;
 		
 		$styles = self::get_styles();
 		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_body' ] ) )
@@ -276,7 +276,7 @@ class Scripts_n_Styles
 	 * @return array $classes 
      */
 	static function post_classes( $classes ) {
-		if ( ! is_singular() ) return $classes;
+		if ( ! is_singular() || is_admin() ) return $classes;
 		
 		$styles = self::get_styles();
 		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_post' ] ) )
