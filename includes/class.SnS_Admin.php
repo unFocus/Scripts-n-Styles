@@ -33,6 +33,26 @@ class SnS_Admin
 	
 	function ajax_handlers() {
 		add_action( 'wp_ajax_update-current-sns-tab', array( __CLASS__, 'update_current_sns_tab' ) );
+		add_action( 'wp_ajax_sns-tinymce-styles-ajax', array( __CLASS__, 'sns_tinymce_styles_ajax' ) );
+	}
+	function sns_tinymce_styles_ajax() {
+		check_ajax_referer( 'sns-tinymce-styles-ajax' );
+		
+		$postid = isset( $_REQUEST[ 'postid' ] ) ? (int)$_REQUEST[ 'postid' ] : 0;
+		
+		if ( 0 == $postid )
+			die( 'Bad Post ID' );
+		
+		$options = get_option( 'SnS_options' );
+		if ( ! empty( $options ) && ! empty( $options[ 'styles' ] ) ) 
+			echo $options[ 'styles' ];
+		
+		$styles = get_post_meta( $postid, 'uFp_styles', true );
+		if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) 
+			echo $styles[ 'styles' ];
+		
+		die( 'success' );
+		break;
 	}
 	function update_current_sns_tab() {
 		check_ajax_referer( Scripts_n_Styles::$file );

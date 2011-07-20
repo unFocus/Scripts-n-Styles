@@ -66,8 +66,8 @@ class SnS_Admin_Meta_Box
 	
 	}
 	static function mce_css( $mce_css ) {
-		$options = get_option( 'PlatformX_Base_options' );
-		$mce_css .= ',' . admin_url( 'admin-ajax.php?v=' . $options[ 'timestamp' ] );
+		global $post;
+		$mce_css .= ',' . wp_nonce_url( admin_url( "admin-ajax.php?action=sns-tinymce-styles-ajax&postid={$post->ID}" ), 'sns-tinymce-styles-ajax' );
 		return $mce_css;
 	}
 
@@ -174,9 +174,8 @@ class SnS_Admin_Meta_Box
 							placeholder="e.g., class-name" value="" type="text" class="code" style="width: 80px;" />
 					</p>
 				</div>
+				<?php if ( isset( $styles[ 'classes_mce' ] ) ) { ?>
 				<div>
-					<?php //echo '<pre>'; print_r( $styles[ 'classes_mce' ] ); echo $post->ID . '</pre>';
-					?>
 					<p>The following classes have been added. Check the box next to the Classes if you'd like to delete them.</p>
 					<?php foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
 						<p>
@@ -185,6 +184,7 @@ class SnS_Admin_Meta_Box
 						</p>
 					<?php } ?>
 				</div>
+				<?php } ?>
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_enqueue_scripts-tab">
