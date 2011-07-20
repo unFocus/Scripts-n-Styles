@@ -34,46 +34,34 @@ class SnS_Admin_Meta_Box
 		return $buttons;
 	}
 	function tiny_mce_before_init( $initArray ) {
-		// Add div as a format option
+		global $post;
+		$styles = get_post_meta( $post->ID, 'uFp_styles', true );
+		
+		// Add div as a format option, should probably use a string replace thing here.
 		$initArray['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div";
 		
-		// In case Themes or plugins have added style_formats
-		if ( isset( $initArray['style_formats'] ) )
-			$style_formats = json_decode( $initArray['style_formats'], true );
-		else
-			$style_formats = array();
+		if ( isset( $styles[ 'classes_mce' ] ) ) {
+			
+			// In case Themes or plugins have added style_formats
+			if ( isset( $initArray['style_formats'] ) )
+				$style_formats = json_decode( $initArray['style_formats'], true );
+			else
+				$style_formats = array();
+			
+			$scripts_n_style_formats = array();
+			
+			foreach ( $styles[ 'classes_mce' ] as $label => $mce_class ) {
+				$scripts_n_style_formats[] = array(
+					'title' => $label,
+					$mce_class[ 'type' ] => $mce_class[ 'element' ],
+					'classes' => $mce_class[ 'name' ]
+				);
+			}
+			$style_formats = array_merge( $style_formats, $scripts_n_style_formats );
 		
-		$scripts_n_style_formats = array();
+			$initArray['style_formats'] = json_encode( $style_formats );
+		}
 		
-		$scripts_n_style_formats[] = array(
-				'title' => 'Button',
-				'selector' => 'a',
-				'classes' => 'button'
-			);
-		$scripts_n_style_formats[] = array(
-				'title' => 'Paragraph',
-				'selector' => 'p',
-				'classes' => 'parag'
-			);
-		$scripts_n_style_formats[] = array(
-				'title' => 'Callout Box',
-				'block' => 'div',
-				'classes' => 'callout',
-				'wrapper' => true
-			);
-		$scripts_n_style_formats[] = array(
-				'title' => 'Bold Red Text',
-				'inline' => 'span',
-				'styles' => array(
-					'color' => '#f00',
-					'fontWeight' => 'bold'
-				)
-			);
-		
-		$style_formats = array_merge( $style_formats, $scripts_n_style_formats );
-	
-		$initArray['style_formats'] = json_encode( $style_formats );
-	
 		return $initArray;
 	
 	}
@@ -355,6 +343,11 @@ class SnS_Admin_Meta_Box
 				$temp_styles[ 'classes_mce' ][ $label ] = $mce_class;
 			}
 			$styles[ 'classes_mce' ] = $temp_styles[ 'classes_mce' ];
+			
+			// a check maybe should be used to see if the key is in the array...
+			if ( isset( $_POST[ 'uFp_classes_mce_delete' ] ) && is_array( $_POST[ 'uFp_classes_mce_delete' ] ) ) 
+				foreach ( $_POST[ 'uFp_classes_mce_delete' ] as $key => $value )
+					unset( $styles[ 'classes_mce' ][ $key ] );
 			
 			update_post_meta( $post_id, 'uFp_scripts', $scripts );
 			update_post_meta( $post_id, 'uFp_styles', $styles );
