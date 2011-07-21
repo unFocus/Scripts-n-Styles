@@ -34,6 +34,7 @@ class SnS_Admin
 	function ajax_handlers() {
 		add_action( 'wp_ajax_update-current-sns-tab', array( __CLASS__, 'update_current_sns_tab' ) );
 		add_action( 'wp_ajax_sns-tinymce-styles-ajax', array( __CLASS__, 'sns_tinymce_styles_ajax' ) );
+		add_action( 'wp_ajax_nopriv_sns-tinymce-styles-ajax', array( __CLASS__, 'sns_tinymce_styles_ajax' ) );
 	}
 	function sns_tinymce_styles_ajax() {
 		check_ajax_referer( 'sns-tinymce-styles-ajax' );
@@ -44,10 +45,16 @@ class SnS_Admin
 			die( 'Bad Post ID' );
 		
 		$options = get_option( 'SnS_options' );
+		$styles = get_post_meta( $postid, 'uFp_styles', true );
+		
+		/*header('Content-Type: text/css; charset=' . get_option('blog_charset'));
+		header("Cache-Control: no-cache");
+		header("Pragma: no-cache");
+		session_cache_limiter( 'nocache' );*/
+		
 		if ( ! empty( $options ) && ! empty( $options[ 'styles' ] ) ) 
 			echo $options[ 'styles' ];
 		
-		$styles = get_post_meta( $postid, 'uFp_styles', true );
 		if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) 
 			echo $styles[ 'styles' ];
 		
