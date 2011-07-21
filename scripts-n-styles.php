@@ -55,7 +55,6 @@ Network: true
  * @todo Create shortcode registration on Options page to make those snippets available on edit screens.
  * @todo Create shortcode registration of html snippets on edit screens for single use.
  * @todo Figure out and add Error messaging.
- * @todo Add ability to push class names into the TinyMCE editor Style Dropdown.
  * @todo Replace Multi-Select element with something better.
  * @todo Clean up Usage Table, paginate, don't display when empty.
  * @todo "Include Scripts" will be reintroduced when registering is finished.
