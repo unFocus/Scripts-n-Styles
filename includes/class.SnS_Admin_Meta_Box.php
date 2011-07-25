@@ -34,7 +34,7 @@ class SnS_Admin_Meta_Box
      */
 	static function add_meta_boxes() {
 		if ( current_user_can( 'unfiltered_html' ) ) {
-			self::$post_types = get_post_types( array('show_ui' => true, 'publicly_queryable' => true) );
+			self::$post_types = get_post_types( array('show_ui' => true, 'public' => true) ); // updated for http://core.trac.wordpress.org/changeset/18234
 			foreach ( self::$post_types as $post_type ) {
 				add_meta_box( 'uFp_meta_box', 'Scripts n Styles', array( __CLASS__, 'meta_box' ), $post_type, 'normal', 'high' );
 			}
