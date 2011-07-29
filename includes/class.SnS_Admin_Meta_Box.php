@@ -127,6 +127,7 @@ class SnS_Admin_Meta_Box
 			</ul>
 			
 			<div class="wp-tab-panel" id="uFp_scripts-tab">
+				<?php /**/ ?>
 				<p><em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) ...</em></p>
 				<label for="uFp_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
 				<textarea class="codemirror js" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
@@ -135,6 +136,30 @@ class SnS_Admin_Meta_Box
 				<label for="uFp_scripts" class="title"><strong>Scripts</strong>: </label>
 				<textarea class="codemirror js" name="uFp_scripts" id="uFp_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
 				<p><em>... <code>&lt;/body></code> tag.</em></p>
+				<?php /**/ ?>
+				<?php /** / ?>
+<pre class="code">
+&lt;html>
+  &lt;head>
+    &#8230;
+    &lt;script type="text/javascript">
+</pre>
+<label for="uFp_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
+<textarea class="codemirror js" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
+<pre class="code">
+    &lt;/script>
+  &lt;/head>
+  &lt;body>
+    &#8230;
+</pre>
+<label for="uFp_scripts" class="title"><strong>Scripts</strong>: </label>
+<textarea class="codemirror js" name="uFp_scripts" id="uFp_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
+
+<pre class="code">
+  &lt;/body>
+&lt;/html>
+</pre>
+				<?php /**/ ?>
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_styles-tab">
@@ -146,42 +171,45 @@ class SnS_Admin_Meta_Box
 			<div class="wp-tab-panel" id="uFp_classes_body-tab">
 				<strong class="title">Classes</strong>
 				<p>
-					<label for="uFp_classes_body">&lt;body class="<?php self::current_classes( 'body', $post->ID ); ?>
-					<input style="width: auto;" name="uFp_classes_body" id="uFp_classes_body" value="<?php echo isset( $styles[ 'classes_body' ] ) ? $styles[ 'classes_body' ] : ''; ?>" type="text" class="code" />"></label>
+					<label for="uFp_classes_body"><strong>Body Classes</strong>: </label>
+					<input name="uFp_classes_body" id="uFp_classes_body" type="text" class="code" style="width: 99%;"
+						value="<?php echo isset( $styles[ 'classes_body' ] ) ? $styles[ 'classes_body' ] : ''; ?>" />
+					<small>Standard: <code><?php self::current_classes( 'body', $post->ID ); ?></code></small>
 				</p>
 				<p>
-					<span>WordPress post classes: <?php self::current_classes( 'post', $post->ID ); ?></span>
-					<label for="uFp_classes_post">post classes: </label>
-					<input style="width: 99%;" name="uFp_classes_post" id="uFp_classes_post" value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" type="text" class="code" />
+					<label for="uFp_classes_post"><strong>Post Classes</strong>: </label>
+					<input name="uFp_classes_post" id="uFp_classes_post" type="text" class="code" style="width: 99%;"
+						value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" />
+					<small>Standard: <code><?php self::current_classes( 'post', $post->ID ); ?></code></small>
 				</p>
-				<p><em>These <strong>space separated</strong> class names will be pushed into the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).</em></p>
+				<p><em>These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).</em></p>
+				<hr />
 				<div id="add-mce-dropdown-names">
-					<p>Add (or update) a class for the TinyMCE "Style" drop-down:<br />
-						<label for="uFp_classes_mce_label">Label:</label>
-						<input name="uFp_classes_mce_label" id="uFp_classes_mce_label"
-							placeholder="e.g., Style Name" value="" type="text" class="code" style="width: 80px;" />
-						
-						<label for="uFp_classes_mce_type">Type:</label>
-						<select name="uFp_classes_mce_type" id="uFp_classes_mce_type">
-							<option value="inline">Inline</option>
-							<option value="block">Block</option>
-							<option value="selector">Selector</option>
-						</select>
-						
-						<label for="uFp_classes_mce_element">Element:</label>
-						<input name="uFp_classes_mce_element" id="uFp_classes_mce_element"
-							placeholder="e.g., div" value="" type="text" class="code" style="width: 80px;" />
-						
-						<label for="uFp_classes_mce_name">Class:</label>
-						<input name="uFp_classes_mce_name" id="uFp_classes_mce_name"
-							placeholder="e.g., class-name" value="" type="text" class="code" style="width: 80px;" />
-						
-						<label for="uFp_classes_mce_wrap">Wrap:</label>
-						<input name="uFp_classes_mce_wrap" id="uFp_classes_mce_wrap" type="checkbox" />
-					</p>
+					<p>Add (or update) a class for the TinyMCE "Style" drop-down:</p>
+					<label for="uFp_classes_mce_label">Label:</label>
+					<input name="uFp_classes_mce_label" id="uFp_classes_mce_label"
+						value="" type="text" class="code" style="width: 80px;" />
+					<br />
+					<label for="uFp_classes_mce_type">Type:</label>
+					<select name="uFp_classes_mce_type" id="uFp_classes_mce_type" style="width: 80px;">
+						<option value="inline">Inline</option>
+						<option value="block">Block</option>
+						<option value="selector">Selector</option>
+					</select>
+					<br />
+					<label for="uFp_classes_mce_element">Element:</label>
+					<input name="uFp_classes_mce_element" id="uFp_classes_mce_element"
+						value="" type="text" class="code" style="width: 80px;" />
+					<br />
+					<label for="uFp_classes_mce_name">Class:</label>
+					<input name="uFp_classes_mce_name" id="uFp_classes_mce_name"
+						value="" type="text" class="code" style="width: 80px;" />
+					<br />
+					<label for="uFp_classes_mce_wrap">Wrap:</label>
+					<input name="uFp_classes_mce_wrap" id="uFp_classes_mce_wrap" type="checkbox" />
 				</div>
 				<?php if ( ! empty( $styles[ 'classes_mce' ] ) ) { ?>
-				<div>
+				<div id="delete-mce-dropdown-names">
 					<p>The following classes have been added. Check the box next to the Classes if you'd like to delete them.</p>
 					<?php foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
 						<p>
@@ -344,14 +372,20 @@ class SnS_Admin_Meta_Box
 				$temp_styles[ 'classes_mce' ] = array();
 				
 			if ( ! empty( $_POST[ 'uFp_classes_mce_label' ] )
-				&& ! empty( $_POST[ 'uFp_classes_mce_type' ] )
 				&& ! empty( $_POST[ 'uFp_classes_mce_element' ] )
 				&& ! empty( $_POST[ 'uFp_classes_mce_name' ] )
 			) {
 				$label = $_POST[ 'uFp_classes_mce_label' ];
-				$type = $_POST[ 'uFp_classes_mce_type' ];
 				$element = $_POST[ 'uFp_classes_mce_element' ];
-				$name = $_POST[ 'uFp_classes_mce_name' ];
+				$name = sanitize_title_with_dashes( $_POST[ 'uFp_classes_mce_name' ] );
+				
+				if ( isset( $_POST[ 'uFp_classes_mce_type' ] ) && 'block' == $_POST[ 'uFp_classes_mce_type' ] )
+					$type = 'block';
+				else if ( isset( $_POST[ 'uFp_classes_mce_type' ] ) && 'inline' == $_POST[ 'uFp_classes_mce_type' ] )
+					$type = 'inline';
+				else
+					$type = 'selector';
+				
 				$wrap = ( isset( $_POST[ 'uFp_classes_mce_wrap' ] ) && 'block' == $type ) ? true: false;
 				
 				$mce_class = array();
@@ -364,7 +398,6 @@ class SnS_Admin_Meta_Box
 			}
 			$styles[ 'classes_mce' ] = $temp_styles[ 'classes_mce' ];
 			
-			// a check maybe should be used to see if the key is in the array...
 			if ( isset( $_POST[ 'uFp_classes_mce_delete' ] ) && is_array( $_POST[ 'uFp_classes_mce_delete' ] ) ) 
 				foreach ( $_POST[ 'uFp_classes_mce_delete' ] as $key => $value )
 					unset( $styles[ 'classes_mce' ][ $key ] );
