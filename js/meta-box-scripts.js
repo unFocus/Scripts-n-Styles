@@ -87,4 +87,61 @@ jQuery( document ).ready( function( $ ) {
 	// activate first run
 	$( '.wp-tab-active a', context ).trigger( 'click' );
 	
+	// TinyMCE refresher.
+	var original_body_class = tinyMCEPreInit.mceInit.body_class.split(' ');
+	var sns_body_class = $('#uFp_classes_body').val().split;
+	
+	for ( var i = 0; i < original_body_class.length; i++ ) {
+		if ( 0 != $.inArray( sns_body_class[i], original_body_class ) )
+		original_body_class.splice( $.inArray( sns_body_class[i], original_body_class ), 1 );
+	}
+	original_body_class = original_body_class.join(' ');
+		console.log( tinyMCEPreInit.mceInit );
+	
+	function refreshMCE( data ) {
+		console.log( data );
+		
+		// update body_class
+		tinyMCEPreInit.mceInit.body_class = original_body_class + ' ' + data.classes_body + ' ' + data.classes_post;
+		var style_formats = [];
+		for ( x in data.classes_mce ) {
+			var format = {};
+			format.title = x;
+			if ( "inline" == data.classes_mce[x].type ) {
+				format.inline = data.classes_mce[x].element;
+			} else if ( "block" == data.classes_mce[x].type ) {
+				format.block = data.classes_mce[x].element;
+			} else {
+				format.selector = data.classes_mce[x].element;
+			}
+			format.classes = data.classes_mce[x].name;
+			style_formats.push( format );
+		}
+		tinyMCEPreInit.mceInit.style_formats = style_formats;
+		console.log( tinyMCEPreInit.mceInit );
+
+		// refresh.
+		tinyMCE.editors["content"].save();
+		tinyMCE.editors["content"].remove();
+		tinyMCE.init(tinyMCEPreInit.mceInit);
+	}
+	$('#update-classes').click(function(e){
+		e.preventDefault();
+		$.post( ajaxurl,
+			{
+				action: 		'sns-classes-ajax',
+				_ajax_nonce:	$( '#scripts_n_styles_noncename' ).val(),
+				post_id:		$( '#post_ID' ).val(),
+				uFp_classes_body:		 $( '#uFp_classes_body' ).val(),
+				uFp_classes_post:		 $( '#uFp_classes_post' ).val(),
+				uFp_classes_mce_label:	 $( '#uFp_classes_mce_label' ).val(),
+				uFp_classes_mce_type:	 $( '#uFp_classes_mce_type' ).val(),
+				uFp_classes_mce_element: $( '#uFp_classes_mce_element' ).val(),
+				uFp_classes_mce_name:	 $( '#uFp_classes_mce_name' ).val(),
+				uFp_classes_mce_wrap:	 $( '#uFp_classes_mce_wrap' ).val(),
+			},
+			function( data ) { refreshMCE( data ); }//, "json"
+		);
+	});
+	
 });

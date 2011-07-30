@@ -45,6 +45,10 @@ class SnS_Admin_Meta_Box
 		// Add div as a format option, should probably use a string replace thing here.
 		$initArray['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div";
 		
+		// Add body_class (and/or maybe post_class) values... problematic.
+		$initArray['body_class'] .= ' ' . $styles[ 'classes_body' ];
+		$initArray['body_class'] .= ' ' . $styles[ 'classes_post' ];
+		
 		// In case Themes or plugins have added style_formats
 		if ( isset( $initArray['style_formats'] ) ) $style_formats = json_decode( $initArray['style_formats'], true );
 		else $style_formats = array();
@@ -103,7 +107,6 @@ class SnS_Admin_Meta_Box
 				other users can be granted access.</p>';
 		return $text;
 	}
-
 	
     /**
 	 * Admin Action: 'add_meta_boxes'
@@ -127,39 +130,13 @@ class SnS_Admin_Meta_Box
 			</ul>
 			
 			<div class="wp-tab-panel" id="uFp_scripts-tab">
-				<?php /**/ ?>
 				<p><em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) ...</em></p>
 				<label for="uFp_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
 				<textarea class="codemirror js" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
 				<p><em>... <code>&lt;/head></code> tag.</em></p>
-				
 				<label for="uFp_scripts" class="title"><strong>Scripts</strong>: </label>
 				<textarea class="codemirror js" name="uFp_scripts" id="uFp_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
 				<p><em>... <code>&lt;/body></code> tag.</em></p>
-				<?php /**/ ?>
-				<?php /** / ?>
-<pre class="code">
-&lt;html>
-  &lt;head>
-    &#8230;
-    &lt;script type="text/javascript">
-</pre>
-<label for="uFp_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
-<textarea class="codemirror js" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
-<pre class="code">
-    &lt;/script>
-  &lt;/head>
-  &lt;body>
-    &#8230;
-</pre>
-<label for="uFp_scripts" class="title"><strong>Scripts</strong>: </label>
-<textarea class="codemirror js" name="uFp_scripts" id="uFp_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
-
-<pre class="code">
-  &lt;/body>
-&lt;/html>
-</pre>
-				<?php /**/ ?>
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_styles-tab">
@@ -182,7 +159,9 @@ class SnS_Admin_Meta_Box
 						value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" />
 					<small>Standard: <code><?php self::current_classes( 'post', $post->ID ); ?></code></small>
 				</p>
-				<p><em>These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).</em></p>
+				<p><em>These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or
+					<code>post_class()</code> function (provided your theme uses these functions).</em></p>
+				<a id="update-classes" href="#">Update Classes</a>
 				<hr />
 				<div id="add-mce-dropdown-names">
 					<p>Add (or update) a class for the TinyMCE "Style" drop-down:</p>
@@ -207,18 +186,23 @@ class SnS_Admin_Meta_Box
 					<br />
 					<label for="uFp_classes_mce_wrap">Wrap:</label>
 					<input name="uFp_classes_mce_wrap" id="uFp_classes_mce_wrap" type="checkbox" />
+					<br />
 				</div>
+				
 				<?php if ( ! empty( $styles[ 'classes_mce' ] ) ) { ?>
 				<div id="delete-mce-dropdown-names">
-					<p>The following classes have been added. Check the box next to the Classes if you'd like to delete them.</p>
+					<p id="instructions-mce-dropdown-names">The following classes have been added. Check the box next to the Classes if you'd like to delete them.</p>
+					
 					<?php foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
-						<p>
-						<input type="checkbox" name="uFp_classes_mce_delete[<?php echo $label ?>]" value="delete" id="uFp_classes_mce_delete[<?php echo $label ?>]" />
-						<label for="uFp_classes_mce_delete[<?php echo $label ?>]"><?php echo $label ?> (<?php echo $mce_class[ 'name' ] ?>, <?php echo $mce_class[ 'type' ] ?>, <?php echo $mce_class[ 'element' ] ?><?php echo ( $mce_class[ 'wrap' ] ) ? ', wrapper': ''; ?>)</label>
-						</p>
+					<p>
+					<input type="checkbox" name="uFp_classes_mce_delete[<?php echo $label ?>]" value="delete" id="uFp_classes_mce_delete[<?php echo $label ?>]" />
+					<label for="uFp_classes_mce_delete[<?php echo $label ?>]"><?php echo $label ?> (<?php echo $mce_class[ 'name' ] ?>, <?php echo $mce_class[ 'type' ] ?>, <?php echo $mce_class[ 'element' ] ?><?php echo ( $mce_class[ 'wrap' ] ) ? ', wrapper': ''; ?>)</label>
+					</p>
 					<?php } ?>
+					
 				</div>
 				<?php } ?>
+				
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_enqueue_scripts-tab">
@@ -245,6 +229,7 @@ class SnS_Admin_Meta_Box
 			</div>
 		<?php
 	}
+	
 	function current_classes( $type, $post_id ) {
 		if ( 'body' == $type ) {
 			global $wp_query;
