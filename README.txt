@@ -2,7 +2,7 @@
 Contributors: WraithKenny, Touvan
 Donate link: http://wordpressfoundation.org/donate/
 Tags: admin, CSS, javascript, code, custom, Style
-Requires at least: 3.1
+Requires at least: 3.2
 Tested up to: 3.2
 Stable tag: 2.0.1
 
