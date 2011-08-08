@@ -87,13 +87,29 @@ body.js .wp-tabs-panel-active {
 	min-height: 200px;
 }
 
-/*
-#add-mce-dropdown-names {
-	border: 1px solid;
-	border-radius: 3px;
-	padding: 3px 6px;
-}*/
 #add-mce-dropdown-names label {
 	width: 50px;
 	display: inline-block
 }
+.sns-ajax-loading {
+	vertical-align: middle;
+}
+.sns-ajax-wrap {
+	height: 23px;
+}
+#sns-classes {
+	overflow: hidden;
+	width: 100%;
+}
+#sns-classes-ajax {
+}
+#uFp_classes_mce_wrap {
+	margin: 6px 0;
+}
+#delete-mce-dropdown-names,
+#add-mce-dropdown-names {
+	width: 40%;
+	float: left;
+	margin-right: 10%;
+}
+

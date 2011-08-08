@@ -71,6 +71,11 @@ class SnS_Admin_Meta_Box
 		return $initArray;
 	
 	}
+	
+    /**
+	 * Admin Action: 'mce_css'
+	 * Adds a styles sheet to TinyMCE via ajax that contains the current styles data.
+     */
 	static function mce_css( $mce_css ) {
 		global $post;
 		$mce_css .= ',' . wp_nonce_url( admin_url( "admin-ajax.php?action=sns-tinymce-styles-ajax&postid={$post->ID}" ), 'sns-tinymce-styles-ajax' );
@@ -93,6 +98,7 @@ class SnS_Admin_Meta_Box
 			add_filter( 'contextual_help', array( __CLASS__, 'contextual_help_filter' ), 10, 3 );
 		}
 	}
+	
 	static function default_hidden_meta_boxes( $hidden ) {
 		$hidden[] = 'uFp_meta_box';
     	return $hidden;
@@ -147,24 +153,27 @@ class SnS_Admin_Meta_Box
 			
 			<div class="wp-tab-panel" id="uFp_classes_body-tab">
 				<strong class="title">Classes</strong>
-				<p>
-					<label for="uFp_classes_body"><strong>Body Classes</strong>: </label>
-					<input name="uFp_classes_body" id="uFp_classes_body" type="text" class="code" style="width: 99%;"
-						value="<?php echo isset( $styles[ 'classes_body' ] ) ? $styles[ 'classes_body' ] : ''; ?>" />
-					<small>Standard: <code><?php self::current_classes( 'body', $post->ID ); ?></code></small>
-				</p>
-				<p>
-					<label for="uFp_classes_post"><strong>Post Classes</strong>: </label>
-					<input name="uFp_classes_post" id="uFp_classes_post" type="text" class="code" style="width: 99%;"
-						value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" />
-					<small>Standard: <code><?php self::current_classes( 'post', $post->ID ); ?></code></small>
-				</p>
-				<p><em>These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or
-					<code>post_class()</code> function (provided your theme uses these functions).</em></p>
-				<a id="update-classes" href="#">Update Classes</a>
+				<div id="sns-classes">
+					<p>
+						<label for="uFp_classes_body"><strong>Body Classes</strong>: </label>
+						<input name="uFp_classes_body" id="uFp_classes_body" type="text" class="code" style="width: 99%;"
+							value="<?php echo isset( $styles[ 'classes_body' ] ) ? $styles[ 'classes_body' ] : ''; ?>" />
+						<small>Standard: <code><?php self::current_classes( 'body', $post->ID ); ?></code></small>
+					</p>
+					<p>
+						<label for="uFp_classes_post"><strong>Post Classes</strong>: </label>
+						<input name="uFp_classes_post" id="uFp_classes_post" type="text" class="code" style="width: 99%;"
+							value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" />
+						<small>Standard: <code><?php self::current_classes( 'post', $post->ID ); ?></code></small>
+					</p>
+					<p><em>These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or
+						<code>post_class()</code> function (provided your theme uses these functions).</em></p>
+				</div>
 				<hr />
+				
+				<h4>The Styles Dropdown</h4>
 				<div id="add-mce-dropdown-names">
-					<p>Add (or update) a class for the TinyMCE "Style" drop-down:</p>
+					<p>Add (or update) a class for the "Styles" drop-down:</p>
 					<label for="uFp_classes_mce_label">Label:</label>
 					<input name="uFp_classes_mce_label" id="uFp_classes_mce_label"
 						value="" type="text" class="code" style="width: 80px;" />
@@ -191,12 +200,24 @@ class SnS_Admin_Meta_Box
 				
 				<?php if ( ! empty( $styles[ 'classes_mce' ] ) ) { ?>
 				<div id="delete-mce-dropdown-names">
-					<p id="instructions-mce-dropdown-names">The following classes have been added. Check the box next to the Classes if you'd like to delete them.</p>
+					<p id="instructions-mce-dropdown-names">
+					Classes currently in the dropdown:<br />
+					<em>Check the box next to the Class and update the post if you'd like to remove it.</em>
+					</p>
 					
 					<?php foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
 					<p>
-					<input type="checkbox" name="uFp_classes_mce_delete[<?php echo $label ?>]" value="delete" id="uFp_classes_mce_delete[<?php echo $label ?>]" />
-					<label for="uFp_classes_mce_delete[<?php echo $label ?>]"><?php echo $label ?> (<?php echo $mce_class[ 'name' ] ?>, <?php echo $mce_class[ 'type' ] ?>, <?php echo $mce_class[ 'element' ] ?><?php echo ( $mce_class[ 'wrap' ] ) ? ', wrapper': ''; ?>)</label>
+					<input type="checkbox"
+						name="uFp_classes_mce_delete[<?php echo $label ?>]"
+						value="delete"
+						id="uFp_classes_mce_delete[<?php echo $label ?>]" />
+					<label for="uFp_classes_mce_delete[<?php echo $label ?>]">
+					"<?php echo $label ?>"
+					<code>
+					<?php echo '&lt;' . $mce_class[ 'element' ] . ' class="' . $mce_class[ 'name' ] . '"&gt;'; ?>
+					</code>
+					<?php echo ( $mce_class[ 'wrap' ] ) ? ' (wrapper)': ''; ?>
+					</label>
 					</p>
 					<?php } ?>
 					

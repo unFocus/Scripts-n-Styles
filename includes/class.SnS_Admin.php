@@ -36,19 +36,41 @@ class SnS_Admin
 		add_action( 'wp_ajax_update-current-sns-tab', array( __CLASS__, 'update_current_sns_tab' ) );
 		// TinyMCE requests a css file.
 		add_action( 'wp_ajax_sns-tinymce-styles-ajax', array( __CLASS__, 'sns_tinymce_styles_ajax' ) );
-		add_action( 'wp_ajax_nopriv_sns-tinymce-styles-ajax', array( __CLASS__, 'sns_tinymce_styles_ajax' ) );
-		// Update Classes.
+		// Ajax Saves.
 		add_action( 'wp_ajax_sns-classes-ajax', array( __CLASS__, 'sns_classes_ajax' ) );
-		add_action( 'wp_ajax_nopriv_sns-classes-ajax', array( __CLASS__, 'sns_classes_ajax' ) );
+		add_action( 'wp_ajax_sns-dropdown-ajax', array( __CLASS__, 'sns_dropdown_ajax' ) );
 	}
 	function sns_classes_ajax() {
-		//check_ajax_referer( Scripts_n_Styles::$file );
-		//if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_post' ) ) return;
+		check_ajax_referer( Scripts_n_Styles::$file );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges' );
 
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		$post_id 		= isset( $_REQUEST[ 'post_id' ] ) ? (int)$_REQUEST[ 'post_id' ] : 0;
-		$classes_body 	= isset( $_POST[ 'uFp_classes_body' ] ) ? $_POST[ 'uFp_classes_body' ] : '';
-		$classes_post 	= isset( $_POST[ 'uFp_classes_post' ] ) ? $_POST[ 'uFp_classes_post' ] : '';
+		$classes_body 	= isset( $_REQUEST[ 'uFp_classes_body' ] ) ? $_REQUEST[ 'uFp_classes_body' ] : '';
+		$classes_post 	= isset( $_REQUEST[ 'uFp_classes_post' ] ) ? $_REQUEST[ 'uFp_classes_post' ] : '';
+		
+		$styles = get_post_meta( $post_id, 'uFp_styles', true );
+		
+		$styles[ 'classes_body' ] = $classes_body;
+		$styles[ 'classes_post' ] = $classes_post;
+		
+		update_post_meta( $post_id, 'uFp_styles', $styles );
+		
+		echo json_encode( array(
+			//"styles" => $styles,
+			"classes_post" => $classes_post,
+			"classes_body" => $classes_body
+		) );
+		
+		die();
+		break;
+	}
+	function sns_dropdown_ajax() {
+		check_ajax_referer( Scripts_n_Styles::$file );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) return;
+
+		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		$post_id = isset( $_REQUEST[ 'post_id' ] ) ? (int)$_REQUEST[ 'post_id' ] : 0;
 		
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		$classes_mce = $styles[ 'classes_mce' ];
@@ -56,6 +78,7 @@ class SnS_Admin
 		if ( ! isset( $classes_mce ) )
 			$classes_mce = array();
 		
+		// Logic: Label, Element and Name are required, Type and Wrap are optional.
 		if ( ! empty( $_REQUEST[ 'uFp_classes_mce_label' ] )
 			&& ! empty( $_REQUEST[ 'uFp_classes_mce_element' ] )
 			&& ! empty( $_REQUEST[ 'uFp_classes_mce_name' ] )
@@ -82,15 +105,11 @@ class SnS_Admin
 			$classes_mce[ $label ] = $mce_class;
 		}
 		$styles[ 'classes_mce' ] = $classes_mce;
-		$styles[ 'classes_body' ] = $classes_body;
-		$styles[ 'classes_post' ] = $classes_post;
 		
 		update_post_meta( $post_id, 'uFp_styles', $styles );
 		
 		echo json_encode( array(
-			"styles" => $styles,
-			"classes_post" => $classes_post,
-			"classes_body" => $classes_body,
+			//"styles" => $styles,
 			"classes_mce" => (array)$classes_mce
 		) );
 		
