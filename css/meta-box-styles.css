@@ -118,3 +118,15 @@ body.js .wp-tabs-panel-active {
 body.js #mce-dropdown-names {
 	display: block;
 }
+#delete-mce-dropdown-names .sns-ajax-delete {
+	cursor: pointer;
+	display: inline-block;
+	height: 10px;
+	overflow: hidden;
+	text-indent: -9999px;
+	width: 10px;
+	background: url("/wp-admin/images/xit.gif") no-repeat scroll 0 0 transparent;
+}
+#delete-mce-dropdown-names .sns-ajax-delete:hover {
+	background: url("/wp-admin/images/xit.gif") no-repeat scroll -10px 0 transparent;
+}

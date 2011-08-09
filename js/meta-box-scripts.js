@@ -108,13 +108,9 @@ jQuery( document ).ready( function( $ ) {
 		 + '<img id="sns-dropdown-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
 		 + '</div>'
 		);
-	$('#delete-mce-dropdown-names').append(
-		'<div id="sns-dropdown-delete-ajax" class="sns-ajax-wrap">'
-		 + '<a id="sns-ajax-delete-dropdown" href="#" class="button">Add Class</a>'
-		 + ' '
-		 + '<img id="sns-dropdown-delete-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
-		 + '</div>'
-		);
+	$('#delete-mce-dropdown-names input[type="checkbox"]').replaceWith(function(){
+		return '<a class="sns-ajax-delete" id="' + $(this).attr('id') + '">X</a> ' + $(this).next().detach().html();
+	});
 	$('#sns-classes-ajax-loading').hide();
 	$('#sns-dropdown-ajax-loading').hide();
 	$('#sns-dropdown-delete-ajax-loading').hide();
@@ -162,7 +158,7 @@ jQuery( document ).ready( function( $ ) {
 		);
 	});
 	
-	$('#delete-mce-dropdown-names .sns-ajax-delete-dropdown').click(function(e){
+	$('#delete-mce-dropdown-names .sns-ajax-delete').click(function(e){
 		e.preventDefault();
 		$('#sns-dropdown-ajax-loading').show();
 		$.post( ajaxurl,
@@ -170,7 +166,7 @@ jQuery( document ).ready( function( $ ) {
 				action: 		'sns-dropdown-delete-ajax',
 				_ajax_nonce:	$( '#scripts_n_styles_noncename' ).val(),
 				post_id:		$( '#post_ID' ).val(),
-				uFp_delete:		 $( '#uFp_classes_mce_label' ).val(),
+				uFp_delete:		 $( this ).class( 'id' ),
 			},
 			function( data ) { snsRefreshStyleFormats( data ); }//, "json"
 		);
