@@ -112,4 +112,9 @@ body.js .wp-tabs-panel-active {
 	float: left;
 	margin-right: 10%;
 }
-
+#mce-dropdown-names {
+	display: none;
+}
+body.js #mce-dropdown-names {
+	display: block;
+}

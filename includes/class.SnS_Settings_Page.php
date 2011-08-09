@@ -164,6 +164,8 @@ class SnS_Settings_Page
 						<th>ID</th>
 						<th>Status</th>
 						<th>Post Type</th>
+						<th>Script Data</th>
+						<th>Style Data</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -179,6 +181,8 @@ class SnS_Settings_Page
 							<td><?php echo $post->ID; ?></td>
 							<td><?php echo $post->post_status; ?></td>
 							<td><?php echo $post->post_type; ?></td>
+							<td><?php echo '<pre>'; print_r( $temp_styles ); echo '</pre>'; ?></td>
+							<td><?php echo '<pre>'; print_r( $temp_scripts ); echo '</pre>'; ?></td>
 						</tr>
 					<?php }
 				} ?>
@@ -189,6 +193,8 @@ class SnS_Settings_Page
 						<th>ID</th>
 						<th>Status</th>
 						<th>Post Type</th>
+						<th>Script Data</th>
+						<th>Style Data</th>
 					</tr>
 				</tfoot>
 			</table>

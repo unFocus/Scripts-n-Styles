@@ -127,7 +127,7 @@ class SnS_Admin_Meta_Box
 		$screen = get_current_screen();
 		$position = get_user_option( "update-current-sns-tab_{$screen->id}" );
 		?>
-			<input type="hidden" name="<?php echo self::NONCE_NAME ?>" id="<?php echo self::NONCE_NAME ?>" value="<?php echo wp_create_nonce( Scripts_n_Styles::$file ) ?>" />
+			<?php wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME ); ?>
 			<ul class="wp-tab-bar">
 				<li<?php echo ( 0 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#uFp_scripts-tab">Scripts</a></li>
 				<li<?php echo ( 1 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#uFp_styles-tab">Styles</a></li>
@@ -169,61 +169,67 @@ class SnS_Admin_Meta_Box
 					<p><em>These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or
 						<code>post_class()</code> function (provided your theme uses these functions).</em></p>
 				</div>
-				<hr />
 				
-				<h4>The Styles Dropdown</h4>
-				<div id="add-mce-dropdown-names">
-					<p>Add (or update) a class for the "Styles" drop-down:</p>
-					<label for="uFp_classes_mce_label">Label:</label>
-					<input name="uFp_classes_mce_label" id="uFp_classes_mce_label"
-						value="" type="text" class="code" style="width: 80px;" />
-					<br />
-					<label for="uFp_classes_mce_type">Type:</label>
-					<select name="uFp_classes_mce_type" id="uFp_classes_mce_type" style="width: 80px;">
-						<option value="inline">Inline</option>
-						<option value="block">Block</option>
-						<option value="selector">Selector</option>
-					</select>
-					<br />
-					<label for="uFp_classes_mce_element">Element:</label>
-					<input name="uFp_classes_mce_element" id="uFp_classes_mce_element"
-						value="" type="text" class="code" style="width: 80px;" />
-					<br />
-					<label for="uFp_classes_mce_name">Class:</label>
-					<input name="uFp_classes_mce_name" id="uFp_classes_mce_name"
-						value="" type="text" class="code" style="width: 80px;" />
-					<br />
-					<label for="uFp_classes_mce_wrap">Wrap:</label>
-					<input name="uFp_classes_mce_wrap" id="uFp_classes_mce_wrap" type="checkbox" />
-					<br />
-				</div>
-				
-				<?php if ( ! empty( $styles[ 'classes_mce' ] ) ) { ?>
-				<div id="delete-mce-dropdown-names">
-					<p id="instructions-mce-dropdown-names">
-					Classes currently in the dropdown:<br />
-					<em>Check the box next to the Class and update the post if you'd like to remove it.</em>
-					</p>
+				<?php 
+				/*
+				 * Note: Styles Dropdown section only makes sense when Javascript is enabled. (Otherwise, no TinyMCE.)
+				 */
+				?>
+				<div id="mce-dropdown-names">
+				<input type="hidden" value="nope" id="javascript_enabled" name="javascript_enabled" />
+					<h4>The Styles Dropdown</h4>
+					<div id="add-mce-dropdown-names">
+						<p>Add (or update) a class for the "Styles" drop-down:</p>
+						<label for="uFp_classes_mce_label">Label:</label>
+						<input name="uFp_classes_mce_label" id="uFp_classes_mce_label"
+							value="" type="text" class="code" style="width: 80px;" />
+						<br />
+						<label for="uFp_classes_mce_type">Type:</label>
+						<select name="uFp_classes_mce_type" id="uFp_classes_mce_type" style="width: 80px;">
+							<option value="inline">Inline</option>
+							<option value="block">Block</option>
+							<option value="selector">Selector</option>
+						</select>
+						<br />
+						<label for="uFp_classes_mce_element">Element:</label>
+						<input name="uFp_classes_mce_element" id="uFp_classes_mce_element"
+							value="" type="text" class="code" style="width: 80px;" />
+						<br />
+						<label for="uFp_classes_mce_name">Class:</label>
+						<input name="uFp_classes_mce_name" id="uFp_classes_mce_name"
+							value="" type="text" class="code" style="width: 80px;" />
+						<br />
+						<label for="uFp_classes_mce_wrap">Wrap:</label>
+						<input name="uFp_classes_mce_wrap" id="uFp_classes_mce_wrap" type="checkbox" />
+						</p>
+					</div>
 					
-					<?php foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
-					<p>
-					<input type="checkbox"
-						name="uFp_classes_mce_delete[<?php echo $label ?>]"
-						value="delete"
-						id="uFp_classes_mce_delete[<?php echo $label ?>]" />
-					<label for="uFp_classes_mce_delete[<?php echo $label ?>]">
-					"<?php echo $label ?>"
-					<code>
-					<?php echo '&lt;' . $mce_class[ 'element' ] . ' class="' . $mce_class[ 'name' ] . '"&gt;'; ?>
-					</code>
-					<?php echo ( $mce_class[ 'wrap' ] ) ? ' (wrapper)': ''; ?>
-					</label>
-					</p>
+					<?php if ( ! empty( $styles[ 'classes_mce' ] ) ) { ?>
+					<div id="delete-mce-dropdown-names">
+						<p id="instructions-mce-dropdown-names">
+						Classes currently in the dropdown:<br />
+						<em>Check the box next to the Class and update the post if you'd like to remove it.</em>
+						</p>
+						
+						<?php foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
+						<p>
+						<input type="checkbox"
+							name="uFp_classes_mce_delete[<?php echo $label ?>]"
+							value="delete"
+							id="uFp_classes_mce_delete[<?php echo $label ?>]" />
+						<label for="uFp_classes_mce_delete[<?php echo $label ?>]">
+						"<?php echo $label ?>"
+						<code>
+						<?php echo '&lt;' . $mce_class[ 'element' ] . ' class="' . $mce_class[ 'name' ] . '"&gt;'; ?>
+						</code>
+						<?php echo ( $mce_class[ 'wrap' ] ) ? ' (wrapper)': ''; ?>
+						</label>
+						</p>
+						<?php } ?>
+						
+					</div>
 					<?php } ?>
-					
 				</div>
-				<?php } ?>
-				
 			</div>
 			
 			<div class="wp-tab-panel" id="uFp_enqueue_scripts-tab">
@@ -375,14 +381,16 @@ class SnS_Admin_Meta_Box
 			
 			$temp_styles = get_post_meta( $post_id, 'uFp_styles', true );
 			if ( ! isset( $temp_styles[ 'classes_mce' ] ) )
-				$temp_styles[ 'classes_mce' ] = array();
+				$classes_mce = array();
+			else 
+				$classes_mce = $temp_styles[ 'classes_mce' ];
 				
 			if ( ! empty( $_POST[ 'uFp_classes_mce_label' ] )
 				&& ! empty( $_POST[ 'uFp_classes_mce_element' ] )
 				&& ! empty( $_POST[ 'uFp_classes_mce_name' ] )
 			) {
-				$label = $_POST[ 'uFp_classes_mce_label' ];
-				$element = $_POST[ 'uFp_classes_mce_element' ];
+				$label = sanitize_title( $_POST[ 'uFp_classes_mce_label' ] );
+				$element = sanitize_key( $_POST[ 'uFp_classes_mce_element' ] );
 				$name = sanitize_title_with_dashes( $_POST[ 'uFp_classes_mce_name' ] );
 				
 				if ( isset( $_POST[ 'uFp_classes_mce_type' ] ) && 'block' == $_POST[ 'uFp_classes_mce_type' ] )
@@ -400,9 +408,10 @@ class SnS_Admin_Meta_Box
 				$mce_class[ 'name' ] = $name;
 				$mce_class[ 'wrap' ] = $wrap;
 				
-				$temp_styles[ 'classes_mce' ][ $label ] = $mce_class;
+				$classes_mce[ $label ] = $mce_class;
 			}
-			$styles[ 'classes_mce' ] = $temp_styles[ 'classes_mce' ];
+			if ( ! empty( $classes_mce ) )
+				$styles[ 'classes_mce' ] = $classes_mce;
 			
 			if ( isset( $_POST[ 'uFp_classes_mce_delete' ] ) && is_array( $_POST[ 'uFp_classes_mce_delete' ] ) ) 
 				foreach ( $_POST[ 'uFp_classes_mce_delete' ] as $key => $value )

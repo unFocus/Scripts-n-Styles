@@ -39,25 +39,25 @@ class SnS_Admin
 		// Ajax Saves.
 		add_action( 'wp_ajax_sns-classes-ajax', array( __CLASS__, 'sns_classes_ajax' ) );
 		add_action( 'wp_ajax_sns-dropdown-ajax', array( __CLASS__, 'sns_dropdown_ajax' ) );
+		add_action( 'wp_ajax_sns-dropdown-delete-ajax', array( __CLASS__, 'sns_dropdown_delete_ajax' ) );
 	}
 	function sns_classes_ajax() {
 		check_ajax_referer( Scripts_n_Styles::$file );
-		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges' );
-
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
-		$post_id 		= isset( $_REQUEST[ 'post_id' ] ) ? (int)$_REQUEST[ 'post_id' ] : 0;
-		$classes_body 	= isset( $_REQUEST[ 'uFp_classes_body' ] ) ? $_REQUEST[ 'uFp_classes_body' ] : '';
-		$classes_post 	= isset( $_REQUEST[ 'uFp_classes_post' ] ) ? $_REQUEST[ 'uFp_classes_post' ] : '';
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
 		
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] || ! is_int( $_REQUEST[ 'post_id' ] ) ) die( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'uFp_classes_body' ] ) || ! isset( $_REQUEST[ 'uFp_classes_post' ] ) ) die( 'Data incorrectly sent.' );
+		
+		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		
-		$styles[ 'classes_body' ] = $classes_body;
-		$styles[ 'classes_post' ] = $classes_post;
+		$styles[ 'classes_body' ] = empty( $_REQUEST[ 'uFp_classes_body' ] ) ? '' : $_REQUEST[ 'uFp_classes_body' ];
+		$styles[ 'classes_post' ] = empty( $_REQUEST[ 'uFp_classes_post' ] ) ? '' : $_REQUEST[ 'uFp_classes_post' ];
 		
 		update_post_meta( $post_id, 'uFp_styles', $styles );
 		
+		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			//"styles" => $styles,
 			"classes_post" => $classes_post,
 			"classes_body" => $classes_body
 		) );
@@ -67,10 +67,15 @@ class SnS_Admin
 	}
 	function sns_dropdown_ajax() {
 		check_ajax_referer( Scripts_n_Styles::$file );
-		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) return;
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
 
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
-		$post_id = isset( $_REQUEST[ 'post_id' ] ) ? (int)$_REQUEST[ 'post_id' ] : 0;
+		if ( empty( $_REQUEST[ 'uFp_classes_mce_label' ] )
+			|| empty( $_REQUEST[ 'uFp_classes_mce_element' ] )
+			|| empty( $_REQUEST[ 'uFp_classes_mce_name' ] )
+		) die( 'Missing at least one required field.' );
+		
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] || ! is_int( $_REQUEST[ 'post_id' ] ) ) die( 'Bad post ID.' );
+		$post_id = $_REQUEST[ 'post_id' ];
 		
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		$classes_mce = $styles[ 'classes_mce' ];
@@ -78,43 +83,46 @@ class SnS_Admin
 		if ( ! isset( $classes_mce ) )
 			$classes_mce = array();
 		
-		// Logic: Label, Element and Name are required, Type and Wrap are optional.
-		if ( ! empty( $_REQUEST[ 'uFp_classes_mce_label' ] )
-			&& ! empty( $_REQUEST[ 'uFp_classes_mce_element' ] )
-			&& ! empty( $_REQUEST[ 'uFp_classes_mce_name' ] )
-		) {
-			$label = $_REQUEST[ 'uFp_classes_mce_label' ];
-			$element = $_REQUEST[ 'uFp_classes_mce_element' ];
-			$name = sanitize_title_with_dashes( $_REQUEST[ 'uFp_classes_mce_name' ] );
-			
-			if ( isset( $_REQUEST[ 'uFp_classes_mce_type' ] ) && 'block' == $_REQUEST[ 'uFp_classes_mce_type' ] )
-				$type = 'block';
-			else if ( isset( $_REQUEST[ 'uFp_classes_mce_type' ] ) && 'inline' == $_REQUEST[ 'uFp_classes_mce_type' ] )
-				$type = 'inline';
-			else
-				$type = 'selector';
-			
-			$wrap = ( isset( $_REQUEST[ 'uFp_classes_mce_wrap' ] ) && 'block' == $type ) ? true: false;
-			
-			$mce_class = array();
-			$mce_class[ 'type' ] = $type;
-			$mce_class[ 'element' ] = $element;
-			$mce_class[ 'name' ] = $name;
-			$mce_class[ 'wrap' ] = $wrap;
-			
-			$classes_mce[ $label ] = $mce_class;
-		}
-		$styles[ 'classes_mce' ] = $classes_mce;
+		$label = sanitize_title( $_POST[ 'uFp_classes_mce_label' ] );
+		$element = sanitize_key( $_POST[ 'uFp_classes_mce_element' ] );
+		$name = sanitize_title_with_dashes( $_POST[ 'uFp_classes_mce_name' ] );
+		
+		if ( isset( $_REQUEST[ 'uFp_classes_mce_type' ] ) && 'block' == $_REQUEST[ 'uFp_classes_mce_type' ] )
+			$type = 'block';
+		else if ( isset( $_REQUEST[ 'uFp_classes_mce_type' ] ) && 'inline' == $_REQUEST[ 'uFp_classes_mce_type' ] )
+			$type = 'inline';
+		else
+			$type = 'selector';
+		
+		$wrap = ( isset( $_REQUEST[ 'uFp_classes_mce_wrap' ] ) && 'block' == $type ) ? true: false;
+		
+		$mce_class = array();
+		$mce_class[ 'type' ] = $type;
+		$mce_class[ 'element' ] = $element;
+		$mce_class[ 'name' ] = $name;
+		$mce_class[ 'wrap' ] = $wrap;
+		
+		$classes_mce[ $label ] = $mce_class;
+		
+		if ( ! empty( $classes_mce ) )
+			$styles[ 'classes_mce' ] = $classes_mce;
 		
 		update_post_meta( $post_id, 'uFp_styles', $styles );
 		
+		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			//"styles" => $styles,
 			"classes_mce" => (array)$classes_mce
 		) );
 		
 		die();
 		break;
+	}
+	function sns_dropdown_delete_ajax() {
+		check_ajax_referer( Scripts_n_Styles::$file );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
+		
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] || ! is_int( $_REQUEST[ 'post_id' ] ) ) die( 'Bad post ID.' );
+		$post_id = $_REQUEST[ 'post_id' ];
 	}
 	function sns_tinymce_styles_ajax() {
 		check_ajax_referer( 'sns-tinymce-styles-ajax' );
@@ -153,7 +161,10 @@ class SnS_Admin
 			die( 'Bad User' );
 		
 		$success = update_user_option( $user->ID, "update-current-sns-tab_$page", $active_tab, true);
-		die( $success );
+		if ( $success )
+			die( 'Current Tab Updated. New value is ' . $active_tab );
+		else
+			die( 'Current Tab Not Updated. It is possible that no change was needed.' );
 		break;
 	}
 	
