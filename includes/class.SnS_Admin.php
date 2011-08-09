@@ -45,7 +45,7 @@ class SnS_Admin
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] || ! is_int( $_REQUEST[ 'post_id' ] ) ) die( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
 		if ( ! isset( $_REQUEST[ 'uFp_classes_body' ] ) || ! isset( $_REQUEST[ 'uFp_classes_post' ] ) ) die( 'Data incorrectly sent.' );
 		
 		$post_id = $_REQUEST[ 'post_id' ];
@@ -58,8 +58,8 @@ class SnS_Admin
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			"classes_post" => $classes_post,
-			"classes_body" => $classes_body
+			"classes_post" => $styles[ 'classes_post' ],
+			"classes_body" => $styles[ 'classes_body' ]
 		) );
 		
 		die();
@@ -74,7 +74,7 @@ class SnS_Admin
 			|| empty( $_REQUEST[ 'uFp_classes_mce_name' ] )
 		) die( 'Missing at least one required field.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] || ! is_int( $_REQUEST[ 'post_id' ] ) ) die( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
 		$post_id = $_REQUEST[ 'post_id' ];
 		
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
@@ -121,16 +121,13 @@ class SnS_Admin
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] || ! is_int( $_REQUEST[ 'post_id' ] ) ) die( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
 		$post_id = $_REQUEST[ 'post_id' ];
 	}
 	function sns_tinymce_styles_ajax() {
 		check_ajax_referer( 'sns-tinymce-styles-ajax' );
 		
-		$postid = isset( $_REQUEST[ 'postid' ] ) ? (int)$_REQUEST[ 'postid' ] : 0;
-		
-		if ( 0 == $postid )
-			die( 'Bad Post ID' );
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
 		
 		$options = get_option( 'SnS_options' );
 		$styles = get_post_meta( $postid, 'uFp_styles', true );

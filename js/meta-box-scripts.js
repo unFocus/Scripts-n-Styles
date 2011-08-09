@@ -108,8 +108,16 @@ jQuery( document ).ready( function( $ ) {
 		 + '<img id="sns-dropdown-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
 		 + '</div>'
 		);
+	$('#delete-mce-dropdown-names').append(
+		'<div id="sns-dropdown-delete-ajax" class="sns-ajax-wrap">'
+		 + '<a id="sns-ajax-delete-dropdown" href="#" class="button">Add Class</a>'
+		 + ' '
+		 + '<img id="sns-dropdown-delete-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+		 + '</div>'
+		);
 	$('#sns-classes-ajax-loading').hide();
 	$('#sns-dropdown-ajax-loading').hide();
+	$('#sns-dropdown-delete-ajax-loading').hide();
 
 	// TinyMCE refresher.
 	var snsBaseBodyClass = tinyMCEPreInit.mceInit.body_class.split(' ');
@@ -154,9 +162,23 @@ jQuery( document ).ready( function( $ ) {
 		);
 	});
 	
+	$('#delete-mce-dropdown-names .sns-ajax-delete-dropdown').click(function(e){
+		e.preventDefault();
+		$('#sns-dropdown-ajax-loading').show();
+		$.post( ajaxurl,
+			{
+				action: 		'sns-dropdown-delete-ajax',
+				_ajax_nonce:	$( '#scripts_n_styles_noncename' ).val(),
+				post_id:		$( '#post_ID' ).val(),
+				uFp_delete:		 $( '#uFp_classes_mce_label' ).val(),
+			},
+			function( data ) { snsRefreshStyleFormats( data ); }//, "json"
+		);
+	});
+	
 	function snsRefreshDeleteNames( data ) {
 		// update 'delete-mce-dropdown-names' section
-		//
+		// Does nothing yet.
 		
 		snsRefreshMCE();
 	}

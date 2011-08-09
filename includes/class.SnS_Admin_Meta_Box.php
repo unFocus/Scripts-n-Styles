@@ -46,8 +46,10 @@ class SnS_Admin_Meta_Box
 		$initArray['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div";
 		
 		// Add body_class (and/or maybe post_class) values... problematic.
-		$initArray['body_class'] .= ' ' . $styles[ 'classes_body' ];
-		$initArray['body_class'] .= ' ' . $styles[ 'classes_post' ];
+		if ( ! empty( $styles[ 'classes_body' ] ) )
+			$initArray['body_class'] .= ' ' . $styles[ 'classes_body' ];
+		if ( ! empty( $styles[ 'classes_post' ] ) )
+			$initArray['body_class'] .= ' ' . $styles[ 'classes_post' ];
 		
 		// In case Themes or plugins have added style_formats
 		if ( isset( $initArray['style_formats'] ) ) $style_formats = json_decode( $initArray['style_formats'], true );
