@@ -80,7 +80,7 @@ class SnS_Admin_Meta_Box
      */
 	static function mce_css( $mce_css ) {
 		global $post;
-		$mce_css .= ',' . wp_nonce_url( admin_url( "admin-ajax.php?action=sns-tinymce-styles-ajax&postid={$post->ID}" ), 'sns-tinymce-styles-ajax' );
+		$mce_css .= ',' . wp_nonce_url( admin_url( "admin-ajax.php?action=sns-tinymce-styles-ajax&post_id={$post->ID}" ), 'sns-tinymce-styles-ajax' );
 		return $mce_css;
 	}
 

@@ -38,8 +38,56 @@ class SnS_Admin
 		add_action( 'wp_ajax_sns-tinymce-styles-ajax', array( __CLASS__, 'sns_tinymce_styles_ajax' ) );
 		// Ajax Saves.
 		add_action( 'wp_ajax_sns-classes-ajax', array( __CLASS__, 'sns_classes_ajax' ) );
+		add_action( 'wp_ajax_sns-update-scripts-ajax', array( __CLASS__, 'sns_update_scripts_ajax' ) );
+		add_action( 'wp_ajax_sns-update-styles-ajax', array( __CLASS__, 'sns_update_styles_ajax' ) );
 		add_action( 'wp_ajax_sns-dropdown-ajax', array( __CLASS__, 'sns_dropdown_ajax' ) );
 		add_action( 'wp_ajax_sns-dropdown-delete-ajax', array( __CLASS__, 'sns_dropdown_delete_ajax' ) );
+	}
+	function sns_update_scripts_ajax() {
+		check_ajax_referer( Scripts_n_Styles::$file );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
+		
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'uFp_scripts' ] ) || ! isset( $_REQUEST[ 'uFp_scripts_in_head' ] ) ) die( 'Data incorrectly sent.' );
+		
+		$post_id = $_REQUEST[ 'post_id' ];
+		$scripts = get_post_meta( $post_id, 'uFp_scripts', true );
+		
+		$scripts[ 'scripts_in_head' ] = empty( $_REQUEST[ 'uFp_scripts_in_head' ] ) ? '' : $_REQUEST[ 'uFp_scripts_in_head' ];
+		$scripts[ 'scripts' ] = empty( $_REQUEST[ 'uFp_scripts' ] ) ? '' : $_REQUEST[ 'uFp_scripts' ];
+		
+		update_post_meta( $post_id, 'uFp_scripts', $scripts );
+		
+		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		echo json_encode( array(
+			"scripts" => $scripts[ 'scripts' ],
+			"scripts_in_head" => $scripts[ 'scripts_in_head' ],
+		) );
+		
+		die();
+		break;
+	}
+	function sns_update_styles_ajax() {
+		check_ajax_referer( Scripts_n_Styles::$file );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
+		
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'uFp_styles' ] ) ) die( 'Data incorrectly sent.' );
+		
+		$post_id = $_REQUEST[ 'post_id' ];
+		$styles = get_post_meta( $post_id, 'uFp_styles', true );
+		
+		$styles[ 'styles' ] = empty( $_REQUEST[ 'uFp_styles' ] ) ? '' : $_REQUEST[ 'uFp_styles' ];
+		
+		update_post_meta( $post_id, 'uFp_styles', $styles );
+		
+		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		echo json_encode( array(
+			"styles" => $styles[ 'styles' ],
+		) );
+		
+		die();
+		break;
 	}
 	function sns_classes_ajax() {
 		check_ajax_referer( Scripts_n_Styles::$file );
@@ -128,9 +176,10 @@ class SnS_Admin
 		check_ajax_referer( 'sns-tinymce-styles-ajax' );
 		
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
+		$post_id = $_REQUEST[ 'post_id' ];
 		
 		$options = get_option( 'SnS_options' );
-		$styles = get_post_meta( $postid, 'uFp_styles', true );
+		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		
 		/*header('Content-Type: text/css; charset=' . get_option('blog_charset'));
 		header("Cache-Control: no-cache");

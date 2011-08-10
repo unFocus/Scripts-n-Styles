@@ -88,12 +88,25 @@ jQuery( document ).ready( function( $ ) {
 	// activate first run
 	$( '.wp-tab-active a', context ).trigger( 'click' );
 	
-});
-
-// AJAX code.
-jQuery( document ).ready( function( $ ) {
 	
-	// set up ajax ui.
+	
+	// set up ajax ui. (need to come up with a better naming scheme.)
+	$('#uFp_scripts-tab').append(
+		'<div id="sns-scripts-update" class="sns-ajax-wrap">'
+		 + '<a id="sns-ajax-update-scripts" href="#" class="button">Update Scripts</a>'
+		 + ' '
+		 + '<img id="sns-scripts-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+		 + '</div>'
+		);
+	
+	$('#uFp_styles-tab').append(
+		'<div id="sns-styles-update" class="sns-ajax-wrap">'
+		 + '<a id="sns-ajax-update-styles" href="#" class="button">Update Styles</a>'
+		 + ' '
+		 + '<img id="sns-styles-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+		 + '</div>'
+		);
+	
 	$('#sns-classes').append(
 		'<div id="sns-classes-ajax" class="sns-ajax-wrap">'
 		 + '<a id="sns-ajax-update-classes" href="#" class="button">Update Classes</a>'
@@ -101,6 +114,7 @@ jQuery( document ).ready( function( $ ) {
 		 + '<img id="sns-classes-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
 		 + '</div>'
 		);
+	
 	$('#add-mce-dropdown-names').append(
 		'<div id="sns-dropdown-ajax" class="sns-ajax-wrap">'
 		 + '<a id="sns-ajax-update-dropdown" href="#" class="button">Add Class</a>'
@@ -108,12 +122,12 @@ jQuery( document ).ready( function( $ ) {
 		 + '<img id="sns-dropdown-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
 		 + '</div>'
 		);
+	
 	$('#delete-mce-dropdown-names input[type="checkbox"]').replaceWith(function(){
 		return '<a class="sns-ajax-delete" id="' + $(this).attr('id') + '">X</a> ' + $(this).next().detach().html();
 	});
-	$('#sns-classes-ajax-loading').hide();
-	$('#sns-dropdown-ajax-loading').hide();
-	$('#sns-dropdown-delete-ajax-loading').hide();
+	
+	$('.sns-ajax-loading').hide();
 
 	// TinyMCE refresher.
 	var snsBaseBodyClass = tinyMCEPreInit.mceInit.body_class.split(' ');
@@ -125,51 +139,69 @@ jQuery( document ).ready( function( $ ) {
 	}
 	snsBaseBodyClass = snsBaseBodyClass.join(' ');
 	
+	var ajaxArgsBase = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
+	
+	$('#sns-ajax-update-scripts').click(function(e){
+		e.preventDefault();
+		$('#sns-scripts-ajax-loading').show();
+		$(currentCodeMirror).each(function (){ this.save(); });
+		var args = ajaxArgsBase;
+		args.action = 'sns-update-scripts-ajax';
+		
+		args.uFp_scripts = $( '#uFp_scripts' ).val();
+		args.uFp_scripts_in_head = $( '#uFp_scripts_in_head' ).val();
+		
+		$.post( ajaxurl, args, function() { snsRefreshMCE(); } );
+	});
+	
+	$('#sns-ajax-update-styles').click(function(e){
+		e.preventDefault();
+		$(this).next().show();
+		$(currentCodeMirror).each(function (){ this.save(); });
+		var args = ajaxArgsBase;
+		args.action = 'sns-update-styles-ajax';
+		
+		args.uFp_scripts = $( '#uFp_styles' ).val();
+		
+		$.post( ajaxurl, args, function() { snsRefreshMCE(); } );
+	});
+	
 	$('#sns-ajax-update-classes').click(function(e){
 		e.preventDefault();
-		$('#sns-classes-ajax-loading').show();
-		$.post( ajaxurl,
-			{
-				action: 		'sns-classes-ajax',
-				_ajax_nonce:	$( '#scripts_n_styles_noncename' ).val(),
-				post_id:		$( '#post_ID' ).val(),
-				uFp_classes_body:		 $( '#uFp_classes_body' ).val(),
-				uFp_classes_post:		 $( '#uFp_classes_post' ).val(),
-			},
-			function( data ) { snsRefreshBodyClass( data ); }//, "json"
-		);
+		$(this).next().show();
+		var args = ajaxArgsBase;
+		args.action = 'sns-classes-ajax';
+		
+		args.uFp_classes_body = $( '#uFp_classes_body' ).val();
+		args.uFp_classes_post = $( '#uFp_classes_post' ).val();
+		
+		$.post( ajaxurl, args, function( data ) { snsRefreshBodyClass( data ); } );
 	});
 	
 	$('#sns-ajax-update-dropdown').click(function(e){
 		e.preventDefault();
-		$('#sns-dropdown-ajax-loading').show();
-		$.post( ajaxurl,
-			{
-				action: 		'sns-dropdown-ajax',
-				_ajax_nonce:	$( '#scripts_n_styles_noncename' ).val(),
-				post_id:		$( '#post_ID' ).val(),
-				uFp_classes_mce_label:	 $( '#uFp_classes_mce_label' ).val(),
-				uFp_classes_mce_type:	 $( '#uFp_classes_mce_type' ).val(),
-				uFp_classes_mce_element: $( '#uFp_classes_mce_element' ).val(),
-				uFp_classes_mce_name:	 $( '#uFp_classes_mce_name' ).val(),
-				uFp_classes_mce_wrap:	 $( '#uFp_classes_mce_wrap' ).val(),
-			},
-			function( data ) { snsRefreshStyleFormats( data ); }//, "json"
-		);
+		$(this).next().show();
+		var args = ajaxArgsBase;
+		args.action = 'sns-dropdown-ajax';
+		
+		args.uFp_classes_mce_label = $( '#uFp_classes_mce_label' ).val();
+		args.uFp_classes_mce_type = $( '#uFp_classes_mce_type' ).val();
+		args.uFp_classes_mce_element = $( '#uFp_classes_mce_element' ).val();
+		args.uFp_classes_mce_name = $( '#uFp_classes_mce_name' ).val();
+		args.uFp_classes_mce_wrap = $( '#uFp_classes_mce_wrap' ).val();
+		
+		$.post( ajaxurl, args, function( data ) { snsRefreshStyleFormats( data ); } );
 	});
 	
 	$('#delete-mce-dropdown-names .sns-ajax-delete').click(function(e){
 		e.preventDefault();
-		$('#sns-dropdown-ajax-loading').show();
-		$.post( ajaxurl,
-			{
-				action: 		'sns-dropdown-delete-ajax',
-				_ajax_nonce:	$( '#scripts_n_styles_noncename' ).val(),
-				post_id:		$( '#post_ID' ).val(),
-				uFp_delete:		 $( this ).class( 'id' ),
-			},
-			function( data ) { snsRefreshStyleFormats( data ); }//, "json"
-		);
+		$(this).next().show();
+		var args = ajaxArgsBase;
+		args.action = 'sns-dropdown-delete-ajax';
+		
+		args.uFp_delete = $( this ).attr( 'id' );
+		
+		$.post( ajaxurl, args, function( data ) { snsRefreshStyleFormats( data ); } );
 	});
 	
 	function snsRefreshDeleteNames( data ) {
@@ -182,7 +214,6 @@ jQuery( document ).ready( function( $ ) {
 		tinyMCEPreInit.mceInit.body_class = snsBaseBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
 		
 		snsRefreshMCE();
-		$('#sns-classes-ajax-loading').hide();
 	}
 	function snsRefreshStyleFormats( data ) {
 		var style_formats = [];
@@ -202,14 +233,14 @@ jQuery( document ).ready( function( $ ) {
 		}
 		tinyMCEPreInit.mceInit.style_formats = style_formats;
 		
-		snsRefreshMCE();
-		$('#sns-dropdown-ajax-loading').hide();
+		snsRefreshDeleteNames( data );
 	}
 	
 	function snsRefreshMCE() {
 		tinyMCE.editors["content"].save();
 		tinyMCE.editors["content"].remove();
 		tinyMCE.init(tinyMCEPreInit.mceInit);
+		$('.sns-ajax-loading').hide();
 	}
 	
 });
