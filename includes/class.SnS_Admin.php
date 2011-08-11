@@ -45,10 +45,10 @@ class SnS_Admin
 	}
 	function sns_update_scripts_ajax() {
 		check_ajax_referer( Scripts_n_Styles::$file );
-		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
-		if ( ! isset( $_REQUEST[ 'uFp_scripts' ] ) || ! isset( $_REQUEST[ 'uFp_scripts_in_head' ] ) ) die( 'Data incorrectly sent.' );
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'uFp_scripts' ] ) || ! isset( $_REQUEST[ 'uFp_scripts_in_head' ] ) ) exit( 'Data incorrectly sent.' );
 		
 		$post_id = $_REQUEST[ 'post_id' ];
 		$scripts = get_post_meta( $post_id, 'uFp_scripts', true );
@@ -64,15 +64,14 @@ class SnS_Admin
 			"scripts_in_head" => $scripts[ 'scripts_in_head' ],
 		) );
 		
-		die();
-		break;
+		exit();
 	}
 	function sns_update_styles_ajax() {
 		check_ajax_referer( Scripts_n_Styles::$file );
-		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
-		if ( ! isset( $_REQUEST[ 'uFp_styles' ] ) ) die( 'Data incorrectly sent.' );
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'uFp_styles' ] ) ) exit( 'Data incorrectly sent.' );
 		
 		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
@@ -86,15 +85,14 @@ class SnS_Admin
 			"styles" => $styles[ 'styles' ],
 		) );
 		
-		die();
-		break;
+		exit();
 	}
 	function sns_classes_ajax() {
 		check_ajax_referer( Scripts_n_Styles::$file );
-		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
-		if ( ! isset( $_REQUEST[ 'uFp_classes_body' ] ) || ! isset( $_REQUEST[ 'uFp_classes_post' ] ) ) die( 'Data incorrectly sent.' );
+		if ( ! isset( $_REQUEST[ 'uFp_classes_body' ] ) || ! isset( $_REQUEST[ 'uFp_classes_post' ] ) ) exit( 'Data incorrectly sent.' );
 		
 		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
@@ -110,19 +108,18 @@ class SnS_Admin
 			"classes_body" => $styles[ 'classes_body' ]
 		) );
 		
-		die();
-		break;
+		exit();
 	}
 	function sns_dropdown_ajax() {
 		check_ajax_referer( Scripts_n_Styles::$file );
-		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 
 		if ( empty( $_REQUEST[ 'uFp_classes_mce_label' ] )
 			|| empty( $_REQUEST[ 'uFp_classes_mce_element' ] )
 			|| empty( $_REQUEST[ 'uFp_classes_mce_name' ] )
-		) die( 'Missing at least one required field.' );
+		) exit( 'Missing at least one required field.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
 		$post_id = $_REQUEST[ 'post_id' ];
 		
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
@@ -132,60 +129,58 @@ class SnS_Admin
 			$classes_mce = array();
 		
 		$label = sanitize_title( $_POST[ 'uFp_classes_mce_label' ] );
-		$element = sanitize_key( $_POST[ 'uFp_classes_mce_element' ] );
-		$name = sanitize_title_with_dashes( $_POST[ 'uFp_classes_mce_name' ] );
-		
-		if ( isset( $_REQUEST[ 'uFp_classes_mce_type' ] ) && 'block' == $_REQUEST[ 'uFp_classes_mce_type' ] )
-			$type = 'block';
-		else if ( isset( $_REQUEST[ 'uFp_classes_mce_type' ] ) && 'inline' == $_REQUEST[ 'uFp_classes_mce_type' ] )
-			$type = 'inline';
-		else
-			$type = 'selector';
-		
-		$wrap = ( isset( $_REQUEST[ 'uFp_classes_mce_wrap' ] ) && 'block' == $type ) ? true: false;
 		
 		$mce_class = array();
-		$mce_class[ 'type' ] = $type;
-		$mce_class[ 'element' ] = $element;
-		$mce_class[ 'name' ] = $name;
-		$mce_class[ 'wrap' ] = $wrap;
+		
+		$mce_class[ 'element' ] = sanitize_key( $_POST[ 'uFp_classes_mce_element' ] );
+		$mce_class[ 'name' ] = sanitize_title_with_dashes( $_POST[ 'uFp_classes_mce_name' ] );
+		
+		if ( isset( $_REQUEST[ 'uFp_classes_mce_type' ] ) && 'block' == $_REQUEST[ 'uFp_classes_mce_type' ] )
+			$mce_class[ 'type' ] = 'block';
+		else if ( isset( $_REQUEST[ 'uFp_classes_mce_type' ] ) && 'inline' == $_REQUEST[ 'uFp_classes_mce_type' ] )
+			$mce_class[ 'type' ] = 'inline';
+		else
+			$mce_class[ 'type' ] = 'selector';
+		
+		$mce_class[ 'wrap' ]= ( isset( $_REQUEST[ 'uFp_classes_mce_wrap' ] ) && 'block' == $type ) ? true: false;
 		
 		$classes_mce[ $label ] = $mce_class;
 		
-		if ( ! empty( $classes_mce ) )
-			$styles[ 'classes_mce' ] = $classes_mce;
+		$styles[ 'classes_mce' ] = $classes_mce;
 		
 		update_post_meta( $post_id, 'uFp_styles', $styles );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			"classes_mce" => (array)$classes_mce
+			"classes_mce" => $classes_mce
 		) );
 		
-		die();
-		break;
+		exit();
 	}
 	function sns_dropdown_delete_ajax() {
 		check_ajax_referer( Scripts_n_Styles::$file );
-		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) die( 'Insufficient Privileges.' );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
 		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		
 		$uFp_delete = $_REQUEST[ 'uFp_delete' ];
+		$unset = $styles[ 'classes_mce' ][ $uFp_delete ];
+		//unset( $styles[ 'classes_mce' ][ $uFp_delete ] );
+		//update_post_meta( $post_id, 'uFp_styles', $styles );
+		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			"uFp_delete" => $uFp_delete
+			"classes_mce" => $styles[ 'classes_mce' ]
 		) );
 		
-		die();
-		break;
+		exit();
 	}
 	function sns_tinymce_styles_ajax() {
 		check_ajax_referer( 'sns-tinymce-styles-ajax' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
 		$post_id = $_REQUEST[ 'post_id' ];
 		
 		$options = get_option( 'SnS_options' );
@@ -202,8 +197,7 @@ class SnS_Admin
 		if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) 
 			echo $styles[ 'styles' ];
 		
-		die();
-		break;
+		exit();
 	}
 	function update_current_sns_tab() {
 		check_ajax_referer( Scripts_n_Styles::$file );
@@ -212,16 +206,15 @@ class SnS_Admin
 		$page = isset( $_POST[ 'page' ] ) ? $_POST[ 'page' ] : '';
 		
 		if ( !preg_match( '/^[a-z_-]+$/', $page ) )
-			die( 'Bad Page' );
+			exit( 'Bad Page' );
 		if ( ! $user = wp_get_current_user() )
-			die( 'Bad User' );
+			exit( 'Bad User' );
 		
 		$success = update_user_option( $user->ID, "update-current-sns-tab_$page", $active_tab, true);
 		if ( $success )
-			die( 'Current Tab Updated. New value is ' . $active_tab );
+			exit( 'Current Tab Updated. New value is ' . $active_tab );
 		else
-			die( 'Current Tab Not Updated. It is possible that no change was needed.' );
-		break;
+			exit( 'Current Tab Not Updated. It is possible that no change was needed.' );
 	}
 	
     /**

@@ -88,10 +88,11 @@ jQuery( document ).ready( function( $ ) {
 	// activate first run
 	$( '.wp-tab-active a', context ).trigger( 'click' );
 	
+	// show mce-dropdown sections
 	$( '#mce-dropdown-names', context ).show();
 	$( '#delete-mce-dropdown-names', context ).show();
 	
-	// set up ajax ui. (need to come up with a better naming scheme.)
+	// set up ajax ui. (need to come up with a better ID naming scheme.)
 	$('#uFp_scripts-tab').append(
 		'<div id="sns-scripts-update" class="sns-ajax-wrap">'
 		 + '<a id="sns-ajax-update-scripts" href="#" class="button">Update Scripts</a>'
@@ -130,7 +131,7 @@ jQuery( document ).ready( function( $ ) {
 	
 	$('.sns-ajax-loading').hide();
 
-	// TinyMCE refresher.
+	// TinyMCE refresher set up.
 	var snsBaseBodyClass = tinyMCEPreInit.mceInit.body_class.split(' ');
 	var sns_body_class = $('#uFp_classes_body').val().split;
 	
@@ -205,12 +206,6 @@ jQuery( document ).ready( function( $ ) {
 		$.post( ajaxurl, args, function( data ) { snsRefreshStyleFormats( data ); } );
 	});
 	
-	function snsRefreshDeleteNames( data ) {
-		// update 'delete-mce-dropdown-names' section
-		// Does nothing yet.
-		
-		snsRefreshMCE();
-	}
 	function snsRefreshBodyClass( data ) {
 		tinyMCEPreInit.mceInit.body_class = snsBaseBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
 		
@@ -218,7 +213,7 @@ jQuery( document ).ready( function( $ ) {
 	}
 	function snsRefreshStyleFormats( data ) {
 		var style_formats = [];
-		for ( x in data.classes_mce ) { // loop returned classes_mce
+		for ( var x in data.classes_mce ) { // loop returned classes_mce
 			var format = {};
 			format.title = x;
 			
@@ -234,7 +229,34 @@ jQuery( document ).ready( function( $ ) {
 		}
 		tinyMCEPreInit.mceInit.style_formats = style_formats;
 		
-		snsRefreshDeleteNames( data );
+		snsRefreshDeleteNames( data.classes_mce, style_formats );
+	}
+	function snsRefreshDeleteNames( classes, style_formats ) {
+		// update 'delete-mce-dropdown-names' section
+		console.log( 'classes' );
+		console.log( classes );
+		console.log( 'style_formats: ' );
+		console.log( style_formats );
+		if ( 0 < style_formats.length ) {
+			$( '#delete-mce-dropdown-names', context ).show();
+			for ( var x in classes ) {
+				console.log( x );
+				console.log( classes[x].element );
+				console.log( classes[x].name );
+				console.log( classes[x].type );
+				console.log( classes[x].wrap );
+			}
+			for ( var i=0; i < style_formats.length; i++ ) {
+				console.log( i );
+				console.log( style_formats[i].title );
+				console.log( style_formats[i].inline );
+				console.log( style_formats[i].classes );
+				console.log( style_formats[i].wrap );
+			}
+		} else {
+			$( '#delete-mce-dropdown-names', context ).hide();
+		}
+		snsRefreshMCE();
 	}
 	
 	function snsRefreshMCE() {
