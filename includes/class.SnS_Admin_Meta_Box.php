@@ -177,8 +177,7 @@ class SnS_Admin_Meta_Box
 				 * Note: Styles Dropdown section only makes sense when Javascript is enabled. (Otherwise, no TinyMCE.)
 				 */
 				?>
-				<div id="mce-dropdown-names">
-				<input type="hidden" value="nope" id="javascript_enabled" name="javascript_enabled" />
+				<div id="mce-dropdown-names" style="display: none;">
 					<h4>The Styles Dropdown</h4>
 					<div id="add-mce-dropdown-names">
 						<p>Add (or update) a class for the "Styles" drop-down:</p>
@@ -206,12 +205,8 @@ class SnS_Admin_Meta_Box
 						</p>
 					</div>
 					
-					<?php if ( ! empty( $styles[ 'classes_mce' ] ) ) { ?>
-					<div id="delete-mce-dropdown-names">
-						<p id="instructions-mce-dropdown-names">
-						Classes currently in the dropdown:<br />
-						<em>Check the box next to the Class and update the post if you'd like to remove it.</em>
-						</p>
+					<div id="delete-mce-dropdown-names" style="display: none;">
+						<p id="instructions-mce-dropdown-names">Classes currently in the dropdown:</p>
 						
 						<?php foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
 						<p>
@@ -230,7 +225,6 @@ class SnS_Admin_Meta_Box
 						<?php } ?>
 						
 					</div>
-					<?php } ?>
 				</div>
 			</div>
 			
@@ -381,6 +375,7 @@ class SnS_Admin_Meta_Box
 			if ( ! empty( $_POST[ 'uFp_enqueue_scripts' ] ) )
 				$scripts[ 'enqueue_scripts' ] = $_POST[ 'uFp_enqueue_scripts' ];
 			
+			// start of MCE Dropdown code.
 			$temp_styles = get_post_meta( $post_id, 'uFp_styles', true );
 			if ( ! isset( $temp_styles[ 'classes_mce' ] ) )
 				$classes_mce = array();
@@ -418,6 +413,7 @@ class SnS_Admin_Meta_Box
 			if ( isset( $_POST[ 'uFp_classes_mce_delete' ] ) && is_array( $_POST[ 'uFp_classes_mce_delete' ] ) ) 
 				foreach ( $_POST[ 'uFp_classes_mce_delete' ] as $key => $value )
 					unset( $styles[ 'classes_mce' ][ $key ] );
+			// end of MCE Dropdown code.
 			
 			update_post_meta( $post_id, 'uFp_scripts', $scripts );
 			update_post_meta( $post_id, 'uFp_styles', $styles );

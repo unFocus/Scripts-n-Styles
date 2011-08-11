@@ -88,7 +88,8 @@ jQuery( document ).ready( function( $ ) {
 	// activate first run
 	$( '.wp-tab-active a', context ).trigger( 'click' );
 	
-	
+	$( '#mce-dropdown-names', context ).show();
+	$( '#delete-mce-dropdown-names', context ).show();
 	
 	// set up ajax ui. (need to come up with a better naming scheme.)
 	$('#uFp_scripts-tab').append(
