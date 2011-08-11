@@ -218,7 +218,7 @@ class SnS_Admin_Meta_Box
 						<input type="checkbox"
 							name="uFp_classes_mce_delete[<?php echo $label ?>]"
 							value="delete"
-							id="uFp_classes_mce_delete[<?php echo $label ?>]" />
+							id="<?php echo $label ?>" />
 						<label for="uFp_classes_mce_delete[<?php echo $label ?>]">
 						"<?php echo $label ?>"
 						<code>

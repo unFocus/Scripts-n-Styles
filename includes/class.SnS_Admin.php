@@ -171,6 +171,16 @@ class SnS_Admin
 		
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) die( 'Bad post ID.' );
 		$post_id = $_REQUEST[ 'post_id' ];
+		$styles = get_post_meta( $post_id, 'uFp_styles', true );
+		
+		$uFp_delete = $_REQUEST[ 'uFp_delete' ];
+		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		echo json_encode( array(
+			"uFp_delete" => $uFp_delete
+		) );
+		
+		die();
+		break;
 	}
 	function sns_tinymce_styles_ajax() {
 		check_ajax_referer( 'sns-tinymce-styles-ajax' );
