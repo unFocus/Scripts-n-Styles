@@ -131,7 +131,8 @@ class SnS_Admin
 		$format[ 'element' ] = sanitize_key( $_POST[ 'uFp_classes_mce_element' ] );
 		$format[ 'name' ] = sanitize_title_with_dashes( $_POST[ 'uFp_classes_mce_name' ] );
 		
-		switch ( $_REQUEST[ 'uFp_classes_mce_type' ] ) {
+		switch ( $_REQUEST[ 'uFp_classes_mce_type' ] )
+		{
 			case 'block':
 				$format[ 'type' ] = 'block';
 				break;

@@ -354,43 +354,45 @@ class SnS_Admin_Meta_Box
 	 * @param int $post_id ID value of the WordPress post.
      */
 	static function save_post( $post_id ) {
-		if ( isset( $_POST[ self::NONCE_NAME ] ) && wp_verify_nonce( $_POST[ self::NONCE_NAME ], Scripts_n_Styles::$file )
-			&& current_user_can( 'unfiltered_html' ) 
-			&& ! wp_is_post_revision( $post_id ) // is needed for get_post_meta compatibility.
-			&& ! ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
+		if ( ! isset( $_POST[ self::NONCE_NAME ] )
+			|| ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], Scripts_n_Styles::$file )
+			|| ! current_user_can( 'unfiltered_html' ) 
+			|| wp_is_post_revision( $post_id ) // is needed for get_post_meta compatibility.
+			|| ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		) return;
 			
-			/* 
-				NOTE: There is no current_user_can( 'edit_post' ) check here, because as far as I 
-				can tell, in /wp-admin/post.php the calls edit_post(), write_post(), post_preview(), 
-				wp_untrash_post(), etc., the check is already done prior to the 'save_post' action, 
-				which is where this function is called. Other calls are from other pages so the 
-				NONCE covers those cases, and that leaves autosave, which is also checked here. 
-			*/
-			
-			$scripts = get_post_meta( $post_id, 'uFp_scripts', true );
-			$styles = get_post_meta( $post_id, 'uFp_styles', true );
-			
-			if ( isset( $_POST[ 'uFp_scripts_in_head' ] ) )
-				$scripts[ 'scripts_in_head' ] = $_POST[ 'uFp_scripts_in_head' ];
-			
-			if ( isset( $_POST[ 'uFp_scripts' ] ) )
-				$scripts[ 'scripts' ] = $_POST[ 'uFp_scripts' ];
-			
-			if ( isset( $_POST[ 'uFp_styles' ] ) )
-				$styles[ 'styles' ] = $_POST[ 'uFp_styles' ];
-			
-			if ( isset( $_POST[ 'uFp_classes_body' ] ) )
-				$styles[ 'classes_body' ] = $_POST[ 'uFp_classes_body' ];
-			
-			if ( isset( $_POST[ 'uFp_classes_post' ] ) )
-				$styles[ 'classes_post' ] = $_POST[ 'uFp_classes_post' ];
-			
-			if ( isset( $_POST[ 'uFp_enqueue_scripts' ] ) )
-				$scripts[ 'enqueue_scripts' ] = $_POST[ 'uFp_enqueue_scripts' ];
-			
-			update_post_meta( $post_id, 'uFp_scripts', $scripts );
-			update_post_meta( $post_id, 'uFp_styles', $styles );
-		}
+		/* 
+			NOTE: There is no current_user_can( 'edit_post' ) check here, because as far as I 
+			can tell, in /wp-admin/post.php the calls edit_post(), write_post(), post_preview(), 
+			wp_untrash_post(), etc., the check is already done prior to the 'save_post' action, 
+			which is where this function is called. Other calls are from other pages so the 
+			NONCE covers those cases, and that leaves autosave, which is also checked here. 
+		*/
+		
+		$scripts = get_post_meta( $post_id, 'uFp_scripts', true );
+		$styles = get_post_meta( $post_id, 'uFp_styles', true );
+		
+		if ( isset( $_POST[ 'uFp_scripts_in_head' ] ) )
+			$scripts[ 'scripts_in_head' ] = $_POST[ 'uFp_scripts_in_head' ];
+		
+		if ( isset( $_POST[ 'uFp_scripts' ] ) )
+			$scripts[ 'scripts' ] = $_POST[ 'uFp_scripts' ];
+		
+		if ( isset( $_POST[ 'uFp_styles' ] ) )
+			$styles[ 'styles' ] = $_POST[ 'uFp_styles' ];
+		
+		if ( isset( $_POST[ 'uFp_classes_body' ] ) )
+			$styles[ 'classes_body' ] = $_POST[ 'uFp_classes_body' ];
+		
+		if ( isset( $_POST[ 'uFp_classes_post' ] ) )
+			$styles[ 'classes_post' ] = $_POST[ 'uFp_classes_post' ];
+		
+		if ( isset( $_POST[ 'uFp_enqueue_scripts' ] ) )
+			$scripts[ 'enqueue_scripts' ] = $_POST[ 'uFp_enqueue_scripts' ];
+		
+		update_post_meta( $post_id, 'uFp_scripts', $scripts );
+		update_post_meta( $post_id, 'uFp_styles', $styles );
+		
 	}
 }
 ?>
