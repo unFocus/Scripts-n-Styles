@@ -125,9 +125,8 @@ class SnS_Admin
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		
 		// initiallize new format
-		$format = array();
-		
 		$label = sanitize_title( $_POST[ 'uFp_classes_mce_label' ] );
+		$format = array();
 		$format[ 'element' ] = sanitize_key( $_POST[ 'uFp_classes_mce_element' ] );
 		$format[ 'name' ] = sanitize_title_with_dashes( $_POST[ 'uFp_classes_mce_name' ] );
 		
@@ -150,12 +149,10 @@ class SnS_Admin
 		$format[ 'wrap' ]= ( isset( $_REQUEST[ 'uFp_classes_mce_wrap' ] ) && 'block' == $format[ 'type' ]) ? true: false;
 		
 		// add new format
-		if ( isset( $styles[ 'classes_mce' ] ) )
-			$classes_mce = $styles[ 'classes_mce' ];
-		else
-			$classes_mce = array();
+		if ( ! isset( $styles[ 'classes_mce' ] ) )
+			$styles[ 'classes_mce' ] = array();
 		
-		$classes_mce[ $label ] = $format;
+		$styles[ 'classes_mce' ][ $label ] = $format;
 		
 		$styles[ 'classes_mce' ] = $classes_mce;
 		
@@ -176,10 +173,12 @@ class SnS_Admin
 		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		
-		$uFp_delete = $_REQUEST[ 'uFp_delete' ];
-		$unset = $styles[ 'classes_mce' ][ $uFp_delete ];
-		//unset( $styles[ 'classes_mce' ][ $uFp_delete ] );
-		//update_post_meta( $post_id, 'uFp_styles', $styles );
+		$key = $_REQUEST[ 'uFp_delete' ];
+		
+		if ( isset( $styles[ 'classes_mce' ][ $key ] ) ) unset( $styles[ 'classes_mce' ][ $key ] );
+		else exit ( 'No Format of that name.' );
+		
+		update_post_meta( $post_id, 'uFp_styles', $styles );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -197,8 +196,8 @@ class SnS_Admin
 		$options = get_option( 'SnS_options' );
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		
-		/*header('Content-Type: text/css; charset=' . get_option('blog_charset'));
-		header("Cache-Control: no-cache");
+		header('Content-Type: text/css; charset=' . get_option('blog_charset'));
+		/*header("Cache-Control: no-cache");
 		header("Pragma: no-cache");
 		session_cache_limiter( 'nocache' );*/
 		
