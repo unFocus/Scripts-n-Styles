@@ -90,7 +90,8 @@ jQuery( document ).ready( function( $ ) {
 	
 	// show mce-dropdown sections
 	$( '#mce-dropdown-names', context ).show();
-	$( '#delete-mce-dropdown-names', context ).show();
+	if ( tinyMCEPreInit.mceInit.style_formats.length )
+		$( '#delete-mce-dropdown-names', context ).show();
 	
 	// set up ajax ui. (need to come up with a better ID naming scheme.)
 	$('#uFp_scripts-tab').append(
@@ -217,12 +218,20 @@ jQuery( document ).ready( function( $ ) {
 			var format = {};
 			format.title = x;
 			
-			if ( "inline" == data.classes_mce[x].type ) 
-				format.inline = data.classes_mce[x].element;
-			else if ( "block" == data.classes_mce[x].type ) 
-				format.block = data.classes_mce[x].element;
-			else 
-				format.selector = data.classes_mce[x].element;
+			switch ( data.classes_mce[x].type ) {
+				case 'inline':
+					format.inline = data.classes_mce[x].element;
+					break;
+				case 'block':
+					format.block = data.classes_mce[x].element;
+					break;
+				case 'selector':
+					format.selector = data.classes_mce[x].element;
+					break;
+				default:
+					//alert('dropdown format has bad type.');
+					return;
+			}
 			
 			format.classes = data.classes_mce[x].name;
 			style_formats.push( format );

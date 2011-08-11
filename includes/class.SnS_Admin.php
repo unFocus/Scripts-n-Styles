@@ -123,28 +123,38 @@ class SnS_Admin
 		$post_id = $_REQUEST[ 'post_id' ];
 		
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
-		$classes_mce = $styles[ 'classes_mce' ];
 		
-		if ( ! isset( $classes_mce ) )
-			$classes_mce = array();
+		// initiallize new format
+		$format = array();
 		
 		$label = sanitize_title( $_POST[ 'uFp_classes_mce_label' ] );
+		$format[ 'element' ] = sanitize_key( $_POST[ 'uFp_classes_mce_element' ] );
+		$format[ 'name' ] = sanitize_title_with_dashes( $_POST[ 'uFp_classes_mce_name' ] );
 		
-		$mce_class = array();
+		switch ( $_REQUEST[ 'uFp_classes_mce_type' ] ) {
+			case 'block':
+				$format[ 'type' ] = 'block';
+				break;
+			case 'inline':
+				$format[ 'type' ] = 'inline';
+				break;
+			case 'selector':
+				$format[ 'type' ] = 'selector';
+				break;
+			default:
+				exit( 'Dropdown Type is Faulty.' );
+				break;
+		}
 		
-		$mce_class[ 'element' ] = sanitize_key( $_POST[ 'uFp_classes_mce_element' ] );
-		$mce_class[ 'name' ] = sanitize_title_with_dashes( $_POST[ 'uFp_classes_mce_name' ] );
+		$format[ 'wrap' ]= ( isset( $_REQUEST[ 'uFp_classes_mce_wrap' ] ) && 'block' == $format[ 'type' ]) ? true: false;
 		
-		if ( isset( $_REQUEST[ 'uFp_classes_mce_type' ] ) && 'block' == $_REQUEST[ 'uFp_classes_mce_type' ] )
-			$mce_class[ 'type' ] = 'block';
-		else if ( isset( $_REQUEST[ 'uFp_classes_mce_type' ] ) && 'inline' == $_REQUEST[ 'uFp_classes_mce_type' ] )
-			$mce_class[ 'type' ] = 'inline';
+		// add new format
+		if ( isset( $styles[ 'classes_mce' ] ) )
+			$classes_mce = $styles[ 'classes_mce' ];
 		else
-			$mce_class[ 'type' ] = 'selector';
+			$classes_mce = array();
 		
-		$mce_class[ 'wrap' ]= ( isset( $_REQUEST[ 'uFp_classes_mce_wrap' ] ) && 'block' == $type ) ? true: false;
-		
-		$classes_mce[ $label ] = $mce_class;
+		$classes_mce[ $label ] = $format;
 		
 		$styles[ 'classes_mce' ] = $classes_mce;
 		

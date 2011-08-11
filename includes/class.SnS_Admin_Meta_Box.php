@@ -221,7 +221,7 @@ class SnS_Admin_Meta_Box
 					<div id="delete-mce-dropdown-names" style="display: none;">
 						<p id="instructions-mce-dropdown-names">Classes currently in the dropdown:</p>
 						
-						<?php foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
+						<?php if ( isset( $styles[ 'classes_mce' ] ) ) foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
 						<p>
 						<input type="checkbox"
 							name="uFp_classes_mce_delete[<?php echo $label ?>]"
@@ -367,66 +367,26 @@ class SnS_Admin_Meta_Box
 				NONCE covers those cases, and that leaves autosave, which is also checked here. 
 			*/
 			
-			$scripts = array();
-			$styles = array();
+			$scripts = get_post_meta( $post_id, 'uFp_scripts', true );
+			$styles = get_post_meta( $post_id, 'uFp_styles', true );
 			
-			if ( ! empty( $_POST[ 'uFp_scripts' ] ) )
-				$scripts[ 'scripts' ] = $_POST[ 'uFp_scripts' ];
-			
-			if ( ! empty( $_POST[ 'uFp_styles' ] ) )
-				$styles[ 'styles' ] = $_POST[ 'uFp_styles' ];
-			
-			if ( ! empty( $_POST[ 'uFp_scripts_in_head' ] ) )
+			if ( isset( $_POST[ 'uFp_scripts_in_head' ] ) )
 				$scripts[ 'scripts_in_head' ] = $_POST[ 'uFp_scripts_in_head' ];
 			
-			if ( ! empty( $_POST[ 'uFp_classes_body' ] ) )
+			if ( isset( $_POST[ 'uFp_scripts' ] ) )
+				$scripts[ 'scripts' ] = $_POST[ 'uFp_scripts' ];
+			
+			if ( isset( $_POST[ 'uFp_styles' ] ) )
+				$styles[ 'styles' ] = $_POST[ 'uFp_styles' ];
+			
+			if ( isset( $_POST[ 'uFp_classes_body' ] ) )
 				$styles[ 'classes_body' ] = $_POST[ 'uFp_classes_body' ];
 			
-			if ( ! empty( $_POST[ 'uFp_classes_post' ] ) )
+			if ( isset( $_POST[ 'uFp_classes_post' ] ) )
 				$styles[ 'classes_post' ] = $_POST[ 'uFp_classes_post' ];
 			
-			if ( ! empty( $_POST[ 'uFp_enqueue_scripts' ] ) )
+			if ( isset( $_POST[ 'uFp_enqueue_scripts' ] ) )
 				$scripts[ 'enqueue_scripts' ] = $_POST[ 'uFp_enqueue_scripts' ];
-			
-			// start of MCE Dropdown code.
-			$temp_styles = get_post_meta( $post_id, 'uFp_styles', true );
-			if ( ! isset( $temp_styles[ 'classes_mce' ] ) )
-				$classes_mce = array();
-			else 
-				$classes_mce = $temp_styles[ 'classes_mce' ];
-				
-			if ( ! empty( $_POST[ 'uFp_classes_mce_label' ] )
-				&& ! empty( $_POST[ 'uFp_classes_mce_element' ] )
-				&& ! empty( $_POST[ 'uFp_classes_mce_name' ] )
-			) {
-				$label = sanitize_title( $_POST[ 'uFp_classes_mce_label' ] );
-				$element = sanitize_key( $_POST[ 'uFp_classes_mce_element' ] );
-				$name = sanitize_title_with_dashes( $_POST[ 'uFp_classes_mce_name' ] );
-				
-				if ( isset( $_POST[ 'uFp_classes_mce_type' ] ) && 'block' == $_POST[ 'uFp_classes_mce_type' ] )
-					$type = 'block';
-				else if ( isset( $_POST[ 'uFp_classes_mce_type' ] ) && 'inline' == $_POST[ 'uFp_classes_mce_type' ] )
-					$type = 'inline';
-				else
-					$type = 'selector';
-				
-				$wrap = ( isset( $_POST[ 'uFp_classes_mce_wrap' ] ) && 'block' == $type ) ? true: false;
-				
-				$mce_class = array();
-				$mce_class[ 'type' ] = $type;
-				$mce_class[ 'element' ] = $element;
-				$mce_class[ 'name' ] = $name;
-				$mce_class[ 'wrap' ] = $wrap;
-				
-				$classes_mce[ $label ] = $mce_class;
-			}
-			if ( ! empty( $classes_mce ) )
-				$styles[ 'classes_mce' ] = $classes_mce;
-			
-			if ( isset( $_POST[ 'uFp_classes_mce_delete' ] ) && is_array( $_POST[ 'uFp_classes_mce_delete' ] ) ) 
-				foreach ( $_POST[ 'uFp_classes_mce_delete' ] as $key => $value )
-					unset( $styles[ 'classes_mce' ][ $key ] );
-			// end of MCE Dropdown code.
 			
 			update_post_meta( $post_id, 'uFp_scripts', $scripts );
 			update_post_meta( $post_id, 'uFp_styles', $styles );
