@@ -113,54 +113,32 @@ class SnS_Admin
 	function sns_dropdown_ajax() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
-
-		if ( empty( $_REQUEST[ 'uFp_classes_mce_label' ] )
-			|| empty( $_REQUEST[ 'uFp_classes_mce_element' ] )
-			|| empty( $_REQUEST[ 'uFp_classes_mce_name' ] )
-		) exit( 'Missing at least one required field.' );
+		
+		if ( ! isset( $_REQUEST[ 'format' ] ) || empty( $_REQUEST[ 'format' ] ) ) exit( 'Missing Format.' );
+		if ( empty( $_REQUEST[ 'format' ][ 'title' ] ) ) exit( 'Title is required.' );
+		if ( empty( $_REQUEST[ 'format' ][ 'classes' ] ) ) exit( 'Classes is required.' );
+		if (
+			empty( $_REQUEST[ 'format' ][ 'inline' ] ) &&
+			empty( $_REQUEST[ 'format' ][ 'block' ] ) &&
+			empty( $_REQUEST[ 'format' ][ 'selector' ] )
+		) exit( 'A type is required.' );
 		
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
 		$post_id = $_REQUEST[ 'post_id' ];
 		
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		
-		// initiallize new format
-		$label = sanitize_title( $_POST[ 'uFp_classes_mce_label' ] );
-		$format = array();
-		$format[ 'element' ] = sanitize_key( $_POST[ 'uFp_classes_mce_element' ] );
-		$format[ 'name' ] = sanitize_title_with_dashes( $_POST[ 'uFp_classes_mce_name' ] );
-		
-		switch ( $_REQUEST[ 'uFp_classes_mce_type' ] )
-		{
-			case 'block':
-				$format[ 'type' ] = 'block';
-				break;
-			case 'inline':
-				$format[ 'type' ] = 'inline';
-				break;
-			case 'selector':
-				$format[ 'type' ] = 'selector';
-				break;
-			default:
-				exit( 'Dropdown Type is Faulty.' );
-				break;
-		}
-		
-		$format[ 'wrap' ]= ( isset( $_REQUEST[ 'uFp_classes_mce_wrap' ] ) && 'block' == $format[ 'type' ]) ? true: false;
-		
-		// add new format
 		if ( ! isset( $styles[ 'classes_mce' ] ) )
 			$styles[ 'classes_mce' ] = array();
 		
-		$styles[ 'classes_mce' ][ $label ] = $format;
-		
-		$styles[ 'classes_mce' ] = $classes_mce;
+		// pass title as key to be able to delete.
+		$styles[ 'classes_mce' ][ $_REQUEST[ 'format' ][ 'title' ] ] = $_REQUEST[ 'format' ];
 		
 		update_post_meta( $post_id, 'uFp_styles', $styles );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			"classes_mce" => $classes_mce
+			"classes_mce" => array_values( $styles[ 'classes_mce' ] )
 		) );
 		
 		exit();
@@ -173,16 +151,16 @@ class SnS_Admin
 		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		
-		$key = $_REQUEST[ 'uFp_delete' ];
+		$title = $_REQUEST[ 'uFp_delete' ];
 		
-		if ( isset( $styles[ 'classes_mce' ][ $key ] ) ) unset( $styles[ 'classes_mce' ][ $key ] );
+		if ( isset( $styles[ 'classes_mce' ][ $title ] ) ) unset( $styles[ 'classes_mce' ][ $title ] );
 		else exit ( 'No Format of that name.' );
 		
 		update_post_meta( $post_id, 'uFp_styles', $styles );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			"classes_mce" => $styles[ 'classes_mce' ]
+			"classes_mce" => array_values( $styles[ 'classes_mce' ] )
 		) );
 		
 		exit();

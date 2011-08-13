@@ -52,39 +52,19 @@ class SnS_Admin_Meta_Box
 			$initArray['body_class'] .= ' ' . $styles[ 'classes_post' ];
 		
 		// In case Themes or plugins have added style_formats, not tested.
-		if ( isset( $initArray['style_formats'] ) ) $style_formats = json_decode( $initArray['style_formats'], true );
-		else $style_formats = array();
-			
-		$formats = array();
+		if ( isset( $initArray['style_formats'] ) )
+			$style_formats = json_decode( $initArray['style_formats'], true );
+		else
+			$style_formats = array();
 		
 		if ( ! empty( $styles[ 'classes_mce' ] ) )
-			foreach ( $styles[ 'classes_mce' ] as $label => $mce_class ) {
-				$class = array(
-					'title' => $label,
-					'classes' => $mce_class[ 'name' ]
-				);
-				switch ( $mce_class[ 'type' ] ) {
-					case 'inline':
-						$class[ 'inline' ] = $mce_class[ 'element' ];
-						break;
-					case 'block':
-						$class[ 'block' ] = $mce_class[ 'element' ];
-						break;
-					case 'selector':
-						$class[ 'selector' ] = $mce_class[ 'element' ];
-						break;
-					default:
-						return $initArray;
-						break;
-				}
-				if ( $mce_class[ 'wrap' ] ) $class[ 'wrapper' ] = true;
-				$formats[] = $class;
-			}
+			foreach ( $styles[ 'classes_mce' ] as $format )
+				$style_formats[] = $format;
 		
-		$initArray['style_formats'] = json_encode( array_merge( $style_formats, $formats ) );
+		if ( ! empty( $style_formats ) )
+			$initArray['style_formats'] = json_encode( $style_formats );
 		
 		return $initArray;
-	
 	}
 	
     /**
@@ -194,49 +174,37 @@ class SnS_Admin_Meta_Box
 					<h4>The Styles Dropdown</h4>
 					<div id="add-mce-dropdown-names">
 						<p>Add (or update) a class for the "Styles" drop-down:</p>
-						<label for="uFp_classes_mce_label">Label:</label>
-						<input name="uFp_classes_mce_label" id="uFp_classes_mce_label"
-							value="" type="text" class="code" style="width: 80px;" />
-						<br />
-						<label for="uFp_classes_mce_type">Type:</label>
-						<select name="uFp_classes_mce_type" id="uFp_classes_mce_type" style="width: 80px;">
-							<option value="inline">Inline</option>
-							<option value="block">Block</option>
-							<option value="selector">Selector</option>
-						</select>
-						<br />
-						<label for="uFp_classes_mce_element">Element:</label>
-						<input name="uFp_classes_mce_element" id="uFp_classes_mce_element"
-							value="" type="text" class="code" style="width: 80px;" />
-						<br />
-						<label for="uFp_classes_mce_name">Class:</label>
-						<input name="uFp_classes_mce_name" id="uFp_classes_mce_name"
-							value="" type="text" class="code" style="width: 80px;" />
-						<br />
-						<label for="uFp_classes_mce_wrap">Wrap:</label>
-						<input name="uFp_classes_mce_wrap" id="uFp_classes_mce_wrap" type="checkbox" />
+						<p class="sns-mce-title">
+							<label for="uFp_classes_mce_title">Title:</label>
+							<input name="uFp_classes_mce_title" id="uFp_classes_mce_title"
+								value="" type="text" class="code" style="width: 80px;" />
+						</p>
+						<p class="sns-mce-type">
+							<label for="uFp_classes_mce_type">Type:</label>
+							<select name="uFp_classes_mce_type" id="uFp_classes_mce_type" style="width: 80px;">
+								<option value="inline">Inline</option>
+								<option value="block">Block</option>
+								<option value="selector">Selector</option>
+							</select>
+						</p>
+						<p class="sns-mce-element">
+							<label for="uFp_classes_mce_element">Element:</label>
+							<input name="uFp_classes_mce_element" id="uFp_classes_mce_element"
+								value="" type="text" class="code" style="width: 80px;" />
+						</p>
+						<p class="sns-mce-classes">
+							<label for="uFp_classes_mce_classes">classes:</label>
+							<input name="uFp_classes_mce_classes" id="uFp_classes_mce_classes"
+								value="" type="text" class="code" style="width: 80px;" />
+						</p>
+						<p class="sns-mce-wrapper" style="display: none;">
+							<label for="uFp_classes_mce_wrapper">Wrapper:</label>
+							<input name="uFp_classes_mce_wrapper" id="uFp_classes_mce_wrapper" type="checkbox" value="true" />
 						</p>
 					</div>
 					
 					<div id="delete-mce-dropdown-names" style="display: none;">
 						<p id="instructions-mce-dropdown-names">Classes currently in the dropdown:</p>
-						
-						<?php if ( isset( $styles[ 'classes_mce' ] ) ) foreach( $styles[ 'classes_mce' ] as $label => $mce_class ) { ?>
-						<p>
-						<input type="checkbox"
-							name="uFp_classes_mce_delete[<?php echo $label ?>]"
-							value="delete"
-							id="<?php echo $label ?>" />
-						<label for="uFp_classes_mce_delete[<?php echo $label ?>]">
-						"<?php echo $label ?>"
-						<code>
-						<?php echo '&lt;' . $mce_class[ 'element' ] . ' class="' . $mce_class[ 'name' ] . '"&gt;'; ?>
-						</code>
-						<?php echo ( $mce_class[ 'wrap' ] ) ? ' (wrapper)': ''; ?>
-						</label>
-						</p>
-						<?php } ?>
-						
 					</div>
 				</div>
 			</div>
