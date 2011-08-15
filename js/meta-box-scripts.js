@@ -252,7 +252,6 @@ jQuery( document ).ready( function( $ ) {
 				format.selector = $( '#uFp_classes_mce_element' ).val();
 				break;
 			default:
-				alert('dropdown format has bad type.');
 				return;
 		}
 		args.format = format;
@@ -273,7 +272,7 @@ jQuery( document ).ready( function( $ ) {
 	
 	function snsRefreshBodyClass( data ) {
 		tinyMCEPreInit.mceInit.body_class = snsBaseBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
-		
+		tinymce.settings.body_class = tinyMCEPreInit.mceInit.body_class;
 		snsRefreshMCE();
 	}
 	function snsRefreshStyleFormats( data ) {
@@ -302,27 +301,43 @@ jQuery( document ).ready( function( $ ) {
 				style_formats.push( format );
 			}
 			tinyMCEPreInit.mceInit.style_formats = style_formats;
+			tinymce.settings.style_formats = tinyMCEPreInit.mceInit.style_formats;
 			if ( tinyMCEPreInit.mceInit.theme_advanced_buttons2.indexOf( "styleselect" ) == -1 ) {
 				var tempString = "styleselect,";
 				tinyMCEPreInit.mceInit.theme_advanced_buttons2 = tempString.concat(tinyMCEPreInit.mceInit.theme_advanced_buttons2);
 			}
+			tinymce.settings.theme_advanced_buttons2 = tinyMCEPreInit.mceInit.theme_advanced_buttons2;
 			$( '#delete-mce-dropdown-names', context ).show();
 		} else {
 			delete tinyMCEPreInit.mceInit.style_formats;
 			tinyMCEPreInit.mceInit.theme_advanced_buttons2 = tinyMCEPreInit.mceInit.theme_advanced_buttons2.replace("styleselect,", "");
+			tinymce.settings.theme_advanced_buttons2 = tinyMCEPreInit.mceInit.theme_advanced_buttons2;
 			$( '#delete-mce-dropdown-names', context ).hide();
 		}
+		
 		snsRefreshDeleteBtns();
 		snsRefreshMCE();
 	}
 	
 	function snsRefreshMCE() {
-		//if ( tinyMCE.editors["content"] ) {
+		if ( tinyMCE.editors["content"] ) {
 			tinyMCE.editors["content"].save();
-			tinyMCE.editors["content"].remove();
-			tinyMCE.init( tinyMCEPreInit.mceInit );
-			$('.sns-ajax-loading').hide();
-		//}
+			if ( tinyMCE.editors["content"].isHidden() ) {
+				console.log('isHidden');
+				tinyMCE.editors["content"].remove();
+				if ( ! $( '#content' ).hasClass( '.theEditor' ) ) $( '#content' ).addClass( 'theEditor' );
+				tinyMCE.init( tinyMCEPreInit.mceInit );
+				tinyMCE.editors["content"].hide();
+			} else {
+				console.log('!isHidden');
+				tinyMCE.editors["content"].remove();
+				if ( ! $( '#content' ).hasClass( '.theEditor' ) ) $( '#content' ).addClass( 'theEditor' );
+				tinyMCE.init( tinyMCEPreInit.mceInit );
+			}
+		} else if ( tinymce.settings ) {
+			console.log(tinymce.settings);
+		}
+		$('.sns-ajax-loading').hide();
 	}
 	
 });
