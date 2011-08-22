@@ -141,6 +141,8 @@ jQuery( document ).ready( function( $ ) {
 					deleteBtn.element =  formats[i].block;
 					if ( formats[i].wrapper )
 						deleteBtn.wrapper = ' (wrapper)';
+					else
+						deleteBtn.wrapper = '';
 				} else if ( formats[i].selector ) {
 					deleteBtn.element =  formats[i].selector;
 					deleteBtn.wrapper = '';
@@ -154,7 +156,8 @@ jQuery( document ).ready( function( $ ) {
 					+ deleteBtn.title + '">X</a> "'
 					+ deleteBtn.title + '" <code>&lt;'
 					+ deleteBtn.element + ' class="'
-					+ deleteBtn.classes + '"&gt;</code></p>'
+					+ deleteBtn.classes + '"&gt;</code>'
+					+ deleteBtn.wrapper + '</p>'
 				);
 			}
 		} else {
@@ -290,9 +293,11 @@ jQuery( document ).ready( function( $ ) {
 				
 				if ( data.classes_mce[i].inline )
 					format.inline = data.classes_mce[i].inline;
-				else if ( data.classes_mce[i].block )
+				else if ( data.classes_mce[i].block ) {
 					format.block = data.classes_mce[i].block;
-				else if ( data.classes_mce[i].selector )
+					if (data.classes_mce[i].wrapper)
+						format.wrapper = true;
+				} else if ( data.classes_mce[i].selector )
 					format.selector = data.classes_mce[i].selector;
 				else
 					alert('dropdown format has bad type.');
@@ -318,24 +323,23 @@ jQuery( document ).ready( function( $ ) {
 		snsRefreshDeleteBtns();
 		snsRefreshMCE();
 	}
-	
 	function snsRefreshMCE() {
 		if ( tinyMCE.editors["content"] ) {
-			tinyMCE.editors["content"].save();
+			if ( ! $( '#content' ).hasClass( '.theEditor' ) ) $( '#content' ).addClass( 'theEditor' );
+			
 			if ( tinyMCE.editors["content"].isHidden() ) {
-				console.log('isHidden');
 				tinyMCE.editors["content"].remove();
-				if ( ! $( '#content' ).hasClass( '.theEditor' ) ) $( '#content' ).addClass( 'theEditor' );
 				tinyMCE.init( tinyMCEPreInit.mceInit );
 				tinyMCE.editors["content"].hide();
 			} else {
-				console.log('!isHidden');
+				// you've got to be kidding me.
+				switchEditors.go('content', 'html');
 				tinyMCE.editors["content"].remove();
-				if ( ! $( '#content' ).hasClass( '.theEditor' ) ) $( '#content' ).addClass( 'theEditor' );
 				tinyMCE.init( tinyMCEPreInit.mceInit );
+				tinyMCE.editors["content"].hide();
+				switchEditors.go('content', 'tinymce');
 			}
-		} else if ( tinymce.settings ) {
-			console.log(tinymce.settings);
+			
 		}
 		$('.sns-ajax-loading').hide();
 	}
