@@ -3,7 +3,7 @@
 // Tabs code.
 jQuery( document ).ready( function( $ ) {
 	
-	// hack for WP 3.3 compat
+	// hack for compat: 3.3 || 3.2 
 	var sns_mceInit = tinyMCEPreInit.mceInit["content"] || tinyMCEPreInit.mceInit;
 	
 	var context = $( '#uFp_meta_box' );
@@ -279,6 +279,8 @@ jQuery( document ).ready( function( $ ) {
 	
 	function snsRefreshBodyClass( data ) {
 		sns_mceInit.body_class = snsBaseBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
+		
+		// needed for < 3.3
 		if ( tinymce.settings ) tinymce.settings.body_class = sns_mceInit.body_class;
 		snsRefreshMCE();
 	}
@@ -310,16 +312,22 @@ jQuery( document ).ready( function( $ ) {
 				style_formats.push( format );
 			}
 			sns_mceInit.style_formats = style_formats;
+			
+			// needed for < 3.3
 			if ( tinymce.settings ) tinymce.settings.style_formats = sns_mceInit.style_formats;
 			if ( sns_mceInit.theme_advanced_buttons2.indexOf( "styleselect" ) == -1 ) {
 				var tempString = "styleselect,";
 				sns_mceInit.theme_advanced_buttons2 = tempString.concat(sns_mceInit.theme_advanced_buttons2);
 			}
+			
+			// needed for < 3.3
 			if ( tinymce.settings ) tinymce.settings.theme_advanced_buttons2 = sns_mceInit.theme_advanced_buttons2;
 			$( '#delete-mce-dropdown-names', context ).show();
 		} else {
 			delete sns_mceInit.style_formats;
 			sns_mceInit.theme_advanced_buttons2 = sns_mceInit.theme_advanced_buttons2.replace("styleselect,", "");
+			
+			// needed for < 3.3
 			if ( tinymce.settings ) tinymce.settings.theme_advanced_buttons2 = sns_mceInit.theme_advanced_buttons2;
 			$( '#delete-mce-dropdown-names', context ).hide();
 		}
@@ -329,7 +337,7 @@ jQuery( document ).ready( function( $ ) {
 	}
 	function snsRefreshMCE() {
 		if ( tinyMCE.editors["content"] ) {
-			// needed for pre WP 3.3 editor initialization.
+			// needed for < 3.3 editor initialization.
 			if ( ! $( '#content' ).hasClass( '.theEditor' ) ) $( '#content' ).addClass( 'theEditor' );
 			
 			if ( tinyMCE.editors["content"].isHidden() ) {
@@ -339,18 +347,18 @@ jQuery( document ).ready( function( $ ) {
 			} else {
 				// you've got to be kidding me.
 				if ( 1 == $('#content-html').length )
-					$('#content-html').click();
+					$('#content-html').click(); // 3.3
 				else if( 1 == $('#edButtonHTML').length )
-					switchEditors.go('content', 'html');
+					switchEditors.go('content', 'html'); // 3.2
 				
 				tinyMCE.editors["content"].remove();
 				tinyMCE.init( sns_mceInit );
 				tinyMCE.editors["content"].hide();
 				
 				if ( 1 == $('#content-tmce').length )
-					$('#content-tmce').click();
+					$('#content-tmce').click(); // 3.3
 				else if( 1 == $('#edButtonPreview').length )
-					switchEditors.go('content', 'tinymce');
+					switchEditors.go('content', 'tinymce'); // 3.2
 			}
 			
 		}
