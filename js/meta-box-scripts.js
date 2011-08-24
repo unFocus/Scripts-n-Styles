@@ -3,6 +3,9 @@
 // Tabs code.
 jQuery( document ).ready( function( $ ) {
 	
+	// hack for WP 3.3 compat
+	var sns_mceInit = tinyMCEPreInit.mceInit.content || tinyMCEPreInit.mceInit;
+	
 	var context = $( '#uFp_meta_box' );
 	var CodeMirrors = [];
 	var currentCodeMirror = [];
@@ -128,10 +131,11 @@ jQuery( document ).ready( function( $ ) {
 	snsRefreshDeleteBtns();
 	
 	function snsRefreshDeleteBtns() {
-		if ( tinyMCEPreInit.mceInit.style_formats && tinyMCEPreInit.mceInit.style_formats.length ) {
+		
+		if ( sns_mceInit.style_formats && sns_mceInit.style_formats.length ) {
 			$( '#delete-mce-dropdown-names .sns-ajax-delete-p' ).remove();
 			$( '#delete-mce-dropdown-names', context ).show();
-			var formats = tinyMCEPreInit.mceInit.style_formats;
+			var formats = sns_mceInit.style_formats;
 			for ( var i = 0; i < formats.length; i++ ) {
 				var deleteBtn = {};
 				if ( formats[i].inline ) {
@@ -182,7 +186,7 @@ jQuery( document ).ready( function( $ ) {
 	$('.sns-ajax-loading').hide();
 
 	// TinyMCE refresher set up.
-	var snsBaseBodyClass = tinyMCEPreInit.mceInit.body_class.split(' ');
+	var snsBaseBodyClass = sns_mceInit.body_class.split(' ');
 	var sns_body_class = $('#uFp_classes_body').val().split(' ');
 	var sns_post_class = $('#uFp_classes_post').val().split(' ');
 	
@@ -274,8 +278,8 @@ jQuery( document ).ready( function( $ ) {
 	});
 	
 	function snsRefreshBodyClass( data ) {
-		tinyMCEPreInit.mceInit.body_class = snsBaseBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
-		tinymce.settings.body_class = tinyMCEPreInit.mceInit.body_class;
+		sns_mceInit.body_class = snsBaseBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
+		tinymce.settings.body_class = sns_mceInit.body_class;
 		snsRefreshMCE();
 	}
 	function snsRefreshStyleFormats( data ) {
@@ -305,18 +309,18 @@ jQuery( document ).ready( function( $ ) {
 				format.classes = data.classes_mce[i].classes;
 				style_formats.push( format );
 			}
-			tinyMCEPreInit.mceInit.style_formats = style_formats;
-			tinymce.settings.style_formats = tinyMCEPreInit.mceInit.style_formats;
-			if ( tinyMCEPreInit.mceInit.theme_advanced_buttons2.indexOf( "styleselect" ) == -1 ) {
+			sns_mceInit.style_formats = style_formats;
+			tinymce.settings.style_formats = sns_mceInit.style_formats;
+			if ( sns_mceInit.theme_advanced_buttons2.indexOf( "styleselect" ) == -1 ) {
 				var tempString = "styleselect,";
-				tinyMCEPreInit.mceInit.theme_advanced_buttons2 = tempString.concat(tinyMCEPreInit.mceInit.theme_advanced_buttons2);
+				sns_mceInit.theme_advanced_buttons2 = tempString.concat(sns_mceInit.theme_advanced_buttons2);
 			}
-			tinymce.settings.theme_advanced_buttons2 = tinyMCEPreInit.mceInit.theme_advanced_buttons2;
+			tinymce.settings.theme_advanced_buttons2 = sns_mceInit.theme_advanced_buttons2;
 			$( '#delete-mce-dropdown-names', context ).show();
 		} else {
-			delete tinyMCEPreInit.mceInit.style_formats;
-			tinyMCEPreInit.mceInit.theme_advanced_buttons2 = tinyMCEPreInit.mceInit.theme_advanced_buttons2.replace("styleselect,", "");
-			tinymce.settings.theme_advanced_buttons2 = tinyMCEPreInit.mceInit.theme_advanced_buttons2;
+			delete sns_mceInit.style_formats;
+			sns_mceInit.theme_advanced_buttons2 = sns_mceInit.theme_advanced_buttons2.replace("styleselect,", "");
+			tinymce.settings.theme_advanced_buttons2 = sns_mceInit.theme_advanced_buttons2;
 			$( '#delete-mce-dropdown-names', context ).hide();
 		}
 		
@@ -329,13 +333,13 @@ jQuery( document ).ready( function( $ ) {
 			
 			if ( tinyMCE.editors["content"].isHidden() ) {
 				tinyMCE.editors["content"].remove();
-				tinyMCE.init( tinyMCEPreInit.mceInit );
+				tinyMCE.init( sns_mceInit );
 				tinyMCE.editors["content"].hide();
 			} else {
 				// you've got to be kidding me.
 				switchEditors.go('content', 'html');
 				tinyMCE.editors["content"].remove();
-				tinyMCE.init( tinyMCEPreInit.mceInit );
+				tinyMCE.init( sns_mceInit );
 				tinyMCE.editors["content"].hide();
 				switchEditors.go('content', 'tinymce');
 			}
