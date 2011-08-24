@@ -4,7 +4,7 @@
 jQuery( document ).ready( function( $ ) {
 	
 	// hack for WP 3.3 compat
-	var sns_mceInit = tinyMCEPreInit.mceInit.content || tinyMCEPreInit.mceInit;
+	var sns_mceInit = tinyMCEPreInit.mceInit["content"] || tinyMCEPreInit.mceInit;
 	
 	var context = $( '#uFp_meta_box' );
 	var CodeMirrors = [];
@@ -329,6 +329,7 @@ jQuery( document ).ready( function( $ ) {
 	}
 	function snsRefreshMCE() {
 		if ( tinyMCE.editors["content"] ) {
+			// needed for pre WP 3.3 editor initialization.
 			if ( ! $( '#content' ).hasClass( '.theEditor' ) ) $( '#content' ).addClass( 'theEditor' );
 			
 			if ( tinyMCE.editors["content"].isHidden() ) {
@@ -337,11 +338,19 @@ jQuery( document ).ready( function( $ ) {
 				tinyMCE.editors["content"].hide();
 			} else {
 				// you've got to be kidding me.
-				switchEditors.go('content', 'html');
+				if ( 1 == $('#content-html').length )
+					$('#content-html').click();
+				else if( 1 == $('#edButtonHTML').length )
+					switchEditors.go('content', 'html');
+				
 				tinyMCE.editors["content"].remove();
 				tinyMCE.init( sns_mceInit );
 				tinyMCE.editors["content"].hide();
-				switchEditors.go('content', 'tinymce');
+				
+				if ( 1 == $('#content-tmce').length )
+					$('#content-tmce').click();
+				else if( 1 == $('#edButtonPreview').length )
+					switchEditors.go('content', 'tinymce');
 			}
 			
 		}
