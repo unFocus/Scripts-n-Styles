@@ -45,6 +45,9 @@ class SnS_Admin_Meta_Box
 		// Add div as a format option, should probably use a string replace thing here.
 		$initArray['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div";
 		
+		if ( ( ! empty( $styles[ 'classes_body' ] ) || ! empty( $styles[ 'classes_post' ] ) ) && ! isset( $initArray['body_class'] ) )
+			$initArray['body_class'] = '';	
+		
 		// Add body_class (and/or maybe post_class) values... somewhat problematic.
 		if ( ! empty( $styles[ 'classes_body' ] ) )
 			$initArray['body_class'] .= ' ' . $styles[ 'classes_body' ];
