@@ -31,7 +31,7 @@ class SnS_Admin_Meta_Box
 	
 	function mce_buttons_2( $buttons ) {
 		global $post;
-		$styles = get_post_meta( $post->ID, 'uFp_styles', true );
+		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
 		
 		if ( ! empty( $styles[ 'classes_mce' ] ) )
 			array_unshift( $buttons, 'styleselect' );
@@ -40,7 +40,7 @@ class SnS_Admin_Meta_Box
 	}
 	function tiny_mce_before_init( $initArray ) {
 		global $post;
-		$styles = get_post_meta( $post->ID, 'uFp_styles', true );
+		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
 		
 		// Add div as a format option, should probably use a string replace thing here.
 		$initArray['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div";
@@ -119,11 +119,11 @@ class SnS_Admin_Meta_Box
      */
 	static function meta_box( $post ) {
 		$registered_handles = Scripts_n_Styles::get_wp_registered();
-		$styles = get_post_meta( $post->ID, 'uFp_styles', true );
-		$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
+		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
+		$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
 		
 		$screen = get_current_screen();
-		$position = get_user_option( "update-current-sns-tab_{$screen->id}" );
+		$position = get_user_option( "current-sns-tab" );
 		?>
 			<?php wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME ); ?>
 			<ul class="wp-tab-bar">
@@ -339,29 +339,47 @@ class SnS_Admin_Meta_Box
 			NONCE covers those cases, and that leaves autosave, which is also checked here. 
 		*/
 		
-		$scripts = get_post_meta( $post_id, 'uFp_scripts', true );
-		$styles = get_post_meta( $post_id, 'uFp_styles', true );
+		$scripts = get_post_meta( $post_id, '_SnS_scripts', true );
+		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
-		if ( empty( $_POST[ 'uFp_scripts_in_head' ] ) ) unset( $scripts[ 'scripts_in_head' ] );
-		else $scripts[ 'scripts_in_head' ] = $_POST[ 'uFp_scripts_in_head' ];
+		if ( empty( $_POST[ 'uFp_scripts_in_head' ] ) ) {
+			if ( isset( $scripts[ 'scripts_in_head' ] ) )
+				unset( $scripts[ 'scripts_in_head' ] );
+		} else
+			$scripts[ 'scripts_in_head' ] = $_POST[ 'uFp_scripts_in_head' ];
 		
-		if ( empty( $_POST[ 'uFp_scripts' ] ) ) unset( $scripts[ 'scripts' ] );
-		else $scripts[ 'scripts' ] = $_POST[ 'uFp_scripts' ];
+		if ( empty( $_POST[ 'uFp_scripts' ] ) ) {
+			if ( isset( $scripts[ 'scripts' ] ) )
+				unset( $scripts[ 'scripts' ] );
+		} else
+			$scripts[ 'scripts' ] = $_POST[ 'uFp_scripts' ];
 		
-		if ( empty( $_POST[ 'uFp_styles' ] ) ) unset( $styles[ 'styles' ] );
-		else $styles[ 'styles' ] = $_POST[ 'uFp_styles' ];
+		if ( empty( $_POST[ 'uFp_styles' ] ) ) {
+			if ( isset( $styles[ 'styles' ] ) )
+				unset( $styles[ 'styles' ] );
+		} else
+			$styles[ 'styles' ] = $_POST[ 'uFp_styles' ];
 		
-		if ( empty( $_POST[ 'uFp_classes_body' ] ) ) unset( $styles[ 'classes_body' ] );
-		else $styles[ 'classes_body' ] = $_POST[ 'uFp_classes_body' ];
+		if ( empty( $_POST[ 'uFp_classes_body' ] ) ){
+			if ( isset( $styles[ 'classes_body' ] ) )
+				unset( $styles[ 'classes_body' ] );
+		} else
+			$styles[ 'classes_body' ] = $_POST[ 'uFp_classes_body' ];
 		
-		if ( empty( $_POST[ 'uFp_classes_post' ] ) ) unset( $styles[ 'classes_post' ] );
-		else $styles[ 'classes_post' ] = $_POST[ 'uFp_classes_post' ];
+		if ( empty( $_POST[ 'uFp_classes_post' ] ) ) {
+			if ( isset( $styles[ 'classes_post' ] ) )
+				unset( $styles[ 'classes_post' ] );
+		} else
+			$styles[ 'classes_post' ] = $_POST[ 'uFp_classes_post' ];
 		
-		if ( empty( $_POST[ 'uFp_enqueue_scripts' ] ) ) unset( $scripts[ 'enqueue_scripts' ] );
-		else $scripts[ 'enqueue_scripts' ] = $_POST[ 'uFp_enqueue_scripts' ];
+		if ( empty( $_POST[ 'uFp_enqueue_scripts' ] ) ) {
+			if ( isset( $scripts[ 'enqueue_scripts' ] ) )
+				unset( $scripts[ 'enqueue_scripts' ] );
+		} else
+			$scripts[ 'enqueue_scripts' ] = $_POST[ 'uFp_enqueue_scripts' ];
 		
-		update_post_meta( $post_id, 'uFp_scripts', $scripts );
-		update_post_meta( $post_id, 'uFp_styles', $styles );
+		update_post_meta( $post_id, '_SnS_scripts', $scripts );
+		update_post_meta( $post_id, '_SnS_styles', $styles );
 		
 	}
 }

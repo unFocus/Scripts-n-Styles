@@ -144,28 +144,22 @@ class SnS_Settings_Page
 	 * Outputs the Usage Section.
      */
 	static function usage_section() {
-		$options = get_option( 'SnS_options' );
-		
 		$all_posts = get_posts( array(
 			'numberposts' => -1,
 			'post_type' => 'any',
 			'post_status' => 'any',
 			'meta_query' => array(
-				array(
-					'key' => 'uFp_scripts'
-				),
-				array(
-					'key' => 'uFp_styles'
-				)
+				array( 'key' => '_SnS_scripts' ),
+				array( 'key' => '_SnS_styles' )
 			)
 		) );
 		$sns_posts = array();
 		foreach( $all_posts as $post) {
-			$temp_styles = get_post_meta( $post->ID, 'uFp_styles', true );
-			$temp_scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
-			if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) ) {
-				$post->sns_styles = $temp_styles;
-				$post->sns_scripts = $temp_scripts;
+			$styles = get_post_meta( $post->ID, 'uFp_styles', true );
+			$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
+			if ( ! empty( $styles ) || ! empty( $scripts ) ) {
+				$post->sns_styles = $styles;
+				$post->sns_scripts = $scripts;
 				$sns_posts[] = $post;
 			}
 		}
@@ -183,6 +177,16 @@ class SnS_Settings_Page
 						<th>Style Data</th>
 					</tr>
 				</thead>
+				<tfoot>
+					<tr>
+						<th>Title</th>
+						<th>ID</th>
+						<th>Status</th>
+						<th>Post Type</th>
+						<th>Script Data</th>
+						<th>Style Data</th>
+					</tr>
+				</tfoot>
 				<tbody>
 				<?php foreach( $sns_posts as $post) {
 					$temp_styles = $post->sns_styles;
@@ -202,16 +206,6 @@ class SnS_Settings_Page
 					<?php }
 				} ?>
 				</tbody>
-				<tfoot>
-					<tr>
-						<th>Title</th>
-						<th>ID</th>
-						<th>Status</th>
-						<th>Post Type</th>
-						<th>Script Data</th>
-						<th>Style Data</th>
-					</tr>
-				</tfoot>
 			</table>
 			<?php
 		} else {

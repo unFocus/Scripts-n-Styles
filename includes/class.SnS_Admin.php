@@ -13,7 +13,7 @@ class SnS_Admin
      * Constants
      */
 	const MENU_SLUG = 'Scripts-n-Styles';
-	const VERSION = '3.alpha';
+	const VERSION = '3.beta';
     /**#@-*/
 	
     /**
@@ -51,7 +51,7 @@ class SnS_Admin
 		if ( ! isset( $_REQUEST[ 'uFp_scripts' ] ) || ! isset( $_REQUEST[ 'uFp_scripts_in_head' ] ) ) exit( 'Data incorrectly sent.' );
 		
 		$post_id = $_REQUEST[ 'post_id' ];
-		$scripts = get_post_meta( $post_id, 'uFp_scripts', true );
+		$scripts = get_post_meta( $post_id, '_SnS_scripts', true );
 		
 		if ( empty( $_REQUEST[ 'uFp_scripts_in_head' ] ) ) unset( $scripts[ 'scripts_in_head' ] );
 		else $scripts[ 'scripts_in_head' ] = $_REQUEST[ 'uFp_scripts_in_head' ];
@@ -59,7 +59,7 @@ class SnS_Admin
 		if ( empty( $_REQUEST[ 'uFp_scripts' ] ) ) unset( $scripts[ 'scripts' ] );
 		else $scripts[ 'scripts' ] = $_REQUEST[ 'uFp_scripts' ];
 		
-		update_post_meta( $post_id, 'uFp_scripts', $scripts );
+		update_post_meta( $post_id, '_SnS_scripts', $scripts );
 		
 		if ( empty( $_REQUEST[ 'uFp_scripts' ] ) ) $scripts[ 'scripts' ] = '';
 		if ( empty( $_REQUEST[ 'uFp_scripts_in_head' ] ) ) $scripts[ 'scripts_in_head' ] = '';
@@ -80,12 +80,12 @@ class SnS_Admin
 		if ( ! isset( $_REQUEST[ 'uFp_styles' ] ) ) exit( 'Data incorrectly sent.' );
 		
 		$post_id = $_REQUEST[ 'post_id' ];
-		$styles = get_post_meta( $post_id, 'uFp_styles', true );
+		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
 		if ( empty( $_REQUEST[ 'uFp_styles' ] ) ) unset( $styles[ 'styles' ] );
 		else $styles[ 'styles' ] = $_REQUEST[ 'uFp_styles' ];
 		
-		update_post_meta( $post_id, 'uFp_styles', $styles );
+		update_post_meta( $post_id, '_SnS_styles', $styles );
 		
 		if ( empty( $_REQUEST[ 'uFp_styles' ] ) ) $styles[ 'styles' ] = '';
 		
@@ -104,7 +104,7 @@ class SnS_Admin
 		if ( ! isset( $_REQUEST[ 'uFp_classes_body' ] ) || ! isset( $_REQUEST[ 'uFp_classes_post' ] ) ) exit( 'Data incorrectly sent.' );
 		
 		$post_id = $_REQUEST[ 'post_id' ];
-		$styles = get_post_meta( $post_id, 'uFp_styles', true );
+		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
 		if ( empty( $_REQUEST[ 'uFp_classes_body' ] ) ) unset( $styles[ 'classes_body' ] );
 		else $styles[ 'classes_body' ] = $_REQUEST[ 'uFp_classes_body' ];
@@ -112,7 +112,7 @@ class SnS_Admin
 		if ( empty( $_REQUEST[ 'uFp_classes_post' ] ) ) unset( $styles[ 'classes_post' ] );
 		else $styles[ 'classes_post' ] = $_REQUEST[ 'uFp_classes_post' ];
 		
-		update_post_meta( $post_id, 'uFp_styles', $styles );
+		update_post_meta( $post_id, '_SnS_styles', $styles );
 		
 		if ( empty( $_REQUEST[ 'uFp_classes_body' ] ) ) $styles[ 'classes_body' ] = '';
 		if ( empty( $_REQUEST[ 'uFp_classes_post' ] ) ) $styles[ 'classes_post' ] = '';
@@ -141,7 +141,7 @@ class SnS_Admin
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
 		$post_id = $_REQUEST[ 'post_id' ];
 		
-		$styles = get_post_meta( $post_id, 'uFp_styles', true );
+		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
 		if ( ! isset( $styles[ 'classes_mce' ] ) )
 			$styles[ 'classes_mce' ] = array();
@@ -149,7 +149,7 @@ class SnS_Admin
 		// pass title as key to be able to delete.
 		$styles[ 'classes_mce' ][ $_REQUEST[ 'format' ][ 'title' ] ] = $_REQUEST[ 'format' ];
 		
-		update_post_meta( $post_id, 'uFp_styles', $styles );
+		update_post_meta( $post_id, '_SnS_styles', $styles );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -164,14 +164,14 @@ class SnS_Admin
 		
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
 		$post_id = $_REQUEST[ 'post_id' ];
-		$styles = get_post_meta( $post_id, 'uFp_styles', true );
+		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
 		$title = $_REQUEST[ 'uFp_delete' ];
 		
 		if ( isset( $styles[ 'classes_mce' ][ $title ] ) ) unset( $styles[ 'classes_mce' ][ $title ] );
 		else exit ( 'No Format of that name.' );
 		
-		update_post_meta( $post_id, 'uFp_styles', $styles );
+		update_post_meta( $post_id, '_SnS_styles', $styles );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -187,7 +187,7 @@ class SnS_Admin
 		$post_id = $_REQUEST[ 'post_id' ];
 		
 		$options = get_option( 'SnS_options' );
-		$styles = get_post_meta( $post_id, 'uFp_styles', true );
+		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
 		header('Content-Type: text/css; charset=' . get_option('blog_charset'));
 		/*header("Cache-Control: no-cache");
@@ -227,21 +227,39 @@ class SnS_Admin
 		$options = get_option( 'SnS_options' );
 		$options[ 'version' ] = self::VERSION;
 		update_option( 'SnS_options', $options );
-		
-		/* upgrade proceedure
-		 * step 1: merge sns_enqueue_scripts and SnS_options. 
+
+		/*
+		 * upgrade proceedure
 		 */
+		$sns_posts = get_posts(
+			array(
+				'numberposts' => -1,
+				'post_type' => 'any',
+				'post_status' => 'any',
+				'meta_query' => array(
+					array( 'key' => 'uFp_scripts' ),
+					array( 'key' => 'uFp_styles' )
+				)
+			)
+		);
+		
+		foreach( $sns_posts as $post) {
+			$styles = get_post_meta( $post->ID, 'uFp_styles', true );
+			$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
+			if ( ! empty( $styles ) || ! empty( $scripts ) ) {
+				update_post_meta( $post->ID, '_SnS_styles', $styles );
+				update_post_meta( $post->ID, '_SnS_scripts', $scripts );
+			}
+			delete_post_meta( $post->ID, 'uFp_styles' );
+			delete_post_meta( $post->ID, 'uFp_scripts' );
+		}
 		
 		
-		/*$enqueue_scripts = get_option( 'sns_enqueue_scripts' );
+		/*
+		$enqueue_scripts = get_option( 'sns_enqueue_scripts' );
 		delete_option('SnS_options');
 		delete_option('sns_enqueue_scripts');
-		$get_posts_args = array('numberposts' => -1, 'post_type' => 'any', 'post_status' => 'any' );
-		$all_posts = get_posts( $get_posts_args );
-		foreach( $all_posts as $postinfo) {
-			delete_post_meta($postinfo->ID, 'uFp_scripts');
-			delete_post_meta($postinfo->ID, 'uFp_styles');
-		}*/
+		*/
 
 	}
 	
@@ -249,6 +267,7 @@ class SnS_Admin
 	 * Utility Method: Compares VERSION to stored 'version' value.
      */
 	static function upgrade_check() {
+		$options = get_option( 'SnS_options' );
 		if ( ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) )
 			self::upgrade();
 	}
