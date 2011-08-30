@@ -62,7 +62,7 @@ class SnS_Settings_Page
 			);
 		register_setting(
 				self::OPTION_GROUP, 
-				'SnS_enqueue_scripts'
+				'sns_enqueue_scripts'
 			);
 		add_settings_section(
 				'global',
@@ -146,13 +146,28 @@ class SnS_Settings_Page
 	static function usage_section() {
 		$options = get_option( 'SnS_options' );
 		
-		$all_posts = get_posts( array( 'numberposts' => -1, 'post_type' => 'any', 'post_status' => 'any' ) );
+		$all_posts = get_posts( array(
+			'numberposts' => -1,
+			'post_type' => 'any',
+			'post_status' => 'any',
+			'meta_query' => array(
+				array(
+					'key' => 'uFp_scripts'
+				),
+				array(
+					'key' => 'uFp_styles'
+				)
+			)
+		) );
 		$sns_posts = array();
 		foreach( $all_posts as $post) {
 			$temp_styles = get_post_meta( $post->ID, 'uFp_styles', true );
 			$temp_scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
-			if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) )
+			if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) ) {
+				$post->sns_styles = $temp_styles;
+				$post->sns_scripts = $temp_scripts;
 				$sns_posts[] = $post;
+			}
 		}
 		
 		if ( ! empty( $sns_posts ) ) {
@@ -170,8 +185,8 @@ class SnS_Settings_Page
 				</thead>
 				<tbody>
 				<?php foreach( $sns_posts as $post) {
-					$temp_styles = get_post_meta( $post->ID, 'uFp_styles', true );
-					$temp_scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
+					$temp_styles = $post->sns_styles;
+					$temp_scripts = $post->sns_scripts;
 					if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) ) { ?>
 						<tr>
 							<td>
@@ -246,10 +261,10 @@ class SnS_Settings_Page
      */
 	static function enqueue_scripts_field() {
 		$registered_handles = Scripts_n_Styles::get_wp_registered();
-		$sns_enqueue_scripts = get_option( 'SnS_enqueue_scripts' );
+		$sns_enqueue_scripts = get_option( 'sns_enqueue_scripts' );
 		if ( ! is_array( $sns_enqueue_scripts ) ) $sns_enqueue_scripts = array();
 		?>
-		<select name="SnS_enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto;">
+		<select name="sns_enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto;">
 			<?php foreach ( $registered_handles as $value ) { ?>
 				<option value="<?php echo $value ?>"<?php foreach ( $sns_enqueue_scripts as $handle ) selected( $handle, $value ); ?>><?php echo $value ?></option> 
 			<?php } ?>

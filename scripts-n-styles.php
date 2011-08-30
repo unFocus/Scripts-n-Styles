@@ -292,7 +292,7 @@ class Scripts_n_Styles
      */
 	static function enqueue_scripts() {
 		// Global
-		$enqueue_scripts = get_option( 'SnS_enqueue_scripts' );
+		$enqueue_scripts = get_option( 'sns_enqueue_scripts' );
 
 		if ( is_array( $enqueue_scripts ) ) {
 			foreach ( $enqueue_scripts as $handle )

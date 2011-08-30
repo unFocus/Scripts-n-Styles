@@ -53,10 +53,16 @@ class SnS_Admin
 		$post_id = $_REQUEST[ 'post_id' ];
 		$scripts = get_post_meta( $post_id, 'uFp_scripts', true );
 		
-		$scripts[ 'scripts_in_head' ] = empty( $_REQUEST[ 'uFp_scripts_in_head' ] ) ? '' : $_REQUEST[ 'uFp_scripts_in_head' ];
-		$scripts[ 'scripts' ] = empty( $_REQUEST[ 'uFp_scripts' ] ) ? '' : $_REQUEST[ 'uFp_scripts' ];
+		if ( empty( $_REQUEST[ 'uFp_scripts_in_head' ] ) ) unset( $scripts[ 'scripts_in_head' ] );
+		else $scripts[ 'scripts_in_head' ] = $_REQUEST[ 'uFp_scripts_in_head' ];
+		
+		if ( empty( $_REQUEST[ 'uFp_scripts' ] ) ) unset( $scripts[ 'scripts' ] );
+		else $scripts[ 'scripts' ] = $_REQUEST[ 'uFp_scripts' ];
 		
 		update_post_meta( $post_id, 'uFp_scripts', $scripts );
+		
+		if ( empty( $_REQUEST[ 'uFp_scripts' ] ) ) $scripts[ 'scripts' ] = '';
+		if ( empty( $_REQUEST[ 'uFp_scripts_in_head' ] ) ) $scripts[ 'scripts_in_head' ] = '';
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -76,9 +82,12 @@ class SnS_Admin
 		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		
-		$styles[ 'styles' ] = empty( $_REQUEST[ 'uFp_styles' ] ) ? '' : $_REQUEST[ 'uFp_styles' ];
+		if ( empty( $_REQUEST[ 'uFp_styles' ] ) ) unset( $styles[ 'styles' ] );
+		else $styles[ 'styles' ] = $_REQUEST[ 'uFp_styles' ];
 		
 		update_post_meta( $post_id, 'uFp_styles', $styles );
+		
+		if ( empty( $_REQUEST[ 'uFp_styles' ] ) ) $styles[ 'styles' ] = '';
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -97,10 +106,16 @@ class SnS_Admin
 		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, 'uFp_styles', true );
 		
-		$styles[ 'classes_body' ] = empty( $_REQUEST[ 'uFp_classes_body' ] ) ? '' : $_REQUEST[ 'uFp_classes_body' ];
-		$styles[ 'classes_post' ] = empty( $_REQUEST[ 'uFp_classes_post' ] ) ? '' : $_REQUEST[ 'uFp_classes_post' ];
+		if ( empty( $_REQUEST[ 'uFp_classes_body' ] ) ) unset( $styles[ 'classes_body' ] );
+		else $styles[ 'classes_body' ] = $_REQUEST[ 'uFp_classes_body' ];
+		
+		if ( empty( $_REQUEST[ 'uFp_classes_post' ] ) ) unset( $styles[ 'classes_post' ] );
+		else $styles[ 'classes_post' ] = $_REQUEST[ 'uFp_classes_post' ];
 		
 		update_post_meta( $post_id, 'uFp_styles', $styles );
+		
+		if ( empty( $_REQUEST[ 'uFp_classes_body' ] ) ) $styles[ 'classes_body' ] = '';
+		if ( empty( $_REQUEST[ 'uFp_classes_post' ] ) ) $styles[ 'classes_post' ] = '';
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -198,7 +213,7 @@ class SnS_Admin
 		if ( ! $user = wp_get_current_user() )
 			exit( 'Bad User' );
 		
-		$success = update_user_option( $user->ID, "update-current-sns-tab_$page", $active_tab, true);
+		$success = update_user_option( $user->ID, "current-sns-tab", $active_tab, true);
 		if ( $success )
 			exit( 'Current Tab Updated. New value is ' . $active_tab );
 		else
@@ -212,6 +227,22 @@ class SnS_Admin
 		$options = get_option( 'SnS_options' );
 		$options[ 'version' ] = self::VERSION;
 		update_option( 'SnS_options', $options );
+		
+		/* upgrade proceedure
+		 * step 1: merge sns_enqueue_scripts and SnS_options. 
+		 */
+		
+		
+		/*$enqueue_scripts = get_option( 'sns_enqueue_scripts' );
+		delete_option('SnS_options');
+		delete_option('sns_enqueue_scripts');
+		$get_posts_args = array('numberposts' => -1, 'post_type' => 'any', 'post_status' => 'any' );
+		$all_posts = get_posts( $get_posts_args );
+		foreach( $all_posts as $postinfo) {
+			delete_post_meta($postinfo->ID, 'uFp_scripts');
+			delete_post_meta($postinfo->ID, 'uFp_styles');
+		}*/
+
 	}
 	
     /**

@@ -186,7 +186,10 @@ jQuery( document ).ready( function( $ ) {
 	$('.sns-ajax-loading').hide();
 
 	// TinyMCE refresher set up.
-	var snsBaseBodyClass = sns_mceInit.body_class.split(' ');
+	if ( sns_mceInit.body_class )
+		var snsBaseBodyClass = sns_mceInit.body_class.split(' ');
+	else
+		var snsBaseBodyClass = [];
 	var sns_body_class = $('#uFp_classes_body').val().split(' ');
 	var sns_post_class = $('#uFp_classes_post').val().split(' ');
 	
