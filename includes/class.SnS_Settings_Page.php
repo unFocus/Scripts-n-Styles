@@ -155,8 +155,8 @@ class SnS_Settings_Page
 		) );
 		$sns_posts = array();
 		foreach( $all_posts as $post) {
-			$styles = get_post_meta( $post->ID, 'uFp_styles', true );
-			$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
+			$styles = get_post_meta( $post->ID, '_SnS_styles', true );
+			$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
 			if ( ! empty( $styles ) || ! empty( $scripts ) ) {
 				$post->sns_styles = $styles;
 				$post->sns_scripts = $scripts;
