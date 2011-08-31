@@ -1,25 +1,214 @@
-// Meta Box JavaScript
-
-// Tabs code.
 jQuery( document ).ready( function( $ ) {
 	
-	// hack for compat: 3.3 || 3.2 
+	// For compat: 3.3 || 3.2 
 	var initData = tinyMCEPreInit.mceInit["content"] || tinyMCEPreInit.mceInit,
-		context = $( '#uFp_meta_box' ),
-		currentCodeMirror = [];
-		
+		context = '#uFp_meta_box',
+		currentCodeMirror = [],
+		mceBodyClass = getMCEBodyClasses();
+	
 	//$('textarea', context).attr('autocomplete','off');
 	
 	// Refresh when panel becomes unhidden
-	$( '#uFp_meta_box-hide, #uFp_meta_box .hndle, #uFp_meta_box .handlediv ' ).live( 'click', function(){
-		$(currentCodeMirror).each(function (){ this.refresh(); });
+	$( context + '-hide, '
+		+ context + ' .hndle, '
+		+ context + ' .handlediv ' )
+		.live( 'click', refreshCodeMirrors );
+	
+	// add tab-switch handler
+	$( '.wp-tab-bar a', context ).live( 'click', onTabSwitch );
+	
+	// activate first run
+	$( '.wp-tab-active a', context ).trigger( 'click' );
+	
+	// must run before ajax click handlers are added.
+	setupAjaxUI();
+	
+	refreshDeleteBtns();
+	
+	
+	$('#sns-ajax-update-scripts').click(function( event ){
+		event.preventDefault();
+		$(this).next().show();
+		$(currentCodeMirror).each(function (){ this.save(); });
+		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
+		
+		args.action = 'sns-update-scripts-ajax';
+		args.uFp_scripts = $( '#uFp_scripts' ).val();
+		args.uFp_scripts_in_head = $( '#uFp_scripts_in_head' ).val();
+		
+		$.post( ajaxurl, args, function() { refreshMCE(); } );
 	});
 	
-	// main tab handler
-	$( '.wp-tab-bar a', context ).live( 'click', function( event ){
+	$('#sns-ajax-update-styles').click(function( event ){
+		event.preventDefault();
+		$(this).next().show();
+		$(currentCodeMirror).each(function (){ this.save(); });
+		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
+		
+		args.action = 'sns-update-styles-ajax';
+		args.uFp_styles = $( '#uFp_styles' ).val();
+		
+		$.post( ajaxurl, args, function() { refreshMCE(); } );
+	});
+	
+	/*
+	 * Expects return data.
+	 */
+	$('#sns-ajax-update-classes').click(function( event ){
+		event.preventDefault();
+		$(this).next().show();
+		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
+		
+		args.action = 'sns-classes-ajax';
+		args.uFp_classes_body = $( '#uFp_classes_body' ).val();
+		args.uFp_classes_post = $( '#uFp_classes_post' ).val();
+		
+		$.post( ajaxurl, args, function( data ) { refreshBodyClass( data ); } );
+	});
+	
+	/*
+	 * Expects return data.
+	 */
+	$('#sns-ajax-update-dropdown').click(function( event ){
+		event.preventDefault();
+		$(this).next().show();
+		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
+		
+		args.action = 'sns-dropdown-ajax';
+		var format = {};
+		format.title = $( '#uFp_classes_mce_title' ).val();
+		format.classes = $( '#uFp_classes_mce_classes' ).val();
+		switch ( $( '#uFp_classes_mce_type' ).val() ) {
+			case 'inline':
+				format.inline = $( '#uFp_classes_mce_element' ).val();
+				break;
+			case 'block':
+				format.block = $( '#uFp_classes_mce_element' ).val();
+				if ( $( '#uFp_classes_mce_wrapper' ).prop('checked') )
+					format.wrapper = true;
+				break;
+			case 'selector':
+				format.selector = $( '#uFp_classes_mce_element' ).val();
+				break;
+			default:
+				return;
+		}
+		args.format = format;
+		
+		$.post( ajaxurl, args, function( data ) { refreshStyleFormats( data ); } );
+	});
+	
+	/*
+	 * Expects return data.
+	 */
+	$('#delete-mce-dropdown-names .sns-ajax-delete').live( "click", function( event ){
+		event.preventDefault();
+		$(this).next().show();
+		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
+		
+		args.action = 'sns-dropdown-delete-ajax';
+		args.uFp_delete = $( this ).attr( 'id' );
+		
+		$.post( ajaxurl, args, function( data ) { refreshStyleFormats( data ); } );
+	});
+	
+	/*
+	 * Returns the body_class of TinyMCE minus the Scripts n Styles values.
+	 */
+	function getMCEBodyClasses() {
+		var t = [];
+		if ( initData.body_class )
+			t = initData.body_class.split(' ');
+		
+		var bc = $('#uFp_classes_body').val().split(' ');
+		var pc = $('#uFp_classes_post').val().split(' ');
+		var p;
+		for ( var i = 0; i < t.length; i++ ) {
+			p = $.inArray( bc[i], t )
+			if ( -1 != p )
+				t.splice( p, 1 );
+		}
+		for ( var i = 0; i < t.length; i++ ) {
+			p = $.inArray( pc[i], t )
+			if ( -1 != p )
+				t.splice( p, 1 );
+		}
+		t = t.join(' ');
+		return t;
+	}
+	
+	/*
+	 * Builds and Adds the DOM for AJAX functionality.
+	 */
+	function setupAjaxUI() {
+		// set up ajax ui. (need to come up with a better ID naming scheme.)
+		$('#uFp_scripts-tab').append(
+			'<div id="sns-scripts-update" class="sns-ajax-wrap">'
+			 + '<a id="sns-ajax-update-scripts" href="#" class="button">Update Scripts</a>'
+			 + ' '
+			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			 + '</div>'
+			);
+		
+		$('#uFp_styles-tab').append(
+			'<div id="sns-styles-update" class="sns-ajax-wrap">'
+			 + '<a id="sns-ajax-update-styles" href="#" class="button">Update Styles</a>'
+			 + ' '
+			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			 + '</div>'
+			);
+		
+		$('#sns-classes').append(
+			'<div id="sns-classes-ajax" class="sns-ajax-wrap">'
+			 + '<a id="sns-ajax-update-classes" href="#" class="button">Update Classes</a>'
+			 + ' '
+			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			 + '</div>'
+			);
+		
+		$('#add-mce-dropdown-names').append(
+			'<div id="sns-dropdown-ajax" class="sns-ajax-wrap">'
+			 + '<a id="sns-ajax-update-dropdown" href="#" class="button">Add Class</a>'
+			 + ' '
+			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			 + '</div>'
+			);
+	
+		$('.sns-ajax-loading').hide();
+		
+		if ( $( '#uFp_classes_mce_type').val() == 'block' ) {
+			$('#add-mce-dropdown-names .sns-mce-wrapper').show();
+		} else {
+			$('#add-mce-dropdown-names .sns-mce-wrapper').hide();
+		}
+			
+		$( '#uFp_classes_mce_type' ).change(function() {
+			if ( $(this).val() == 'block' ) {
+				$('#add-mce-dropdown-names .sns-mce-wrapper').show();
+			} else {
+				$('#add-mce-dropdown-names .sns-mce-wrapper').hide();
+			}
+		});
+		
+		$( '#mce-dropdown-names', context ).show();
+	}
+	
+	/*
+	 * Main Tab Switch Handler.
+	 */
+	function onTabSwitch( event ) {
 		event.preventDefault();
 		
 		clearCodeMirrors();
+		
+		/*
+		 * There is a weird bug where if clearCodeMirrors() is called right before
+		 * loadCodeMirrors(), loading the page with the Styles tab active, and
+		 * then switching to the Script tab, you can lose data from the second
+		 * CodeMirror if leaving and returning to that tab. I've no idea what's
+		 * going on there. Leaving code inbetween them is a fraggle, but working,
+		 * workaround. Maybe has to do with execution time? No idea.
+		 */
 		
 		// switch active classes
 		$( '.wp-tab-active', context ).removeClass( 'wp-tab-active' );
@@ -36,15 +225,22 @@ jQuery( document ).ready( function( $ ) {
 				active_tab:  $( '.wp-tab-bar li', context ).index( $( this ).parent( 'li' ).get(0) )
 			}
 		);
-	});
+	}
 	
+	/*
+	 * CodeMirror Utilities.
+	 */
 	function clearCodeMirrors() {
 		$(currentCodeMirror).each(function (){
 			this.toTextArea();
 		});
 		currentCodeMirror = [];
 	}
-	
+	function refreshCodeMirrors() {
+		$(currentCodeMirror).each( function(){
+			this.refresh();
+		});
+	}
 	function loadCodeMirrors() {
 		// collect codemirrors
 		var settings;
@@ -95,161 +291,12 @@ jQuery( document ).ready( function( $ ) {
 		});
 	}
 	
-	// activate first run
-	$( '.wp-tab-active a', context ).trigger( 'click' );
-	
-	
-	// set up ajax ui. (need to come up with a better ID naming scheme.)
-	$('#uFp_scripts-tab').append(
-		'<div id="sns-scripts-update" class="sns-ajax-wrap">'
-		 + '<a id="sns-ajax-update-scripts" href="#" class="button">Update Scripts</a>'
-		 + ' '
-		 + '<img id="sns-scripts-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
-		 + '</div>'
-		);
-	
-	$('#uFp_styles-tab').append(
-		'<div id="sns-styles-update" class="sns-ajax-wrap">'
-		 + '<a id="sns-ajax-update-styles" href="#" class="button">Update Styles</a>'
-		 + ' '
-		 + '<img id="sns-styles-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
-		 + '</div>'
-		);
-	
-	$('#sns-classes').append(
-		'<div id="sns-classes-ajax" class="sns-ajax-wrap">'
-		 + '<a id="sns-ajax-update-classes" href="#" class="button">Update Classes</a>'
-		 + ' '
-		 + '<img id="sns-classes-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
-		 + '</div>'
-		);
-	
-	$('#add-mce-dropdown-names').append(
-		'<div id="sns-dropdown-ajax" class="sns-ajax-wrap">'
-		 + '<a id="sns-ajax-update-dropdown" href="#" class="button">Add Class</a>'
-		 + ' '
-		 + '<img id="sns-dropdown-ajax-loading" class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
-		 + '</div>'
-		);
-	
-	// show mce-dropdown sections
-	$( '#mce-dropdown-names', context ).show();
-	
-	snsRefreshDeleteBtns();
-	
-	if ( $( '#uFp_classes_mce_type').val() == 'block' ) {
-		$('#add-mce-dropdown-names .sns-mce-wrapper').show();
-	} else {
-		$('#add-mce-dropdown-names .sns-mce-wrapper').hide();
-	}
-		
-	$( '#uFp_classes_mce_type' ).change(function() {
-		if ( $(this).val() == 'block' ) {
-			$('#add-mce-dropdown-names .sns-mce-wrapper').show();
-		} else {
-			$('#add-mce-dropdown-names .sns-mce-wrapper').hide();
-		}
-	});
-	
-	$('.sns-ajax-loading').hide();
-
-	// TinyMCE refresher set up.
-	if ( initData.body_class )
-		var snsBaseBodyClass = initData.body_class.split(' ');
-	else
-		var snsBaseBodyClass = [];
-	var sns_body_class = $('#uFp_classes_body').val().split(' ');
-	var sns_post_class = $('#uFp_classes_post').val().split(' ');
-	
-	for ( var i = 0; i < snsBaseBodyClass.length; i++ ) { // loop over the base_body_class and remove sns classes
-		var position = $.inArray( sns_body_class[i], snsBaseBodyClass )
-		if ( 0 != position ) snsBaseBodyClass.splice( position, 1 );
-	}
-	for ( var i = 0; i < snsBaseBodyClass.length; i++ ) { // loop over the base_post_class and remove sns classes
-		var position = $.inArray( sns_post_class[i], snsBaseBodyClass )
-		if ( 0 != position ) snsBaseBodyClass.splice( position, 1 );
-	}
-	snsBaseBodyClass = snsBaseBodyClass.join(' ');
-	
-	$('#sns-ajax-update-scripts').click(function(e){
-		e.preventDefault();
-		$('#sns-scripts-ajax-loading').show();
-		$(currentCodeMirror).each(function (){ this.save(); });
-		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
-		args.action = 'sns-update-scripts-ajax';
-		
-		args.uFp_scripts = $( '#uFp_scripts' ).val();
-		args.uFp_scripts_in_head = $( '#uFp_scripts_in_head' ).val();
-		
-		$.post( ajaxurl, args, function() { snsRefreshMCE(); } );
-	});
-	
-	$('#sns-ajax-update-styles').click(function(e){
-		e.preventDefault();
-		$(this).next().show();
-		$(currentCodeMirror).each(function (){ this.save(); });
-		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
-		args.action = 'sns-update-styles-ajax';
-		
-		args.uFp_styles = $( '#uFp_styles' ).val();
-		
-		$.post( ajaxurl, args, function() { snsRefreshMCE(); } );
-	});
-	
-	$('#sns-ajax-update-classes').click(function(e){
-		e.preventDefault();
-		$(this).next().show();
-		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
-		args.action = 'sns-classes-ajax';
-		
-		args.uFp_classes_body = $( '#uFp_classes_body' ).val();
-		args.uFp_classes_post = $( '#uFp_classes_post' ).val();
-		
-		$.post( ajaxurl, args, function( data ) { snsRefreshBodyClass( data ); } );
-	});
-	
-	$('#sns-ajax-update-dropdown').click(function(e){
-		e.preventDefault();
-		$(this).next().show();
-		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
-		args.action = 'sns-dropdown-ajax';
-		
-		var format = {};
-		format.title = $( '#uFp_classes_mce_title' ).val();
-		format.classes = $( '#uFp_classes_mce_classes' ).val();
-		switch ( $( '#uFp_classes_mce_type' ).val() ) {
-			case 'inline':
-				format.inline = $( '#uFp_classes_mce_element' ).val();
-				break;
-			case 'block':
-				format.block = $( '#uFp_classes_mce_element' ).val();
-				if ( $( '#uFp_classes_mce_wrapper' ).prop('checked') )
-					format.wrapper = true;
-				break;
-			case 'selector':
-				format.selector = $( '#uFp_classes_mce_element' ).val();
-				break;
-			default:
-				return;
-		}
-		args.format = format;
-		
-		$.post( ajaxurl, args, function( data ) { snsRefreshStyleFormats( data ); } );
-	});
-	
-	$('#delete-mce-dropdown-names .sns-ajax-delete').live( "click", function(e){
-		e.preventDefault();
-		$(this).next().show();
-		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
-		args.action = 'sns-dropdown-delete-ajax';
-		
-		args.uFp_delete = $( this ).attr( 'id' );
-		
-		$.post( ajaxurl, args, function( data ) { snsRefreshStyleFormats( data ); } );
-	});
-	
-	function snsRefreshDeleteBtns() {
-		
+	/*
+	 * Refresh after AJAX.
+	 */
+	function refreshDeleteBtns() {
+		// responsible for clearing out Delete Buttons, and Adding new ones.
+		// initData should always contain the latest settings.
 		if ( initData.style_formats && initData.style_formats.length ) {
 			$( '#delete-mce-dropdown-names .sns-ajax-delete-p' ).remove();
 			$( '#delete-mce-dropdown-names', context ).show();
@@ -286,16 +333,14 @@ jQuery( document ).ready( function( $ ) {
 			$( '#delete-mce-dropdown-names', context ).hide();
 		}
 	}
-	
-	function snsRefreshBodyClass( data ) {
-		initData.body_class = snsBaseBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
+	function refreshBodyClass( data ) {
+		initData.body_class = mceBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
 		
 		// needed for < 3.3
 		if ( tinymce.settings ) tinymce.settings.body_class = initData.body_class;
-		snsRefreshMCE();
+		refreshMCE();
 	}
-	
-	function snsRefreshStyleFormats( data ) {
+	function refreshStyleFormats( data ) {
 		// error check
 		if ( typeof data.classes_mce === 'undefined' ) {
 			alert( data );
@@ -343,11 +388,10 @@ jQuery( document ).ready( function( $ ) {
 			$( '#delete-mce-dropdown-names', context ).hide();
 		}
 		
-		snsRefreshDeleteBtns();
-		snsRefreshMCE();
+		refreshDeleteBtns();
+		refreshMCE();
 	}
-	
-	function snsRefreshMCE() {
+	function refreshMCE() {
 		if ( tinyMCE.editors["content"] ) {
 			// needed for < 3.3 editor initialization.
 			if ( ! $( '#content' ).hasClass( '.theEditor' ) ) $( '#content' ).addClass( 'theEditor' );
