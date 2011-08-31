@@ -59,6 +59,10 @@ Network: true
  * @todo Clean up Usage Table, paginate, don't display when empty.
  * @todo "Include Scripts" will be reintroduced when registering is finished.
  * @todo Clean up tiny_mce_before_init in SnS_Admin_Meta_Box.
+ * @todo LESS.js support.
+ * @todo LESS.js highlighting support to CodeMirror.
+ * @todo Solarize theme to CodeMirror.
+ * @todo Structure options page more like custom header/background.
  */
 
 class Scripts_n_Styles
@@ -67,7 +71,6 @@ class Scripts_n_Styles
      * @static
      */
 	static $file = __FILE__;
-	static $hook_suffix; // 'tools_page_Scripts-n-Styles';
     /**#@-*/
 	
     /**
@@ -95,31 +98,12 @@ class Scripts_n_Styles
 		add_action( 'wp_footer', array( __CLASS__, 'scripts' ), 11 );
 	}
 	
-    /**
-	 * Utility Method: Returns the value of $scripts if it is set, and if not, sets it via a call to the database.
-	 * @return array 'ufp_script' meta data entry.
-     */
-	static function get_scripts() {
-		global $post;
-		return get_post_meta( $post->ID, '_SnS_scripts', true );
-	}
-	
-    /**
-	 * Utility Method: Returns the value of $styles if it is set, and if not, sets it via a call to the database.
-	 * @return array 'ufp_styles' meta data entry.
-     */
-	static function get_styles() {
-		global $post;
-		return get_post_meta( $post->ID, '_SnS_styles', true );
-	}
-	
-    /**
+	/**
 	 * Utility Method
      */
 	static function get_wp_registered() {
 		return array(
 				// Starting with the list of Scripts registered by default on the Theme side (index page of twentyten).
-				// This list should be trimmed down, as some probably aren't apporpriate for Theme enqueueing.
 				'l10n',
 				'utils',
 				'common',
@@ -196,7 +180,8 @@ class Scripts_n_Styles
 		
 		if ( ! is_singular() ) return;
 		// Individual
-		$styles = self::get_styles();
+		global $post;
+		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
 		if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) {
 			?><style type="text/css"><?php
 			echo $styles[ 'styles' ];
@@ -219,7 +204,8 @@ class Scripts_n_Styles
 		
 		if ( ! is_singular() ) return;
 		// Individual
-		$scripts = self::get_scripts();
+		global $post;
+		$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
 		if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts' ] ) ) {
 			?><script type="text/javascript"><?php
 			echo $scripts[ 'scripts' ];
@@ -242,7 +228,8 @@ class Scripts_n_Styles
 		
 		if ( ! is_singular() ) return;
 		// Individual
-		$scripts = self::get_scripts();
+		global $post;
+		$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
 		if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts_in_head' ] ) ) {
 			?><script type="text/javascript"><?php
 			echo $scripts[ 'scripts_in_head' ];
@@ -260,7 +247,8 @@ class Scripts_n_Styles
 	static function body_classes( $classes ) {
 		if ( ! is_singular() || is_admin() ) return $classes;
 		
-		$styles = self::get_styles();
+		global $post;
+		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
 		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_body' ] ) )
 			$classes = array_merge( $classes, explode( " ", $styles[ 'classes_body' ] ) );
 		
@@ -270,14 +258,15 @@ class Scripts_n_Styles
     /**
 	 * Theme Filter: 'post_class()'
 	 * Adds classes to the Theme's post container.
-	 * @uses self::get_styles()
 	 * @param array $classes 
 	 * @return array $classes 
      */
 	static function post_classes( $classes ) {
 		if ( ! is_singular() || is_admin() ) return $classes;
 		
-		$styles = self::get_styles();
+		global $post;
+		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
+		
 		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_post' ] ) )
 			$classes = array_merge( $classes, explode( " ", $styles[ 'classes_post' ] ) );
 		
@@ -288,7 +277,6 @@ class Scripts_n_Styles
 	 * Theme Action: 'wp_enqueue_scripts'
 	 * Enqueues chosen Scripts.
 	 * @uses self::get_enqueue()
-	 * @uses self::get_scripts()
      */
 	static function enqueue_scripts() {
 		// Global
@@ -301,7 +289,9 @@ class Scripts_n_Styles
 		
 		if ( ! is_singular() ) return;
 		// Individual
-		$scripts = self::get_scripts();
+		global $post;
+		$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
+		
 		if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) {
 			foreach ( $scripts[ 'enqueue_scripts' ] as $handle )
 				wp_enqueue_script( $handle );

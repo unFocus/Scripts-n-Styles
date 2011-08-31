@@ -21,14 +21,13 @@ class SnS_Settings_Page
 	static function init() {
 		/* NOTE: Even when Scripts n Styles is not restricted by 'manage_options', Editors still can't submit the option page */
 		if ( current_user_can( 'manage_options' ) ) { // if they can't, they won't be able to save anyway.
-			$hook_suffix = add_management_page(
+			$hook_suffix = add_management_page( // 'tools_page_Scripts-n-Styles';
 					'Scripts n Styles Settings',	// $page_title (string) (required) The text to be displayed in the title tags of the page when the menu is selected
 					'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
 					'unfiltered_html',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
 					SnS_Admin::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
 					array( __CLASS__, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
 				);
-			Scripts_n_Styles::$hook_suffix = $hook_suffix;
 			add_action( "load-$hook_suffix", array( __CLASS__, 'init_options_page' ) );
 			add_action( "load-options.php", array( __CLASS__, 'init_options_page' ) );
 			
