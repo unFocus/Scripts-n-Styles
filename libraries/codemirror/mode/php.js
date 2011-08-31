@@ -4,11 +4,6 @@
     for (var i = 0; i < words.length; ++i) obj[words[i]] = true;
     return obj;
   }
-  var phpKeywords =
-    keywords("abstract and array as break case catch cfunction class clone const continue declare " +
-             "default do else elseif enddeclare endfor endforeach endif endswitch endwhile extends " +
-             "final for foreach function global goto if implements interface instanceof namespace " +
-             "new or private protected public static switch throw try use var while xor return");
   function heredoc(delim) {
     return function(stream, state) {
       if (stream.match(delim)) state.tokenize = null;
@@ -18,7 +13,11 @@
   }
   var phpConfig = {
     name: "clike",
-    keywords: phpKeywords,
+    keywords: keywords("abstract and array as break case catch cfunction class clone const continue declare " +
+                       "default do else elseif enddeclare endfor endforeach endif endswitch endwhile extends " +
+                       "final for foreach function global goto if implements interface instanceof namespace " +
+                       "new or private protected public static switch throw try use var while xor return"),
+    blockKeywords: keywords("catch do else elseif for foreach if switch try while"),
     atoms: keywords("true false null"),
     multiLineStrings: true,
     hooks: {
@@ -50,17 +49,20 @@
           state.curMode = phpMode;
           state.curState = state.php;
           state.curClose = /^\?>/;
+		  state.mode =  'php';
         }
         else if (style == "tag" && stream.current() == ">" && state.curState.context) {
           if (/^script$/i.test(state.curState.context.tagName)) {
             state.curMode = jsMode;
             state.curState = jsMode.startState(htmlMode.indent(state.curState, ""));
             state.curClose = /^<\/\s*script\s*>/i;
+			state.mode =  'javascript';
           }
           else if (/^style$/i.test(state.curState.context.tagName)) {
             state.curMode = cssMode;
             state.curState = cssMode.startState(htmlMode.indent(state.curState, ""));
             state.curClose =  /^<\/\s*style\s*>/i;
+            state.mode =  'css';
           }
         }
         return style;
@@ -69,6 +71,7 @@
         state.curMode = htmlMode;
         state.curState = state.html;
         state.curClose = null;
+		state.mode =  'html';
         return dispatch(stream, state);
       }
       else return state.curMode.token(stream, state.curState);
@@ -81,7 +84,8 @@
                 php: phpMode.startState(),
                 curMode:	parserConfig.startOpen ? phpMode : htmlMode,
                 curState:	parserConfig.startOpen ? phpMode.startState() : html,
-                curClose:	parserConfig.startOpen ? /^\?>/ : null}
+                curClose:	parserConfig.startOpen ? /^\?>/ : null,
+				mode:		parserConfig.startOpen ? 'php' : 'html'}
       },
 
       copyState: function(state) {

@@ -206,10 +206,7 @@ class SnS_Admin
 		check_ajax_referer( Scripts_n_Styles::$file );
 		
 		$active_tab = isset( $_POST[ 'active_tab' ] ) ? (int)$_POST[ 'active_tab' ] : 0;
-		$page = isset( $_POST[ 'page' ] ) ? $_POST[ 'page' ] : '';
 		
-		if ( !preg_match( '/^[a-z_-]+$/', $page ) )
-			exit( 'Bad Page' );
 		if ( ! $user = wp_get_current_user() )
 			exit( 'Bad User' );
 		

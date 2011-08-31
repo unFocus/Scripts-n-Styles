@@ -255,8 +255,8 @@ class SnS_Admin_Meta_Box
 	 * Enqueues the CSS for admin styling of the Meta Box.
      */
 	static function meta_box_styles() {
-		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.11' );
-		wp_enqueue_style( 'codemirror-default', plugins_url( 'libraries/codemirror/theme/default.css', Scripts_n_Styles::$file), array( 'codemirror' ), '2.11' );
+		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.13' );
+		wp_enqueue_style( 'codemirror-default', plugins_url( 'libraries/codemirror/theme/default.css', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
 		wp_enqueue_style( 'sns-meta-box-styles', plugins_url( 'css/meta-box-styles.css', Scripts_n_Styles::$file), array( 'codemirror-default' ), SnS_Admin::VERSION );
 	}
 	
@@ -269,17 +269,17 @@ class SnS_Admin_Meta_Box
 			'codemirror',
 			plugins_url( 'libraries/codemirror/lib/codemirror.js', Scripts_n_Styles::$file),
 			array(),
-			'2.11' );
+			'2.13' );
 		wp_enqueue_script(
 			'codemirror-css',
 			plugins_url( 'libraries/codemirror/mode/css.js', Scripts_n_Styles::$file),
 			array(  'codemirror' ),
-			'2.11' );
+			'2.13' );
 		wp_enqueue_script(
 			'codemirror-javascript',
 			plugins_url( 'libraries/codemirror/mode/javascript.js', Scripts_n_Styles::$file),
 			array(  'codemirror' ),
-			'2.11' );
+			'2.13' );
 		/*wp_register_script(
 			'codemirror-xml',
 			plugins_url( 'libraries/codemirror/mode/xml.js', Scripts_n_Styles::$file),
@@ -310,7 +310,8 @@ class SnS_Admin_Meta_Box
 		wp_enqueue_script(
 			'sns-meta-box-scripts',
 			plugins_url( 'js/meta-box-scripts.js', Scripts_n_Styles::$file),
-			array( 	'jquery-ui-tabs',
+			array( 	'editor',
+					'jquery-ui-tabs',
 					'codemirror-javascript',
 					'codemirror-css'//,
 					//'codemirror-htmlmixed',

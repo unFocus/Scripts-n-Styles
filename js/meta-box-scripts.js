@@ -4,11 +4,11 @@
 jQuery( document ).ready( function( $ ) {
 	
 	// hack for compat: 3.3 || 3.2 
-	var sns_mceInit = tinyMCEPreInit.mceInit["content"] || tinyMCEPreInit.mceInit;
-	
-	var context = $( '#uFp_meta_box' );
-	var CodeMirrors = [];
-	var currentCodeMirror = [];
+	var initData = tinyMCEPreInit.mceInit["content"] || tinyMCEPreInit.mceInit,
+		context = $( '#uFp_meta_box' ),
+		currentCodeMirror = [];
+		
+	//$('textarea', context).attr('autocomplete','off');
 	
 	// Refresh when panel becomes unhidden
 	$( '#uFp_meta_box-hide, #uFp_meta_box .hndle, #uFp_meta_box .handlediv ' ).live( 'click', function(){
@@ -19,9 +19,7 @@ jQuery( document ).ready( function( $ ) {
 	$( '.wp-tab-bar a', context ).live( 'click', function( event ){
 		event.preventDefault();
 		
-		// unset active codemirrors
-		$(currentCodeMirror).each(function (){ this.toTextArea(); });
-		currentCodeMirror = [];
+		clearCodeMirrors();
 		
 		// switch active classes
 		$( '.wp-tab-active', context ).removeClass( 'wp-tab-active' );
@@ -30,14 +28,31 @@ jQuery( document ).ready( function( $ ) {
 		$( '.wp-tabs-panel-active', context ).hide().removeClass( 'wp-tabs-panel-active' );
 		$( $( this ).attr( 'href' ) ).show().addClass( 'wp-tabs-panel-active' );
 		
+		loadCodeMirrors();
+		
+		$.post( ajaxurl, {
+				action: 'update-current-sns-tab',
+				_ajax_nonce: $('#scripts_n_styles_noncename').val(),
+				active_tab:  $( '.wp-tab-bar li', context ).index( $( this ).parent( 'li' ).get(0) )
+			}
+		);
+	});
+	
+	function clearCodeMirrors() {
+		$(currentCodeMirror).each(function (){
+			this.toTextArea();
+		});
+		currentCodeMirror = [];
+	}
+	
+	function loadCodeMirrors() {
 		// collect codemirrors
-		var targetCode = $( '.wp-tabs-panel-active textarea.codemirror', context );
-		var targetSet;
+		var settings;
 		
 		// loop codemirrors
-		$(targetCode).each(function (){
+		$( '.wp-tabs-panel-active textarea.codemirror', context ).each(function (){
 			if ( $(this).hasClass( 'js' ) )
-				targetSet = {
+				settings = {
 					mode: "text/javascript",
 					lineNumbers: true,
 					tabMode: "shift",
@@ -45,7 +60,7 @@ jQuery( document ).ready( function( $ ) {
 					indentWithTabs: true
 				};
 			else if ( $(this).hasClass( 'css' ) )
-				targetSet = {
+				settings = {
 					mode: "text/css",
 					lineNumbers: true,
 					tabMode: "shift",
@@ -53,7 +68,7 @@ jQuery( document ).ready( function( $ ) {
 					indentWithTabs: true
 				};
 			/*else if ( $(this).hasClass( 'htmlmixed' ) )
-				targetSet = {
+				settings = {
 					mode: "text/html",
 					lineNumbers: true,
 					tabMode: "shift",
@@ -63,7 +78,7 @@ jQuery( document ).ready( function( $ ) {
 					matchBrackets: true
 				};
 			else if ( $(this).hasClass( 'php' ) )
-				targetSet = {
+				settings = {
 					mode: "application/x-httpd-php",
 					lineNumbers: true,
 					tabMode: "shift",
@@ -75,18 +90,10 @@ jQuery( document ).ready( function( $ ) {
 			else
 				return;
 			
-			// store active codemirrors
-			currentCodeMirror.push( CodeMirror.fromTextArea( this, targetSet ) );
+			// initialize and store active codemirrors
+			currentCodeMirror.push( CodeMirror.fromTextArea( this, settings ) );
 		});
-		
-		$.post( ajaxurl, {
-				action: 'update-current-sns-tab',
-				_ajax_nonce: $('#scripts_n_styles_noncename').val(),
-				active_tab:  $( '.wp-tab-bar li', context ).index( $( this ).parent( 'li' ).get(0) ),
-				page: pagenow
-			}
-		);
-	});
+	}
 	
 	// activate first run
 	$( '.wp-tab-active a', context ).trigger( 'click' );
@@ -130,45 +137,6 @@ jQuery( document ).ready( function( $ ) {
 	
 	snsRefreshDeleteBtns();
 	
-	function snsRefreshDeleteBtns() {
-		
-		if ( sns_mceInit.style_formats && sns_mceInit.style_formats.length ) {
-			$( '#delete-mce-dropdown-names .sns-ajax-delete-p' ).remove();
-			$( '#delete-mce-dropdown-names', context ).show();
-			var formats = sns_mceInit.style_formats;
-			for ( var i = 0; i < formats.length; i++ ) {
-				var deleteBtn = {};
-				if ( formats[i].inline ) {
-					deleteBtn.element =  formats[i].inline;
-					deleteBtn.wrapper = '';
-				} else if ( formats[i].block ) {
-					deleteBtn.element =  formats[i].block;
-					if ( formats[i].wrapper )
-						deleteBtn.wrapper = ' (wrapper)';
-					else
-						deleteBtn.wrapper = '';
-				} else if ( formats[i].selector ) {
-					deleteBtn.element =  formats[i].selector;
-					deleteBtn.wrapper = '';
-				} else {
-					alert( 'ERROR!' ); 
-				}
-				deleteBtn.title = formats[i].title;
-				deleteBtn.classes = formats[i].classes;
-				$( '#instructions-mce-dropdown-names', context ).after(
-					'<p class="sns-ajax-delete-p"><a title="delete" class="sns-ajax-delete" id="'
-					+ deleteBtn.title + '">X</a> "'
-					+ deleteBtn.title + '" <code>&lt;'
-					+ deleteBtn.element + ' class="'
-					+ deleteBtn.classes + '"&gt;</code>'
-					+ deleteBtn.wrapper + '</p>'
-				);
-			}
-		} else {
-			$( '#delete-mce-dropdown-names', context ).hide();
-		}
-	}
-	
 	if ( $( '#uFp_classes_mce_type').val() == 'block' ) {
 		$('#add-mce-dropdown-names .sns-mce-wrapper').show();
 	} else {
@@ -186,8 +154,8 @@ jQuery( document ).ready( function( $ ) {
 	$('.sns-ajax-loading').hide();
 
 	// TinyMCE refresher set up.
-	if ( sns_mceInit.body_class )
-		var snsBaseBodyClass = sns_mceInit.body_class.split(' ');
+	if ( initData.body_class )
+		var snsBaseBodyClass = initData.body_class.split(' ');
 	else
 		var snsBaseBodyClass = [];
 	var sns_body_class = $('#uFp_classes_body').val().split(' ');
@@ -280,13 +248,53 @@ jQuery( document ).ready( function( $ ) {
 		$.post( ajaxurl, args, function( data ) { snsRefreshStyleFormats( data ); } );
 	});
 	
+	function snsRefreshDeleteBtns() {
+		
+		if ( initData.style_formats && initData.style_formats.length ) {
+			$( '#delete-mce-dropdown-names .sns-ajax-delete-p' ).remove();
+			$( '#delete-mce-dropdown-names', context ).show();
+			var formats = initData.style_formats;
+			for ( var i = 0; i < formats.length; i++ ) {
+				var deleteBtn = {};
+				if ( formats[i].inline ) {
+					deleteBtn.element =  formats[i].inline;
+					deleteBtn.wrapper = '';
+				} else if ( formats[i].block ) {
+					deleteBtn.element =  formats[i].block;
+					if ( formats[i].wrapper )
+						deleteBtn.wrapper = ' (wrapper)';
+					else
+						deleteBtn.wrapper = '';
+				} else if ( formats[i].selector ) {
+					deleteBtn.element =  formats[i].selector;
+					deleteBtn.wrapper = '';
+				} else {
+					alert( 'ERROR!' ); 
+				}
+				deleteBtn.title = formats[i].title;
+				deleteBtn.classes = formats[i].classes;
+				$( '#instructions-mce-dropdown-names', context ).after(
+					'<p class="sns-ajax-delete-p"><a title="delete" class="sns-ajax-delete" id="'
+					+ deleteBtn.title + '">X</a> "'
+					+ deleteBtn.title + '" <code>&lt;'
+					+ deleteBtn.element + ' class="'
+					+ deleteBtn.classes + '"&gt;</code>'
+					+ deleteBtn.wrapper + '</p>'
+				);
+			}
+		} else {
+			$( '#delete-mce-dropdown-names', context ).hide();
+		}
+	}
+	
 	function snsRefreshBodyClass( data ) {
-		sns_mceInit.body_class = snsBaseBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
+		initData.body_class = snsBaseBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
 		
 		// needed for < 3.3
-		if ( tinymce.settings ) tinymce.settings.body_class = sns_mceInit.body_class;
+		if ( tinymce.settings ) tinymce.settings.body_class = initData.body_class;
 		snsRefreshMCE();
 	}
+	
 	function snsRefreshStyleFormats( data ) {
 		// error check
 		if ( typeof data.classes_mce === 'undefined' ) {
@@ -314,30 +322,31 @@ jQuery( document ).ready( function( $ ) {
 				format.classes = data.classes_mce[i].classes;
 				style_formats.push( format );
 			}
-			sns_mceInit.style_formats = style_formats;
+			initData.style_formats = style_formats;
 			
 			// needed for < 3.3
-			if ( tinymce.settings ) tinymce.settings.style_formats = sns_mceInit.style_formats;
-			if ( sns_mceInit.theme_advanced_buttons2.indexOf( "styleselect" ) == -1 ) {
+			if ( tinymce.settings ) tinymce.settings.style_formats = initData.style_formats;
+			if ( initData.theme_advanced_buttons2.indexOf( "styleselect" ) == -1 ) {
 				var tempString = "styleselect,";
-				sns_mceInit.theme_advanced_buttons2 = tempString.concat(sns_mceInit.theme_advanced_buttons2);
+				initData.theme_advanced_buttons2 = tempString.concat(initData.theme_advanced_buttons2);
 			}
 			
 			// needed for < 3.3
-			if ( tinymce.settings ) tinymce.settings.theme_advanced_buttons2 = sns_mceInit.theme_advanced_buttons2;
+			if ( tinymce.settings ) tinymce.settings.theme_advanced_buttons2 = initData.theme_advanced_buttons2;
 			$( '#delete-mce-dropdown-names', context ).show();
 		} else {
-			delete sns_mceInit.style_formats;
-			sns_mceInit.theme_advanced_buttons2 = sns_mceInit.theme_advanced_buttons2.replace("styleselect,", "");
+			delete initData.style_formats;
+			initData.theme_advanced_buttons2 = initData.theme_advanced_buttons2.replace("styleselect,", "");
 			
 			// needed for < 3.3
-			if ( tinymce.settings ) tinymce.settings.theme_advanced_buttons2 = sns_mceInit.theme_advanced_buttons2;
+			if ( tinymce.settings ) tinymce.settings.theme_advanced_buttons2 = initData.theme_advanced_buttons2;
 			$( '#delete-mce-dropdown-names', context ).hide();
 		}
 		
 		snsRefreshDeleteBtns();
 		snsRefreshMCE();
 	}
+	
 	function snsRefreshMCE() {
 		if ( tinyMCE.editors["content"] ) {
 			// needed for < 3.3 editor initialization.
@@ -345,7 +354,7 @@ jQuery( document ).ready( function( $ ) {
 			
 			if ( tinyMCE.editors["content"].isHidden() ) {
 				tinyMCE.editors["content"].remove();
-				tinyMCE.init( sns_mceInit );
+				tinyMCE.init( initData );
 				tinyMCE.editors["content"].hide();
 			} else {
 				// you've got to be kidding me.
@@ -355,7 +364,7 @@ jQuery( document ).ready( function( $ ) {
 					switchEditors.go('content', 'html'); // 3.2
 				
 				tinyMCE.editors["content"].remove();
-				tinyMCE.init( sns_mceInit );
+				tinyMCE.init( initData );
 				tinyMCE.editors["content"].hide();
 				
 				if ( 1 == $('#content-tmce').length )
