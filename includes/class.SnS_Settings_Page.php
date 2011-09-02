@@ -20,22 +20,22 @@ class SnS_Settings_Page
      */
 	static function init() {
 		/* NOTE: Even when Scripts n Styles is not restricted by 'manage_options', Editors still can't submit the option page */
-		if ( current_user_can( 'manage_options' ) ) { // if they can't, they won't be able to save anyway.
-			$hook_suffix = add_management_page( // 'tools_page_Scripts-n-Styles';
-					'Scripts n Styles Settings',	// $page_title (string) (required) The text to be displayed in the title tags of the page when the menu is selected
-					'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
-					'unfiltered_html',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
-					SnS_Admin::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
-					array( __CLASS__, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
-				);
-			add_action( "load-$hook_suffix", array( __CLASS__, 'init_options_page' ) );
-			add_action( "load-options.php", array( __CLASS__, 'init_options_page' ) );
-			
-			add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'options_styles'));
-			add_action( "admin_print_scripts-$hook_suffix", array( __CLASS__, 'options_scripts'));
-			
-			add_contextual_help( $hook_suffix, self::contextual_help() );
-		}
+		if ( ! current_user_can( 'manage_options' ) ) return; // if they can't, they won't be able to save anyway.
+		
+		$hook_suffix = add_options_page( // 'tools_page_Scripts-n-Styles';
+				'Scripts n Styles Settings',	// $page_title (string) (required) The text to be displayed in the title tags of the page when the menu is selected
+				'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
+				'unfiltered_html',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
+				SnS_Admin::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
+				array( __CLASS__, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
+			);
+		add_action( "load-$hook_suffix", array( __CLASS__, 'init_options_page' ) );
+		add_action( "load-options.php", array( __CLASS__, 'init_options_page' ) );
+		
+		//add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'options_styles'));
+		//add_action( "admin_print_scripts-$hook_suffix", array( __CLASS__, 'options_scripts'));
+		
+		add_contextual_help( $hook_suffix, self::contextual_help() );
 	}
 	
     /**
@@ -44,10 +44,26 @@ class SnS_Settings_Page
 	function contextual_help() {
 		$contextual_help = '<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
 			<em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. 
-			Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either
-			<em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically "unfiltered_html"), 
+			Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only 
+			<em>"Super Admin"</em> users can access either
+			<em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change 
+			capabilities (specifically "unfiltered_html"), 
 			other users can be granted access.</p>';
 		return $contextual_help;
+	}
+	
+    /**
+	 * Settings Page
+	 * Adds CSS styles to the Scripts n Styles Admin Page.
+     */
+	static function options_styles() {
+	}
+	
+    /**
+	 * Settings Page
+	 * Adds JavaScript to the Scripts n Styles Admin Page.
+     */
+	static function options_scripts() {
 	}
 	
     /**
@@ -55,6 +71,15 @@ class SnS_Settings_Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
      */
 	static function init_options_page() {
+		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array( 'codemirror-default' ), SnS_Admin::VERSION );
+		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.13' );
+		wp_enqueue_style( 'codemirror-default', plugins_url( 'libraries/codemirror/theme/default.css', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
+		
+		wp_enqueue_script( 'sns-options-scripts', plugins_url('js/options-scripts.js', Scripts_n_Styles::$file), array( 'jquery', 'codemirror-css', 'codemirror-javascript' ), SnS_Admin::VERSION, true );
+		wp_enqueue_script( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.js', Scripts_n_Styles::$file), array(), '2.13' );
+		wp_enqueue_script( 'codemirror-css', plugins_url( 'libraries/codemirror/mode/css.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
+		wp_enqueue_script( 'codemirror-javascript', plugins_url( 'libraries/codemirror/mode/javascript.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
+		
 		register_setting(
 				self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
 				'SnS_options'	// $option_name (string) (required) The name of an option to sanitize and save.
@@ -103,27 +128,6 @@ class SnS_Settings_Page
 				array( __CLASS__, 'usage_section' ),
 				SnS_Admin::MENU_SLUG
 			);
-	}
-	
-    /**
-	 * Settings Page
-	 * Adds CSS styles to the Scripts n Styles Admin Page.
-     */
-	static function options_styles() {
-		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array( 'codemirror-default' ), SnS_Admin::VERSION );
-		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.13' );
-		wp_enqueue_style( 'codemirror-default', plugins_url( 'libraries/codemirror/theme/default.css', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
-	}
-	
-    /**
-	 * Settings Page
-	 * Adds JavaScript to the Scripts n Styles Admin Page.
-     */
-	static function options_scripts() {
-		wp_enqueue_script( 'sns-options-scripts', plugins_url('js/options-scripts.js', Scripts_n_Styles::$file), array( 'jquery', 'codemirror-css', 'codemirror-javascript' ), SnS_Admin::VERSION, true );
-		wp_enqueue_script( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.js', Scripts_n_Styles::$file), array(), '2.13' );
-		wp_enqueue_script( 'codemirror-css', plugins_url( 'libraries/codemirror/mode/css.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
-		wp_enqueue_script( 'codemirror-javascript', plugins_url( 'libraries/codemirror/mode/javascript.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
 	}
 	
     /**
@@ -278,8 +282,9 @@ class SnS_Settings_Page
 		global $title;
 		?>
 		<div class="wrap">
-			<?php screen_icon(); ?>
+			<?php screen_icon();/**/ ?>
 			<h2><?php echo esc_html($title); ?></h2>
+			<?php /*settings_errors();*/ ?>
 			<form action="options.php" method="post" autocomplete="off">
 			<?php settings_fields( self::OPTION_GROUP ); ?>
 			<?php do_settings_sections( SnS_Admin::MENU_SLUG ); ?>
