@@ -21,7 +21,7 @@ class SnS_Settings_Page
 	static function init() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 		
-		$hook_suffix = add_menu_page(
+		$hook_suffix = add_utility_page(
 				'Scripts n Styles Settings',
 				'Scripts n Styles',
 				'unfiltered_html',
@@ -219,7 +219,6 @@ class SnS_Settings_Page
      */
 	static function scripts_field( $args ) {
 		$options = get_option( 'SnS_options' );
-		//print_r($args);
 		?><textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="SnS_options[scripts]" id="scripts"><?php echo isset( $options[ 'scripts' ] ) ? $options[ 'scripts' ] : ''; ?></textarea>
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>
 		<?php
@@ -281,26 +280,19 @@ class SnS_Settings_Page
 		
 		wp_reset_vars( array( 'action', 'option_page', 'page' ) );
 		
-		//check_admin_referer( self::OPTION_GROUP . '-options' );
-		check_admin_referer(  $option_page  . '-options' ); // 'scripts_n_styles' . '-options'
+		check_admin_referer(  $option_page  . '-options' );
 		
-		//self::save_settings_page( SnS_Admin::MENU_SLUG );
-		self::save_settings_page( $page, $option_page ); // ?page=Scripts-n-Styles
+		self::save( $option_page, $page, $action );
 		
 		return;
 	}
 	
-	// see the patch on http://core.trac.wordpress.org/ticket/18285
-	function save_settings_page( $page, $option_page ) {
-		global /*$wp_settings_fields, */$new_whitelist_options;
-		
-		/*if ( ! isset( $wp_settings_fields ) || ! isset( $wp_settings_fields[ $page ] ) )
-			return;*/
+	function save( $option_page, $page, $action ) {
+		global $new_whitelist_options;
 		
 		if ( ! isset( $new_whitelist_options ) || ! isset( $new_whitelist_options[ $option_page ] ) )
 			return;
 		
-		//$settings_sections = $wp_settings_fields[ $page ];
 		$options = $new_whitelist_options[ $option_page ];
 		
 		foreach ( (array) $options as $option ) {

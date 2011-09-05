@@ -284,7 +284,7 @@ class SnS_Admin
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
      */
 	static function admin_meta_box() {
-		include_once( 'class.SnS_Admin_Meta_Box.php' );
+		require_once( 'class.SnS_Admin_Meta_Box.php' );
 		SnS_Admin_Meta_Box::init();
 	}
 	
@@ -294,7 +294,7 @@ class SnS_Admin
      */
 	static function settings_page() {
 		/* NOTE: Even when Scripts n Styles is not restricted by 'manage_options', Editors still can't submit the option page */
-		include_once( 'class.SnS_Settings_Page.php' );
+		require_once( 'class.SnS_Settings_Page.php' );
 		SnS_Settings_Page::init();
 	}
 }
