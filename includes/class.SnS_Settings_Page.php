@@ -19,21 +19,17 @@ class SnS_Settings_Page
      * @static
      */
 	static function init() {
-		/* NOTE: Even when Scripts n Styles is not restricted by 'manage_options', Editors still can't submit the option page */
-		if ( ! current_user_can( 'manage_options' ) ) return; // if they can't, they won't be able to save anyway.
+		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 		
-		$hook_suffix = add_options_page( // 'tools_page_Scripts-n-Styles';
-				'Scripts n Styles Settings',	// $page_title (string) (required) The text to be displayed in the title tags of the page when the menu is selected
-				'Scripts n Styles',	// $menu_title (string) (required) The text to be used for the menu
-				'unfiltered_html',	// $capability (string) (required) The capability required for this menu to be displayed to the user.
-				SnS_Admin::MENU_SLUG,	// $menu_slug (string) (required) The slug name to refer to this menu by (should be unique for this menu).
-				array( __CLASS__, 'options_page' )	// $function (callback) (optional) The function to be called to output the content for this page. 
+		$hook_suffix = add_menu_page(
+				'Scripts n Styles Settings',
+				'Scripts n Styles',
+				'unfiltered_html',
+				SnS_Admin::MENU_SLUG,
+				array( __CLASS__, 'admin_page' )
 			);
-		add_action( "load-$hook_suffix", array( __CLASS__, 'init_options_page' ) );
-		add_action( "load-options.php", array( __CLASS__, 'init_options_page' ) );
-		
-		//add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'options_styles'));
-		//add_action( "admin_print_scripts-$hook_suffix", array( __CLASS__, 'options_scripts'));
+		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
+		add_action( "load-$hook_suffix", array( __CLASS__, 'take_action'), 49 );
 		
 		add_contextual_help( $hook_suffix, self::contextual_help() );
 	}
@@ -54,23 +50,9 @@ class SnS_Settings_Page
 	
     /**
 	 * Settings Page
-	 * Adds CSS styles to the Scripts n Styles Admin Page.
-     */
-	static function options_styles() {
-	}
-	
-    /**
-	 * Settings Page
-	 * Adds JavaScript to the Scripts n Styles Admin Page.
-     */
-	static function options_scripts() {
-	}
-	
-    /**
-	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
      */
-	static function init_options_page() {
+	static function admin_load() {
 		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array( 'codemirror-default' ), SnS_Admin::VERSION );
 		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.13' );
 		wp_enqueue_style( 'codemirror-default', plugins_url( 'libraries/codemirror/theme/default.css', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
@@ -81,53 +63,64 @@ class SnS_Settings_Page
 		wp_enqueue_script( 'codemirror-javascript', plugins_url( 'libraries/codemirror/mode/javascript.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
 		
 		register_setting(
-				self::OPTION_GROUP,	// $option_group (string) (required) A settings group name. Can be anything.
-				'SnS_options'	// $option_name (string) (required) The name of an option to sanitize and save.
-			);
+				self::OPTION_GROUP,
+				'SnS_options' );
 		register_setting(
-				self::OPTION_GROUP, 
-				'sns_enqueue_scripts'
-			);
+				self::OPTION_GROUP,
+				'sns_enqueue_scripts' );
+		
 		add_settings_section(
 				'global',
 				'Global Scripts n Styles',
 				array( __CLASS__, 'global_section' ),
-				SnS_Admin::MENU_SLUG
-			);
+				SnS_Admin::MENU_SLUG );
+		
 		add_settings_field(
-				'scripts', 
-				'<label for="scripts"><strong>Scripts:</strong> </label>',
+				'scripts',
+				'<strong>Scripts:</strong> ',
 				array( __CLASS__, 'scripts_field' ),
 				SnS_Admin::MENU_SLUG,
-				'global'
-			);
+				'global',
+				array(
+					'label_for' => 'scripts',
+					'setting' => 'SnS_options'
+				) );
 		add_settings_field(
 				'styles',
-				'<label for="styles"><strong>Styles:</strong> </label>',
+				'<strong>Styles:</strong> ',
 				array( __CLASS__, 'styles_field' ),
 				SnS_Admin::MENU_SLUG,
-				'global'
-			);
+				'global',
+				array(
+					'label_for' => 'styles',
+					'setting' => 'SnS_options'
+				) );
 		add_settings_field(
 				'scripts_in_head',
-				'<label for="scripts_in_head"><strong>Scripts</strong><br />(for the <code>head</code> element): </label>',
+				'<strong>Scripts</strong><br />(for the <code>head</code> element): ',
 				array( __CLASS__, 'scripts_in_head_field' ),
 				SnS_Admin::MENU_SLUG,
-				'global'
-			);
+				'global',
+				array(
+					'label_for' => 'scripts_in_head',
+					'setting' => 'SnS_options'
+				) );
 		add_settings_field(
 				'enqueue_scripts',
-				'<label for="enqueue_scripts"><strong>Enqueue Scripts</strong>: </label>',
+				'<strong>Enqueue Scripts</strong>: ',
 				array( __CLASS__, 'enqueue_scripts_field' ),
 				SnS_Admin::MENU_SLUG,
-				'global'
-			);
+				'global',
+				array(
+					'label_for' => 'enqueue_scripts',
+					'setting' => 'sns_enqueue_scripts'
+				) );
+		
 		add_settings_section(
 				'usage',
 				'Scripts n Styles Usage',
 				array( __CLASS__, 'usage_section' ),
-				SnS_Admin::MENU_SLUG
-			);
+				SnS_Admin::MENU_SLUG );
 	}
 	
     /**
@@ -224,8 +217,9 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs a textarea for setting 'scripts'.
      */
-	static function scripts_field() {
+	static function scripts_field( $args ) {
 		$options = get_option( 'SnS_options' );
+		//print_r($args);
 		?><textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="SnS_options[scripts]" id="scripts"><?php echo isset( $options[ 'scripts' ] ) ? $options[ 'scripts' ] : ''; ?></textarea>
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>
 		<?php
@@ -235,7 +229,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs a textarea for setting 'styles'.
      */
-	static function styles_field() {
+	static function styles_field( $args ) {
 		$options = get_option( 'SnS_options' );
 		?><textarea style="min-width: 500px; width:97%;" class="code css" rows="5" cols="40" name="SnS_options[styles]" id="styles"><?php echo isset( $options[ 'styles' ] ) ? $options[ 'styles' ] : ''; ?></textarea>
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span><?php
@@ -245,7 +239,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs a textarea for setting 'scripts_in_head'.
      */
-	static function scripts_in_head_field() {
+	static function scripts_in_head_field( $args ) {
 		$options = get_option( 'SnS_options' );
 		?><textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="SnS_options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $options[ 'scripts_in_head' ] ) ? $options[ 'scripts_in_head' ] : ''; ?></textarea>
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>
@@ -256,7 +250,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs a select element for selecting options to set $sns_enqueue_scripts.
      */
-	static function enqueue_scripts_field() {
+	static function enqueue_scripts_field( $args ) {
 		$registered_handles = Scripts_n_Styles::get_wp_registered();
 		$sns_enqueue_scripts = get_option( 'sns_enqueue_scripts' );
 		if ( ! is_array( $sns_enqueue_scripts ) ) $sns_enqueue_scripts = array();
@@ -277,15 +271,66 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
      */
-	static function options_page() {
+	static function take_action() {
+		global $action, $option_page, $page;
+		
+		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) || ( is_multisite() && ! is_super_admin() ) )
+			wp_die( __( 'Cheatin&#8217; uh?' ) );
+		
+		if ( empty( $_POST ) || ! isset( $_POST[ 'action' ] ) || ! isset( $_POST[ 'option_page' ] ) || ! isset( $_GET[ 'page' ] ) ) return;
+		
+		wp_reset_vars( array( 'action', 'option_page', 'page' ) );
+		
+		//check_admin_referer( self::OPTION_GROUP . '-options' );
+		check_admin_referer(  $option_page  . '-options' ); // 'scripts_n_styles' . '-options'
+		
+		//self::save_settings_page( SnS_Admin::MENU_SLUG );
+		self::save_settings_page( $page, $option_page ); // ?page=Scripts-n-Styles
+		
+		return;
+	}
+	
+	// see the patch on http://core.trac.wordpress.org/ticket/18285
+	function save_settings_page( $page, $option_page ) {
+		global /*$wp_settings_fields, */$new_whitelist_options;
+		
+		/*if ( ! isset( $wp_settings_fields ) || ! isset( $wp_settings_fields[ $page ] ) )
+			return;*/
+		
+		if ( ! isset( $new_whitelist_options ) || ! isset( $new_whitelist_options[ $option_page ] ) )
+			return;
+		
+		//$settings_sections = $wp_settings_fields[ $page ];
+		$options = $new_whitelist_options[ $option_page ];
+		
+		foreach ( (array) $options as $option ) {
+			$option = trim($option);
+			$value = null;
+			if ( isset($_POST[$option]) )
+				$value = $_POST[$option];
+			if ( !is_array($value) )
+				$value = trim($value);
+			$value = stripslashes_deep($value);
+			update_option($option, $value);
+		}
+		
+		if ( ! count( get_settings_errors() ) )
+			add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
+	}
+
+    /**
+	 * Settings Page
+	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
+     */
+	static function admin_page() {
 		SnS_Admin::upgrade_check();
 		global $title;
 		?>
 		<div class="wrap">
-			<?php screen_icon();/**/ ?>
+			<?php screen_icon(); ?>
 			<h2><?php echo esc_html($title); ?></h2>
-			<?php /*settings_errors();*/ ?>
-			<form action="options.php" method="post" autocomplete="off">
+			<?php settings_errors(); ?>
+			<form action="" method="post" autocomplete="off">
 			<?php settings_fields( self::OPTION_GROUP ); ?>
 			<?php do_settings_sections( SnS_Admin::MENU_SLUG ); ?>
 			<?php submit_button(); ?>
