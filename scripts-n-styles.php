@@ -47,22 +47,21 @@ Network: true
  * @version 3.beta
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2010 - 2011, Kenneth Newman
- * @todo Add Post Type Selection on Options Page? Not sure that's usefull.
+ * @todo Add Post Type Selection on Options Page? Not sure that's useful.
  * @todo Add Conditional Tags support as alternative to Globally applying Scripts n Styles.
  * @todo Create ability to add and register scripts and styles for enqueueing (via Options page).
  * @todo Create selection on Option page of which to pick registered scripts to make available on edit screens.
  * @todo Create shortcode to embed html/javascript snippets. See http://scribu.net/wordpress/optimal-script-loading.html in which this is already figured out :-)
  * @todo Create shortcode registration on Options page to make those snippets available on edit screens.
  * @todo Create shortcode registration of html snippets on edit screens for single use.
- * @todo Figure out and add Error messaging.
+ * @todo Add Error messaging.
  * @todo Replace Multi-Select element with something better.
- * @todo Clean up Usage Table, paginate, don't display when empty.
+ * @todo Clean up Usage Table, paginate.
  * @todo "Include Scripts" will be reintroduced when registering is finished.
  * @todo Clean up tiny_mce_before_init in SnS_Admin_Meta_Box.
  * @todo LESS.js support.
  * @todo LESS.js highlighting support to CodeMirror.
  * @todo Solarize theme to CodeMirror.
- * @todo Structure options page more like custom header/background.
  */
 
 class Scripts_n_Styles
