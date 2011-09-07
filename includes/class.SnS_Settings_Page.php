@@ -18,7 +18,7 @@ class SnS_Settings_Page
 	 * Initializing method.
      * @static
      */
-	static function init() {
+	function init() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 		
 		$hook_suffix = add_utility_page(
@@ -26,7 +26,8 @@ class SnS_Settings_Page
 				'Scripts n Styles',
 				'unfiltered_html',
 				SnS_Admin::MENU_SLUG,
-				array( __CLASS__, 'admin_page' )
+				array( __CLASS__, 'admin_page' ),
+				'//0.gravatar.com/avatar/e8c50274eb82cb03745385ba37fc6a79?s=16&d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D32&r=G'
 			);
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( __CLASS__, 'take_action'), 49 );
@@ -52,7 +53,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
      */
-	static function admin_load() {
+	function admin_load() {
 		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array( 'codemirror-default' ), SnS_Admin::VERSION );
 		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/codemirror/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.13' );
 		wp_enqueue_style( 'codemirror-default', plugins_url( 'libraries/codemirror/theme/default.css', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
@@ -127,7 +128,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
 	 */
-	static function global_section() {
+	function global_section() {
 		?>
 		<div style="max-width: 55em;">
 			<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.</p>
@@ -139,7 +140,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs the Usage Section.
      */
-	static function usage_section() {
+	function usage_section() {
 		$all_posts = get_posts( array(
 			'numberposts' => -1,
 			'post_type' => 'any',
@@ -217,7 +218,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs a textarea for setting 'scripts'.
      */
-	static function scripts_field( $args ) {
+	function scripts_field( $args ) {
 		$options = get_option( 'SnS_options' );
 		?><textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="SnS_options[scripts]" id="scripts"><?php echo isset( $options[ 'scripts' ] ) ? $options[ 'scripts' ] : ''; ?></textarea>
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>
@@ -228,7 +229,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs a textarea for setting 'styles'.
      */
-	static function styles_field( $args ) {
+	function styles_field( $args ) {
 		$options = get_option( 'SnS_options' );
 		?><textarea style="min-width: 500px; width:97%;" class="code css" rows="5" cols="40" name="SnS_options[styles]" id="styles"><?php echo isset( $options[ 'styles' ] ) ? $options[ 'styles' ] : ''; ?></textarea>
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span><?php
@@ -238,7 +239,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs a textarea for setting 'scripts_in_head'.
      */
-	static function scripts_in_head_field( $args ) {
+	function scripts_in_head_field( $args ) {
 		$options = get_option( 'SnS_options' );
 		?><textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="SnS_options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $options[ 'scripts_in_head' ] ) ? $options[ 'scripts_in_head' ] : ''; ?></textarea>
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>
@@ -249,7 +250,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs a select element for selecting options to set $sns_enqueue_scripts.
      */
-	static function enqueue_scripts_field( $args ) {
+	function enqueue_scripts_field( $args ) {
 		$registered_handles = Scripts_n_Styles::get_wp_registered();
 		$sns_enqueue_scripts = get_option( 'sns_enqueue_scripts' );
 		if ( ! is_array( $sns_enqueue_scripts ) ) $sns_enqueue_scripts = array();
@@ -270,7 +271,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
      */
-	static function take_action() {
+	function take_action() {
 		global $action, $option_page, $page;
 		
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) || ( is_multisite() && ! is_super_admin() ) )
@@ -314,7 +315,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
      */
-	static function admin_page() {
+	function admin_page() {
 		SnS_Admin::upgrade_check();
 		global $title;
 		?>
