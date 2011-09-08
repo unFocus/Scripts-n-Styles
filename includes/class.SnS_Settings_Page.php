@@ -27,7 +27,7 @@ class SnS_Settings_Page
 				'unfiltered_html',
 				SnS_Admin::MENU_SLUG,
 				array( __CLASS__, 'admin_page' ),
-				'//0.gravatar.com/avatar/e8c50274eb82cb03745385ba37fc6a79?s=16&d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D32&r=G'
+				plugins_url( 'images/menu.png', Scripts_n_Styles::$file)
 			);
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( __CLASS__, 'take_action'), 49 );
@@ -320,6 +320,7 @@ class SnS_Settings_Page
 		global $title;
 		?>
 		<div class="wrap">
+			<style>#icon-<?php echo esc_html( $_REQUEST[ 'page' ] ); ?> { background: no-repeat center url('<?php echo plugins_url( 'images/icon32.png', Scripts_n_Styles::$file); ?>'); }</style>
 			<?php screen_icon(); ?>
 			<h2><?php echo esc_html($title); ?></h2>
 			<?php settings_errors(); ?>
