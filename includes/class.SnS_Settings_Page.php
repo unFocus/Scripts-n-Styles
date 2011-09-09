@@ -141,15 +141,28 @@ class SnS_Settings_Page
 	 * Outputs the Usage Section.
      */
 	function usage_section() {
-		$all_posts = get_posts( array(
+		$script_posts = get_posts( array(
 			'numberposts' => -1,
 			'post_type' => 'any',
 			'post_status' => 'any',
-			'meta_query' => array(
-				array( 'key' => '_SnS_scripts' ),
-				array( 'key' => '_SnS_styles' )
-			)
+    		'orderby' => 'ID',
+			'meta_query' => array( array( 'key' => '_SnS_scripts' ) )
 		) );
+		
+		$exclude = array();
+		foreach ( $script_posts as $post ) {$exclude[] =  $post->ID;}
+		$exclude = implode( ', ', $exclude );
+		
+		$style_posts = get_posts( array(
+			'numberposts' => -1,
+			'exclude' => $exclude,
+			'post_type' => 'any',
+			'post_status' => 'any',
+    		'orderby' => 'ID',
+			'meta_query' => array( array( 'key' => '_SnS_styles' ) )
+		) );
+		
+		$all_posts = array_merge( $style_posts, $script_posts );
 		$sns_posts = array();
 		foreach( $all_posts as $post) {
 			$styles = get_post_meta( $post->ID, '_SnS_styles', true );
@@ -185,30 +198,49 @@ class SnS_Settings_Page
 					</tr>
 				</tfoot>
 				<tbody>
-				<?php foreach( $sns_posts as $post) {
-					$temp_styles = $post->sns_styles;
-					$temp_scripts = $post->sns_scripts;
-					if ( ! empty( $temp_styles ) || ! empty( $temp_scripts ) ) { ?>
-						<tr>
-							<td>
-								<strong><a class="row-title" title="Edit &#8220;<?php echo esc_attr( $post->post_title ); ?>&#8221;" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>"><?php echo $post->post_title; ?></a></strong>
-								<div class="row-actions"><span class="edit"><a title="Edit this item" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>">Edit</a></span></div>
-							</td>
-							<td><?php echo $post->ID; ?></td>
-							<td><?php echo $post->post_status; ?></td>
-							<td><?php echo $post->post_type; ?></td>
-							<td><?php echo '<pre>'; print_r( $temp_styles ); echo '</pre>'; ?></td>
-							<td><?php echo '<pre>'; print_r( $temp_scripts ); echo '</pre>'; ?></td>
-						</tr>
-					<?php }
-				} ?>
+				<?php foreach( $sns_posts as $post) { ?>
+					<tr>
+						<td>
+							<strong><a class="row-title" title="Edit &#8220;<?php echo esc_attr( $post->post_title ); ?>&#8221;" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>"><?php echo $post->post_title; ?></a></strong>
+							<div class="row-actions"><span class="edit"><a title="Edit this item" href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>">Edit</a></span></div>
+						</td>
+						<td><?php echo $post->ID; ?></td>
+						<td><?php echo $post->post_status; ?></td>
+						<td><?php echo $post->post_type; ?></td>
+						<td><?php 
+							if ( isset( $post->sns_scripts[ 'scripts_in_head' ] ) ) { ?>
+								<div>Scripts (head)</div>
+							<?php }
+							if ( isset( $post->sns_scripts[ 'scripts' ] ) ) { ?>
+								<div>Scripts</div>
+							<?php }
+							if ( isset( $post->sns_scripts[ 'enqueue_scripts' ] ) ) { ?>
+								<div>Enqueued Scripts</div>
+							<?php }
+						 ?></td>
+						<td><?php
+							if ( isset( $post->sns_styles[ 'classes_mce' ] ) ) { ?>
+								<div>TinyMCE Formats</div>
+							<?php }
+							if ( isset( $post->sns_styles[ 'styles' ] ) ) { ?>
+								<div>Styles</div>
+							<?php }
+							if ( isset( $post->sns_styles[ 'classes_post' ] ) ) { ?>
+								<div>Post Classes</div>
+							<?php }
+							if ( isset( $post->sns_styles[ 'classes_body' ] ) ) { ?>
+								<div>Body Classes</div>
+							<?php }
+						?></td>
+					</tr>
+				<?php } ?>
 				</tbody>
 			</table>
 			<?php
 		} else {
 			?>
 			<div style="max-width: 55em;">
-				<p>No content items are currently using Scripts-n-Styles data.</p>
+				<p>No items are currently using Scripts-n-Styles.</p>
 			</div>
 			<?php
 		}

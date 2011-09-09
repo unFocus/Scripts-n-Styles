@@ -33,89 +33,72 @@ class SnS_Admin
 	
 	function ajax_handlers() {
 		// Keep track of current tab.
-		add_action( 'wp_ajax_update-current-sns-tab', array( __CLASS__, 'update_current_sns_tab' ) );
+		add_action( 'wp_ajax_sns_update_tab', array( __CLASS__, 'update_tab' ) );
 		// TinyMCE requests a css file.
-		add_action( 'wp_ajax_sns-tinymce-styles-ajax', array( __CLASS__, 'sns_tinymce_styles_ajax' ) );
+		add_action( 'wp_ajax_sns_tinymce_styles', array( __CLASS__, 'tinymce_styles' ) );
 		// Ajax Saves.
-		add_action( 'wp_ajax_sns-classes-ajax', array( __CLASS__, 'sns_classes_ajax' ) );
-		add_action( 'wp_ajax_sns-update-scripts-ajax', array( __CLASS__, 'sns_update_scripts_ajax' ) );
-		add_action( 'wp_ajax_sns-update-styles-ajax', array( __CLASS__, 'sns_update_styles_ajax' ) );
-		add_action( 'wp_ajax_sns-dropdown-ajax', array( __CLASS__, 'sns_dropdown_ajax' ) );
-		add_action( 'wp_ajax_sns-dropdown-delete-ajax', array( __CLASS__, 'sns_dropdown_delete_ajax' ) );
+		add_action( 'wp_ajax_sns_classes', array( __CLASS__, 'classes' ) );
+		add_action( 'wp_ajax_sns_scripts', array( __CLASS__, 'scripts' ) );
+		add_action( 'wp_ajax_sns_styles', array( __CLASS__, 'styles' ) );
+		add_action( 'wp_ajax_sns_dropdown', array( __CLASS__, 'dropdown' ) );
+		add_action( 'wp_ajax_sns_delete_class', array( __CLASS__, 'delete_class' ) );
 	}
-	function sns_update_scripts_ajax() {
+	function update_tab() {
 		check_ajax_referer( Scripts_n_Styles::$file );
-		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
+		
+		$active_tab = isset( $_POST[ 'active_tab' ] ) ? (int)$_POST[ 'active_tab' ] : 0;
+		
+		if ( ! $user = wp_get_current_user() )
+			exit( 'Bad User' );
+		
+		$success = update_user_option( $user->ID, "current-sns-tab", $active_tab, true);
+		if ( $success )
+			exit( 'Current Tab Updated. New value is ' . $active_tab );
+		else
+			exit( 'Current Tab Not Updated. It is possible that no change was needed.' );
+	}
+	function tinymce_styles() {
+		check_ajax_referer( 'sns_tinymce_styles' );
 		
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
-		if ( ! isset( $_REQUEST[ 'uFp_scripts' ] ) || ! isset( $_REQUEST[ 'uFp_scripts_in_head' ] ) ) exit( 'Data incorrectly sent.' );
-		
 		$post_id = $_REQUEST[ 'post_id' ];
-		$scripts = get_post_meta( $post_id, '_SnS_scripts', true );
 		
-		if ( empty( $_REQUEST[ 'uFp_scripts_in_head' ] ) ) unset( $scripts[ 'scripts_in_head' ] );
-		else $scripts[ 'scripts_in_head' ] = $_REQUEST[ 'uFp_scripts_in_head' ];
+		$options = get_option( 'SnS_options' );
+		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
-		if ( empty( $_REQUEST[ 'uFp_scripts' ] ) ) unset( $scripts[ 'scripts' ] );
-		else $scripts[ 'scripts' ] = $_REQUEST[ 'uFp_scripts' ];
+		header('Content-Type: text/css; charset=' . get_option('blog_charset'));
+		/*header("Cache-Control: no-cache");
+		header("Pragma: no-cache");
+		session_cache_limiter( 'nocache' );*/
 		
-		update_post_meta( $post_id, '_SnS_scripts', $scripts );
+		if ( ! empty( $options ) && ! empty( $options[ 'styles' ] ) ) 
+			echo $options[ 'styles' ];
 		
-		if ( empty( $_REQUEST[ 'uFp_scripts' ] ) ) $scripts[ 'scripts' ] = '';
-		if ( empty( $_REQUEST[ 'uFp_scripts_in_head' ] ) ) $scripts[ 'scripts_in_head' ] = '';
-		
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
-		echo json_encode( array(
-			"scripts" => $scripts[ 'scripts' ],
-			"scripts_in_head" => $scripts[ 'scripts_in_head' ],
-		) );
+		if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) 
+			echo $styles[ 'styles' ];
 		
 		exit();
 	}
-	function sns_update_styles_ajax() {
+	function classes() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
-		if ( ! isset( $_REQUEST[ 'uFp_styles' ] ) ) exit( 'Data incorrectly sent.' );
+		if ( ! isset( $_REQUEST[ 'classes_body' ] ) || ! isset( $_REQUEST[ 'classes_post' ] ) ) exit( 'Data incorrectly sent.' );
 		
 		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
-		if ( empty( $_REQUEST[ 'uFp_styles' ] ) ) unset( $styles[ 'styles' ] );
-		else $styles[ 'styles' ] = $_REQUEST[ 'uFp_styles' ];
+		if ( empty( $_REQUEST[ 'classes_body' ] ) ) unset( $styles[ 'classes_body' ] );
+		else $styles[ 'classes_body' ] = $_REQUEST[ 'classes_body' ];
+		
+		if ( empty( $_REQUEST[ 'classes_post' ] ) ) unset( $styles[ 'classes_post' ] );
+		else $styles[ 'classes_post' ] = $_REQUEST[ 'classes_post' ];
 		
 		update_post_meta( $post_id, '_SnS_styles', $styles );
 		
-		if ( empty( $_REQUEST[ 'uFp_styles' ] ) ) $styles[ 'styles' ] = '';
-		
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
-		echo json_encode( array(
-			"styles" => $styles[ 'styles' ],
-		) );
-		
-		exit();
-	}
-	function sns_classes_ajax() {
-		check_ajax_referer( Scripts_n_Styles::$file );
-		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
-		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
-		if ( ! isset( $_REQUEST[ 'uFp_classes_body' ] ) || ! isset( $_REQUEST[ 'uFp_classes_post' ] ) ) exit( 'Data incorrectly sent.' );
-		
-		$post_id = $_REQUEST[ 'post_id' ];
-		$styles = get_post_meta( $post_id, '_SnS_styles', true );
-		
-		if ( empty( $_REQUEST[ 'uFp_classes_body' ] ) ) unset( $styles[ 'classes_body' ] );
-		else $styles[ 'classes_body' ] = $_REQUEST[ 'uFp_classes_body' ];
-		
-		if ( empty( $_REQUEST[ 'uFp_classes_post' ] ) ) unset( $styles[ 'classes_post' ] );
-		else $styles[ 'classes_post' ] = $_REQUEST[ 'uFp_classes_post' ];
-		
-		update_post_meta( $post_id, '_SnS_styles', $styles );
-		
-		if ( empty( $_REQUEST[ 'uFp_classes_body' ] ) ) $styles[ 'classes_body' ] = '';
-		if ( empty( $_REQUEST[ 'uFp_classes_post' ] ) ) $styles[ 'classes_post' ] = '';
+		if ( empty( $_REQUEST[ 'classes_body' ] ) ) $styles[ 'classes_body' ] = '';
+		if ( empty( $_REQUEST[ 'classes_post' ] ) ) $styles[ 'classes_post' ] = '';
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -125,7 +108,60 @@ class SnS_Admin
 		
 		exit();
 	}
-	function sns_dropdown_ajax() {
+	function scripts() {
+		check_ajax_referer( Scripts_n_Styles::$file );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
+		
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'scripts' ] ) || ! isset( $_REQUEST[ 'scripts_in_head' ] ) ) exit( 'Data incorrectly sent.' );
+		
+		$post_id = $_REQUEST[ 'post_id' ];
+		$scripts = get_post_meta( $post_id, '_SnS_scripts', true );
+		
+		if ( empty( $_REQUEST[ 'scripts_in_head' ] ) ) unset( $scripts[ 'scripts_in_head' ] );
+		else $scripts[ 'scripts_in_head' ] = $_REQUEST[ 'scripts_in_head' ];
+		
+		if ( empty( $_REQUEST[ 'scripts' ] ) ) unset( $scripts[ 'scripts' ] );
+		else $scripts[ 'scripts' ] = $_REQUEST[ 'scripts' ];
+		
+		update_post_meta( $post_id, '_SnS_scripts', $scripts );
+		
+		if ( empty( $_REQUEST[ 'scripts' ] ) ) $scripts[ 'scripts' ] = '';
+		if ( empty( $_REQUEST[ 'scripts_in_head' ] ) ) $scripts[ 'scripts_in_head' ] = '';
+		
+		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		echo json_encode( array(
+			"scripts" => $scripts[ 'scripts' ],
+			"scripts_in_head" => $scripts[ 'scripts_in_head' ],
+		) );
+		
+		exit();
+	}
+	function styles() {
+		check_ajax_referer( Scripts_n_Styles::$file );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
+		
+		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'styles' ] ) ) exit( 'Data incorrectly sent.' );
+		
+		$post_id = $_REQUEST[ 'post_id' ];
+		$styles = get_post_meta( $post_id, '_SnS_styles', true );
+		
+		if ( empty( $_REQUEST[ 'styles' ] ) ) unset( $styles[ 'styles' ] );
+		else $styles[ 'styles' ] = $_REQUEST[ 'styles' ];
+		
+		update_post_meta( $post_id, '_SnS_styles', $styles );
+		
+		if ( empty( $_REQUEST[ 'styles' ] ) ) $styles[ 'styles' ] = '';
+		
+		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		echo json_encode( array(
+			"styles" => $styles[ 'styles' ],
+		) );
+		
+		exit();
+	}
+	function dropdown() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
@@ -158,7 +194,7 @@ class SnS_Admin
 		
 		exit();
 	}
-	function sns_dropdown_delete_ajax() {
+	function delete_class() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
@@ -166,12 +202,16 @@ class SnS_Admin
 		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
-		$title = $_REQUEST[ 'uFp_delete' ];
+		$title = $_REQUEST[ 'delete' ];
 		
 		if ( isset( $styles[ 'classes_mce' ][ $title ] ) ) unset( $styles[ 'classes_mce' ][ $title ] );
 		else exit ( 'No Format of that name.' );
 		
+		if ( empty( $styles[ 'classes_mce' ] ) ) unset( $styles[ 'classes_mce' ] );
+		
 		update_post_meta( $post_id, '_SnS_styles', $styles );
+		
+		if ( ! isset( $styles[ 'classes_mce' ] ) ) $styles[ 'classes_mce' ] = array( 'Empty' );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -179,42 +219,6 @@ class SnS_Admin
 		) );
 		
 		exit();
-	}
-	function sns_tinymce_styles_ajax() {
-		check_ajax_referer( 'sns-tinymce-styles-ajax' );
-		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
-		$post_id = $_REQUEST[ 'post_id' ];
-		
-		$options = get_option( 'SnS_options' );
-		$styles = get_post_meta( $post_id, '_SnS_styles', true );
-		
-		header('Content-Type: text/css; charset=' . get_option('blog_charset'));
-		/*header("Cache-Control: no-cache");
-		header("Pragma: no-cache");
-		session_cache_limiter( 'nocache' );*/
-		
-		if ( ! empty( $options ) && ! empty( $options[ 'styles' ] ) ) 
-			echo $options[ 'styles' ];
-		
-		if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) 
-			echo $styles[ 'styles' ];
-		
-		exit();
-	}
-	function update_current_sns_tab() {
-		check_ajax_referer( Scripts_n_Styles::$file );
-		
-		$active_tab = isset( $_POST[ 'active_tab' ] ) ? (int)$_POST[ 'active_tab' ] : 0;
-		
-		if ( ! $user = wp_get_current_user() )
-			exit( 'Bad User' );
-		
-		$success = update_user_option( $user->ID, "current-sns-tab", $active_tab, true);
-		if ( $success )
-			exit( 'Current Tab Updated. New value is ' . $active_tab );
-		else
-			exit( 'Current Tab Not Updated. It is possible that no change was needed.' );
 	}
 	
     /**

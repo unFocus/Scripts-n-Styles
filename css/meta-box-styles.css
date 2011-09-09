@@ -7,10 +7,10 @@
 body.js .wp-tab-bar {
 	display: block;
 }
-#uFp_meta_box .title {
+#SnS_meta_box .title {
 	margin-top: 1.5em;
 }
-body.js #uFp_meta_box .title,
+body.js #SnS_meta_box .title,
 body.js .wp-tab-panel {
 	display: none;
 }
@@ -75,14 +75,14 @@ body.js .wp-tabs-panel-active {
 }
 /* end core styles */
 
-#post-body #uFp_meta_box .wp-tab-bar li {
+#post-body #SnS_meta_box .wp-tab-bar li {
 	padding: 0px;
 }
-#post-body #uFp_meta_box .wp-tab-bar a {
+#post-body #SnS_meta_box .wp-tab-bar a {
 	padding: 8px;
 	display: block;
 }
-#uFp_meta_box .wp-tab-panel {
+#SnS_meta_box .wp-tab-panel {
 	height: auto;
 	min-height: 200px;
 }
@@ -101,13 +101,8 @@ body.js .wp-tabs-panel-active {
 	overflow: hidden;
 	width: 100%;
 }
-#sns-classes-ajax {
-}
-#uFp_classes_mce_wrapper {
+#SnS_classes_mce_wrapper {
 	margin: 6px 0;
-}
-#delete-mce-dropdown-names,
-#add-mce-dropdown-names {
 }
 #mce-dropdown-names {
 	display: none;

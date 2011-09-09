@@ -76,7 +76,7 @@ class SnS_Admin_Meta_Box
      */
 	static function mce_css( $mce_css ) {
 		global $post;
-		$mce_css .= ',' . wp_nonce_url( admin_url( "admin-ajax.php?action=sns-tinymce-styles-ajax&post_id={$post->ID}" ), 'sns-tinymce-styles-ajax' );
+		$mce_css .= ',' . wp_nonce_url( admin_url( "admin-ajax.php?action=sns_tinymce_styles&post_id={$post->ID}" ), 'sns_tinymce_styles' );
 		return $mce_css;
 	}
 
@@ -88,7 +88,7 @@ class SnS_Admin_Meta_Box
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			self::$post_types = get_post_types( array('show_ui' => true, 'public' => true) ); // updated for http://core.trac.wordpress.org/changeset/18234
 			foreach ( self::$post_types as $post_type ) {
-				add_meta_box( 'uFp_meta_box', 'Scripts n Styles', array( __CLASS__, 'meta_box' ), $post_type, 'normal', 'high' );
+				add_meta_box( 'SnS_meta_box', 'Scripts n Styles', array( __CLASS__, 'admin_meta_box' ), $post_type, 'normal', 'high' );
 			}
 			add_filter( 'default_hidden_meta_boxes', array( __CLASS__,  'default_hidden_meta_boxes' )  );
 			add_action( "admin_print_styles", array( __CLASS__, 'meta_box_styles'));
@@ -98,7 +98,7 @@ class SnS_Admin_Meta_Box
 	}
 	
 	static function default_hidden_meta_boxes( $hidden ) {
-		$hidden[] = 'uFp_meta_box';
+		$hidden[] = 'SnS_meta_box';
     	return $hidden;
 	}
 	
@@ -117,7 +117,7 @@ class SnS_Admin_Meta_Box
 	 * Outputs the Meta Box. Only called on callback from add_meta_box() during the add_meta_boxes action.
 	 * @param unknown_type WordPress Post object.
      */
-	static function meta_box( $post ) {
+	static function admin_meta_box( $post ) {
 		$registered_handles = Scripts_n_Styles::get_wp_registered();
 		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
 		$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
@@ -127,40 +127,40 @@ class SnS_Admin_Meta_Box
 		?>
 			<?php wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME ); ?>
 			<ul class="wp-tab-bar">
-				<li<?php echo ( 0 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#uFp_scripts-tab">Scripts</a></li>
-				<li<?php echo ( 1 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#uFp_styles-tab">Styles</a></li>
-				<li<?php echo ( 2 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#uFp_classes_body-tab">Classes</a></li>
-				<li<?php echo ( 3 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#uFp_enqueue_scripts-tab">Include Scripts</a></li>
+				<li<?php echo ( 0 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_scripts-tab">Scripts</a></li>
+				<li<?php echo ( 1 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_styles-tab">Styles</a></li>
+				<li<?php echo ( 2 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_classes_body-tab">Classes</a></li>
+				<li<?php echo ( 3 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_enqueue_scripts-tab">Include Scripts</a></li>
 			</ul>
 			
-			<div class="wp-tab-panel" id="uFp_scripts-tab">
+			<div class="wp-tab-panel" id="SnS_scripts-tab">
 				<p><em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) ...</em></p>
-				<label for="uFp_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
-				<textarea class="codemirror js" name="uFp_scripts_in_head" id="uFp_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
+				<label for="SnS_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
+				<textarea class="codemirror js" name="SnS_scripts_in_head" id="SnS_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
 				<p><em>... <code>&lt;/head></code> tag.</em></p>
-				<label for="uFp_scripts" class="title"><strong>Scripts</strong>: </label>
-				<textarea class="codemirror js" name="uFp_scripts" id="uFp_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
+				<label for="SnS_scripts" class="title"><strong>Scripts</strong>: </label>
+				<textarea class="codemirror js" name="SnS_scripts" id="SnS_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
 				<p><em>... <code>&lt;/body></code> tag.</em></p>
 			</div>
 			
-			<div class="wp-tab-panel" id="uFp_styles-tab">
-				<label for="uFp_styles" class="title"><strong>Styles</strong>: </label>
-				<textarea class="codemirror css" name="uFp_styles" id="uFp_styles" rows="5" cols="40" style="width: 98%;"><?php echo isset( $styles[ 'styles' ] ) ? $styles[ 'styles' ] : ''; ?></textarea>
+			<div class="wp-tab-panel" id="SnS_styles-tab">
+				<label for="SnS_styles" class="title"><strong>Styles</strong>: </label>
+				<textarea class="codemirror css" name="SnS_styles" id="SnS_styles" rows="5" cols="40" style="width: 98%;"><?php echo isset( $styles[ 'styles' ] ) ? $styles[ 'styles' ] : ''; ?></textarea>
 				<p><em>This code will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> tag of your page (or post).</em></p>
 			</div>
 			
-			<div class="wp-tab-panel" id="uFp_classes_body-tab">
+			<div class="wp-tab-panel" id="SnS_classes_body-tab">
 				<strong class="title">Classes</strong>
 				<div id="sns-classes">
 					<p>
-						<label for="uFp_classes_body"><strong>Body Classes</strong>: </label>
-						<input name="uFp_classes_body" id="uFp_classes_body" type="text" class="code" style="width: 99%;"
+						<label for="SnS_classes_body"><strong>Body Classes</strong>: </label>
+						<input name="SnS_classes_body" id="SnS_classes_body" type="text" class="code" style="width: 99%;"
 							value="<?php echo isset( $styles[ 'classes_body' ] ) ? $styles[ 'classes_body' ] : ''; ?>" />
 						<small>Standard: <code><?php self::current_classes( 'body', $post->ID ); ?></code></small>
 					</p>
 					<p>
-						<label for="uFp_classes_post"><strong>Post Classes</strong>: </label>
-						<input name="uFp_classes_post" id="uFp_classes_post" type="text" class="code" style="width: 99%;"
+						<label for="SnS_classes_post"><strong>Post Classes</strong>: </label>
+						<input name="SnS_classes_post" id="SnS_classes_post" type="text" class="code" style="width: 99%;"
 							value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" />
 						<small>Standard: <code><?php self::current_classes( 'post', $post->ID ); ?></code></small>
 					</p>
@@ -178,31 +178,31 @@ class SnS_Admin_Meta_Box
 					<div id="add-mce-dropdown-names">
 						<p>Add (or update) a class for the "Styles" drop-down:</p>
 						<p class="sns-mce-title">
-							<label for="uFp_classes_mce_title">Title:</label>
-							<input name="uFp_classes_mce_title" id="uFp_classes_mce_title"
+							<label for="SnS_classes_mce_title">Title:</label>
+							<input name="SnS_classes_mce_title" id="SnS_classes_mce_title"
 								value="" type="text" class="code" style="width: 80px;" />
 						</p>
 						<p class="sns-mce-type">
-							<label for="uFp_classes_mce_type">Type:</label>
-							<select name="uFp_classes_mce_type" id="uFp_classes_mce_type" style="width: 80px;">
+							<label for="SnS_classes_mce_type">Type:</label>
+							<select name="SnS_classes_mce_type" id="SnS_classes_mce_type" style="width: 80px;">
 								<option value="inline">Inline</option>
 								<option value="block">Block</option>
 								<option value="selector">Selector</option>
 							</select>
 						</p>
 						<p class="sns-mce-element">
-							<label for="uFp_classes_mce_element">Element:</label>
-							<input name="uFp_classes_mce_element" id="uFp_classes_mce_element"
+							<label for="SnS_classes_mce_element">Element:</label>
+							<input name="SnS_classes_mce_element" id="SnS_classes_mce_element"
 								value="" type="text" class="code" style="width: 80px;" />
 						</p>
 						<p class="sns-mce-classes">
-							<label for="uFp_classes_mce_classes">classes:</label>
-							<input name="uFp_classes_mce_classes" id="uFp_classes_mce_classes"
+							<label for="SnS_classes_mce_classes">classes:</label>
+							<input name="SnS_classes_mce_classes" id="SnS_classes_mce_classes"
 								value="" type="text" class="code" style="width: 80px;" />
 						</p>
 						<p class="sns-mce-wrapper" style="display: none;">
-							<label for="uFp_classes_mce_wrapper">Wrapper:</label>
-							<input name="uFp_classes_mce_wrapper" id="uFp_classes_mce_wrapper" type="checkbox" value="true" />
+							<label for="SnS_classes_mce_wrapper">Wrapper:</label>
+							<input name="SnS_classes_mce_wrapper" id="SnS_classes_mce_wrapper" type="checkbox" value="true" />
 						</p>
 					</div>
 					
@@ -212,9 +212,9 @@ class SnS_Admin_Meta_Box
 				</div>
 			</div>
 			
-			<div class="wp-tab-panel" id="uFp_enqueue_scripts-tab">
+			<div class="wp-tab-panel" id="SnS_enqueue_scripts-tab">
 				<strong class="title">Include Scripts</strong>
-				<select name="uFp_enqueue_scripts[]" id="uFp_enqueue_scripts" size="5" multiple="multiple" style="height: auto; float: left; margin: 6px 10px 8px 0;">
+				<select name="SnS_enqueue_scripts[]" id="SnS_enqueue_scripts" size="5" multiple="multiple" style="height: auto; float: left; margin: 6px 10px 8px 0;">
 					<?php // This is a bit intense here...
 					if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) {
 						foreach ( $registered_handles as $value ) { ?>
@@ -343,41 +343,44 @@ class SnS_Admin_Meta_Box
 		$scripts = get_post_meta( $post_id, '_SnS_scripts', true );
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
-		if ( empty( $_POST[ 'uFp_scripts_in_head' ] ) ) {
+		if ( empty( $_POST[ 'SnS_scripts_in_head' ] ) ) {
 			if ( isset( $scripts[ 'scripts_in_head' ] ) )
 				unset( $scripts[ 'scripts_in_head' ] );
 		} else
-			$scripts[ 'scripts_in_head' ] = $_POST[ 'uFp_scripts_in_head' ];
+			$scripts[ 'scripts_in_head' ] = $_POST[ 'SnS_scripts_in_head' ];
 		
-		if ( empty( $_POST[ 'uFp_scripts' ] ) ) {
+		if ( empty( $_POST[ 'SnS_scripts' ] ) ) {
 			if ( isset( $scripts[ 'scripts' ] ) )
 				unset( $scripts[ 'scripts' ] );
 		} else
-			$scripts[ 'scripts' ] = $_POST[ 'uFp_scripts' ];
+			$scripts[ 'scripts' ] = $_POST[ 'SnS_scripts' ];
 		
-		if ( empty( $_POST[ 'uFp_styles' ] ) ) {
+		if ( empty( $_POST[ 'SnS_styles' ] ) ) {
 			if ( isset( $styles[ 'styles' ] ) )
 				unset( $styles[ 'styles' ] );
 		} else
-			$styles[ 'styles' ] = $_POST[ 'uFp_styles' ];
+			$styles[ 'styles' ] = $_POST[ 'SnS_styles' ];
 		
-		if ( empty( $_POST[ 'uFp_classes_body' ] ) ){
+		if ( empty( $_POST[ 'SnS_classes_body' ] ) ){
 			if ( isset( $styles[ 'classes_body' ] ) )
 				unset( $styles[ 'classes_body' ] );
 		} else
-			$styles[ 'classes_body' ] = $_POST[ 'uFp_classes_body' ];
+			$styles[ 'classes_body' ] = $_POST[ 'SnS_classes_body' ];
 		
-		if ( empty( $_POST[ 'uFp_classes_post' ] ) ) {
+		if ( empty( $_POST[ 'SnS_classes_post' ] ) ) {
 			if ( isset( $styles[ 'classes_post' ] ) )
 				unset( $styles[ 'classes_post' ] );
 		} else
-			$styles[ 'classes_post' ] = $_POST[ 'uFp_classes_post' ];
+			$styles[ 'classes_post' ] = $_POST[ 'SnS_classes_post' ];
 		
-		if ( empty( $_POST[ 'uFp_enqueue_scripts' ] ) ) {
+		if ( empty( $_POST[ 'SnS_enqueue_scripts' ] ) ) {
 			if ( isset( $scripts[ 'enqueue_scripts' ] ) )
 				unset( $scripts[ 'enqueue_scripts' ] );
 		} else
-			$scripts[ 'enqueue_scripts' ] = $_POST[ 'uFp_enqueue_scripts' ];
+			$scripts[ 'enqueue_scripts' ] = $_POST[ 'SnS_enqueue_scripts' ];
+		
+		if ( isset( $styles[ 'classes_mce' ] ) && empty( $styles[ 'classes_mce' ] ) )
+			unset( $styles[ 'classes_mce' ] );
 		
 		update_post_meta( $post_id, '_SnS_scripts', $scripts );
 		update_post_meta( $post_id, '_SnS_styles', $styles );
