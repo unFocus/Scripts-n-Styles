@@ -147,6 +147,10 @@ class SnS_Settings_Page
 	 * Outputs the Usage Section.
      */
 	static function usage_section() {
+		if ( ! isset( $_REQUEST[ 'usage' ] ) || ! $_REQUEST[ 'usage' ] ) {
+			echo '<a href="' . menu_page_url( SnS_Admin::MENU_SLUG, false ) . '&usage=1"/>Show Usage</a>';
+			return;
+		}
 		$options = get_option( 'SnS_options' );
 		
 		$all_posts = get_posts( array( 'numberposts' => -1, 'post_type' => 'any', 'post_status' => 'any' ) );
