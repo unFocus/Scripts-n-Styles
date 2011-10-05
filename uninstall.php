@@ -1,28 +1,18 @@
 <?php
 if( ! defined( 'ABSPATH') && ! defined('WP_UNINSTALL_PLUGIN') ) exit();
-$script_posts = get_posts( array(
+$posts = get_posts( array(
 	'numberposts' => -1,
 	'post_type' => 'any',
 	'post_status' => 'any',
 	'orderby' => 'ID',
-	'meta_query' => array( array( 'key' => '_SnS_scripts' ) )
+	'meta_query' => array(
+		'relation' => 'OR',
+		array( 'key' => '_SnS_scripts' ),
+		array( 'key' => '_SnS_styles' )
+	)
 ) );
 
-$exclude = array();
-foreach ( $script_posts as $post ) {$exclude[] =  $post->ID;}
-$exclude = implode( ', ', $exclude );
-
-$style_posts = get_posts( array(
-	'numberposts' => -1,
-	'exclude' => $exclude,
-	'post_type' => 'any',
-	'post_status' => 'any',
-	'orderby' => 'ID',
-	'meta_query' => array( array( 'key' => '_SnS_styles' ) )
-) );
-
-$all_posts = array_merge( $style_posts, $script_posts );
-foreach( $all_posts as $post) {
+foreach( $posts as $post) {
 	delete_post_meta( $post->ID, '_SnS_scripts' );
 	delete_post_meta( $post->ID, '_SnS_styles' );
 }
