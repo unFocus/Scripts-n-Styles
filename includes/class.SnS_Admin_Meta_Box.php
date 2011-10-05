@@ -350,30 +350,14 @@ class SnS_Admin_Meta_Box
 		$scripts = get_post_meta( $post_id, '_SnS_scripts', true );
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
-		if ( empty( $_POST[ 'SnS_scripts_in_head' ] ) )
-			if ( isset( $scripts[ 'scripts_in_head' ] ) ) unset( $scripts[ 'scripts_in_head' ] );
-		else $scripts[ 'scripts_in_head' ] = $_POST[ 'SnS_scripts_in_head' ];
+		$scripts = self::maybe_set( $scripts, 'scripts_in_head' );
+		$scripts = self::maybe_set( $scripts, 'scripts' );
+		$scripts = self::maybe_set( $scripts, 'enqueue_scripts' );
+		$styles = self::maybe_set( $styles, 'styles' );
+		$styles = self::maybe_set( $styles, 'classes_body' );
+		$styles = self::maybe_set( $styles, 'classes_post' );
 		
-		if ( empty( $_POST[ 'SnS_scripts' ] ) )
-			if ( isset( $scripts[ 'scripts' ] ) ) unset( $scripts[ 'scripts' ] );
-		else $scripts[ 'scripts' ] = $_POST[ 'SnS_scripts' ];
-		
-		if ( empty( $_POST[ 'SnS_styles' ] ) )
-			if ( isset( $styles[ 'styles' ] ) ) unset( $styles[ 'styles' ] );
-		else $styles[ 'styles' ] = $_POST[ 'SnS_styles' ];
-		
-		if ( empty( $_POST[ 'SnS_classes_body' ] ) )
-			if ( isset( $styles[ 'classes_body' ] ) ) unset( $styles[ 'classes_body' ] );
-		else $styles[ 'classes_body' ] = $_POST[ 'SnS_classes_body' ];
-		
-		if ( empty( $_POST[ 'SnS_classes_post' ] ) )
-			if ( isset( $styles[ 'classes_post' ] ) ) unset( $styles[ 'classes_post' ] );
-		else $styles[ 'classes_post' ] = $_POST[ 'SnS_classes_post' ];
-		
-		if ( ! isset( $_POST[ 'SnS_enqueue_scripts' ] ) )
-			if ( isset( $scripts[ 'enqueue_scripts' ] ) ) unset( $scripts[ 'enqueue_scripts' ] );
-		else $scripts[ 'enqueue_scripts' ] = $_POST[ 'SnS_enqueue_scripts' ];
-		
+		// This one isn't posted, it's ajax only. Cleanup anyway.
 		if ( isset( $styles[ 'classes_mce' ] ) && empty( $styles[ 'classes_mce' ] ) )
 			unset( $styles[ 'classes_mce' ] );
 		
@@ -383,6 +367,13 @@ class SnS_Admin_Meta_Box
 		if ( empty( $styles ) ) delete_post_meta( $post_id, '_SnS_styles' );
 		else update_post_meta( $post_id, '_SnS_styles', $styles );
 		
+	}
+	
+	function maybe_set( $o, $i ) {
+		if ( empty( $_REQUEST[ 'SnS_' . $i ] ) ) {
+			if ( isset( $o[ $i ] ) ) unset( $o[ $i ] );
+		} else $o[ $i ] = $_REQUEST[ 'SnS_' . $i ];
+		return $o;
 	}
 }
 ?>

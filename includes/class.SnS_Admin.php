@@ -79,6 +79,17 @@ class SnS_Admin
 		
 		exit();
 	}
+	// Differs from SnS_Admin_Meta_Box::maybe_set() in that this needs no prefix.
+	function maybe_set( $o, $i ) {
+		if ( empty( $_REQUEST[ $i ] ) ) {
+			if ( isset( $o[ $i ] ) ) unset( $o[ $i ] );
+		} else $o[ $i ] = $_REQUEST[ $i ];
+		return $o;
+	}
+	function maybe_update( $id, $name, $meta ) {
+		if ( empty( $meta ) ) delete_post_meta( $id, $name );
+		else update_post_meta( $id, $name, $meta );
+	}
 	function classes() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
@@ -89,21 +100,15 @@ class SnS_Admin
 		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
-		if ( empty( $_REQUEST[ 'classes_body' ] ) ) unset( $styles[ 'classes_body' ] );
-		else $styles[ 'classes_body' ] = $_REQUEST[ 'classes_body' ];
+		$styles = self::maybe_set( $styles, 'classes_body' );
+		$styles = self::maybe_set( $styles, 'classes_post' );
 		
-		if ( empty( $_REQUEST[ 'classes_post' ] ) ) unset( $styles[ 'classes_post' ] );
-		else $styles[ 'classes_post' ] = $_REQUEST[ 'classes_post' ];
-		
-		update_post_meta( $post_id, '_SnS_styles', $styles );
-		
-		if ( empty( $_REQUEST[ 'classes_body' ] ) ) $styles[ 'classes_body' ] = '';
-		if ( empty( $_REQUEST[ 'classes_post' ] ) ) $styles[ 'classes_post' ] = '';
+		self::maybe_update( $post_id, '_SnS_styles', $styles );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			"classes_post" => $styles[ 'classes_post' ],
-			"classes_body" => $styles[ 'classes_body' ]
+			"classes_post" => $_REQUEST[ 'classes_post' ],
+			"classes_body" => $_REQUEST[ 'classes_body' ]
 		) );
 		
 		exit();
@@ -118,21 +123,15 @@ class SnS_Admin
 		$post_id = $_REQUEST[ 'post_id' ];
 		$scripts = get_post_meta( $post_id, '_SnS_scripts', true );
 		
-		if ( empty( $_REQUEST[ 'scripts_in_head' ] ) ) unset( $scripts[ 'scripts_in_head' ] );
-		else $scripts[ 'scripts_in_head' ] = $_REQUEST[ 'scripts_in_head' ];
+		$scripts = self::maybe_set( $scripts, 'scripts_in_head' );
+		$scripts = self::maybe_set( $scripts, 'scripts' );
 		
-		if ( empty( $_REQUEST[ 'scripts' ] ) ) unset( $scripts[ 'scripts' ] );
-		else $scripts[ 'scripts' ] = $_REQUEST[ 'scripts' ];
-		
-		update_post_meta( $post_id, '_SnS_scripts', $scripts );
-		
-		if ( empty( $_REQUEST[ 'scripts' ] ) ) $scripts[ 'scripts' ] = '';
-		if ( empty( $_REQUEST[ 'scripts_in_head' ] ) ) $scripts[ 'scripts_in_head' ] = '';
+		self::maybe_update( $post_id, '_SnS_scripts', $scripts );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			"scripts" => $scripts[ 'scripts' ],
-			"scripts_in_head" => $scripts[ 'scripts_in_head' ],
+			"scripts" => $_REQUEST[ 'scripts' ],
+			"scripts_in_head" => $_REQUEST[ 'scripts_in_head' ],
 		) );
 		
 		exit();
@@ -147,16 +146,13 @@ class SnS_Admin
 		$post_id = $_REQUEST[ 'post_id' ];
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
-		if ( empty( $_REQUEST[ 'styles' ] ) ) unset( $styles[ 'styles' ] );
-		else $styles[ 'styles' ] = $_REQUEST[ 'styles' ];
+		$styles = self::maybe_set( $styles, 'styles' );
 		
-		update_post_meta( $post_id, '_SnS_styles', $styles );
-		
-		if ( empty( $_REQUEST[ 'styles' ] ) ) $styles[ 'styles' ] = '';
+		self::maybe_update( $post_id, '_SnS_styles', $styles );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			"styles" => $styles[ 'styles' ],
+			"styles" => $_REQUEST[ 'styles' ],
 		) );
 		
 		exit();
@@ -209,7 +205,7 @@ class SnS_Admin
 		
 		if ( empty( $styles[ 'classes_mce' ] ) ) unset( $styles[ 'classes_mce' ] );
 		
-		update_post_meta( $post_id, '_SnS_styles', $styles );
+		self::maybe_update( $post_id, '_SnS_styles', $styles );
 		
 		if ( ! isset( $styles[ 'classes_mce' ] ) ) $styles[ 'classes_mce' ] = array( 'Empty' );
 		
