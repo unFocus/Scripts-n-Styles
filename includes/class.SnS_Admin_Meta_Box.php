@@ -232,7 +232,6 @@ class SnS_Admin_Meta_Box
 					</p>
 				<?php } ?>
 				<p><em>The chosen scripts will be enqueued and placed before your codes if your code is dependant on certain scripts (like jQuery).</em></p>
-				<p>NOTE: Not all Scripts in the list are appropriate for use in themes. This is merely a generated list of all currently available registered scripts. It's possible some scripts could be registered only on the "front end" and therefore not listed here.</p>
 			</div>
 		<?php
 	}
@@ -363,7 +362,7 @@ class SnS_Admin_Meta_Box
 			if ( isset( $styles[ 'classes_post' ] ) ) unset( $styles[ 'classes_post' ] );
 		else $styles[ 'classes_post' ] = $_POST[ 'SnS_classes_post' ];
 		
-		if ( empty( $_POST[ 'SnS_enqueue_scripts' ] ) )
+		if ( ! isset( $_POST[ 'SnS_enqueue_scripts' ] ) )
 			if ( isset( $scripts[ 'enqueue_scripts' ] ) ) unset( $scripts[ 'enqueue_scripts' ] );
 		else $scripts[ 'enqueue_scripts' ] = $_POST[ 'SnS_enqueue_scripts' ];
 		
@@ -374,7 +373,7 @@ class SnS_Admin_Meta_Box
 		else update_post_meta( $post_id, '_SnS_scripts', $scripts );
 		
 		if ( empty( $styles ) ) delete_post_meta( $post_id, '_SnS_styles' );
-		else upupdate_post_meta( $post_id, '_SnS_styles', $styles );
+		else update_post_meta( $post_id, '_SnS_styles', $styles );
 		
 	}
 }
