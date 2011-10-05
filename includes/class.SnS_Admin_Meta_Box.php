@@ -238,12 +238,20 @@ class SnS_Admin_Meta_Box
 	
 	function current_classes( $type, $post_id ) {
 		if ( 'body' == $type ) {
-			global $wp_query;
+			global $wp_query, $pagenow;
+			
+			if ( 'post-new.php' == $pagenow ) {
+				echo join( ' ', get_body_class( '', $post_id ) );
+				echo ' (plus others once saved.)';
+				return;
+			}
+			// This returns more of what actually get used on the theme side.
 			$save = $wp_query;
 			$param = ( 'page' == get_post_type( $post_id ) ) ? 'page_id': 'p';
 			$wp_query = new WP_Query( "$param=$post_id" );
 			echo join( ' ', get_body_class( '', $post_id ) );
 			$wp_query = $save;
+			
 		} else {
 			echo join( ' ', get_post_class( '', $post_id ) );
 		}
