@@ -20,15 +20,47 @@ class SnS_Settings_Page
      */
 	function init() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
-		
-		$hook_suffix = add_utility_page(
-				'Scripts n Styles Settings',
-				'Scripts n Styles',
-				'unfiltered_html',
-				SnS_Admin::MENU_SLUG,
-				array( __CLASS__, 'admin_page' ),
-				plugins_url( 'images/menu.png', Scripts_n_Styles::$file)
-			);
+		$menu_spot = 'tools';
+		$possible_spots = array(
+			'menu', // Custom Top level
+			'object', // Bottom of Top default section.
+			'utility', // Bottom of Bottom default section.
+			'management', // Tools section.
+			'options', // Settings section.
+			'theme', // Appearence section.
+		);
+		switch( $menu_spot ) {
+			case 'utility':
+				$hook_suffix = add_utility_page(
+					'Scripts n Styles Settings',
+					'Scripts n Styles',
+					'unfiltered_html',
+					SnS_Admin::MENU_SLUG,
+					array( __CLASS__, 'admin_page' ),
+					plugins_url( 'images/menu.png', Scripts_n_Styles::$file)
+				);
+				break;
+			case 'top':
+				$hook_suffix = add_menu_page(
+					'Scripts n Styles Settings',
+					'Scripts n Styles',
+					'unfiltered_html',
+					SnS_Admin::MENU_SLUG,
+					array( __CLASS__, 'admin_page' ),
+					plugins_url( 'images/menu.png', Scripts_n_Styles::$file)
+				);
+				break;
+			default:
+				$hook_suffix = add_menu_page(
+					'Scripts n Styles Settings',
+					'Scripts n Styles',
+					'unfiltered_html',
+					SnS_Admin::MENU_SLUG,
+					array( __CLASS__, 'admin_page' ),
+					plugins_url( 'images/menu.png', Scripts_n_Styles::$file)
+				);
+				break;
+		}
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( __CLASS__, 'take_action'), 49 );
 		
