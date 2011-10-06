@@ -54,34 +54,29 @@ class SnS_Admin
 		
 		$active_tab = isset( $_POST[ 'active_tab' ] ) ? (int)$_POST[ 'active_tab' ] : 0;
 		
-		if ( ! $user = wp_get_current_user() )
-			exit( 'Bad User' );
+		if ( ! $user = wp_get_current_user() ) exit( 'Bad User' );
 		
 		$success = update_user_option( $user->ID, "current-sns-tab", $active_tab, true);
-		if ( $success )
-			exit( 'Current Tab Updated. New value is ' . $active_tab );
-		else
-			exit( 'Current Tab Not Updated. It is possible that no change was needed.' );
+		exit( $success );
 	}
 	function tinymce_styles() {
 		check_ajax_referer( 'sns_tinymce_styles' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
+		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		
 		$options = get_option( 'SnS_options' );
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
 		header('Content-Type: text/css; charset=' . get_option('blog_charset'));
+		// ::TODO:: Add far-future expires, with timestap cache-busting.
 		/*header("Cache-Control: no-cache");
 		header("Pragma: no-cache");
 		session_cache_limiter( 'nocache' );*/
 		
-		if ( ! empty( $options ) && ! empty( $options[ 'styles' ] ) ) 
-			echo $options[ 'styles' ];
+		if ( ! empty( $options[ 'styles' ] ) ) echo $options[ 'styles' ];
 		
-		if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) 
-			echo $styles[ 'styles' ];
+		if ( ! empty( $styles[ 'styles' ] ) ) echo $styles[ 'styles' ];
 		
 		exit();
 	}
@@ -91,8 +86,8 @@ class SnS_Admin
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
-		if ( ! isset( $_REQUEST[ 'classes_body' ] ) || ! isset( $_REQUEST[ 'classes_post' ] ) ) exit( 'Data incorrectly sent.' );
+		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'classes_body' ], $_REQUEST[ 'classes_post' ] ) ) exit( 'Data missing.' );
 		
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
@@ -114,8 +109,8 @@ class SnS_Admin
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
-		if ( ! isset( $_REQUEST[ 'scripts' ] ) || ! isset( $_REQUEST[ 'scripts_in_head' ] ) ) exit( 'Data incorrectly sent.' );
+		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
+		if ( ! isset( $_REQUEST[ 'scripts' ], $_REQUEST[ 'scripts_in_head' ] ) ) exit( 'Data incorrectly sent.' );
 		
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		$scripts = get_post_meta( $post_id, '_SnS_scripts', true );
@@ -137,7 +132,7 @@ class SnS_Admin
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
+		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
 		if ( ! isset( $_REQUEST[ 'styles' ] ) ) exit( 'Data incorrectly sent.' );
 		
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
@@ -158,7 +153,7 @@ class SnS_Admin
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
-		if ( ! isset( $_REQUEST[ 'format' ] ) || empty( $_REQUEST[ 'format' ] ) ) exit( 'Missing Format.' );
+		if ( empty( $_REQUEST[ 'format' ] ) ) exit( 'Missing Format.' );
 		if ( empty( $_REQUEST[ 'format' ][ 'title' ] ) ) exit( 'Title is required.' );
 		if ( empty( $_REQUEST[ 'format' ][ 'classes' ] ) ) exit( 'Classes is required.' );
 		if (
@@ -167,13 +162,12 @@ class SnS_Admin
 			empty( $_REQUEST[ 'format' ][ 'selector' ] )
 		) exit( 'A type is required.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
+		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
-		if ( ! isset( $styles[ 'classes_mce' ] ) )
-			$styles[ 'classes_mce' ] = array();
+		if ( ! isset( $styles[ 'classes_mce' ] ) ) $styles[ 'classes_mce' ] = array();
 		
 		// pass title as key to be able to delete.
 		$styles[ 'classes_mce' ][ $_REQUEST[ 'format' ][ 'title' ] ] = $_REQUEST[ 'format' ];
@@ -191,7 +185,7 @@ class SnS_Admin
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
-		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
+		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
@@ -253,15 +247,13 @@ class SnS_Admin
 		
 		foreach( $posts as $post) {
 			$styles = get_post_meta( $post->ID, 'uFp_styles', true );
-			if ( ! empty( $styles ) ) {
+			if ( ! empty( $styles ) )
 				update_post_meta( $post->ID, '_SnS_styles', $styles );
-			}
 			delete_post_meta( $post->ID, 'uFp_styles' );
 			
 			$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
-			if ( ! empty( $scripts ) ) {
+			if ( ! empty( $scripts ) )
 				update_post_meta( $post->ID, '_SnS_scripts', $scripts );
-			}
 			delete_post_meta( $post->ID, 'uFp_scripts' );
 		}
 		
@@ -280,7 +272,7 @@ class SnS_Admin
      */
 	static function upgrade_check() {
 		$options = get_option( 'SnS_options' );
-		if ( ! $options || ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) )
+		if ( ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) )
 			self::upgrade();
 	}
 	
