@@ -20,7 +20,7 @@ class SnS_Settings_Page
      */
 	function init() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
-		$menu_spot = 'management';
+		$menu_spot = 'object';
 		$possible_spots = array(
 			'menu', // Custom Top level
 			'object', // Bottom of Top default section.
@@ -39,24 +39,24 @@ class SnS_Settings_Page
 		switch( $menu_spot ) {
 			case 'utility':
 				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
-				$hook_suffix = add_utility_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[6] );
+				$hook_suffix = add_utility_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
 				break;
 			case 'object':
 				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
-				$hook_suffix = add_object_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[6] );
+				$hook_suffix = add_object_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
 				break;
 			case 'management':
-				$hook_suffix = add_management_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
+				$hook_suffix = add_management_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
 				break;
 			case 'options':
-				$hook_suffix = add_options_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
+				$hook_suffix = add_options_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
 				break;
 			case 'theme':
-				$hook_suffix = add_theme_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
+				$hook_suffix = add_theme_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
 				break;
 			default:
 				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
-				$hook_suffix = add_menu_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[6] );
+				$hook_suffix = add_menu_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
 				break;
 		}
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
