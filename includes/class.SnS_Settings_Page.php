@@ -20,7 +20,7 @@ class SnS_Settings_Page
      */
 	function init() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
-		$menu_spot = 'tools';
+		$menu_spot = 'management';
 		$possible_spots = array(
 			'menu', // Custom Top level
 			'object', // Bottom of Top default section.
@@ -29,36 +29,34 @@ class SnS_Settings_Page
 			'options', // Settings section.
 			'theme', // Appearence section.
 		);
+		$a = array(
+			'Scripts n Styles Settings',
+			'Scripts n Styles',
+			'unfiltered_html',
+			SnS_Admin::MENU_SLUG,
+			array( __CLASS__, 'admin_page' )
+		);
 		switch( $menu_spot ) {
 			case 'utility':
-				$hook_suffix = add_utility_page(
-					'Scripts n Styles Settings',
-					'Scripts n Styles',
-					'unfiltered_html',
-					SnS_Admin::MENU_SLUG,
-					array( __CLASS__, 'admin_page' ),
-					plugins_url( 'images/menu.png', Scripts_n_Styles::$file)
-				);
+				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
+				$hook_suffix = add_utility_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[6] );
 				break;
-			case 'top':
-				$hook_suffix = add_menu_page(
-					'Scripts n Styles Settings',
-					'Scripts n Styles',
-					'unfiltered_html',
-					SnS_Admin::MENU_SLUG,
-					array( __CLASS__, 'admin_page' ),
-					plugins_url( 'images/menu.png', Scripts_n_Styles::$file)
-				);
+			case 'object':
+				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
+				$hook_suffix = add_object_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[6] );
+				break;
+			case 'management':
+				$hook_suffix = add_management_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
+				break;
+			case 'options':
+				$hook_suffix = add_options_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
+				break;
+			case 'theme':
+				$hook_suffix = add_theme_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
 				break;
 			default:
-				$hook_suffix = add_menu_page(
-					'Scripts n Styles Settings',
-					'Scripts n Styles',
-					'unfiltered_html',
-					SnS_Admin::MENU_SLUG,
-					array( __CLASS__, 'admin_page' ),
-					plugins_url( 'images/menu.png', Scripts_n_Styles::$file)
-				);
+				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
+				$hook_suffix = add_menu_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[6] );
 				break;
 		}
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );

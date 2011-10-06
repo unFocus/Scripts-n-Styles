@@ -4,7 +4,8 @@ jQuery( document ).ready( function( $ ) {
 	var initData = tinyMCEPreInit.mceInit["content"] || tinyMCEPreInit.mceInit,
 		context = '#SnS_meta_box',
 		currentCodeMirror = [],
-		mceBodyClass = getMCEBodyClasses();
+		mceBodyClass = getMCEBodyClasses(),
+		nonce = $( '#scripts_n_styles_noncename' ).val();
 	
 	//$('textarea', context).attr('autocomplete','off');
 	
@@ -30,7 +31,7 @@ jQuery( document ).ready( function( $ ) {
 		event.preventDefault();
 		$(this).next().show();
 		$(currentCodeMirror).each(function (){ this.save(); });
-		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
+		var args = { _ajax_nonce: nonce, post_id: $( '#post_ID' ).val(), };
 		
 		args.action = 'sns_scripts';
 		args.scripts = $( '#SnS_scripts' ).val();
@@ -43,7 +44,7 @@ jQuery( document ).ready( function( $ ) {
 		event.preventDefault();
 		$(this).next().show();
 		$(currentCodeMirror).each(function (){ this.save(); });
-		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
+		var args = { _ajax_nonce: nonce, post_id: $( '#post_ID' ).val(), };
 		
 		args.action = 'sns_styles';
 		args.styles = $( '#SnS_styles' ).val();
@@ -57,7 +58,7 @@ jQuery( document ).ready( function( $ ) {
 	$('#sns-ajax-update-classes').click(function( event ){
 		event.preventDefault();
 		$(this).next().show();
-		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
+		var args = { _ajax_nonce: nonce, post_id: $( '#post_ID' ).val(), };
 		
 		args.action = 'sns_classes';
 		args.classes_body = $( '#SnS_classes_body' ).val();
@@ -72,7 +73,7 @@ jQuery( document ).ready( function( $ ) {
 	$('#sns-ajax-update-dropdown').click(function( event ){
 		event.preventDefault();
 		$(this).next().show();
-		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
+		var args = { _ajax_nonce: nonce, post_id: $( '#post_ID' ).val(), };
 		
 		args.action = 'sns_dropdown';
 		var format = {};
@@ -104,7 +105,7 @@ jQuery( document ).ready( function( $ ) {
 	$('#delete-mce-dropdown-names .sns-ajax-delete').live( "click", function( event ){
 		event.preventDefault();
 		$(this).next().show();
-		var args = { _ajax_nonce: $( '#scripts_n_styles_noncename' ).val(), post_id: $( '#post_ID' ).val(), };
+		var args = { _ajax_nonce: nonce, post_id: $( '#post_ID' ).val(), };
 		
 		args.action = 'sns_delete_class';
 		args.delete = $( this ).attr( 'id' );
@@ -221,7 +222,7 @@ jQuery( document ).ready( function( $ ) {
 		
 		$.post( ajaxurl, {
 				action: 'sns_update_tab',
-				_ajax_nonce: $('#scripts_n_styles_noncename').val(),
+				_ajax_nonce: nonce,
 				active_tab:  $( '.wp-tab-bar li', context ).index( $( this ).parent( 'li' ).get(0) )
 			}
 		);

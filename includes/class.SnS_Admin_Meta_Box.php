@@ -124,8 +124,9 @@ class SnS_Admin_Meta_Box
 		
 		$screen = get_current_screen();
 		$position = get_user_option( "current-sns-tab" );
+		
+		wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME );
 		?>
-			<?php wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME ); ?>
 			<ul class="wp-tab-bar">
 				<li<?php echo ( 0 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_scripts-tab">Scripts</a></li>
 				<li<?php echo ( 1 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_styles-tab">Styles</a></li>

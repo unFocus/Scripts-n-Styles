@@ -21,8 +21,12 @@ class SnS_Admin
      * @static
      */
 	static function init() {
-		add_action( 'admin_menu', array( __CLASS__, 'admin_meta_box' ) );
-		add_action( 'admin_menu', array( __CLASS__, 'settings_page' ) );
+		require_once( 'class.SnS_Admin_Meta_Box.php' );
+		add_action( 'admin_menu', array( 'SnS_Admin_Meta_Box', 'init' ) );
+		
+		require_once( 'class.SnS_Settings_Page.php' );
+		add_action( 'admin_menu', array( 'SnS_Settings_Page', 'init' ) );
+		
 		add_action( 'admin_init', array( __CLASS__, 'ajax_handlers' ) );
 		
 		$plugin_file = plugin_basename( Scripts_n_Styles::$file ); 
@@ -36,6 +40,7 @@ class SnS_Admin
 		add_action( 'wp_ajax_sns_update_tab', array( __CLASS__, 'update_tab' ) );
 		// TinyMCE requests a css file.
 		add_action( 'wp_ajax_sns_tinymce_styles', array( __CLASS__, 'tinymce_styles' ) );
+		
 		// Ajax Saves.
 		add_action( 'wp_ajax_sns_classes', array( __CLASS__, 'classes' ) );
 		add_action( 'wp_ajax_sns_scripts', array( __CLASS__, 'scripts' ) );
@@ -43,6 +48,7 @@ class SnS_Admin
 		add_action( 'wp_ajax_sns_dropdown', array( __CLASS__, 'dropdown' ) );
 		add_action( 'wp_ajax_sns_delete_class', array( __CLASS__, 'delete_class' ) );
 	}
+	
 	function update_tab() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		
@@ -61,7 +67,7 @@ class SnS_Admin
 		check_ajax_referer( 'sns_tinymce_styles' );
 		
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
-		$post_id = $_REQUEST[ 'post_id' ];
+		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		
 		$options = get_option( 'SnS_options' );
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
@@ -79,17 +85,8 @@ class SnS_Admin
 		
 		exit();
 	}
-	// Differs from SnS_Admin_Meta_Box::maybe_set() in that this needs no prefix.
-	function maybe_set( $o, $i ) {
-		if ( empty( $_REQUEST[ $i ] ) ) {
-			if ( isset( $o[ $i ] ) ) unset( $o[ $i ] );
-		} else $o[ $i ] = $_REQUEST[ $i ];
-		return $o;
-	}
-	function maybe_update( $id, $name, $meta ) {
-		if ( empty( $meta ) ) delete_post_meta( $id, $name );
-		else update_post_meta( $id, $name, $meta );
-	}
+	
+	// AJAX handlers
 	function classes() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
@@ -97,7 +94,7 @@ class SnS_Admin
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
 		if ( ! isset( $_REQUEST[ 'classes_body' ] ) || ! isset( $_REQUEST[ 'classes_post' ] ) ) exit( 'Data incorrectly sent.' );
 		
-		$post_id = $_REQUEST[ 'post_id' ];
+		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
 		$styles = self::maybe_set( $styles, 'classes_body' );
@@ -120,7 +117,7 @@ class SnS_Admin
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
 		if ( ! isset( $_REQUEST[ 'scripts' ] ) || ! isset( $_REQUEST[ 'scripts_in_head' ] ) ) exit( 'Data incorrectly sent.' );
 		
-		$post_id = $_REQUEST[ 'post_id' ];
+		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		$scripts = get_post_meta( $post_id, '_SnS_scripts', true );
 		
 		$scripts = self::maybe_set( $scripts, 'scripts_in_head' );
@@ -143,7 +140,7 @@ class SnS_Admin
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
 		if ( ! isset( $_REQUEST[ 'styles' ] ) ) exit( 'Data incorrectly sent.' );
 		
-		$post_id = $_REQUEST[ 'post_id' ];
+		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
 		$styles = self::maybe_set( $styles, 'styles' );
@@ -171,7 +168,7 @@ class SnS_Admin
 		) exit( 'A type is required.' );
 		
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
-		$post_id = $_REQUEST[ 'post_id' ];
+		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
@@ -195,7 +192,7 @@ class SnS_Admin
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
 		if ( ! isset( $_REQUEST[ 'post_id' ] ) || ! $_REQUEST[ 'post_id' ] ) exit( 'Bad post ID.' );
-		$post_id = $_REQUEST[ 'post_id' ];
+		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
 		$title = $_REQUEST[ 'delete' ];
@@ -217,42 +214,60 @@ class SnS_Admin
 		exit();
 	}
 	
+	// Differs from SnS_Admin_Meta_Box::maybe_set() in that this needs no prefix.
+	function maybe_set( $o, $i ) {
+		if ( empty( $_REQUEST[ $i ] ) ) {
+			if ( isset( $o[ $i ] ) ) unset( $o[ $i ] );
+		} else $o[ $i ] = $_REQUEST[ $i ];
+		return $o;
+	}
+	function maybe_update( $id, $name, $meta ) {
+		if ( empty( $meta ) ) delete_post_meta( $id, $name );
+		else update_post_meta( $id, $name, $meta );
+	}
+	
     /**
 	 * Utility Method: Sets defaults if not previously set. Sets stored 'version' to VERSION.
      */
 	static function upgrade() {
 		$options = get_option( 'SnS_options' );
+		if ( ! $option ) $option = array();
 		$options[ 'version' ] = self::VERSION;
 		update_option( 'SnS_options', $options );
 
 		/*
 		 * upgrade proceedure
 		 */
-		$sns_posts = get_posts(
+		$posts = get_posts(
 			array(
 				'numberposts' => -1,
 				'post_type' => 'any',
 				'post_status' => 'any',
 				'meta_query' => array(
+					'relation' => 'OR',
 					array( 'key' => 'uFp_scripts' ),
 					array( 'key' => 'uFp_styles' )
 				)
 			)
 		);
 		
-		foreach( $sns_posts as $post) {
+		foreach( $posts as $post) {
 			$styles = get_post_meta( $post->ID, 'uFp_styles', true );
-			$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
-			if ( ! empty( $styles ) || ! empty( $scripts ) ) {
+			if ( ! empty( $styles ) ) {
 				update_post_meta( $post->ID, '_SnS_styles', $styles );
-				update_post_meta( $post->ID, '_SnS_scripts', $scripts );
 			}
 			delete_post_meta( $post->ID, 'uFp_styles' );
+			
+			$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
+			if ( ! empty( $scripts ) ) {
+				update_post_meta( $post->ID, '_SnS_scripts', $scripts );
+			}
 			delete_post_meta( $post->ID, 'uFp_scripts' );
 		}
 		
 		
 		/*
+		// ::TODO:: Combine multiple option
 		$enqueue_scripts = get_option( 'sns_enqueue_scripts' );
 		delete_option('SnS_options');
 		delete_option('sns_enqueue_scripts');
@@ -265,7 +280,7 @@ class SnS_Admin
      */
 	static function upgrade_check() {
 		$options = get_option( 'SnS_options' );
-		if ( ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) )
+		if ( ! $options || ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) )
 			self::upgrade();
 	}
 	
@@ -279,24 +294,6 @@ class SnS_Admin
 		return $actions;
 	}
 	
-    /**
-	 * Settings Page
-	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
-     */
-	static function admin_meta_box() {
-		require_once( 'class.SnS_Admin_Meta_Box.php' );
-		SnS_Admin_Meta_Box::init();
-	}
-	
-    /**
-	 * Settings Page
-	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
-     */
-	static function settings_page() {
-		/* NOTE: Even when Scripts n Styles is not restricted by 'manage_options', Editors still can't submit the option page */
-		require_once( 'class.SnS_Settings_Page.php' );
-		SnS_Settings_Page::init();
-	}
 }
 
 ?>
