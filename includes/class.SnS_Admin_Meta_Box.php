@@ -17,9 +17,8 @@ class SnS_Admin_Meta_Box
 	static $post_types;
 	
     /**
-	 * Initializing method. Checks if is_admin() and registers action hooks for admin if true. Sets filters and actions for Theme side functions.
-     * @static
-     */
+	 * Initializing method. 
+	 */
 	static function init() {
 		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( __CLASS__, 'save_post' ) );
@@ -43,7 +42,8 @@ class SnS_Admin_Meta_Box
 		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
 		
 		// Add div as a format option, should probably use a string replace thing here.
-		$initArray['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div";
+		// Better yet, a setting for adding these. Postpone for now.
+		//$initArray['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div";
 		
 		if ( ( ! empty( $styles[ 'classes_body' ] ) || ! empty( $styles[ 'classes_post' ] ) ) && ! isset( $initArray['body_class'] ) )
 			$initArray['body_class'] = '';	
