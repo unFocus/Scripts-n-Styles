@@ -14,7 +14,7 @@ class SnS_List_Usage extends WP_List_Table {
 		return current_user_can( 'unfiltered_html' ) && current_user_can( 'manage_options' );
 	}
 	
-	function column_default( $post, $column_name ){
+	function column_default( $post, $column_name ) {
 		$return = '';
 		switch( $column_name ){
 			case 'status':
@@ -77,6 +77,67 @@ class SnS_List_Usage extends WP_List_Table {
 		return $return;
 	}
 	
+	function get_columns() {
+		return array(
+			'title'     => 'Title',
+			'ID'     => 'ID',
+			'status'     => 'Status',
+			'post_type'    => 'Post Type',
+			'script_data'     => 'Script Data',
+			'style_data'    => 'Style Data'
+		);
+	}
+	
+	function prepare_items() {
+		
+		/**
+		 * ::TODO:: $per_page should be set using a Screen Options setting (user_option) which is usually in the help pulldown area.
+		 */
+		$per_page = ( empty( $_REQUEST['per_page'] ) ) ? 3: absint($_REQUEST['per_page'] );
+		
+		/**
+		 * Get Relavent Posts.
+		 */
+		$posts = get_posts( array(
+			'numberposts' => -1,
+			'post_type' => 'any',
+			'post_status' => 'any',
+			'orderby' => 'ID',
+			'order' => 'ASC',
+			'meta_query' => array(
+				'relation' => 'OR',
+				array( 'key' => '_SnS_scripts' ),
+				array( 'key' => '_SnS_styles' )
+			)
+		) );
+		
+		$sns_posts = $this->_add_meta_data( $posts );
+		
+		$total_items = count( $sns_posts );
+		
+		/**
+		 * Reduce items to current page's posts. 
+		 */
+		$this->items = array_slice(
+			$sns_posts,
+			( ( $this->get_pagenum() - 1 ) * $per_page ),
+			$per_page
+		);
+		
+		$this->set_pagination_args( compact( 'total_items', 'per_page' ) );
+	}
+	
+	function display_tablenav( $which ) {
+		 // edited to avoid additional inputs
+		?>
+		<div class="tablenav <?php echo esc_attr( $which ); ?>">
+			<div class="alignleft actions"><?php $this->bulk_actions( $which ); ?></div>
+			<?php $this->pagination( 'bottom' ); ?>
+			<br class="clear" />
+		</div>
+		<?php
+	}
+	
 	function _post_states( $post ) {
 		$post_states = array();
 		$return = '';
@@ -126,59 +187,6 @@ class SnS_List_Usage extends WP_List_Table {
 			}
 		}
 		return $posts;
-	}
-	
-	function get_columns() {
-		return array(
-			'title'     => 'Title',
-			'ID'     => 'ID',
-			'status'     => 'Status',
-			'post_type'    => 'Post Type',
-			'script_data'     => 'Script Data',
-			'style_data'    => 'Style Data'
-		);
-	}
-	
-	function prepare_items() {
-		
-		/**
-		 * ::TODO:: $per_page should be set using a Screen Options setting (user_option) which is usually in the help pulldown area.
-		 */
-		$per_page = ( empty( $_REQUEST['per_page'] ) ) ? 10: absint($_REQUEST['per_page'] );
-		
-		/**
-		 * Get Relavent Posts.
-		 */
-		$posts = get_posts( array(
-			'numberposts' => -1,
-			'post_type' => 'any',
-			'post_status' => 'any',
-			'orderby' => 'ID',
-			'order' => 'ASC',
-			'meta_query' => array(
-				'relation' => 'OR',
-				array( 'key' => '_SnS_scripts' ),
-				array( 'key' => '_SnS_styles' )
-			)
-		) );
-		
-		$sns_posts = $this->_add_meta_data( $posts );
-		
-		$total_items = count( $sns_posts );
-		
-		/**
-		 * Reduce items to current page's posts. 
-		 */
-		$this->items = array_slice(
-			$sns_posts,
-			( ( $this->get_pagenum() - 1 ) * $per_page ),
-			$per_page
-		);
-		
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $per_page
-		) );
 	}
 	
 }

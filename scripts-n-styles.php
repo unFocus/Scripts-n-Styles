@@ -47,6 +47,7 @@ Network: true
  * @version 3.beta.2
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2010 - 2011, Kenneth Newman
+ * 
  * @todo Add Post Type Selection on Options Page? Not sure that's useful.
  * @todo Add Conditional Tags support as alternative to Globally applying Scripts n Styles.
  * @todo Create ability to add and register scripts and styles for enqueueing (via Options page).
@@ -56,7 +57,6 @@ Network: true
  * @todo Create shortcode registration of html snippets on edit screens for single use.
  * @todo Add Error messaging.
  * @todo Replace Multi-Select element with something better.
- * @todo Clean up Usage Table, paginate.
  * @todo "Include Scripts" will be reintroduced when registering is finished.
  * @todo Clean up tiny_mce_before_init in SnS_Admin_Meta_Box.
  * @todo LESS.js support.
@@ -275,16 +275,17 @@ class Scripts_n_Styles
     /**
 	 * Theme Action: 'wp_enqueue_scripts'
 	 * Enqueues chosen Scripts.
-	 * @uses self::get_enqueue()
      */
 	static function enqueue_scripts() {
 		// Global
-		$enqueue_scripts = get_option( 'sns_enqueue_scripts' );
+		$options = get_option( 'SnS_options' );
+		if ( ! isset( $options[ 'enqueue_scripts' ] ) )
+			$enqueue_scripts = array();
+		else
+			$enqueue_scripts = $options[ 'enqueue_scripts' ];
 
-		if ( is_array( $enqueue_scripts ) ) {
-			foreach ( $enqueue_scripts as $handle )
-				wp_enqueue_script( $handle );
-		}
+		foreach ( $enqueue_scripts as $handle )
+			wp_enqueue_script( $handle );
 		
 		if ( ! is_singular() ) return;
 		// Individual

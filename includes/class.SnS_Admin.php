@@ -69,10 +69,6 @@ class SnS_Admin
 		$styles = get_post_meta( $post_id, '_SnS_styles', true );
 		
 		header('Content-Type: text/css; charset=' . get_option('blog_charset'));
-		// ::TODO:: Add far-future expires, with timestap cache-busting.
-		/*header("Cache-Control: no-cache");
-		header("Pragma: no-cache");
-		session_cache_limiter( 'nocache' );*/
 		
 		if ( ! empty( $options[ 'styles' ] ) ) echo $options[ 'styles' ];
 		
@@ -225,7 +221,7 @@ class SnS_Admin
      */
 	static function upgrade() {
 		$options = get_option( 'SnS_options' );
-		if ( ! $option ) $option = array();
+		if ( ! $options ) $options = array();
 		$options[ 'version' ] = self::VERSION;
 		update_option( 'SnS_options', $options );
 
@@ -256,14 +252,6 @@ class SnS_Admin
 				update_post_meta( $post->ID, '_SnS_scripts', $scripts );
 			delete_post_meta( $post->ID, 'uFp_scripts' );
 		}
-		
-		
-		/*
-		// ::TODO:: Combine multiple option
-		$enqueue_scripts = get_option( 'sns_enqueue_scripts' );
-		delete_option('SnS_options');
-		delete_option('sns_enqueue_scripts');
-		*/
 
 	}
 	

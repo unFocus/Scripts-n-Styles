@@ -370,10 +370,14 @@ class SnS_Admin_Meta_Box
 		
 	}
 	
-	function maybe_set( $o, $i ) {
-		if ( empty( $_REQUEST[ 'SnS_' . $i ] ) ) {
+    /**
+	 * maybe_set()
+	 * Filters $o and Checks if the sent data $i is empty (intended to clear). If not, updates.
+     */
+	function maybe_set( $o, $i, $p = 'SnS_' ) {
+		if ( empty( $_REQUEST[ $p . $i ] ) ) {
 			if ( isset( $o[ $i ] ) ) unset( $o[ $i ] );
-		} else $o[ $i ] = $_REQUEST[ 'SnS_' . $i ];
+		} else $o[ $i ] = $_REQUEST[ $p . $i ];
 		return $o;
 	}
 }

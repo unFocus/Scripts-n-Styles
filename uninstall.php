@@ -17,7 +17,6 @@ foreach( $posts as $post) {
 	delete_post_meta( $post->ID, '_SnS_styles' );
 }
 delete_option( 'SnS_options' );
-delete_option( 'sns_enqueue_scripts' );
 
 $all_users = get_users( 'meta_key=current-sns-tab' );
 foreach( $all_users as $user) delete_user_option( $user->ID, 'current-sns-tab', true );

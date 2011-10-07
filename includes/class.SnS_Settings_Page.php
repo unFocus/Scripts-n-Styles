@@ -96,9 +96,6 @@ class SnS_Settings_Page
 		register_setting(
 				self::OPTION_GROUP,
 				'SnS_options' );
-		register_setting(
-				self::OPTION_GROUP,
-				'sns_enqueue_scripts' );
 		
 		add_settings_section(
 				'global',
@@ -144,7 +141,7 @@ class SnS_Settings_Page
 				'global',
 				array(
 					'label_for' => 'enqueue_scripts',
-					'setting' => 'sns_enqueue_scripts'
+					'setting' => 'SnS_options'
 				) );
 		
 		add_settings_section(
@@ -214,18 +211,24 @@ class SnS_Settings_Page
 	 * Outputs a select element for selecting options to set $sns_enqueue_scripts.
      */
 	function enqueue_scripts_field( $args ) {
-		$registered_handles = Scripts_n_Styles::get_wp_registered();
-		$sns_enqueue_scripts = get_option( 'sns_enqueue_scripts' );
-		if ( ! is_array( $sns_enqueue_scripts ) ) $sns_enqueue_scripts = array();
+		// One step closer to generic form element output.
+		$a = $args[ 'label_for' ];
+		$setting = $args[ 'setting' ];
+		
+		$options = get_option( $setting );
+		if ( ! isset( $options[ $a ] ) )
+			$$a = array();
+		else
+			$$a = $options[ $a ];
 		?>
-		<select name="sns_enqueue_scripts[]" id="enqueue_scripts" size="5" multiple="multiple" style="height: auto;">
-			<?php foreach ( $registered_handles as $value ) { ?>
-				<option value="<?php echo $value ?>"<?php foreach ( $sns_enqueue_scripts as $handle ) selected( $handle, $value ); ?>><?php echo $value ?></option> 
+		<select name="<?php echo $setting . '[' . $a . ']' ?>[]" id="<?php echo $a ?>" size="5" multiple="multiple" style="height: auto;">
+			<?php foreach ( Scripts_n_Styles::get_wp_registered() as $value ) { ?>
+				<option value="<?php echo $value ?>"<?php foreach ( $$a as $handle ) selected( $handle, $value ); ?>><?php echo $value ?></option> 
 			<?php } ?>
 		</select>
-		<?php if ( ! empty( $sns_enqueue_scripts ) && is_array( $sns_enqueue_scripts ) ) { ?>
+		<?php if ( ! empty( $$a ) ) { ?>
 			<p>Currently Enqueued Scripts: 
-			<?php foreach ( $sns_enqueue_scripts as $handle )  echo '<code>' . $handle . '</code> '; ?>
+			<?php foreach ( $$a as $handle )  echo '<code>' . $handle . '</code> '; ?>
 			</p>
 		<?php }
 	}
@@ -235,26 +238,19 @@ class SnS_Settings_Page
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
      */
 	function take_action() {
-		global $action, $option_page, $page;
+		global $action, $option_page, $page, $new_whitelist_options;
 		
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) || ( is_multisite() && ! is_super_admin() ) )
 			wp_die( __( 'Cheatin&#8217; uh?' ) );
 		
-		if ( empty( $_POST ) || ! isset( $_POST[ 'action' ] ) || ! isset( $_POST[ 'option_page' ] ) || ! isset( $_GET[ 'page' ] ) ) return;
+		if ( ! isset( $_REQUEST[ 'action' ], $_REQUEST[ 'option_page' ], $_REQUEST[ 'page' ] ) )
+			return;
 		
 		wp_reset_vars( array( 'action', 'option_page', 'page' ) );
 		
 		check_admin_referer(  $option_page  . '-options' );
 		
-		self::save( $option_page, $page, $action );
-		
-		return;
-	}
-	
-	function save( $option_page, $page, $action ) {
-		global $new_whitelist_options;
-		
-		if ( ! isset( $new_whitelist_options ) || ! isset( $new_whitelist_options[ $option_page ] ) )
+		if ( ! isset( $new_whitelist_options[ $option_page ] ) )
 			return;
 		
 		$options = $new_whitelist_options[ $option_page ];
@@ -272,6 +268,8 @@ class SnS_Settings_Page
 		
 		if ( ! count( get_settings_errors() ) )
 			add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
+		
+		return;
 	}
 
     /**
