@@ -79,12 +79,12 @@ class SnS_List_Usage extends WP_List_Table {
 	
 	function get_columns() {
 		return array(
-			'title'     => 'Title',
-			'ID'     => 'ID',
-			'status'     => 'Status',
-			'post_type'    => 'Post Type',
-			'script_data'     => 'Script Data',
-			'style_data'    => 'Style Data'
+			'title'			=> 'Title',
+			'ID'			=> 'ID',
+			'status'		=> 'Status',
+			'post_type'		=> 'Post Type',
+			'script_data'	=> 'Script Data',
+			'style_data'	=> 'Style Data'
 		);
 	}
 	
@@ -93,7 +93,13 @@ class SnS_List_Usage extends WP_List_Table {
 		/**
 		 * ::TODO:: $per_page should be set using a Screen Options setting (user_option) which is usually in the help pulldown area.
 		 */
-		$per_page = ( empty( $_REQUEST['per_page'] ) ) ? 3: absint($_REQUEST['per_page'] );
+		$per_page = ( empty( $_REQUEST['per_page'] ) ) ? 10: absint($_REQUEST['per_page'] );
+		
+        $this->_column_headers = array(
+			$this->get_columns(),
+			array(),
+			$this->get_sortable_columns()
+		);
 		
 		/**
 		 * Get Relavent Posts.
@@ -188,6 +194,5 @@ class SnS_List_Usage extends WP_List_Table {
 		}
 		return $posts;
 	}
-	
 }
 ?>

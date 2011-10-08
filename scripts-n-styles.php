@@ -219,7 +219,7 @@ class Scripts_n_Styles
 	static function scripts_in_head() {
 		// Global
 		$options = get_option( 'SnS_options' );
-		if ( ! empty( $options ) && ! empty($options[ 'scripts_in_head' ]) ) {
+		if ( ! empty( $options ) && ! empty( $options[ 'scripts_in_head' ] ) ) {
 			?><script type="text/javascript"><?php
 			echo $options[ 'scripts_in_head' ];
 			?></script><?php

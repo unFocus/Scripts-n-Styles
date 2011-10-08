@@ -94,61 +94,60 @@ class SnS_Settings_Page
 		wp_enqueue_script( 'codemirror-javascript', plugins_url( 'libraries/codemirror/mode/javascript.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
 		
 		register_setting(
-				self::OPTION_GROUP,
-				'SnS_options' );
+			self::OPTION_GROUP,
+			'SnS_options' );
 		
 		add_settings_section(
-				'global',
-				'Global Scripts n Styles',
-				array( __CLASS__, 'global_section' ),
-				SnS_Admin::MENU_SLUG );
-		
-		add_settings_field(
-				'scripts',
-				'<strong>Scripts:</strong> ',
-				array( __CLASS__, 'scripts_field' ),
-				SnS_Admin::MENU_SLUG,
-				'global',
-				array(
-					'label_for' => 'scripts',
-					'setting' => 'SnS_options'
-				) );
-		add_settings_field(
-				'styles',
-				'<strong>Styles:</strong> ',
-				array( __CLASS__, 'styles_field' ),
-				SnS_Admin::MENU_SLUG,
-				'global',
-				array(
-					'label_for' => 'styles',
-					'setting' => 'SnS_options'
-				) );
-		add_settings_field(
-				'scripts_in_head',
-				'<strong>Scripts</strong><br />(for the <code>head</code> element): ',
-				array( __CLASS__, 'scripts_in_head_field' ),
-				SnS_Admin::MENU_SLUG,
-				'global',
-				array(
-					'label_for' => 'scripts_in_head',
-					'setting' => 'SnS_options'
-				) );
-		add_settings_field(
-				'enqueue_scripts',
-				'<strong>Enqueue Scripts</strong>: ',
-				array( __CLASS__, 'enqueue_scripts_field' ),
-				SnS_Admin::MENU_SLUG,
-				'global',
-				array(
-					'label_for' => 'enqueue_scripts',
-					'setting' => 'SnS_options'
-				) );
-		
+			'global',
+			'Global Scripts n Styles',
+			array( __CLASS__, 'global_section' ),
+			SnS_Admin::MENU_SLUG );
 		add_settings_section(
-				'usage',
-				'Scripts n Styles Usage',
-				array( __CLASS__, 'usage_section' ),
-				SnS_Admin::MENU_SLUG );
+			'usage',
+			'Scripts n Styles Usage',
+			array( __CLASS__, 'usage_section' ),
+			SnS_Admin::MENU_SLUG );
+		
+		add_settings_field(
+			'scripts',
+			'<strong>Scripts:</strong> ',
+			array( __CLASS__, 'scripts_field' ),
+			SnS_Admin::MENU_SLUG,
+			'global',
+			array(
+				'label_for' => 'scripts',
+				'setting' => 'SnS_options'
+			) );
+		add_settings_field(
+			'styles',
+			'<strong>Styles:</strong> ',
+			array( __CLASS__, 'styles_field' ),
+			SnS_Admin::MENU_SLUG,
+			'global',
+			array(
+				'label_for' => 'styles',
+				'setting' => 'SnS_options'
+			) );
+		add_settings_field(
+			'scripts_in_head',
+			'<strong>Scripts</strong><br />(for the <code>head</code> element): ',
+			array( __CLASS__, 'scripts_in_head_field' ),
+			SnS_Admin::MENU_SLUG,
+			'global',
+			array(
+				'label_for' => 'scripts_in_head',
+				'setting' => 'SnS_options'
+			) );
+		add_settings_field(
+			'enqueue_scripts',
+			'<strong>Enqueue Scripts</strong>: ',
+			array( __CLASS__, 'enqueue_scripts_field' ),
+			SnS_Admin::MENU_SLUG,
+			'global',
+			array(
+				'label_for' => 'enqueue_scripts',
+				'setting' => 'SnS_options'
+			) );
 	}
 	
     /**
@@ -200,35 +199,32 @@ class SnS_Settings_Page
 	 * Outputs a textarea for setting 'scripts_in_head'.
      */
 	function scripts_in_head_field( $args ) {
-		$options = get_option( 'SnS_options' );
-		?><textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="SnS_options[scripts_in_head]" id="scripts_in_head"><?php echo isset( $options[ 'scripts_in_head' ] ) ? $options[ 'scripts_in_head' ] : ''; ?></textarea>
+		extract( $args );
+		$options = get_option( $setting );
+		?>
+		<textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="<?php echo $setting . '[' . $label_for . ']' ?>" id="<?php echo $label_for ?>"><?php echo isset( $options[ $label_for ] ) ? $options[ $label_for ] : ''; ?></textarea>
 		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>
 		<?php
 	}
 	
     /**
 	 * Settings Page
-	 * Outputs a select element for selecting options to set $sns_enqueue_scripts.
+	 * Outputs a select element for selecting options to set scripts for including.
      */
 	function enqueue_scripts_field( $args ) {
-		// One step closer to generic form element output.
-		$a = $args[ 'label_for' ];
-		$setting = $args[ 'setting' ];
-		
+		extract( $args );
 		$options = get_option( $setting );
-		if ( ! isset( $options[ $a ] ) )
-			$$a = array();
-		else
-			$$a = $options[ $a ];
+		
+		$selected = ( isset( $options[ $label_for ] ) ) ? $options[ $label_for ] : array();
 		?>
-		<select name="<?php echo $setting . '[' . $a . ']' ?>[]" id="<?php echo $a ?>" size="5" multiple="multiple" style="height: auto;">
+		<select name="<?php echo $setting . '[' . $label_for . ']' ?>[]" id="<?php echo $label_for ?>" size="5" multiple="multiple" style="height: auto;">
 			<?php foreach ( Scripts_n_Styles::get_wp_registered() as $value ) { ?>
-				<option value="<?php echo $value ?>"<?php foreach ( $$a as $handle ) selected( $handle, $value ); ?>><?php echo $value ?></option> 
+				<option value="<?php echo $value ?>"<?php foreach ( $selected as $handle ) selected( $handle, $value ); ?>><?php echo $value ?></option> 
 			<?php } ?>
 		</select>
-		<?php if ( ! empty( $$a ) ) { ?>
+		<?php if ( ! empty( $selected ) ) { ?>
 			<p>Currently Enqueued Scripts: 
-			<?php foreach ( $$a as $handle )  echo '<code>' . $handle . '</code> '; ?>
+			<?php foreach ( $selected as $handle )  echo '<code>' . $handle . '</code> '; ?>
 			</p>
 		<?php }
 	}

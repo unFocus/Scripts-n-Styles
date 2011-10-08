@@ -1,5 +1,5 @@
 <?php
-if( ! defined( 'ABSPATH') && ! defined('WP_UNINSTALL_PLUGIN') ) exit();
+if( ! defined( 'ABSPATH' ) && ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit();
 $posts = get_posts( array(
 	'numberposts' => -1,
 	'post_type' => 'any',
@@ -18,6 +18,6 @@ foreach( $posts as $post) {
 }
 delete_option( 'SnS_options' );
 
-$all_users = get_users( 'meta_key=current-sns-tab' );
-foreach( $all_users as $user) delete_user_option( $user->ID, 'current-sns-tab', true );
+$users = get_users( 'meta_key=current-sns-tab' );
+foreach( $users as $user ) delete_user_option( $user->ID, 'current-sns-tab', true );
 ?>
