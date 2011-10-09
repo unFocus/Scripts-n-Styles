@@ -78,7 +78,7 @@ class SnS_List_Usage extends WP_List_Table {
 	}
 	
 	function get_columns() {
-		return array(
+		$columns = array(
 			'title'			=> 'Title',
 			'ID'			=> 'ID',
 			'status'		=> 'Status',
@@ -86,6 +86,8 @@ class SnS_List_Usage extends WP_List_Table {
 			'script_data'	=> 'Script Data',
 			'style_data'	=> 'Style Data'
 		);
+		
+		return $columns;
 	}
 	
 	function prepare_items() {
@@ -117,15 +119,15 @@ class SnS_List_Usage extends WP_List_Table {
 			)
 		) );
 		
-		$sns_posts = $this->_add_meta_data( $posts );
+		$items = $this->_add_meta_data( $posts );
 		
-		$total_items = count( $sns_posts );
+		$total_items = count( $items );
 		
 		/**
 		 * Reduce items to current page's posts. 
 		 */
 		$this->items = array_slice(
-			$sns_posts,
+			$items,
 			( ( $this->get_pagenum() - 1 ) * $per_page ),
 			$per_page
 		);

@@ -111,42 +111,62 @@ class SnS_Settings_Page
 		add_settings_field(
 			'scripts',
 			'<strong>Scripts:</strong> ',
-			array( __CLASS__, 'scripts_field' ),
+			array( __CLASS__, 'textarea' ),
 			SnS_Admin::MENU_SLUG,
 			'global',
 			array(
 				'label_for' => 'scripts',
-				'setting' => 'SnS_options'
+				'setting' => 'SnS_options',
+				'class' => 'code js',
+				'rows' => 5,
+				'cols' => 40,
+				'style' => 'min-width: 500px; width:97%;',
+				'description' => '<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>'
 			) );
 		add_settings_field(
 			'styles',
 			'<strong>Styles:</strong> ',
-			array( __CLASS__, 'styles_field' ),
+			array( __CLASS__, 'textarea' ),
 			SnS_Admin::MENU_SLUG,
 			'global',
 			array(
 				'label_for' => 'styles',
-				'setting' => 'SnS_options'
+				'setting' => 'SnS_options',
+				'class' => 'code js',
+				'rows' => 5,
+				'cols' => 40,
+				'style' => 'min-width: 500px; width:97%;',
+				'description' => '<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span>'
 			) );
 		add_settings_field(
 			'scripts_in_head',
 			'<strong>Scripts</strong><br />(for the <code>head</code> element): ',
-			array( __CLASS__, 'scripts_in_head_field' ),
+			array( __CLASS__, 'textarea' ),
 			SnS_Admin::MENU_SLUG,
 			'global',
 			array(
 				'label_for' => 'scripts_in_head',
-				'setting' => 'SnS_options'
+				'setting' => 'SnS_options',
+				'class' => 'code js',
+				'rows' => 5,
+				'cols' => 40,
+				'style' => 'min-width: 500px; width:97%;',
+				'description' => '<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>'
 			) );
 		add_settings_field(
 			'enqueue_scripts',
 			'<strong>Enqueue Scripts</strong>: ',
-			array( __CLASS__, 'enqueue_scripts_field' ),
+			array( __CLASS__, 'select' ),
 			SnS_Admin::MENU_SLUG,
 			'global',
 			array(
 				'label_for' => 'enqueue_scripts',
-				'setting' => 'SnS_options'
+				'setting' => 'SnS_options',
+				'choices' => Scripts_n_Styles::get_wp_registered(),
+				'size' => 5,
+				'style' => 'height: auto;',
+				'multiple' => true,
+				'show_current' => 'Currently Enqueued Scripts: '
 			) );
 	}
 	
@@ -175,58 +195,57 @@ class SnS_Settings_Page
 	
     /**
 	 * Settings Page
-	 * Outputs a textarea for setting 'scripts'.
-     */
-	function scripts_field( $args ) {
-		$options = get_option( 'SnS_options' );
-		?><textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="SnS_options[scripts]" id="scripts"><?php echo isset( $options[ 'scripts' ] ) ? $options[ 'scripts' ] : ''; ?></textarea>
-		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>
-		<?php
-	}
-	
-    /**
-	 * Settings Page
-	 * Outputs a textarea for setting 'styles'.
-     */
-	function styles_field( $args ) {
-		$options = get_option( 'SnS_options' );
-		?><textarea style="min-width: 500px; width:97%;" class="code css" rows="5" cols="40" name="SnS_options[styles]" id="styles"><?php echo isset( $options[ 'styles' ] ) ? $options[ 'styles' ] : ''; ?></textarea>
-		<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span><?php
-	}
-	
-    /**
-	 * Settings Page
 	 * Outputs a textarea for setting 'scripts_in_head'.
      */
-	function scripts_in_head_field( $args ) {
+	function textarea( $args ) {
 		extract( $args );
 		$options = get_option( $setting );
-		?>
-		<textarea style="min-width: 500px; width:97%;" class="code js" rows="5" cols="40" name="<?php echo $setting . '[' . $label_for . ']' ?>" id="<?php echo $label_for ?>"><?php echo isset( $options[ $label_for ] ) ? $options[ $label_for ] : ''; ?></textarea>
-		<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>
-		<?php
+		$value =  isset( $options[ $label_for ] ) ? $options[ $label_for ] : '';
+		$output = '<textarea';
+		$output .= ( $style ) ? ' style="' . $style . '"': '';
+		$output .= ( $class ) ? ' class="' . $class . '"': '';
+		$output .= ( $rows ) ? ' rows="' . $rows . '"': '';
+		$output .= ( $cols ) ? ' cols="' . $cols . '"': '';
+		$output .= ' name="' . $setting . '[' . $label_for . ']"';
+		$output .= ' id="' . $label_for . '">';
+		$output .= $value . '</textarea>';
+		if ( $description ) {
+			$output .= $description;
+		}
+		echo $output;
 	}
 	
     /**
 	 * Settings Page
 	 * Outputs a select element for selecting options to set scripts for including.
      */
-	function enqueue_scripts_field( $args ) {
+	function select( $args ) {
 		extract( $args );
 		$options = get_option( $setting );
+		$selected = isset( $options[ $label_for ] ) ? $options[ $label_for ] : array();
 		
-		$selected = ( isset( $options[ $label_for ] ) ) ? $options[ $label_for ] : array();
-		?>
-		<select name="<?php echo $setting . '[' . $label_for . ']' ?>[]" id="<?php echo $label_for ?>" size="5" multiple="multiple" style="height: auto;">
-			<?php foreach ( Scripts_n_Styles::get_wp_registered() as $value ) { ?>
-				<option value="<?php echo $value ?>"<?php foreach ( $selected as $handle ) selected( $handle, $value ); ?>><?php echo $value ?></option> 
-			<?php } ?>
-		</select>
-		<?php if ( ! empty( $selected ) ) { ?>
-			<p>Currently Enqueued Scripts: 
-			<?php foreach ( $selected as $handle )  echo '<code>' . $handle . '</code> '; ?>
-			</p>
-		<?php }
+		$output = '<select';
+		$output .= ' id="' . $label_for . '"';
+		$output .= ' name="' . $setting . '[' . $label_for . ']';
+		if ( $multiple )
+			$output .= '[]" multiple="multiple"';
+		else
+			$output .= '"';
+		$output .= ( $size ) ? ' size="' . $size . '"': '';
+		$output .= ( $style ) ? ' style="' . $style . '"': '';
+		$output .= '>';
+		foreach ( $choices as $choice ) {
+			$output .= '<option value="' . $choice . '"';
+			foreach ( $selected as $handle ) $output .= selected( $handle, $choice, false );
+			$output .= '>' . $choice . '</option> ';
+		}
+		$output .= '</select>';
+		if ( ! empty( $show_current ) && ! empty( $selected ) ) {
+			$output .= '<p>' . $show_current;
+			foreach ( $selected as $handle ) $output .= '<code>' . $handle . '</code> ';
+			$output .= '</p>';
+		}
+		echo $output;
 	}
 	
     /**
@@ -275,9 +294,9 @@ class SnS_Settings_Page
 	function admin_page() {
 		SnS_Admin::upgrade_check();
 		global $title;
+		//print_r( get_current_screen() );
 		?>
 		<div class="wrap">
-			<style>#icon-<?php echo esc_html( $_REQUEST[ 'page' ] ); ?> { background: no-repeat center url('<?php echo plugins_url( 'images/icon32.png', Scripts_n_Styles::$file); ?>'); }</style>
 			<?php screen_icon(); ?>
 			<h2><?php echo esc_html($title); ?></h2>
 			<?php settings_errors(); ?>
