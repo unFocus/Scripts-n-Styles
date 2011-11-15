@@ -6,6 +6,10 @@
  * and JavaScript directly to individual Post, Pages or custom
  * post types.
  */
+ 
+require_once( 'class.SnS_Admin_Meta_Box.php' );
+require_once( 'class.SnS_Settings_Page.php' );
+require_once( 'class.SnS_AJAX.php' );
 
 class SnS_Admin
 {
@@ -21,13 +25,10 @@ class SnS_Admin
      * @static
      */
 	static function init() {
-		require_once( 'class.SnS_Admin_Meta_Box.php' );
 		add_action( 'admin_menu', array( 'SnS_Admin_Meta_Box', 'init' ) );
 		
-		require_once( 'class.SnS_Settings_Page.php' );
 		add_action( 'admin_menu', array( 'SnS_Settings_Page', 'init' ) );
 		
-		require_once( 'class.SnS_AJAX.php' );
 		add_action( 'admin_init', array( 'SnS_AJAX', 'init' ) );
 		
 		$plugin_file = plugin_basename( Scripts_n_Styles::$file ); 
