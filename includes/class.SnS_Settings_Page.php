@@ -13,6 +13,7 @@ class SnS_Settings_Page
      * Constants
      */
 	const OPTION_GROUP = 'scripts_n_styles';
+	static $hook_suffix = '';
 	
     /**
 	 * Initializing method.
@@ -20,7 +21,8 @@ class SnS_Settings_Page
      */
 	function init() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
-		$menu_spot = 'object';
+		
+		$menu_spot = 'menu';
 		$possible_spots = array(
 			'menu', // Custom Top level
 			'object', // Bottom of Top default section.
@@ -39,44 +41,32 @@ class SnS_Settings_Page
 		switch( $menu_spot ) {
 			case 'utility':
 				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
-				$hook_suffix = add_utility_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
+				self::$hook_suffix = $hook_suffix = add_utility_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
+				add_submenu_page( $a[3], $a[0], 'Settings', $a[2], $a[3], $a[4] );
 				break;
 			case 'object':
 				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
-				$hook_suffix = add_object_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
+				self::$hook_suffix = $hook_suffix = add_object_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
+				add_submenu_page( $a[3], $a[0], 'Settings', $a[2], $a[3], $a[4] );
 				break;
 			case 'management':
-				$hook_suffix = add_management_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
+				self::$hook_suffix = $hook_suffix = add_management_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
 				break;
 			case 'options':
-				$hook_suffix = add_options_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
+				self::$hook_suffix = $hook_suffix = add_options_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
 				break;
 			case 'theme':
-				$hook_suffix = add_theme_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
+				self::$hook_suffix = $hook_suffix = add_theme_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
 				break;
 			default:
 				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
-				$hook_suffix = add_menu_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
+				self::$hook_suffix = $hook_suffix = add_menu_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
+				add_submenu_page( $a[3], $a[0], 'Settings', $a[2], $a[3], $a[4] );
 				break;
 		}
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
+		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
 		add_action( "load-$hook_suffix", array( __CLASS__, 'take_action'), 49 );
-		
-		add_contextual_help( $hook_suffix, self::contextual_help() );
-	}
-	
-    /**
-	 * Settings Page help
-     */
-	function contextual_help() {
-		$contextual_help = '<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
-			<em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. 
-			Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only 
-			<em>"Super Admin"</em> users can access either
-			<em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change 
-			capabilities (specifically "unfiltered_html"), 
-			other users can be granted access.</p>';
-		return $contextual_help;
 	}
 	
     /**
@@ -101,11 +91,6 @@ class SnS_Settings_Page
 			'global',
 			'Global Scripts n Styles',
 			array( __CLASS__, 'global_section' ),
-			SnS_Admin::MENU_SLUG );
-		add_settings_section(
-			'usage',
-			'Scripts n Styles Usage',
-			array( __CLASS__, 'usage_section' ),
 			SnS_Admin::MENU_SLUG );
 		
 		add_settings_field(
@@ -180,17 +165,6 @@ class SnS_Settings_Page
 			<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.</p>
 		</div>
 		<?php
-	}
-	
-    /**
-	 * Settings Page
-	 * Outputs the Usage Section.
-     */
-	function usage_section() {
-		require_once( 'class.SnS_List_Usage.php' );
-		$usageTable = new SnS_List_Usage();
-		$usageTable->prepare_items();
-		$usageTable->display();
 	}
 	
     /**
@@ -294,7 +268,6 @@ class SnS_Settings_Page
 	function admin_page() {
 		SnS_Admin::upgrade_check();
 		global $title;
-		//print_r( get_current_screen() );
 		?>
 		<div class="wrap">
 			<?php screen_icon(); ?>

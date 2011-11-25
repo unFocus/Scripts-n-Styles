@@ -3,12 +3,12 @@ if ( ! class_exists( 'WP_List_Table' ) ) require_once( ABSPATH . 'wp-admin/inclu
 
 class SnS_List_Usage extends WP_List_Table {
 	
-	function __construct(){
+	/*function __construct(){
 		parent::__construct( array(
 			'singular'  => 'sns_post',
 			'plural'    => 'sns_posts'
 		) );
-	}
+	}*/
 	
 	function ajax_user_can() {
 		return current_user_can( 'unfiltered_html' ) && current_user_can( 'manage_options' );
@@ -91,11 +91,8 @@ class SnS_List_Usage extends WP_List_Table {
 	}
 	
 	function prepare_items() {
-		
-		/**
-		 * ::TODO:: $per_page should be set using a Screen Options setting (user_option) which is usually in the help pulldown area.
-		 */
-		$per_page = ( empty( $_REQUEST['per_page'] ) ) ? 10: absint($_REQUEST['per_page'] );
+		$screen_id = get_current_screen()->id;
+		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$screen_id}_per_page" ) );
 		
         $this->_column_headers = array(
 			$this->get_columns(),
@@ -133,17 +130,6 @@ class SnS_List_Usage extends WP_List_Table {
 		);
 		
 		$this->set_pagination_args( compact( 'total_items', 'per_page' ) );
-	}
-	
-	function display_tablenav( $which ) {
-		 // edited to avoid additional inputs
-		?>
-		<div class="tablenav <?php echo esc_attr( $which ); ?>">
-			<div class="alignleft actions"><?php $this->bulk_actions( $which ); ?></div>
-			<?php $this->pagination( 'bottom' ); ?>
-			<br class="clear" />
-		</div>
-		<?php
 	}
 	
 	function _post_states( $post ) {

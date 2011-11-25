@@ -9,6 +9,7 @@
  
 require_once( 'class.SnS_Admin_Meta_Box.php' );
 require_once( 'class.SnS_Settings_Page.php' );
+require_once( 'class.SnS_Usage_Page.php' );
 require_once( 'class.SnS_AJAX.php' );
 
 class SnS_Admin
@@ -16,7 +17,7 @@ class SnS_Admin
     /**#@+
      * Constants
      */
-	const MENU_SLUG = 'Scripts-n-Styles';
+	const MENU_SLUG = 'sns';
 	const VERSION = '3.beta.2';
     /**#@-*/
 	
@@ -28,6 +29,7 @@ class SnS_Admin
 		add_action( 'admin_menu', array( 'SnS_Admin_Meta_Box', 'init' ) );
 		
 		add_action( 'admin_menu', array( 'SnS_Settings_Page', 'init' ) );
+		add_action( 'admin_menu', array( 'SnS_Usage_Page', 'init' ) );
 		
 		add_action( 'admin_init', array( 'SnS_AJAX', 'init' ) );
 		
@@ -37,6 +39,31 @@ class SnS_Admin
 		register_activation_hook( Scripts_n_Styles::$file, array( __CLASS__, 'upgrade' ) );
 	}
 	
+    /**
+	 * Settings Page help
+     */
+	function help() {
+		get_current_screen()->add_help_tab( array(
+			'title' => __('Overview'),
+			'id' => 'options-help',
+			'content' => 
+				'<p>' . __( '<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
+				<em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. 
+				Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only 
+				<em>"Super Admin"</em> users can access either
+				<em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change 
+				capabilities (specifically "unfiltered_html"), 
+				other users can be granted access.</p>', 'scripts-n-styles' ) . '</p>'
+			)
+		);
+	
+		get_current_screen()->set_help_sidebar(
+			'<p><strong>' . __( 'For more information:', 'twentyeleven' ) . '</strong></p>' .
+			'<p>' . __( '<a href="http://wordpress.org/extend/plugins/scripts-n-styles/faq/" target="_blank">Frequently Asked Questions</a>', 'scripts-n-styles' ) . '</p>' .
+			'<p>' . __( '<a href="https://github.com/unFocus/Scripts-n-Styles" target="_blank">Source on github</a>', 'scripts-n-styles' ) . '</p>' .
+			'<p>' . __( '<a href="http://wordpress.org/tags/scripts-n-styles" target="_blank">Support Forums</a>', 'scripts-n-styles' ) . '</p>'
+		);
+	}
 	
     /**
 	 * Utility Method: Sets defaults if not previously set. Sets stored 'version' to VERSION.

@@ -21,7 +21,7 @@ class SnS_AJAX
 		
 		if ( ! $user = wp_get_current_user() ) exit( 'Bad User' );
 		
-		$success = update_user_option( $user->ID, "current-sns-tab", $active_tab, true);
+		$success = update_user_option( $user->ID, 'current_sns_tab', $active_tab, true);
 		exit( $success );
 	}
 	function tinymce_styles() {

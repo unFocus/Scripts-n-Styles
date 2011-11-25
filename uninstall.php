@@ -18,6 +18,9 @@ foreach( $posts as $post) {
 }
 delete_option( 'SnS_options' );
 
-$users = get_users( 'meta_key=current-sns-tab' );
-foreach( $users as $user ) delete_user_option( $user->ID, 'current-sns-tab', true );
+$users = get_users( 'meta_key=current_sns_tab' );
+foreach( $users as $user ) delete_user_option( $user->ID, 'current_sns_tab', true );
+
+$users = get_users( 'meta_key=scripts_n_styles_page_sns_usage_per_page' );
+foreach( $users as $user ) delete_user_option( $user->ID, 'scripts_n_styles_page_sns_usage_per_page', true );
 ?>
