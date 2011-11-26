@@ -5,7 +5,7 @@ Plugin URI: http://www.unfocus.com/projects/scripts-n-styles/
 Description: Allows WordPress admin users the ability to add custom CSS and JavaScript directly to individual Post, Pages or custom post types.
 Author: unFocus Projects
 Author URI: http://www.unfocus.com/
-Version: 3.beta.2
+Version: 3.beta.3.2
 License: GPL2
 Network: true
 */
@@ -180,7 +180,8 @@ class Scripts_n_Styles
 		if ( ! is_singular() ) return;
 		// Individual
 		global $post;
-		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
+		$SnS = get_post_meta( $post->ID, '_SnS', true );
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) {
 			?><style type="text/css"><?php
 			echo $styles[ 'styles' ];
@@ -204,7 +205,8 @@ class Scripts_n_Styles
 		if ( ! is_singular() ) return;
 		// Individual
 		global $post;
-		$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
+		$SnS = get_post_meta( $post->ID, '_SnS', true );
+		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 		if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts' ] ) ) {
 			?><script type="text/javascript"><?php
 			echo $scripts[ 'scripts' ];
@@ -228,7 +230,8 @@ class Scripts_n_Styles
 		if ( ! is_singular() ) return;
 		// Individual
 		global $post;
-		$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
+		$SnS = get_post_meta( $post->ID, '_SnS', true );
+		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 		if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts_in_head' ] ) ) {
 			?><script type="text/javascript"><?php
 			echo $scripts[ 'scripts_in_head' ];
@@ -247,7 +250,8 @@ class Scripts_n_Styles
 		if ( ! is_singular() || is_admin() ) return $classes;
 		
 		global $post;
-		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
+		$SnS = get_post_meta( $post->ID, '_SnS', true );
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_body' ] ) )
 			$classes = array_merge( $classes, explode( " ", $styles[ 'classes_body' ] ) );
 		
@@ -264,7 +268,8 @@ class Scripts_n_Styles
 		if ( ! is_singular() || is_admin() ) return $classes;
 		
 		global $post;
-		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
+		$SnS = get_post_meta( $post->ID, '_SnS', true );
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		
 		if ( ! empty( $styles ) && ! empty( $styles[ 'classes_post' ] ) )
 			$classes = array_merge( $classes, explode( " ", $styles[ 'classes_post' ] ) );
@@ -290,7 +295,8 @@ class Scripts_n_Styles
 		if ( ! is_singular() ) return;
 		// Individual
 		global $post;
-		$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
+		$SnS = get_post_meta( $post->ID, '_SnS', true );
+		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 		
 		if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) {
 			foreach ( $scripts[ 'enqueue_scripts' ] as $handle )
