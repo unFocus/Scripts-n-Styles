@@ -31,7 +31,8 @@ class SnS_AJAX
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		
 		$options = get_option( 'SnS_options' );
-		$styles = get_post_meta( $post_id, '_SnS_styles', true );
+		$SnS = get_post_meta( $post_id, '_SnS', true );
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		
 		header('Content-Type: text/css; charset=' . get_option('blog_charset'));
 		
@@ -51,12 +52,15 @@ class SnS_AJAX
 		if ( ! isset( $_REQUEST[ 'classes_body' ], $_REQUEST[ 'classes_post' ] ) ) exit( 'Data missing.' );
 		
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
-		$styles = get_post_meta( $post_id, '_SnS_styles', true );
+		$SnS = get_post_meta( $post_id, '_SnS', true );
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		
 		$styles = self::maybe_set( $styles, 'classes_body' );
 		$styles = self::maybe_set( $styles, 'classes_post' );
 		
-		self::maybe_update( $post_id, '_SnS_styles', $styles );
+		if ( ! empty( $styles ) )
+			$SnS[ 'styles' ] = $styles;
+		self::maybe_update( $post_id, '_SnS', $SnS );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -74,12 +78,15 @@ class SnS_AJAX
 		if ( ! isset( $_REQUEST[ 'scripts' ], $_REQUEST[ 'scripts_in_head' ] ) ) exit( 'Data incorrectly sent.' );
 		
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
-		$scripts = get_post_meta( $post_id, '_SnS_scripts', true );
+		$SnS = get_post_meta( $post_id, '_SnS', true );
+		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 		
 		$scripts = self::maybe_set( $scripts, 'scripts_in_head' );
 		$scripts = self::maybe_set( $scripts, 'scripts' );
 		
-		self::maybe_update( $post_id, '_SnS_scripts', $scripts );
+		if ( ! empty( $scripts ) )
+			$SnS[ 'scripts' ] = $scripts;
+		self::maybe_update( $post_id, '_SnS', $SnS );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -97,11 +104,14 @@ class SnS_AJAX
 		if ( ! isset( $_REQUEST[ 'styles' ] ) ) exit( 'Data incorrectly sent.' );
 		
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
-		$styles = get_post_meta( $post_id, '_SnS_styles', true );
+		$SnS = get_post_meta( $post_id, '_SnS', true );
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		
 		$styles = self::maybe_set( $styles, 'styles' );
 		
-		self::maybe_update( $post_id, '_SnS_styles', $styles );
+		if ( ! empty( $styles ) )
+			$SnS[ 'styles' ] = $styles;
+		self::maybe_update( $post_id, '_SnS', $SnS );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -126,14 +136,17 @@ class SnS_AJAX
 		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		
-		$styles = get_post_meta( $post_id, '_SnS_styles', true );
+		$SnS = get_post_meta( $post_id, '_SnS', true );
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		
 		if ( ! isset( $styles[ 'classes_mce' ] ) ) $styles[ 'classes_mce' ] = array();
 		
 		// pass title as key to be able to delete.
 		$styles[ 'classes_mce' ][ $_REQUEST[ 'format' ][ 'title' ] ] = $_REQUEST[ 'format' ];
 		
-		update_post_meta( $post_id, '_SnS_styles', $styles );
+		if ( ! empty( $styles ) )
+			$SnS[ 'styles' ] = $styles;
+		update_post_meta( $post_id, '_SnS', $SnS );
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
@@ -148,7 +161,8 @@ class SnS_AJAX
 		
 		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
-		$styles = get_post_meta( $post_id, '_SnS_styles', true );
+		$SnS = get_post_meta( $post_id, '_SnS', true );
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		
 		$title = $_REQUEST[ 'delete' ];
 		
@@ -157,7 +171,9 @@ class SnS_AJAX
 		
 		if ( empty( $styles[ 'classes_mce' ] ) ) unset( $styles[ 'classes_mce' ] );
 		
-		self::maybe_update( $post_id, '_SnS_styles', $styles );
+		if ( ! empty( $styles ) )
+			$SnS[ 'styles' ] = $styles;
+		self::maybe_update( $post_id, '_SnS', $SnS );
 		
 		if ( ! isset( $styles[ 'classes_mce' ] ) ) $styles[ 'classes_mce' ] = array( 'Empty' );
 		

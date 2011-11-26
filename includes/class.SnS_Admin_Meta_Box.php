@@ -30,7 +30,8 @@ class SnS_Admin_Meta_Box
 	
 	function mce_buttons_2( $buttons ) {
 		global $post;
-		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
+		$SnS = get_post_meta( $post->ID, '_SnS', true );
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		
 		if ( ! empty( $styles[ 'classes_mce' ] ) )
 			array_unshift( $buttons, 'styleselect' );
@@ -39,7 +40,8 @@ class SnS_Admin_Meta_Box
 	}
 	function tiny_mce_before_init( $initArray ) {
 		global $post;
-		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
+		$SnS = get_post_meta( $post->ID, '_SnS', true );
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		
 		// Add div as a format option, should probably use a string replace thing here.
 		// Better yet, a setting for adding these. Postpone for now.
@@ -119,11 +121,12 @@ class SnS_Admin_Meta_Box
      */
 	static function admin_meta_box( $post ) {
 		$registered_handles = Scripts_n_Styles::get_wp_registered();
-		$styles = get_post_meta( $post->ID, '_SnS_styles', true );
-		$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
+		$SnS = get_post_meta( $post->ID, '_SnS', true );
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
+		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 		
 		$screen = get_current_screen();
-		$position = get_user_option( "current-sns-tab" );
+		$position = get_user_option( "current_sns_tab" );
 		
 		wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME );
 		?>
@@ -348,8 +351,9 @@ class SnS_Admin_Meta_Box
 			NONCE covers those cases, and that leaves autosave, which is also checked here. 
 		*/
 		
-		$scripts = get_post_meta( $post_id, '_SnS_scripts', true );
-		$styles = get_post_meta( $post_id, '_SnS_styles', true );
+		$SnS = get_post_meta( $post_id, '_SnS', true );
+		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
+		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		
 		$scripts = self::maybe_set( $scripts, 'scripts_in_head' );
 		$scripts = self::maybe_set( $scripts, 'scripts' );
@@ -358,16 +362,16 @@ class SnS_Admin_Meta_Box
 		$styles = self::maybe_set( $styles, 'classes_body' );
 		$styles = self::maybe_set( $styles, 'classes_post' );
 		
+		$SnS = array_merge( $SnS, array( 'scripts' => $scripts, 'styles' => $styles ) );
+		
 		// This one isn't posted, it's ajax only. Cleanup anyway.
 		if ( isset( $styles[ 'classes_mce' ] ) && empty( $styles[ 'classes_mce' ] ) )
 			unset( $styles[ 'classes_mce' ] );
 		
-		if ( empty( $scripts ) ) delete_post_meta( $post_id, '_SnS_scripts' );
-		else update_post_meta( $post_id, '_SnS_scripts', $scripts );
-		
-		if ( empty( $styles ) ) delete_post_meta( $post_id, '_SnS_styles' );
-		else update_post_meta( $post_id, '_SnS_styles', $styles );
-		
+		if ( empty( $SnS ) )
+			delete_post_meta( $post_id, '_SnS' );
+		else
+			update_post_meta( $post_id, '_SnS', $SnS );
 	}
 	
     /**

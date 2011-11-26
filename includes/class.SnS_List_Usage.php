@@ -102,11 +102,7 @@ class SnS_List_Usage extends WP_List_Table {
 			'post_status' => 'any',
 			'orderby' => 'ID',
 			'order' => 'ASC',
-			'meta_query' => array(
-				'relation' => 'OR',
-				array( 'key' => '_SnS_scripts' ),
-				array( 'key' => '_SnS_styles' )
-			)
+			'meta_key' => '_SnS'
 		) );
 		
 		$items = $this->_add_meta_data( $posts );
@@ -166,12 +162,13 @@ class SnS_List_Usage extends WP_List_Table {
 	
 	function _add_meta_data( $posts ) {
 		foreach( $posts as $post) {
-			$styles = get_post_meta( $post->ID, '_SnS_styles', true );
-			$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
-			if ( ! empty( $styles ) || ! empty( $scripts ) ) {
+			$SnS = get_post_meta( $post->ID, '_SnS', true );
+			$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
+			$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
+			if ( ! empty( $styles ) ) 
 				$post->sns_styles = $styles;
+			if ( ! empty( $scripts ) ) 
 				$post->sns_scripts = $scripts;
-			}
 		}
 		return $posts;
 	}

@@ -18,7 +18,7 @@ class SnS_Admin
      * Constants
      */
 	const MENU_SLUG = 'sns';
-	const VERSION = '3.beta.2';
+	const VERSION = '3.beta.3.2';
     /**#@-*/
 	
     /**
@@ -84,6 +84,8 @@ class SnS_Admin
 				'post_status' => 'any',
 				'meta_query' => array(
 					'relation' => 'OR',
+					array( 'key' => '_SnS_scripts' ),
+					array( 'key' => '_SnS_styles' ),
 					array( 'key' => 'uFp_scripts' ),
 					array( 'key' => 'uFp_styles' )
 				)
@@ -91,15 +93,28 @@ class SnS_Admin
 		);
 		
 		foreach( $posts as $post) {
-			$styles = get_post_meta( $post->ID, 'uFp_styles', true );
-			if ( ! empty( $styles ) )
-				update_post_meta( $post->ID, '_SnS_styles', $styles );
-			delete_post_meta( $post->ID, 'uFp_styles' );
+			$styles = get_post_meta( $post->ID, '_SnS_styles', true );
+			if ( empty( $styles ) )
+				$styles = get_post_meta( $post->ID, 'uFp_styles', true );
 			
-			$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
-			if ( ! empty( $scripts ) )
-				update_post_meta( $post->ID, '_SnS_scripts', $scripts );
+			$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
+			if ( empty( $scripts ) )
+				$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
+			
+			$SnS = array();
+			if ( ! empty( $styles ) ) 
+				$SnS[ 'styles' ] = $styles;
+			
+			if ( ! empty( $scripts ) ) 
+				$SnS[ 'scripts' ] = $scripts;
+			
+			if ( ! empty( $SnS ) ) 
+				update_post_meta( $post->ID, '_SnS', $SnS );
+			
+			delete_post_meta( $post->ID, 'uFp_styles' );
 			delete_post_meta( $post->ID, 'uFp_scripts' );
+			delete_post_meta( $post->ID, '_SnS_styles' );
+			delete_post_meta( $post->ID, '_SnS_scripts' );
 		}
 
 	}
