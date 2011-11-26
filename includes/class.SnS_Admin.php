@@ -43,26 +43,29 @@ class SnS_Admin
 	 * Settings Page help
      */
 	function help() {
-		get_current_screen()->add_help_tab( array(
-			'title' => __('Overview'),
-			'id' => 'options-help',
-			'content' => 
-				'<p>' . __( '<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
-				<em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. 
-				Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only 
-				<em>"Super Admin"</em> users can access either
-				<em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change 
-				capabilities (specifically "unfiltered_html"), 
-				other users can be granted access.</p>', 'scripts-n-styles' ) . '</p>'
-			)
-		);
-	
-		get_current_screen()->set_help_sidebar(
-			'<p><strong>' . __( 'For more information:', 'twentyeleven' ) . '</strong></p>' .
-			'<p>' . __( '<a href="http://wordpress.org/extend/plugins/scripts-n-styles/faq/" target="_blank">Frequently Asked Questions</a>', 'scripts-n-styles' ) . '</p>' .
-			'<p>' . __( '<a href="https://github.com/unFocus/Scripts-n-Styles" target="_blank">Source on github</a>', 'scripts-n-styles' ) . '</p>' .
-			'<p>' . __( '<a href="http://wordpress.org/tags/scripts-n-styles" target="_blank">Support Forums</a>', 'scripts-n-styles' ) . '</p>'
-		);
+		global $wp_version; // Back Compat for now
+		if ( version_compare( $wp_version, '3.2.1', '>') ) {
+			get_current_screen()->add_help_tab( array(
+				'title' => __('Overview'),
+				'id' => 'options-help',
+				'content' => 
+					'<p>' . __( '<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
+					<em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. 
+					Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only 
+					<em>"Super Admin"</em> users can access either
+					<em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change 
+					capabilities (specifically "unfiltered_html"), 
+					other users can be granted access.</p>', 'scripts-n-styles' ) . '</p>'
+				)
+			);
+		
+			get_current_screen()->set_help_sidebar(
+				'<p><strong>' . __( 'For more information:', 'twentyeleven' ) . '</strong></p>' .
+				'<p>' . __( '<a href="http://wordpress.org/extend/plugins/scripts-n-styles/faq/" target="_blank">Frequently Asked Questions</a>', 'scripts-n-styles' ) . '</p>' .
+				'<p>' . __( '<a href="https://github.com/unFocus/Scripts-n-Styles" target="_blank">Source on github</a>', 'scripts-n-styles' ) . '</p>' .
+				'<p>' . __( '<a href="http://wordpress.org/tags/scripts-n-styles" target="_blank">Support Forums</a>', 'scripts-n-styles' ) . '</p>'
+			);
+		}
 	}
 	
     /**
