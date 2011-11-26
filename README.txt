@@ -2,8 +2,8 @@
 Contributors: WraithKenny, Touvan
 Donate link: http://wordpressfoundation.org/donate/
 Tags: admin, CSS, javascript, code, custom, Style
-Requires at least: 3.2
-Tested up to: 3.2
+Requires at least: 3.3
+Tested up to: 3.3-beta
 Stable tag: 2.0.4
 
 This plugin allows Admin users to individually add custom CSS, Classes and JavaScript directly to Post, Pages or any other custom post types.
