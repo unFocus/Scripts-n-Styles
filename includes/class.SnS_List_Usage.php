@@ -3,13 +3,6 @@ if ( ! class_exists( 'WP_List_Table' ) ) require_once( ABSPATH . 'wp-admin/inclu
 
 class SnS_List_Usage extends WP_List_Table {
 	
-	/*function __construct(){
-		parent::__construct( array(
-			'singular'  => 'sns_post',
-			'plural'    => 'sns_posts'
-		) );
-	}*/
-	
 	function ajax_user_can() {
 		return current_user_can( 'unfiltered_html' ) && current_user_can( 'manage_options' );
 	}
