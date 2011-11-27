@@ -78,7 +78,11 @@ class SnS_Admin_Meta_Box
      */
 	static function mce_css( $mce_css ) {
 		global $post;
-		$mce_css .= ',' . wp_nonce_url( admin_url( "admin-ajax.php?action=sns_tinymce_styles&post_id={$post->ID}" ), 'sns_tinymce_styles' );
+		$url = admin_url( 'admin-ajax.php' );
+		$url = wp_nonce_url( $url, 'sns_tinymce_styles' );
+		$url = add_query_arg( 'post_id', $post->ID, $url );
+		$url = add_query_arg( 'action', 'sns_tinymce_styles', $url );
+		$mce_css .= ',' . $url;
 		return $mce_css;
 	}
 
@@ -362,11 +366,12 @@ class SnS_Admin_Meta_Box
 		$styles = self::maybe_set( $styles, 'classes_body' );
 		$styles = self::maybe_set( $styles, 'classes_post' );
 		
-		$SnS = array_merge( $SnS, array( 'scripts' => $scripts, 'styles' => $styles ) );
-		
 		// This one isn't posted, it's ajax only. Cleanup anyway.
 		if ( isset( $styles[ 'classes_mce' ] ) && empty( $styles[ 'classes_mce' ] ) )
 			unset( $styles[ 'classes_mce' ] );
+		
+		$SnS['scripts'] = $scripts;
+		$SnS['styles'] = $styles;
 		
 		if ( empty( $SnS ) )
 			delete_post_meta( $post_id, '_SnS' );
@@ -381,7 +386,9 @@ class SnS_Admin_Meta_Box
 	function maybe_set( $o, $i, $p = 'SnS_' ) {
 		if ( empty( $_REQUEST[ $p . $i ] ) ) {
 			if ( isset( $o[ $i ] ) ) unset( $o[ $i ] );
-		} else $o[ $i ] = $_REQUEST[ $p . $i ];
+		} else {
+			$o[ $i ] = $_REQUEST[ $p . $i ];
+		}
 		return $o;
 	}
 }
