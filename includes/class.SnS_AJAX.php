@@ -17,12 +17,12 @@ class SnS_AJAX
 	function update_tab() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		
-		$active_tab = isset( $_POST[ 'active_tab' ] ) ? (int)$_POST[ 'active_tab' ] : 0;
+		$active_tab = isset( $_POST[ 'active_tab' ] ) ? 's'.$_POST[ 'active_tab' ] : 's0';
 		
 		if ( ! $user = wp_get_current_user() ) exit( 'Bad User' );
 		
 		$success = update_user_option( $user->ID, 'current_sns_tab', $active_tab, true);
-		exit( $success );
+		exit();
 	}
 	function tinymce_styles() {
 		check_ajax_referer( 'sns_tinymce_styles' );

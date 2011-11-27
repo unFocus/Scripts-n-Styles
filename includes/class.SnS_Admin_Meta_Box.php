@@ -131,14 +131,14 @@ class SnS_Admin_Meta_Box
 		
 		$screen = get_current_screen();
 		$position = get_user_option( "current_sns_tab" );
-		
+		if ( ! in_array( $position, array( 's0', 's1', 's2', 's3' ) ) ) $position = 's0';
 		wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME );
 		?>
 			<ul class="wp-tab-bar">
-				<li<?php echo ( 0 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_scripts-tab">Scripts</a></li>
-				<li<?php echo ( 1 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_styles-tab">Styles</a></li>
-				<li<?php echo ( 2 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_classes_body-tab">Classes</a></li>
-				<li<?php echo ( 3 == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_enqueue_scripts-tab">Include Scripts</a></li>
+				<li<?php echo ( 's0' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_scripts-tab">Scripts</a></li>
+				<li<?php echo ( 's1' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_styles-tab">Styles</a></li>
+				<li<?php echo ( 's2' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_classes_body-tab">Classes</a></li>
+				<li<?php echo ( 's3' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_enqueue_scripts-tab">Include Scripts</a></li>
 			</ul>
 			
 			<div class="wp-tab-panel" id="SnS_scripts-tab">
