@@ -2,7 +2,7 @@
 Contributors: WraithKenny, Touvan
 Donate link: http://wordpressfoundation.org/donate/
 Tags: admin, CSS, javascript, code, custom, Style
-Requires at least: 3.3
+Requires at least: 3.2
 Tested up to: 3.3-beta
 Stable tag: 2.0.4
 
@@ -10,15 +10,17 @@ This plugin allows Admin users to individually add custom CSS, Classes and JavaS
 
 == Description ==
 
-This plugin allows Admin users the ability to add custom CSS (at the bottom of the 'head' tag) and JavaScript (at the bottom of the 'body' tag) directly into individual Post, Pages or any other registered custom post types. You can also add classes to the body tag and the post container (if your theme supports `body_class()` and `post_class()` functions).
+This plugin allows Admin users the ability to add custom CSS and JavaScript directly into individual Post, Pages or any other registered custom post types. You can also add classes to the body tag and the post container.
+
+Admin's can also add classes to the TinyMCE "Formats" dropdown which users can use to style posts and pages directly. As of Scripts n Styles 3+ styles are reflected in the post editor.
 
 Because only well trusted users should ever be allowed to insert JavaScript directly into the pages of your site, this plugin restricts usage to admin type users. Admin's have access to even more sensitive areas by definition, so that should be relatively safe ;)
 
 A few notes about the implementation:
 
-*   Admin users, or more specifically, *any user with the `manage_options` capability* (which by default is *only* the admin type user) can use this plugin's functionality. Some plugins extend user rolls, and so this plugin would naturally extend include rolls that have the appropriate capability.
-*   CSS Styles are included inline, not linked, at the bottom of the `head` element with `style` tags by using `wp-head`. If your theme doesn't have this hook, this plugin (as well as most others) won't work.
-*   JavaScript is included inline, not linked, at the bottom of the `body` element with `script` tags by using `wp-footer`. If your theme doesn't have this hook, this plugin (as well as most others) won't work.
+*   Admin users, or more specifically, *any user with the `manage_options` and `unfiltered_html` capabilities* (which by default is *only* the admin type user) can use this plugin's functionality. Some plugins extend user rolls, and so this plugin would naturally extend include rolls that have the appropriate capability.
+*   CSS Styles are embeded, not linked, at the bottom of the `head` element with `style` tags by using `wp-head`. If your theme doesn't have this hook, this plugin (as well as most others) won't work.
+*   JavaScript is embeded, not linked, at the bottom of the `body` (or `head`) element with `script` tags by using `wp-footer` (or `wp-head`). If your theme doesn't have this hook, this plugin (as well as most others) won't work.
 *   **There is no input validation.** This plugin puts exactly what you type in the meta box directly into the `html` with no error checking. You are an Admin, and we trust you to be carefull. Try not to break anything.
 
 == Installation ==
@@ -37,13 +39,17 @@ Well, because plugins are supposed to, and should be expected to clean up after 
 
 = Can I get around that somehow? =
 
-Sure, if you are an Admin, just go to the plugin editor and wipe out the uninstall.php (Replace everything with a space character) and then WordPress will not delete the meta data on uninstall.
+Sure, if you are an Admin, just go to the plugin editor and wipe out the uninstall.php and then WordPress will not delete the meta data on uninstall.
 
 == Screenshots ==
 
 1. The New and Improved Meta Box.
 
 == Changelog ==
+
+= 2.0.3 =
+* fixed some bugs
+
 
 = 2.0.1 =
 * Better selection of `post_types` to add Scripts-n-Styles
