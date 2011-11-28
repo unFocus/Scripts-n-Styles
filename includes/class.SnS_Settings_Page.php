@@ -20,52 +20,13 @@ class SnS_Settings_Page
      * @static
      */
 	function init() {
-		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
+		if ( SnS_Admin::$parent_slug == SnS_Admin::MENU_SLUG ) $menu_title = 'Settings';
+		else $menu_title = 'Scripts n Styles';
 		
-		$menu_spot = 'menu';
-		$possible_spots = array(
-			'menu', // Custom Top level
-			'object', // Bottom of Top default section.
-			'utility', // Bottom of Bottom default section.
-			'management', // Tools section.
-			'options', // Settings section.
-			'theme', // Appearence section.
-		);
-		$a = array(
-			'Scripts n Styles Settings',
-			'Scripts n Styles',
-			'unfiltered_html',
-			SnS_Admin::MENU_SLUG,
-			array( __CLASS__, 'admin_page' )
-		);
-		switch( $menu_spot ) {
-			case 'utility':
-				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
-				self::$hook_suffix = $hook_suffix = add_utility_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
-				add_submenu_page( $a[3], $a[0], 'Settings', $a[2], $a[3], $a[4] );
-				break;
-			case 'object':
-				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
-				self::$hook_suffix = $hook_suffix = add_object_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
-				add_submenu_page( $a[3], $a[0], 'Settings', $a[2], $a[3], $a[4] );
-				break;
-			case 'management':
-				self::$hook_suffix = $hook_suffix = add_management_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
-				break;
-			case 'options':
-				self::$hook_suffix = $hook_suffix = add_options_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
-				break;
-			case 'theme':
-				self::$hook_suffix = $hook_suffix = add_theme_page( $a[0], $a[1], $a[2], $a[3], $a[4] );
-				break;
-			default:
-				$a[] = plugins_url( 'images/menu.png', Scripts_n_Styles::$file );
-				self::$hook_suffix = $hook_suffix = add_menu_page( $a[0], $a[1], $a[2], $a[3], $a[4], $a[5] );
-				add_submenu_page( $a[3], $a[0], 'Settings', $a[2], $a[3], $a[4] );
-				break;
-		}
+		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', $menu_title, 'unfiltered_html', SnS_Admin::MENU_SLUG, 'SnS_Settings_Page::admin_page' );
+		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
-		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
+		add_action( "load-$hook_suffix", 'SnS_Admin::help' );
 		add_action( "load-$hook_suffix", array( __CLASS__, 'take_action'), 49 );
 	}
 	
@@ -267,11 +228,9 @@ class SnS_Settings_Page
      */
 	function admin_page() {
 		SnS_Admin::upgrade_check();
-		global $title;
 		?>
 		<div class="wrap">
-			<?php screen_icon(); ?>
-			<h2><?php echo esc_html($title); ?></h2>
+			<?php SnS_Admin::nav(); ?>
 			<?php settings_errors(); ?>
 			<form action="" method="post" autocomplete="off">
 			<?php settings_fields( self::OPTION_GROUP ); ?>

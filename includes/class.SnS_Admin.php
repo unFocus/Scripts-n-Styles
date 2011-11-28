@@ -19,6 +19,7 @@ class SnS_Admin
      */
 	const MENU_SLUG = 'sns';
 	const VERSION = '3.beta.3.2';
+	static $parent_slug = '';
     /**#@-*/
 	
     /**
@@ -28,8 +29,7 @@ class SnS_Admin
 	static function init() {
 		add_action( 'admin_menu', array( 'SnS_Admin_Meta_Box', 'init' ) );
 		
-		add_action( 'admin_menu', array( 'SnS_Settings_Page', 'init' ) );
-		add_action( 'admin_menu', array( 'SnS_Usage_Page', 'init' ) );
+		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 		
 		add_action( 'admin_init', array( 'SnS_AJAX', 'init' ) );
 		
@@ -39,6 +39,50 @@ class SnS_Admin
 		register_activation_hook( Scripts_n_Styles::$file, array( __CLASS__, 'upgrade' ) );
 	}
 	
+	function menu() {
+		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
+		
+		$menu_spot = '';
+		$top_spots = array( 'menu', 'object', 'utility' );
+		$sub_spots = array( 'tools.php', 'options-general.php', 'themes.php' );
+		
+		if ( in_array( $menu_spot, $top_spots ) ) $parent_slug = SnS_Admin::MENU_SLUG;
+		else if ( in_array( $menu_spot, $sub_spots ) ) $parent_slug = $menu_spot;
+		else $parent_slug = 'tools.php';
+		
+		self::$parent_slug = $parent_slug;
+		
+		switch( $menu_spot ) {
+			case 'menu':
+				add_menu_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Settings_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				break;
+			case 'object':
+				add_object_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Settings_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				break;
+			case 'utility':
+				add_utility_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Settings_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				break;
+		}
+		SnS_Settings_Page::init();
+		SnS_Usage_Page::init();
+	}
+	
+    /**
+	 * Nav Tabs
+     */
+	function nav() {
+		$page = $_REQUEST[ 'page' ];
+		?>
+		<?php screen_icon(); ?>
+		<h2>Scripts n Styles</h2>
+		<?php screen_icon( 'none' ); ?>
+		<h3 class="nav-tab-wrapper">
+			<a class="nav-tab<?php echo ( self::MENU_SLUG == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG ); ?>">Settings</a>
+			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_usage' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_usage' ); ?>">Usage</a>
+		</h3>
+		<?php
+	}
+	
     /**
 	 * Settings Page help
      */
@@ -46,7 +90,7 @@ class SnS_Admin
 		global $wp_version; // Back Compat for now
 		if ( version_compare( $wp_version, '3.2.1', '>') ) {
 			get_current_screen()->add_help_tab( array(
-				'title' => __('Overview'),
+				'title' => __('Overview', 'scripts-n-styles'),
 				'id' => 'options-help',
 				'content' => 
 					'<p>' . __( '<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
@@ -60,7 +104,7 @@ class SnS_Admin
 			);
 		
 			get_current_screen()->set_help_sidebar(
-				'<p><strong>' . __( 'For more information:', 'twentyeleven' ) . '</strong></p>' .
+				'<p><strong>' . __( 'For more information:', 'scripts-n-styles' ) . '</strong></p>' .
 				'<p>' . __( '<a href="http://wordpress.org/extend/plugins/scripts-n-styles/faq/" target="_blank">Frequently Asked Questions</a>', 'scripts-n-styles' ) . '</p>' .
 				'<p>' . __( '<a href="https://github.com/unFocus/Scripts-n-Styles" target="_blank">Source on github</a>', 'scripts-n-styles' ) . '</p>' .
 				'<p>' . __( '<a href="http://wordpress.org/tags/scripts-n-styles" target="_blank">Support Forums</a>', 'scripts-n-styles' ) . '</p>'

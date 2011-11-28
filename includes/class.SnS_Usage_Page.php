@@ -20,19 +20,22 @@ class SnS_Usage_Page
      * @static
      */
 	function init() {
-		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
+		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', 'Usage', 'unfiltered_html', SnS_Admin::MENU_SLUG.'_usage', 'SnS_Settings_Page::admin_page' );
 		
-		self::$hook_suffix = $hook_suffix = add_submenu_page(
-			SnS_Admin::MENU_SLUG,
-			'Scripts n Styles Usage',
-			'Usage',
-			'unfiltered_html',
-			SnS_Admin::MENU_SLUG.'_usage',
-			array( __CLASS__, 'admin_page' )
-		);
-
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
+		
+		// Make the page into a tab.
+		if ( SnS_Admin::MENU_SLUG != SnS_Admin::$parent_slug ) {
+			remove_submenu_page( SnS_Admin::$parent_slug, SnS_Admin::MENU_SLUG.'_usage' );
+			add_filter( 'parent_file', array( __CLASS__, 'parent_file') );
+		}
+	}
+	
+	static function parent_file( $parent_file ) {
+		global $plugin_page, $submenu_file;
+		if ( SnS_Admin::MENU_SLUG.'_usage' == $plugin_page ) $submenu_file = SnS_Admin::MENU_SLUG;
+		return $parent_file;
 	}
 	
     /**
@@ -40,7 +43,9 @@ class SnS_Usage_Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
      */
 	function admin_load() {
-		add_screen_option( 'per_page', array( 'label' => __( 'SnS Per Page' ), 'default' => 20 ) );
+		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array(), SnS_Admin::VERSION );
+		
+		add_screen_option( 'per_page', array( 'label' => __( 'Per Page' ), 'default' => 20 ) );
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		// hack for core limitation: see http://core.trac.wordpress.org/ticket/18954
 		set_screen_options();
@@ -86,16 +91,13 @@ class SnS_Usage_Page
      */
 	function admin_page() {
 		SnS_Admin::upgrade_check();
-		global $title;
 		?>
 		<div class="wrap">
-			<?php screen_icon(); ?>
-			<h2><?php echo esc_html($title); ?></h2>
+			<?php SnS_Admin::nav(); ?>
 			<?php settings_errors(); ?>
 			<form action="" method="post" autocomplete="off">
 			<?php settings_fields( self::OPTION_GROUP ); ?>
 			<?php do_settings_sections( SnS_Admin::MENU_SLUG ); ?>
-			<?php submit_button(); ?>
 			</form>
 		</div>
 		<?php
