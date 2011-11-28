@@ -12,12 +12,14 @@ require_once( 'class.SnS_Settings_Page.php' );
 require_once( 'class.SnS_Usage_Page.php' );
 require_once( 'class.SnS_Global_Page.php' );
 require_once( 'class.SnS_AJAX.php' );
+require_once( 'class.SnS_Form.php' );
 
 class SnS_Admin
 {
     /**#@+
      * Constants
      */
+	const OPTION_GROUP = 'scripts_n_styles';
 	const MENU_SLUG = 'sns';
 	const VERSION = '3.beta.3.2';
 	static $parent_slug = '';
@@ -55,13 +57,13 @@ class SnS_Admin
 		
 		switch( $menu_spot ) {
 			case 'menu':
-				add_menu_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Global_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_menu_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Form::page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 			case 'object':
-				add_object_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Global_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_object_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Form::page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 			case 'utility':
-				add_utility_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Global_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_utility_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Form::page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 		}
 		SnS_Global_Page::init();

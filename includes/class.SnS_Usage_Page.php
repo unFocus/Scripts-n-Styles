@@ -12,6 +12,7 @@ class SnS_Usage_Page
     /**
      * Constants
      */
+	const MENU_SLUG = 'sns_usage';
 	const OPTION_GROUP = 'scripts_n_styles';
 	static $hook_suffix = '';
 	
@@ -20,21 +21,21 @@ class SnS_Usage_Page
      * @static
      */
 	function init() {
-		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', 'Usage', 'unfiltered_html', SnS_Admin::MENU_SLUG.'_usage', 'SnS_Settings_Page::admin_page' );
+		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', 'Usage', 'unfiltered_html', self::MENU_SLUG, 'SnS_Form::page' );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
 		
 		// Make the page into a tab.
 		if ( SnS_Admin::MENU_SLUG != SnS_Admin::$parent_slug ) {
-			remove_submenu_page( SnS_Admin::$parent_slug, SnS_Admin::MENU_SLUG.'_usage' );
+			remove_submenu_page( SnS_Admin::$parent_slug, self::MENU_SLUG );
 			add_filter( 'parent_file', array( __CLASS__, 'parent_file') );
 		}
 	}
 	
 	static function parent_file( $parent_file ) {
 		global $plugin_page, $submenu_file;
-		if ( SnS_Admin::MENU_SLUG.'_usage' == $plugin_page ) $submenu_file = SnS_Admin::MENU_SLUG;
+		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = SnS_Admin::MENU_SLUG;
 		return $parent_file;
 	}
 	
@@ -51,7 +52,7 @@ class SnS_Usage_Page
 		set_screen_options();
 		
 		register_setting(
-			self::OPTION_GROUP,
+			SnS_Admin::OPTION_GROUP,
 			'SnS_options' );
 			
 		add_settings_section(
@@ -78,7 +79,11 @@ class SnS_Usage_Page
 	 * Settings Page
 	 * Outputs the Usage Section.
 	 */
-	function usage_section() {
+	function usage_section() { ?>
+		<div style="max-width: 55em;">
+			<p>The following table shows content that utilizes Scripts n Styles.</p>
+		</div>
+		<?php
 		require_once( 'class.SnS_List_Usage.php' );
 		$usageTable = new SnS_List_Usage();
 		$usageTable->prepare_items();
@@ -89,15 +94,16 @@ class SnS_Usage_Page
 	 * Settings Page
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
      */
-	function admin_page() {
+	function page() {
 		SnS_Admin::upgrade_check();
 		?>
 		<div class="wrap">
 			<?php SnS_Admin::nav(); ?>
 			<?php settings_errors(); ?>
 			<form action="" method="post" autocomplete="off">
-			<?php settings_fields( self::OPTION_GROUP ); ?>
+			<?php settings_fields( SnS_Admin::OPTION_GROUP ); ?>
 			<?php do_settings_sections( SnS_Admin::MENU_SLUG ); ?>
+			<?php submit_button(); ?>
 			</form>
 		</div>
 		<?php
