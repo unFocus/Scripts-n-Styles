@@ -10,6 +10,7 @@
 require_once( 'class.SnS_Admin_Meta_Box.php' );
 require_once( 'class.SnS_Settings_Page.php' );
 require_once( 'class.SnS_Usage_Page.php' );
+require_once( 'class.SnS_Global_Page.php' );
 require_once( 'class.SnS_AJAX.php' );
 
 class SnS_Admin
@@ -54,15 +55,16 @@ class SnS_Admin
 		
 		switch( $menu_spot ) {
 			case 'menu':
-				add_menu_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Settings_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_menu_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Global_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 			case 'object':
-				add_object_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Settings_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_object_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Global_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 			case 'utility':
-				add_utility_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Settings_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_utility_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Global_Page::admin_page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 		}
+		SnS_Global_Page::init();
 		SnS_Settings_Page::init();
 		SnS_Usage_Page::init();
 	}
@@ -77,7 +79,8 @@ class SnS_Admin
 		<h2>Scripts n Styles</h2>
 		<?php screen_icon( 'none' ); ?>
 		<h3 class="nav-tab-wrapper">
-			<a class="nav-tab<?php echo ( self::MENU_SLUG == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG ); ?>">Settings</a>
+			<a class="nav-tab<?php echo ( self::MENU_SLUG == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG ); ?>">Global</a>
+			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_settings' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_settings' ); ?>">Settings</a>
 			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_usage' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_usage' ); ?>">Usage</a>
 		</h3>
 		<?php
@@ -181,7 +184,7 @@ class SnS_Admin
 	 * @return array
      */
 	static function plugin_action_links( $actions ) {
-		$actions[ 'settings' ] = '<a href="' . menu_page_url( self::MENU_SLUG, false ) . '"/>Settings</a>';
+		$actions[ 'settings' ] = '<a href="' . menu_page_url( self::MENU_SLUG . '_settings', false ) . '"/>Settings</a>';
 		return $actions;
 	}
 	

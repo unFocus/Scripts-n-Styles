@@ -20,15 +20,25 @@ class SnS_Settings_Page
      * @static
      */
 	function init() {
-		if ( SnS_Admin::$parent_slug == SnS_Admin::MENU_SLUG ) $menu_title = 'Settings';
-		else $menu_title = 'Scripts n Styles';
-		
-		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', $menu_title, 'unfiltered_html', SnS_Admin::MENU_SLUG, 'SnS_Settings_Page::admin_page' );
+		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', 'Settings', 'unfiltered_html', SnS_Admin::MENU_SLUG.'_settings', 'SnS_Settings_Page::admin_page' );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", 'SnS_Admin::help' );
 		add_action( "load-$hook_suffix", array( __CLASS__, 'take_action'), 49 );
+		
+		// Make the page into a tab.
+		if ( SnS_Admin::MENU_SLUG != SnS_Admin::$parent_slug ) {
+			remove_submenu_page( SnS_Admin::$parent_slug, SnS_Admin::MENU_SLUG.'_settings' );
+			add_filter( 'parent_file', array( __CLASS__, 'parent_file') );
+		}
+	}	
+	
+	static function parent_file( $parent_file ) {
+		global $plugin_page, $submenu_file;
+		if ( SnS_Admin::MENU_SLUG.'_settings' == $plugin_page ) $submenu_file = SnS_Admin::MENU_SLUG;
+		return $parent_file;
 	}
+
 	
     /**
 	 * Settings Page
