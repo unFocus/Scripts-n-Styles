@@ -6,14 +6,16 @@ Description: Allows WordPress admin users the ability to add custom CSS and Java
 Author: unFocus Projects
 Author URI: http://www.unfocus.com/
 Version: 3.beta.3.2
-License: GPL2
+License: GPLv2 or later
 Network: true
 */
+
 /*  Copyright 2010-2011  Kenneth Newman  www.unfocus.com
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License, version 2, as 
-	published by the Free Software Foundation.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 	
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,7 +24,7 @@ Network: true
 	
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 /**
@@ -44,7 +46,7 @@ Network: true
  * @link http://www.unfocus.com/projects/scripts-n-styles/ Plugin URI
  * @author unFocus Projects
  * @link http://www.unfocus.com/ Author URI
- * @version 3.beta.2
+ * @version 3.beta.3.2
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2010 - 2011, Kenneth Newman
  * 

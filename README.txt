@@ -5,6 +5,7 @@ Tags: admin, CSS, javascript, code, custom, Style
 Requires at least: 3.2
 Tested up to: 3.3-beta
 Stable tag: 2.0.4
+License: GPLv2 or later
 
 This plugin allows Admin users to individually add custom CSS, Classes and JavaScript directly to Post, Pages or any other custom post types.
 
@@ -47,9 +48,11 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 == Changelog ==
 
+= 3 =
+* AJAX Saving of Meta-box
+
 = 2.0.3 =
 * fixed some bugs
-
 
 = 2.0.1 =
 * Better selection of `post_types` to add Scripts-n-Styles
@@ -74,20 +77,3 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 = 1.0 =
 * Initial Release.
-
-== Upgrade Notice ==
-
-= 2 =
-Adds new features.
-
-= 1.0.3 =
-Adds a few new features.
-
-= 1.0.2 =
-Minor update. Adds a few new features.
-
-= 1.0.1 =
-Some small plugin meta data updates.
-
-= 1.0 =
-Initial Release, there is nothing to upgrade from.
