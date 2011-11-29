@@ -77,3 +77,20 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 = 1.0 =
 * Initial Release.
+
+== Upgrade Notice ==
+
+= 2 =
+Adds new features.
+
+= 1.0.3 =
+Adds a few new features.
+
+= 1.0.2 =
+Minor update. Adds a few new features.
+
+= 1.0.1 =
+Some small plugin meta data updates.
+
+= 1.0 =
+Initial Release, there is nothing to upgrade from.
