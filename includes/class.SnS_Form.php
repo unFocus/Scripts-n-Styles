@@ -77,7 +77,7 @@ class SnS_Form
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) || ( is_multisite() && ! is_super_admin() ) )
 			wp_die( __( 'Cheatin&#8217; uh?' ) );
 		
-		if ( $_REQUEST[ 'message' ] )
+		if ( isset( $_REQUEST[ 'message' ] ) && $_REQUEST[ 'message' ] )
 			add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
 		
 		if ( ! isset( $_REQUEST[ 'action' ], $_REQUEST[ 'option_page' ], $_REQUEST[ 'page' ] ) )
@@ -107,7 +107,7 @@ class SnS_Form
 		if ( ! count( get_settings_errors() ) )
 			add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
 		
-		if ( $value[ 'menu_position' ] != SnS_Admin::$parent_slug ) {
+		if ( isset( $_POST[ $option ][ 'menu_position' ] ) && ( $value[ 'menu_position' ] != SnS_Admin::$parent_slug ) ) {
 			switch( $value[ 'menu_position' ] ) {
 				case 'menu':
 				case 'object':

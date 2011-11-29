@@ -46,7 +46,7 @@ class SnS_Admin
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 		
 		$options = get_option( 'SnS_options' );
-		$menu_spot = $options[ 'menu_position' ];
+		$menu_spot = isset( $options[ 'menu_position' ] ) ? $options[ 'menu_position' ]: '';
 		$top_spots = array( 'menu', 'object', 'utility' );
 		$sub_spots = array( 'tools.php', 'options-general.php', 'themes.php' );
 		
