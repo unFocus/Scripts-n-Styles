@@ -45,7 +45,8 @@ class SnS_Admin
 	function menu() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 		
-		$menu_spot = '';
+		$options = get_option( 'SnS_options' );
+		$menu_spot = $options[ 'menu_position' ];
 		$top_spots = array( 'menu', 'object', 'utility' );
 		$sub_spots = array( 'tools.php', 'options-general.php', 'themes.php' );
 		
@@ -186,7 +187,7 @@ class SnS_Admin
 	 * @return array
      */
 	static function plugin_action_links( $actions ) {
-		$actions[ 'settings' ] = '<a href="' . menu_page_url( self::MENU_SLUG . '_settings', false ) . '"/>Settings</a>';
+		$actions[ 'settings' ] = '<a href="' . menu_page_url( SnS_Settings_Page::MENU_SLUG, false ) . '"/>Settings</a>';
 		return $actions;
 	}
 	

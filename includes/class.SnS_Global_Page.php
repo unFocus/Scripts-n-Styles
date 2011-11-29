@@ -13,7 +13,6 @@ class SnS_Global_Page
      * Constants
      */
 	const OPTION_GROUP = 'scripts_n_styles';
-	static $hook_suffix = '';
 	
     /**
 	 * Initializing method.
@@ -124,25 +123,6 @@ class SnS_Global_Page
 		?>
 		<div style="max-width: 55em;">
 			<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.</p>
-		</div>
-		<?php
-	}
-
-    /**
-	 * Settings Page
-	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
-     */
-	function page() {
-		SnS_Admin::upgrade_check();
-		?>
-		<div class="wrap">
-			<?php SnS_Admin::nav(); ?>
-			<?php settings_errors(); ?>
-			<form action="" method="post" autocomplete="off">
-			<?php settings_fields( SnS_Admin::OPTION_GROUP ); ?>
-			<?php do_settings_sections( SnS_Admin::MENU_SLUG ); ?>
-			<?php submit_button(); ?>
-			</form>
 		</div>
 		<?php
 	}

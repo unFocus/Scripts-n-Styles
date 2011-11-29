@@ -77,6 +77,9 @@ class SnS_Form
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) || ( is_multisite() && ! is_super_admin() ) )
 			wp_die( __( 'Cheatin&#8217; uh?' ) );
 		
+		if ( $_REQUEST[ 'message' ] )
+			add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
+		
 		if ( ! isset( $_REQUEST[ 'action' ], $_REQUEST[ 'option_page' ], $_REQUEST[ 'page' ] ) )
 			return;
 		
@@ -88,23 +91,54 @@ class SnS_Form
 			return;
 		
 		$options = $new_whitelist_options[ $option_page ];
-		echo '<pre>' . print_r( $options, true ) . '</pre>';
 		foreach ( (array) $options as $option ) {
-		echo '<pre>' . print_r( $_POST[$option], true ) . '</pre>';
-			$option = trim($option);
+			$old = get_option( $option );
+			$option = trim( $option );
 			$value = null;
-			if ( isset($_POST[$option]) )
-				$value = $_POST[$option];
-			if ( !is_array($value) )
-				$value = trim($value);
-			$value = stripslashes_deep($value);
-			update_option($option, $value);
+			if ( isset($_POST[ $option ]) )
+				$value = $_POST[ $option ];
+			if ( !is_array( $value ) )
+				$value = trim( $value );
+			
+			$value = array_merge( $old, stripslashes_deep( $value ) );
+			update_option( $option, $value );
 		}
 		
 		if ( ! count( get_settings_errors() ) )
 			add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
 		
+		if ( $value[ 'menu_position' ] != SnS_Admin::$parent_slug ) {
+			switch( $value[ 'menu_position' ] ) {
+				case 'menu':
+				case 'object':
+				case 'utility':
+					wp_redirect( add_query_arg( 'message', 1, admin_url( 'admin.php?page=sns_settings' ) ) );
+					break;
+				default:
+					wp_redirect( add_query_arg( 'message', 1, admin_url( $value[ 'menu_position' ].'?page=sns_settings' ) ) );
+					break;
+			}
+		}
 		return;
+	}
+
+    /**
+	 * Settings Page
+	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
+     */
+	function page() {
+		SnS_Admin::upgrade_check();
+		?>
+		<div class="wrap">
+			<?php SnS_Admin::nav(); ?>
+			<?php settings_errors(); ?>
+			<form action="" method="post" autocomplete="off">
+			<?php settings_fields( SnS_Admin::OPTION_GROUP ); ?>
+			<?php do_settings_sections( SnS_Admin::MENU_SLUG ); ?>
+			<?php submit_button(); ?>
+			</form>
+		</div>
+		<?php
 	}
 }
 ?>
