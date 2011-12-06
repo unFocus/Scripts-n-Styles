@@ -330,7 +330,7 @@ class SnS_Admin_Meta_Box
 				),
 			SnS_Admin::VERSION, true );
 			
-		wp_localize_script( 'sns-meta-box-scripts', 'cm_theme', $cm_theme );
+		wp_localize_script( 'sns-meta-box-scripts', 'codemirror_options', array( 'theme' => $cm_theme ) );
 	}
 	
     /**

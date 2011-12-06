@@ -6,7 +6,7 @@ jQuery( document ).ready( function( $ ) {
 		currentCodeMirror = [],
 		mceBodyClass = getMCEBodyClasses(),
 		nonce = $( '#scripts_n_styles_noncename' ).val(),
-		theme = cm_theme || 'default';
+		theme = codemirror_options.theme ? codemirror_options.theme: 'default';
 	
 	//$('textarea', context).attr('autocomplete','off');
 	
