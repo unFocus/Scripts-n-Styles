@@ -12,7 +12,7 @@ jQuery( document ).ready( function( $ ) {
 		tabMode: "shift",
 		theme: theme
 	});
-	$('#cm_theme').on( "change", function(){
+	$('#cm_theme').change( function(){
 		editor.setOption("theme", $(this).val());
 	});
 });
