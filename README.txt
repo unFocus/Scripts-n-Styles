@@ -3,7 +3,7 @@ Contributors: WraithKenny, Touvan
 Donate link: http://wordpressfoundation.org/donate/
 Tags: admin, CSS, javascript, code, custom, Style
 Requires at least: 3.2
-Tested up to: 3.3-beta
+Tested up to: 3.3-RC1
 Stable tag: 2.0.4
 License: GPLv2 or later
 
@@ -11,7 +11,7 @@ This plugin allows Admin users to individually add custom CSS, Classes and JavaS
 
 == Description ==
 
-This plugin allows Admin users the ability to add custom CSS and JavaScript directly into individual Post, Pages or any other registered custom post types. You can also add classes to the body tag and the post container.
+This plugin allows Admin users the ability to add custom CSS and JavaScript directly into individual Post, Pages or any other registered custom post types. You can also add classes to the body tag and the post container. There is a Global settings page for which you can write Scripts n Styles for the entire blog.
 
 Admin's can also add classes to the TinyMCE "Formats" dropdown which users can use to style posts and pages directly. As of Scripts n Styles 3+ styles are reflected in the post editor.
 
@@ -55,6 +55,11 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 = 3 =
 * AJAX Saving of Meta-box
+* Dynamically populate the Styles Dropdown for TinyMCE
+* Styles preview in Post Editor
+* Enqueue dependant scripts if you need (like jQuery)
+* Adjustable menu placement
+* CodeMirror Themes
 
 = 2.0.3 =
 * fixed some bugs
@@ -84,6 +89,9 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 3 =
+Adds new features.
 
 = 2 =
 Adds new features.
