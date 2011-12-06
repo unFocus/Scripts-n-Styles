@@ -99,23 +99,13 @@ class SnS_Admin_Meta_Box
 			add_filter( 'default_hidden_meta_boxes', array( __CLASS__,  'default_hidden_meta_boxes' )  );
 			add_action( "admin_print_styles", array( __CLASS__, 'meta_box_styles'));
 			add_action( "admin_print_scripts", array( __CLASS__, 'meta_box_scripts'));
-			add_filter( 'contextual_help', array( __CLASS__, 'contextual_help_filter' ), 10, 3 );
+			add_filter( 'contextual_help', array( 'SnS_Admin', 'help' ) );
 		}
 	}
 	
 	static function default_hidden_meta_boxes( $hidden ) {
 		$hidden[] = 'SnS_meta_box';
     	return $hidden;
-	}
-	
-	function contextual_help_filter( $text, $screen_id, $screen ) {
-		if ( in_array( $screen->post_type, self::$post_types ) )
-			$text .= '<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
-				<em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. 
-				Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either
-				<em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically "unfiltered_html"), 
-				other users can be granted access.</p>';
-		return $text;
 	}
 	
     /**
