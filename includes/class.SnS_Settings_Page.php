@@ -69,6 +69,20 @@ class SnS_Settings_Page
 				'size' => 6,
 				'style' => 'height: auto;'
 			) );
+		
+		add_settings_field(
+			'cm_theme',
+			'<strong>CodeMirror Theme</strong>: ',
+			array( 'SnS_Form', 'select' ),
+			SnS_Admin::MENU_SLUG,
+			'settings',
+			array(
+				'label_for' => 'cm_theme',
+				'setting' => 'SnS_options',
+				'choices' => array( 'cobalt', 'default', 'eclipse', 'elegant', 'monokai', 'neat', 'night', 'rubyblue' ),
+				'size' => 8,
+				'style' => 'height: auto;'
+			) );
 	}
 	
     /**
