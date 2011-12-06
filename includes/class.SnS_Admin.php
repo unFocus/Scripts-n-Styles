@@ -58,13 +58,13 @@ class SnS_Admin
 		
 		switch( $menu_spot ) {
 			case 'menu':
-				add_menu_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Form::page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_menu_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 			case 'object':
-				add_object_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Form::page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_object_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 			case 'utility':
-				add_utility_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, 'SnS_Form::page', plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_utility_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 		}
 		SnS_Global_Page::init();

@@ -19,10 +19,10 @@ class SnS_Usage_Page
      * @static
      */
 	function init() {
-		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', 'Usage', 'unfiltered_html', self::MENU_SLUG, 'SnS_Form::page' );
+		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', 'Usage', 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
-		add_action( "load-$hook_suffix", 'SnS_Admin::help' );
+		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
 		
 		// Make the page into a tab.
 		if ( SnS_Admin::MENU_SLUG != SnS_Admin::$parent_slug ) {

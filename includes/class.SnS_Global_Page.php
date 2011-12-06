@@ -22,10 +22,10 @@ class SnS_Global_Page
 		if ( SnS_Admin::$parent_slug == SnS_Admin::MENU_SLUG ) $menu_title = 'Global';
 		else $menu_title = 'Scripts n Styles';
 		
-		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', $menu_title, 'unfiltered_html', SnS_Admin::MENU_SLUG, 'SnS_Form::page' );
+		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', $menu_title, 'unfiltered_html', SnS_Admin::MENU_SLUG, array( 'SnS_Form', 'page' ) );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
-		add_action( "load-$hook_suffix", 'SnS_Admin::help' );
+		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Form', 'take_action'), 49 );
 	}
 	
