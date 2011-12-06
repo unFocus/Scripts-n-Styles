@@ -17,27 +17,27 @@ class SnS_List_Usage extends WP_List_Table {
 				return $post->$column_name;
 			case 'script_data':
 				if ( isset( $post->sns_scripts[ 'scripts_in_head' ] ) ) {
-                    $return .= '<div>Scripts (head)</div>';
+                    $return .= '<div>' . __( 'Scripts (head)', 'scripts-n-styles' ) . '</div>';
                 }
                 if ( isset( $post->sns_scripts[ 'scripts' ] ) ) {
-                    $return .= '<div>Scripts</div>';
+                    $return .= '<div>' . __( 'Scripts', 'scripts-n-styles' ) . '</div>';
                 }
                 if ( isset( $post->sns_scripts[ 'enqueue_scripts' ] ) ) {
-                    $return .= '<div>Enqueued Scripts</div>';
+                    $return .= '<div>' . __( 'Enqueued Scripts', 'scripts-n-styles' ) . '</div>';
                 }
 				return $return;
 			case 'style_data':
 				if ( isset( $post->sns_styles[ 'classes_mce' ] ) ) {
-                    $return .= '<div>TinyMCE Formats</div>';
+                    $return .= '<div>' . __( 'TinyMCE Formats', 'scripts-n-styles' ) . '</div>';
                 }
                 if ( isset( $post->sns_styles[ 'styles' ] ) ) {
-                    $return .= '<div>Styles</div>';
+                    $return .= '<div>' . __( 'Styles', 'scripts-n-styles' ) . '</div>';
                 }
                 if ( isset( $post->sns_styles[ 'classes_post' ] ) ) {
-                    $return .= '<div>Post Classes</div>';
+                    $return .= '<div>' . __( 'Post Classes', 'scripts-n-styles' ) . '</div>';
                 }
                 if ( isset( $post->sns_styles[ 'classes_body' ] ) ) {
-                    $return .= '<div>Body Classes</div>';
+                    $return .= '<div>' . __( 'Body Classes', 'scripts-n-styles' ) . '</div>';
                 }
 				return $return;
 			default:
@@ -50,7 +50,7 @@ class SnS_List_Usage extends WP_List_Table {
 		$edit_title = esc_attr( sprintf( __( 'Edit &#8220;%s&#8221;' ), $post->post_title ) );
 		
 		$actions = array(
-			'edit'      => sprintf('<a title="%s" href="%s">Edit</a>', $edit_title, $edit_link ),
+			'edit'      => sprintf( '<a title="%s" href="%s">%s</a>', $edit_title, $edit_link, __( 'Edit' ) ),
 		);
 		
 		$return = '<strong>';
@@ -72,12 +72,12 @@ class SnS_List_Usage extends WP_List_Table {
 	
 	function get_columns() {
 		$columns = array(
-			'title'			=> 'Title',
-			'ID'			=> 'ID',
-			'status'		=> 'Status',
-			'post_type'		=> 'Post Type',
-			'script_data'	=> 'Script Data',
-			'style_data'	=> 'Style Data'
+			'title'			=> __( 'Title' ),
+			'ID'			=> __( 'ID' ),
+			'status'		=> __( 'Status' ),
+			'post_type'		=> __( 'Post Type', 'scripts-n-styles' ),
+			'script_data'	=> __( 'Script Data', 'scripts-n-styles' ),
+			'style_data'	=> __( 'Style Data', 'scripts-n-styles' )
 		);
 		
 		return $columns;
@@ -124,27 +124,27 @@ class SnS_List_Usage extends WP_List_Table {
 	function _post_states( $post ) {
 		$post_states = array();
 		$return = '';
-		if ( isset($_GET['post_status']) )
-			$post_status = $_GET['post_status'];
+		if ( isset($_GET[ 'post_status' ]) )
+			$post_status = $_GET[ 'post_status' ];
 		else
 			$post_status = '';
 	
-		if ( !empty($post->post_password) )
-			$post_states['protected'] = __('Password protected');
+		if ( ! empty( $post->post_password ) )
+			$post_states[ 'protected' ] = __( 'Password protected' );
 		if ( 'private' == $post->post_status && 'private' != $post_status )
-			$post_states['private'] = __('Private');
+			$post_states[ 'private' ] = __( 'Private' );
 		if ( 'draft' == $post->post_status && 'draft' != $post_status )
-			$post_states['draft'] = __('Draft');
+			$post_states[ 'draft' ] = __( 'Draft' );
 		if ( 'pending' == $post->post_status && 'pending' != $post_status )
 			/* translators: post state */
-			$post_states['pending'] = _x('Pending', 'post state');
+			$post_states[ 'pending' ] = _x( 'Pending', 'post state' );
 		if ( is_sticky($post->ID) )
-			$post_states['sticky'] = __('Sticky');
+			$post_states[ 'sticky' ] = __( 'Sticky' );
 	
 		$post_states = apply_filters( 'display_post_states', $post_states );
 	
-		if ( ! empty($post_states) ) {
-			$state_count = count($post_states);
+		if ( ! empty( $post_states ) ) {
+			$state_count = count( $post_states );
 			$i = 0;
 			$return .= ' - ';
 			foreach ( $post_states as $state ) {
@@ -163,8 +163,8 @@ class SnS_List_Usage extends WP_List_Table {
 	function _add_meta_data( $posts ) {
 		foreach( $posts as $post) {
 			$SnS = get_post_meta( $post->ID, '_SnS', true );
-			$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
-			$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
+			$styles = isset( $SnS[ 'styles' ] ) ? $SnS[ 'styles' ]: array();
+			$scripts = isset( $SnS[ 'scripts' ] ) ? $SnS[ 'scripts' ]: array();
 			if ( ! empty( $styles ) ) 
 				$post->sns_styles = $styles;
 			if ( ! empty( $scripts ) ) 

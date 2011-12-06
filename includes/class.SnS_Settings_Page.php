@@ -19,7 +19,7 @@ class SnS_Settings_Page
      * @static
      */
 	function init() {
-		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', 'Settings', 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
+		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Settings' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
@@ -74,13 +74,13 @@ class SnS_Settings_Page
 		
 		add_settings_section(
 			'settings',
-			'Scripts n Styles Settings',
+			__( 'Scripts n Styles Settings', 'scripts-n-styles' ),
 			array( __CLASS__, 'settings_section' ),
 			SnS_Admin::MENU_SLUG );
 		
 		add_settings_field(
 			'menu_position',
-			'<strong>Menu Position</strong>: ',
+			__( '<strong>Menu Position</strong>: ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'select' ),
 			SnS_Admin::MENU_SLUG,
 			'settings',
@@ -94,7 +94,7 @@ class SnS_Settings_Page
 		
 		add_settings_field(
 			'cm_theme',
-			'<strong>CodeMirror Theme</strong>: ',
+			__( '<strong>CodeMirror Theme</strong>: ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'select' ),
 			SnS_Admin::MENU_SLUG,
 			'settings',
@@ -108,7 +108,7 @@ class SnS_Settings_Page
 		
 		add_settings_section(
 			'demo',
-			'Code Mirror Demo',
+			__( 'Code Mirror Demo', 'scripts-n-styles' ),
 			array( __CLASS__, 'demo_section' ),
 			SnS_Admin::MENU_SLUG );
 	}
@@ -120,7 +120,7 @@ class SnS_Settings_Page
 	function settings_section() {
 		?>
 		<div style="max-width: 55em;">
-			<p>Control how and where Scripts n Styles menus and metaboxes appear. These options are here because sometimes users really care about this stuff. Feel free to adjust to your liking. :-)</p>
+			<p><?php _e( 'Control how and where Scripts n Styles menus and metaboxes appear. These options are here because sometimes users really care about this stuff. Feel free to adjust to your liking. :-)', 'scripts-n-styles' ) ?></p>
 		</div>
 		<?php
 	}

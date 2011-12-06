@@ -19,7 +19,7 @@ class SnS_Usage_Page
      * @static
      */
 	function init() {
-		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', 'Usage', 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
+		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Usage', 'scripts-n-styles' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
@@ -51,7 +51,7 @@ class SnS_Usage_Page
 		
 		add_settings_section(
 			'usage',
-			'Scripts n Styles Usage',
+			__( 'Scripts n Styles Usage', 'scripts-n-styles' ),
 			array( __CLASS__, 'usage_section' ),
 			SnS_Admin::MENU_SLUG );
 	}
@@ -75,7 +75,7 @@ class SnS_Usage_Page
 	 */
 	function usage_section() { ?>
 		<div style="max-width: 55em;">
-			<p>The following table shows content that utilizes Scripts n Styles.</p>
+			<p><?php _e( 'The following table shows content that utilizes Scripts n Styles.', 'scripts-n-styles' ) ?></p>
 		</div>
 		<?php
 		require_once( 'class.SnS_List_Usage.php' );

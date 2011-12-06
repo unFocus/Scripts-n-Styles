@@ -58,13 +58,13 @@ class SnS_Admin
 		
 		switch( $menu_spot ) {
 			case 'menu':
-				add_menu_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 			case 'object':
-				add_object_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_object_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 			case 'utility':
-				add_utility_page( 'Scripts n Styles', 'Scripts n Styles', 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_utility_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 		}
 		SnS_Global_Page::init();
@@ -82,9 +82,9 @@ class SnS_Admin
 		<h2>Scripts n Styles</h2>
 		<?php screen_icon( 'none' ); ?>
 		<h3 class="nav-tab-wrapper">
-			<a class="nav-tab<?php echo ( self::MENU_SLUG == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG ); ?>">Global</a>
-			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_settings' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_settings' ); ?>">Settings</a>
-			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_usage' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_usage' ); ?>">Usage</a>
+			<a class="nav-tab<?php echo ( self::MENU_SLUG == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG ); ?>"><?php _e( 'Global', 'scripts-n-styles' ); ?></a>
+			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_settings' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_settings' ); ?>"><?php _e( 'Settings', 'scripts-n-styles' ); ?></a>
+			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_usage' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_usage' ); ?>"><?php _e( 'Usage', 'scripts-n-styles' ); ?></a>
 		</h3>
 		<?php
 	}
@@ -98,7 +98,7 @@ class SnS_Admin
 			$screen = get_current_screen();
 			if ( 'post' != $screen->id ) {
 				$screen->add_help_tab( array(
-					'title' => __('Scripts n Styles', 'scripts-n-styles'),
+					'title' => __( 'Scripts n Styles', 'scripts-n-styles' ),
 					'id' => 'scripts-n-styles',
 					'content' => 
 						'<p>' . __( '<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
@@ -118,7 +118,7 @@ class SnS_Admin
 				);
 			} else {
 				$screen->add_help_tab( array(
-					'title' => __('Scripts n Styles', 'scripts-n-styles'),
+					'title' => __( 'Scripts n Styles', 'scripts-n-styles' ),
 					'id' => 'scripts-n-styles',
 					'content' => 
 						'<p>' . __( '<p>In default (non MultiSite) WordPress installs, both <em>Administrators</em> and 
@@ -203,7 +203,7 @@ class SnS_Admin
 	 * @return array
      */
 	static function plugin_action_links( $actions ) {
-		$actions[ 'settings' ] = '<a href="' . menu_page_url( SnS_Settings_Page::MENU_SLUG, false ) . '"/>Settings</a>';
+		$actions[ 'settings' ] = '<a href="' . menu_page_url( SnS_Settings_Page::MENU_SLUG, false ) . '"/>' . __( 'Settings' ) . '</a>';
 		return $actions;
 	}
 	

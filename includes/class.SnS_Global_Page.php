@@ -19,10 +19,10 @@ class SnS_Global_Page
      * @static
      */
 	function init() {
-		if ( SnS_Admin::$parent_slug == SnS_Admin::MENU_SLUG ) $menu_title = 'Global';
-		else $menu_title = 'Scripts n Styles';
+		if ( SnS_Admin::$parent_slug == SnS_Admin::MENU_SLUG ) $menu_title = __( 'Global', 'scripts-n-styles' );
+		else $menu_title = __( 'Scripts n Styles', 'scripts-n-styles' );
 		
-		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, 'Scripts n Styles', $menu_title, 'unfiltered_html', SnS_Admin::MENU_SLUG, array( 'SnS_Form', 'page' ) );
+		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), $menu_title, 'unfiltered_html', SnS_Admin::MENU_SLUG, array( 'SnS_Form', 'page' ) );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
@@ -55,13 +55,13 @@ class SnS_Global_Page
 		
 		add_settings_section(
 			'global',
-			'Global Scripts n Styles',
+			__( 'Global Scripts n Styles', 'scripts-n-styles' ),
 			array( __CLASS__, 'global_section' ),
 			SnS_Admin::MENU_SLUG );
 		
 		add_settings_field(
 			'scripts',
-			'<strong>Scripts:</strong> ',
+			__( '<strong>Scripts:</strong> ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'textarea' ),
 			SnS_Admin::MENU_SLUG,
 			'global',
@@ -72,11 +72,11 @@ class SnS_Global_Page
 				'rows' => 5,
 				'cols' => 40,
 				'style' => 'min-width: 500px; width:97%;',
-				'description' => '<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>'
+				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>', 'scripts-n-styles' )
 			) );
 		add_settings_field(
 			'styles',
-			'<strong>Styles:</strong> ',
+			__( '<strong>Styles:</strong> ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'textarea' ),
 			SnS_Admin::MENU_SLUG,
 			'global',
@@ -87,11 +87,11 @@ class SnS_Global_Page
 				'rows' => 5,
 				'cols' => 40,
 				'style' => 'min-width: 500px; width:97%;',
-				'description' => '<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span>'
+				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span>', 'scripts-n-styles' )
 			) );
 		add_settings_field(
 			'scripts_in_head',
-			'<strong>Scripts</strong><br />(for the <code>head</code> element): ',
+			__( '<strong>Scripts</strong><br />(for the <code>head</code> element): ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'textarea' ),
 			SnS_Admin::MENU_SLUG,
 			'global',
@@ -102,11 +102,11 @@ class SnS_Global_Page
 				'rows' => 5,
 				'cols' => 40,
 				'style' => 'min-width: 500px; width:97%;',
-				'description' => '<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>'
+				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>', 'scripts-n-styles' )
 			) );
 		add_settings_field(
 			'enqueue_scripts',
-			'<strong>Enqueue Scripts</strong>: ',
+			__( '<strong>Enqueue Scripts</strong>: ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'select' ),
 			SnS_Admin::MENU_SLUG,
 			'global',
@@ -117,7 +117,7 @@ class SnS_Global_Page
 				'size' => 5,
 				'style' => 'height: auto;',
 				'multiple' => true,
-				'show_current' => 'Currently Enqueued Scripts: '
+				'show_current' => __( 'Currently Enqueued Scripts: ', 'scripts-n-styles' )
 			) );
 	}
 	
@@ -128,7 +128,7 @@ class SnS_Global_Page
 	function global_section() {
 		?>
 		<div style="max-width: 55em;">
-			<p>Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.</p>
+			<p><?php _e( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.', 'scripts-n-styles' )?></p>
 		</div>
 		<?php
 	}
