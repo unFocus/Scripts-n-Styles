@@ -13,7 +13,7 @@ textarea.code {
 	background-clip: padding-box;
 	overflow: hidden;
 }
-.CodeMirror-scroll {
+body .CodeMirror-scroll {
 	height: auto;
 	min-height: 50px;
 	max-height: 300px;
