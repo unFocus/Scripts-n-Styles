@@ -21,7 +21,7 @@ class SnS_Admin
      */
 	const OPTION_GROUP = 'scripts_n_styles';
 	const MENU_SLUG = 'sns';
-	const VERSION = '3.beta.3.2';
+	const VERSION = '3';
 	static $parent_slug = '';
     /**#@-*/
 	
