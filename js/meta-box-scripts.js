@@ -5,7 +5,8 @@ jQuery( document ).ready( function( $ ) {
 		context = '#SnS_meta_box',
 		currentCodeMirror = [],
 		mceBodyClass = getMCEBodyClasses(),
-		nonce = $( '#scripts_n_styles_noncename' ).val();
+		nonce = $( '#scripts_n_styles_noncename' ).val(),
+		theme = cm_theme || 'default';
 	
 	//$('textarea', context).attr('autocomplete','off');
 	
@@ -245,12 +246,12 @@ jQuery( document ).ready( function( $ ) {
 	function loadCodeMirrors() {
 		// collect codemirrors
 		var settings;
-		
 		// loop codemirrors
 		$( '.wp-tabs-panel-active textarea.codemirror', context ).each(function (){
 			if ( $(this).hasClass( 'js' ) )
 				settings = {
 					mode: "text/javascript",
+					theme: theme,
 					lineNumbers: true,
 					tabMode: "shift",
 					indentUnit: 4,
@@ -259,6 +260,7 @@ jQuery( document ).ready( function( $ ) {
 			else if ( $(this).hasClass( 'css' ) )
 				settings = {
 					mode: "text/css",
+					theme: theme,
 					lineNumbers: true,
 					tabMode: "shift",
 					indentUnit: 4,

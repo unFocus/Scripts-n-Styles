@@ -23,6 +23,10 @@ body.js .wp-tabs-panel-active {
 	background-color: white;
 	border-radius: 3px;
 	margin: 8px 0;
+	-moz-background-clip: padding;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	overflow: hidden;
 }
 .CodeMirror, #editorcontainer #content {
 	font-family: "Courier New", Courier, monospace;

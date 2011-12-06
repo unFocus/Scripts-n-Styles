@@ -270,8 +270,11 @@ class SnS_Admin_Meta_Box
 	 * Enqueues the CSS for admin styling of the Meta Box.
      */
 	static function meta_box_styles() {
-		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.13' );
-		//wp_enqueue_style( 'codemirror-default', plugins_url( 'libraries/CodeMirror2/theme/default.css', Scripts_n_Styles::$file), array( 'codemirror' ), '2.13' );
+		$options = get_option( 'SnS_options' );
+		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
+		
+		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.18' );
+		wp_enqueue_style( "codemirror-$cm_theme", plugins_url( "libraries/CodeMirror2/theme/$cm_theme.css", Scripts_n_Styles::$file), array( 'codemirror' ), '2.18' );
 		wp_enqueue_style( 'sns-meta-box-styles', plugins_url( 'css/meta-box-styles.css', Scripts_n_Styles::$file), array( 'codemirror' ), SnS_Admin::VERSION );
 	}
 	
@@ -280,21 +283,24 @@ class SnS_Admin_Meta_Box
 	 * Enqueues the JavaScript for the admin Meta Box.
      */
 	static function meta_box_scripts() {
+		$options = get_option( 'SnS_options' );
+		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
+		
 		wp_enqueue_script(
 			'codemirror',
 			plugins_url( 'libraries/CodeMirror2/lib/codemirror.js', Scripts_n_Styles::$file),
 			array(),
-			'2.13' );
+			'2.18' );
 		wp_enqueue_script(
 			'codemirror-css',
 			plugins_url( 'libraries/CodeMirror2/mode/css/css.js', Scripts_n_Styles::$file),
 			array(  'codemirror' ),
-			'2.13' );
+			'2.18' );
 		wp_enqueue_script(
 			'codemirror-javascript',
 			plugins_url( 'libraries/CodeMirror2/mode/javascript/javascript.js', Scripts_n_Styles::$file),
 			array(  'codemirror' ),
-			'2.13' );
+			'2.18' );
 		/*wp_register_script(
 			'codemirror-xml',
 			plugins_url( 'libraries/CodeMirror2/mode/xml/xml.js', Scripts_n_Styles::$file),
@@ -333,6 +339,8 @@ class SnS_Admin_Meta_Box
 					//'codemirror-php'
 				),
 			SnS_Admin::VERSION, true );
+			
+		wp_localize_script( 'sns-meta-box-scripts', 'cm_theme', $cm_theme );
 	}
 	
     /**
