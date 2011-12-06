@@ -44,7 +44,12 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 == Screenshots ==
 
-1. The New and Improved Meta Box.
+1. Settings Page for Writing Scripts n Styles that apply to the whole blog.
+2. The Scripts panel of the Meta Box.
+3. The Styles panel of the Meta Box.
+4. The Classes panel. Add classes to the Style dropdown!
+5. Enqueue panel. You can enqueue jQuery from here if you need!
+6. Your styles are reflected in the Editor.
 
 == Changelog ==
 
