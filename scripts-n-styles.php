@@ -79,7 +79,6 @@ class Scripts_n_Styles
      * @static
      */
 	static function init() {
-		
 		if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERED_HTML ) ) {
 			/*	NOTE: Setting the DISALLOW_UNFILTERED_HTML constant to
 				true in the wp-config.php would effectively disable this
@@ -171,6 +170,7 @@ class Scripts_n_Styles
 	 * Outputs the globally and individually set Styles in the Theme's head element.
      */
 	static function styles() {
+		SnS_Admin::upgrade_check();
 		// Global
 		$options = get_option( 'SnS_options' );
 		if ( ! empty( $options ) && ! empty( $options[ 'styles' ] ) ) {

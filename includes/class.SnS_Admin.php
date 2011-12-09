@@ -43,6 +43,7 @@ class SnS_Admin
 	}
 	
 	function menu() {
+		SnS_Admin::upgrade_check();
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 		
 		$options = get_option( 'SnS_options' );

@@ -127,7 +127,6 @@ class SnS_Form
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
      */
 	function page() {
-		SnS_Admin::upgrade_check();
 		?>
 		<div class="wrap">
 			<?php SnS_Admin::nav(); ?>
