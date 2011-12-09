@@ -77,10 +77,12 @@ class SnS_Admin
 	 * Nav Tabs
      */
 	function nav() {
+		$options = get_option( 'SnS_options' );
 		$page = $_REQUEST[ 'page' ];
 		?>
 		<?php screen_icon(); ?>
 		<h2>Scripts n Styles</h2>
+		<?php if ( ! isset( $options[ 'menu_position' ] ) || 'options-general.php' != $options[ 'menu_position' ] ) settings_errors(); ?>
 		<?php screen_icon( 'none' ); ?>
 		<h3 class="nav-tab-wrapper">
 			<a class="nav-tab<?php echo ( self::MENU_SLUG == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG ); ?>"><?php _e( 'Global', 'scripts-n-styles' ); ?></a>

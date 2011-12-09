@@ -104,7 +104,12 @@ class SnS_Admin_Meta_Box
 	}
 	
 	static function default_hidden_meta_boxes( $hidden ) {
-		$hidden[] = 'SnS_meta_box';
+		$options = get_option( 'SnS_options' );
+		if ( ! isset( $options[ 'metabox' ] ) ) 
+			$hidden[] = 'SnS_meta_box';
+		else if ( 'yes' == $options[ 'metabox' ] )
+			$hidden[] = 'SnS_meta_box';
+		
     	return $hidden;
 	}
 	

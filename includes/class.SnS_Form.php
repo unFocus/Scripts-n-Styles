@@ -31,6 +31,33 @@ class SnS_Form
 		echo $output;
 	}
 	
+	function radio( $args ) {
+		extract( $args );
+		$options = get_option( $setting );
+		$default =  isset( $default ) ? $default : '';
+		$value =  isset( $options[ $label_for ] ) ? $options[ $label_for ] : $default;
+		$output = '<fieldset>';
+		if ( $legend ) {
+			$output .= '<legend class="screen-reader-text"><span>';
+			$output .= $legend;
+			$output .= '</span></legend>';
+		}
+		$output .= '<p>';
+		foreach ( $choices as $choice ) {
+			$output .= '<label>';
+			$output .= '<input type="radio"';
+			$output .= checked( $value, $choice, false );
+			$output .= ' value="' . $choice . '" name="' . $setting . '[' . $label_for . ']"> ' . $choice;
+			$output .= '</label>';
+			$output .= '<br>';
+		}
+		$output .= '</p></fieldset>';
+		if ( $description ) {
+			$output .= $description;
+		}
+		echo $output;
+	}
+	
     /**
 	 * Settings Page
 	 * Outputs a select element for selecting options to set scripts for including.
@@ -130,7 +157,6 @@ class SnS_Form
 		?>
 		<div class="wrap">
 			<?php SnS_Admin::nav(); ?>
-			<?php settings_errors(); ?>
 			<form action="" method="post" autocomplete="off">
 			<?php settings_fields( SnS_Admin::OPTION_GROUP ); ?>
 			<?php do_settings_sections( SnS_Admin::MENU_SLUG ); ?>
