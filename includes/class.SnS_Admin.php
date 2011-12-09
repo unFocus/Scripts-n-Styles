@@ -21,7 +21,6 @@ class SnS_Admin
      */
 	const OPTION_GROUP = 'scripts_n_styles';
 	const MENU_SLUG = 'sns';
-	const VERSION = '3';
 	static $parent_slug = '';
     /**#@-*/
 	
@@ -43,7 +42,6 @@ class SnS_Admin
 	}
 	
 	function menu() {
-		SnS_Admin::upgrade_check();
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 		
 		$options = get_option( 'SnS_options' );
@@ -143,9 +141,9 @@ class SnS_Admin
 	static function upgrade() {
 		$options = get_option( 'SnS_options' );
 		if ( ! $options ) $options = array();
-		$options[ 'version' ] = self::VERSION;
+		$options[ 'version' ] = Scripts_n_Styles::VERSION;
 		update_option( 'SnS_options', $options );
-
+		
 		/*
 		 * upgrade proceedure
 		 */
@@ -189,15 +187,6 @@ class SnS_Admin
 			delete_post_meta( $post->ID, '_SnS_scripts' );
 		}
 
-	}
-	
-    /**
-	 * Utility Method: Compares VERSION to stored 'version' value.
-     */
-	static function upgrade_check() {
-		$options = get_option( 'SnS_options' );
-		if ( ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) )
-			self::upgrade();
 	}
 	
     /**

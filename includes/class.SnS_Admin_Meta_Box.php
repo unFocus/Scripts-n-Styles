@@ -270,7 +270,7 @@ class SnS_Admin_Meta_Box
 		
 		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.18' );
 		wp_enqueue_style( "codemirror-$cm_theme", plugins_url( "libraries/CodeMirror2/theme/$cm_theme.css", Scripts_n_Styles::$file), array( 'codemirror' ), '2.18' );
-		wp_enqueue_style( 'sns-meta-box-styles', plugins_url( 'css/meta-box-styles.css', Scripts_n_Styles::$file), array( 'codemirror' ), SnS_Admin::VERSION );
+		wp_enqueue_style( 'sns-meta-box-styles', plugins_url( 'css/meta-box-styles.css', Scripts_n_Styles::$file), array( 'codemirror' ), Scripts_n_Styles::VERSION );
 	}
 	
     /**
@@ -333,7 +333,7 @@ class SnS_Admin_Meta_Box
 					//'codemirror-htmlmixed',
 					//'codemirror-php'
 				),
-			SnS_Admin::VERSION, true );
+			Scripts_n_Styles::VERSION, true );
 			
 		wp_localize_script( 'sns-meta-box-scripts', 'codemirror_options', array( 'theme' => $cm_theme ) );
 	}

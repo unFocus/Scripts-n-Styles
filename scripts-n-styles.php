@@ -71,6 +71,7 @@ class Scripts_n_Styles
     /**#@+
      * @static
      */
+	const VERSION = '3';
 	static $file = __FILE__;
     /**#@-*/
 	
@@ -86,8 +87,8 @@ class Scripts_n_Styles
 			*/
 			include_once( 'includes/class.SnS_Admin.php' );
 			SnS_Admin::init();
-			
 		}
+		add_action( 'plugins_loaded', array( __CLASS__, 'upgrade_check' ) );
 		
 		add_filter( 'body_class', array( __CLASS__, 'body_classes' ) );
 		add_filter( 'post_class', array( __CLASS__, 'post_classes' ) );
@@ -170,7 +171,6 @@ class Scripts_n_Styles
 	 * Outputs the globally and individually set Styles in the Theme's head element.
      */
 	static function styles() {
-		SnS_Admin::upgrade_check();
 		// Global
 		$options = get_option( 'SnS_options' );
 		if ( ! empty( $options ) && ! empty( $options[ 'styles' ] ) ) {
@@ -306,6 +306,16 @@ class Scripts_n_Styles
 		}
 	}
 	
+    /**
+	 * Utility Method: Compares VERSION to stored 'version' value.
+     */
+	static function upgrade_check() {
+		$options = get_option( 'SnS_options' );
+		if ( ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) ) {
+			include_once( 'includes/class.SnS_Admin.php' );
+			SnS_Admin::upgrade();
+		}
+	}
 }
 
 Scripts_n_Styles::init();

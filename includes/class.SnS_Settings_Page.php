@@ -37,13 +37,13 @@ class SnS_Settings_Page
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
 		
-		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array( 'codemirror' ), SnS_Admin::VERSION );
+		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array( 'codemirror' ), Scripts_n_Styles::VERSION );
 		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.18' );
 		
 		foreach ( array( 'cobalt', 'default', 'eclipse', 'elegant', 'monokai', 'neat', 'night', 'rubyblue' ) as $theme )
 			wp_enqueue_style( "codemirror-$theme", plugins_url( "libraries/CodeMirror2/theme/$theme.css", Scripts_n_Styles::$file), array( 'codemirror' ), '2.18' );
 		
-		wp_enqueue_script( 'sns-settings-page-scripts', plugins_url('js/settings-page.js', Scripts_n_Styles::$file), array( 'jquery', 'codemirror-css', 'codemirror-javascript' ), SnS_Admin::VERSION, true );
+		wp_enqueue_script( 'sns-settings-page-scripts', plugins_url('js/settings-page.js', Scripts_n_Styles::$file), array( 'jquery', 'codemirror-css', 'codemirror-javascript' ), Scripts_n_Styles::VERSION, true );
 		wp_localize_script( 'sns-settings-page-scripts', 'codemirror_options', array( 'theme' => $cm_theme ) );
 		wp_enqueue_script( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.js', Scripts_n_Styles::$file), array(), '2.18' );
 		wp_enqueue_script( 'codemirror-css', plugins_url( 'libraries/CodeMirror2/mode/css/css.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.18' );
@@ -66,7 +66,7 @@ class SnS_Settings_Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
      */
 	function admin_load() {
-		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array(), SnS_Admin::VERSION );
+		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array(), Scripts_n_Styles::VERSION );
 		
 		register_setting(
 			SnS_Admin::OPTION_GROUP,
