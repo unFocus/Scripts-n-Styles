@@ -4,7 +4,7 @@ Donate link: http://wordpressfoundation.org/donate/
 Tags: admin, CSS, javascript, code, custom, Style
 Requires at least: 3.2
 Tested up to: 3.3-RC2
-Stable tag: 3.0
+Stable tag: 3.0.1
 License: GPLv2 or later
 
 This plugin allows Admin users to individually add custom CSS, Classes and JavaScript directly to Post, Pages or any other custom post types.
@@ -53,7 +53,7 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 == Changelog ==
 
-= 3.0 =
+= 3.0.1 =
 * Option to show Metabox by default
 * Check upgrade in more places
 * Fix double Settings Message on general-options
@@ -97,7 +97,7 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 == Upgrade Notice ==
 
-= 3.0 =
+= 3.0.1 =
 Bug fixes
 
 = 3 =
