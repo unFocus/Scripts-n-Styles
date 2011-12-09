@@ -3,8 +3,8 @@ Contributors: WraithKenny, Touvan
 Donate link: http://wordpressfoundation.org/donate/
 Tags: admin, CSS, javascript, code, custom, Style
 Requires at least: 3.2
-Tested up to: 3.3-RC1
-Stable tag: 3
+Tested up to: 3.3-RC2
+Stable tag: 3.0
 License: GPLv2 or later
 
 This plugin allows Admin users to individually add custom CSS, Classes and JavaScript directly to Post, Pages or any other custom post types.
@@ -53,6 +53,13 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 == Changelog ==
 
+= 3.0 =
+* Option to show Metabox by default
+* Check upgrade in more places
+* Fix double Settings Message on general-options
+* Fix empty post showing on usage
+* Cleaned up constants (internal)
+
 = 3 =
 * AJAX Saving of Meta-box
 * Dynamically populate the Styles Dropdown for TinyMCE
@@ -89,6 +96,9 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 3.0 =
+Bug fixes
 
 = 3 =
 Adds new features.
