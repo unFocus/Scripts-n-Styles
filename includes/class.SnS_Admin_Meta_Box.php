@@ -94,7 +94,7 @@ class SnS_Admin_Meta_Box
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			self::$post_types = get_post_types( array('show_ui' => true, 'public' => true) ); // updated for http://core.trac.wordpress.org/changeset/18234
 			foreach ( self::$post_types as $post_type ) {
-				add_meta_box( 'SnS_meta_box', 'Scripts n Styles', array( __CLASS__, 'admin_meta_box' ), $post_type, 'normal', 'high' );
+				add_meta_box( 'SnS_meta_box', __( 'Scripts n Styles', 'scripts-n-styles' ), array( __CLASS__, 'admin_meta_box' ), $post_type, 'normal', 'high' );
 			}
 			add_filter( 'default_hidden_meta_boxes', array( __CLASS__,  'default_hidden_meta_boxes' )  );
 			add_action( "admin_print_styles", array( __CLASS__, 'meta_box_styles'));
@@ -130,45 +130,44 @@ class SnS_Admin_Meta_Box
 		wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME );
 		?>
 			<ul class="wp-tab-bar">
-				<li<?php echo ( 's0' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_scripts-tab">Scripts</a></li>
-				<li<?php echo ( 's1' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_styles-tab">Styles</a></li>
-				<li<?php echo ( 's2' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_classes_body-tab">Classes</a></li>
-				<li<?php echo ( 's3' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_enqueue_scripts-tab">Include Scripts</a></li>
+				<li<?php echo ( 's0' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_scripts-tab"><?php _e( 'Scripts', 'scripts-n-styles' ) ?></a></li>
+				<li<?php echo ( 's1' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_styles-tab"><?php _e( 'Styles', 'scripts-n-styles' ) ?></a></li>
+				<li<?php echo ( 's2' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_classes_body-tab"><?php _e( 'Classes', 'scripts-n-styles' ) ?></a></li>
+				<li<?php echo ( 's3' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_enqueue_scripts-tab"><?php _e( 'Include Scripts', 'scripts-n-styles' ) ?></a></li>
 			</ul>
 			
 			<div class="wp-tab-panel" id="SnS_scripts-tab">
-				<p><em>This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's) ...</em></p>
-				<label for="SnS_scripts_in_head" class="title"><strong>Scripts</strong> (for the <code>head</code> element): </label>
+				<p><em><?php _e( "This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's)", 'scripts-n-styles' ) ?> ...</em></p>
+				<label for="SnS_scripts_in_head" class="title"><?php _e( '<strong>Scripts</strong> (for the <code>head</code> element):', 'scripts-n-styles' ) ?> </label>
 				<textarea class="codemirror js" name="SnS_scripts_in_head" id="SnS_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? $scripts[ 'scripts_in_head' ] : ''; ?></textarea>
-				<p><em>... <code>&lt;/head></code> tag.</em></p>
+				<p><em>... <code>&lt;/head></code> <?php _e( 'tag', 'scripts-n-styles' ) ?>.</em></p>
 				<label for="SnS_scripts" class="title"><strong>Scripts</strong>: </label>
 				<textarea class="codemirror js" name="SnS_scripts" id="SnS_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? $scripts[ 'scripts' ] : ''; ?></textarea>
-				<p><em>... <code>&lt;/body></code> tag.</em></p>
+				<p><em>... <code>&lt;/body></code> <?php _e( 'tag', 'scripts-n-styles' ) ?>.</em></p>
 			</div>
 			
 			<div class="wp-tab-panel" id="SnS_styles-tab">
-				<label for="SnS_styles" class="title"><strong>Styles</strong>: </label>
+				<label for="SnS_styles" class="title"><?php _e( '<strong>Styles</strong>:', 'scripts-n-styles' ) ?> </label>
 				<textarea class="codemirror css" name="SnS_styles" id="SnS_styles" rows="5" cols="40" style="width: 98%;"><?php echo isset( $styles[ 'styles' ] ) ? $styles[ 'styles' ] : ''; ?></textarea>
-				<p><em>This code will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> tag of your page (or post).</em></p>
+				<p><em><?php _e( 'This code will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> tag of your page (or post).', 'scripts-n-styles' ) ?></em></p>
 			</div>
 			
 			<div class="wp-tab-panel" id="SnS_classes_body-tab">
-				<strong class="title">Classes</strong>
+				<strong class="title"><?php _e( 'Classes', 'scripts-n-styles' ) ?></strong>
 				<div id="sns-classes">
 					<p>
-						<label for="SnS_classes_body"><strong>Body Classes</strong>: </label>
+						<label for="SnS_classes_body"><?php _e( '<strong>Body Classes</strong>:', 'scripts-n-styles' ) ?> </label>
 						<input name="SnS_classes_body" id="SnS_classes_body" type="text" class="code" style="width: 99%;"
 							value="<?php echo isset( $styles[ 'classes_body' ] ) ? $styles[ 'classes_body' ] : ''; ?>" />
-						<small>Standard: <code><?php self::current_classes( 'body', $post->ID ); ?></code></small>
+						<small><?php _e( 'Standard:', 'scripts-n-styles' ) ?> <code><?php self::current_classes( 'body', $post->ID ); ?></code></small>
 					</p>
 					<p>
 						<label for="SnS_classes_post"><strong>Post Classes</strong>: </label>
 						<input name="SnS_classes_post" id="SnS_classes_post" type="text" class="code" style="width: 99%;"
 							value="<?php echo isset( $styles[ 'classes_post' ] ) ? $styles[ 'classes_post' ] : ''; ?>" />
-						<small>Standard: <code><?php self::current_classes( 'post', $post->ID ); ?></code></small>
+						<small><?php _e( 'Standard:', 'scripts-n-styles' ) ?> <code><?php self::current_classes( 'post', $post->ID ); ?></code></small>
 					</p>
-					<p><em>These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or
-						<code>post_class()</code> function (provided your theme uses these functions).</em></p>
+					<p><em><?php _e( 'These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).', 'scripts-n-styles' ) ?></em></p>
 				</div>
 				
 				<?php 
@@ -177,40 +176,40 @@ class SnS_Admin_Meta_Box
 				 */
 				?>
 				<div id="mce-dropdown-names" style="display: none;">
-					<h4>The Styles Dropdown</h4>
+					<h4><?php _e( 'The Styles Dropdown', 'scripts-n-styles' ) ?></h4>
 					<div id="add-mce-dropdown-names">
-						<p>Add (or update) a class for the "Styles" drop-down:</p>
+						<p><?php _e( 'Add (or update) a class for the "Styles" drop-down:', 'scripts-n-styles' ) ?></p>
 						<p class="sns-mce-title">
-							<label for="SnS_classes_mce_title">Title:</label>
+							<label for="SnS_classes_mce_title"><?php _e( 'Title:', 'scripts-n-styles' ) ?></label>
 							<input name="SnS_classes_mce_title" id="SnS_classes_mce_title"
 								value="" type="text" class="code" style="width: 80px;" />
 						</p>
 						<p class="sns-mce-type">
-							<label for="SnS_classes_mce_type">Type:</label>
+							<label for="SnS_classes_mce_type"><?php _e( 'Type:', 'scripts-n-styles' ) ?></label>
 							<select name="SnS_classes_mce_type" id="SnS_classes_mce_type" style="width: 80px;">
-								<option value="inline">Inline</option>
-								<option value="block">Block</option>
-								<option value="selector">Selector</option>
+								<option value="inline"><?php _ex( 'Inline', 'css type', 'scripts-n-styles' ) ?></option>
+								<option value="block"><?php _ex( 'Block', 'css type', 'scripts-n-styles' ) ?></option>
+								<option value="selector"><?php _ex( 'Selector:', 'css type', 'scripts-n-styles' ) ?></option>
 							</select>
 						</p>
 						<p class="sns-mce-element">
-							<label for="SnS_classes_mce_element">Element:</label>
+							<label for="SnS_classes_mce_element"><?php _e( 'Element:', 'scripts-n-styles' ) ?></label>
 							<input name="SnS_classes_mce_element" id="SnS_classes_mce_element"
 								value="" type="text" class="code" style="width: 80px;" />
 						</p>
 						<p class="sns-mce-classes">
-							<label for="SnS_classes_mce_classes">classes:</label>
+							<label for="SnS_classes_mce_classes"><?php _e( 'Classes:', 'scripts-n-styles' ) ?></label>
 							<input name="SnS_classes_mce_classes" id="SnS_classes_mce_classes"
 								value="" type="text" class="code" style="width: 80px;" />
 						</p>
 						<p class="sns-mce-wrapper" style="display: none;">
-							<label for="SnS_classes_mce_wrapper">Wrapper:</label>
+							<label for="SnS_classes_mce_wrapper"><?php _e( 'Wrapper:', 'scripts-n-styles' ) ?></label>
 							<input name="SnS_classes_mce_wrapper" id="SnS_classes_mce_wrapper" type="checkbox" value="true" />
 						</p>
 					</div>
 					
 					<div id="delete-mce-dropdown-names" style="display: none;">
-						<p id="instructions-mce-dropdown-names">Classes currently in the dropdown:</p>
+						<p id="instructions-mce-dropdown-names"><?php _e( 'Classes currently in the dropdown:', 'scripts-n-styles' ) ?></p>
 					</div>
 				</div>
 			</div>
@@ -218,7 +217,7 @@ class SnS_Admin_Meta_Box
 			<div class="wp-tab-panel" id="SnS_enqueue_scripts-tab">
 				<strong class="title">Include Scripts</strong>
 				<select name="SnS_enqueue_scripts[]" id="SnS_enqueue_scripts" size="5" multiple="multiple" style="height: auto; float: left; margin: 6px 10px 8px 0;">
-					<?php // This is a bit intense here...
+					<?php 
 					if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) {
 						foreach ( $registered_handles as $value ) { ?>
 							<option value="<?php echo $value ?>"<?php foreach ( $scripts[ 'enqueue_scripts' ] as $handle ) selected( $handle, $value ); ?>><?php echo $value ?></option> 
@@ -230,11 +229,11 @@ class SnS_Admin_Meta_Box
 					} ?>
 				</select>
 				<?php if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) { ?>
-					<p>Currently Enqueued Scripts:
+					<p><?php _e( 'Currently Enqueued Scripts:', 'scripts-n-styles' ) ?>
 					<?php foreach ( $scripts[ 'enqueue_scripts' ] as $handle )  echo '<code>' . $handle . '</code> '; ?>
 					</p>
 				<?php } ?>
-				<p><em>The chosen scripts will be enqueued and placed before your codes if your code is dependant on certain scripts (like jQuery).</em></p>
+				<p><em><?php _e( 'The chosen scripts will be enqueued and placed before your codes if your code is dependant on certain scripts (like jQuery).', 'scripts-n-styles' ) ?></em></p>
 			</div>
 		<?php
 	}
@@ -245,7 +244,7 @@ class SnS_Admin_Meta_Box
 			
 			if ( 'post-new.php' == $pagenow ) {
 				echo join( ' ', get_body_class( '', $post_id ) );
-				echo ' (plus others once saved.)';
+				echo ' ' . __( '(plus others once saved.)', 'scripts-n-styles' );
 				return;
 			}
 			// This returns more of what actually get used on the theme side.
