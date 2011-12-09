@@ -7,6 +7,7 @@ Author: unFocus Projects
 Author URI: http://www.unfocus.com/
 Version: 3.0
 License: GPLv2 or later
+Text Domain: scripts-n-styles
 Network: true
 */
 

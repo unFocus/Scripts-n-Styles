@@ -34,6 +34,7 @@ class SnS_Admin
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 		
 		add_action( 'admin_init', array( 'SnS_AJAX', 'init' ) );
+		add_action( 'admin_init', array( __CLASS__, 'load_plugin_textdomain' ) );
 		
 		$plugin_file = plugin_basename( Scripts_n_Styles::$file ); 
 		add_filter( "plugin_action_links_$plugin_file", array( __CLASS__, 'plugin_action_links') );
@@ -41,6 +42,9 @@ class SnS_Admin
 		register_activation_hook( Scripts_n_Styles::$file, array( __CLASS__, 'upgrade' ) );
 	}
 	
+	function load_plugin_textdomain() {
+		load_plugin_textdomain( 'scripts-n-styles', false, dirname( plugin_basename( Scripts_n_Styles::$file ) ) . '/languages/' );
+	}
 	function menu() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 		

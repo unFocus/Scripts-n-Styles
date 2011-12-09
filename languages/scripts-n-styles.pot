@@ -1,0 +1,398 @@
+# Copyright (C) 2010 Scripts n Styles
+# This file is distributed under the same license as the Scripts n Styles package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Scripts n Styles 3.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/scripts-n-styles\n"
+"POT-Creation-Date: 2011-12-09 20:20:28+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#. #-#-#-#-#  plugin.pot (Scripts n Styles 3.0)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: includes/class.SnS_Usage_Page.php:22 includes/class.SnS_Admin.php:60
+#: includes/class.SnS_Admin.php:63 includes/class.SnS_Admin.php:66
+#: includes/class.SnS_Admin.php:102 includes/class.SnS_Admin.php:122
+#: includes/class.SnS_Settings_Page.php:22
+#: includes/class.SnS_Global_Page.php:18 includes/class.SnS_Global_Page.php:20
+#: includes/class.SnS_Admin_Meta_Box.php:97
+msgid "Scripts n Styles"
+msgstr ""
+
+#: includes/class.SnS_Usage_Page.php:22 includes/class.SnS_Admin.php:88
+msgid "Usage"
+msgstr ""
+
+#: includes/class.SnS_Usage_Page.php:47
+msgid "Per Page"
+msgstr ""
+
+#: includes/class.SnS_Usage_Page.php:54
+msgid "Scripts n Styles Usage"
+msgstr ""
+
+#: includes/class.SnS_Usage_Page.php:78
+msgid "The following table shows content that utilizes Scripts n Styles."
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:20
+msgid "Scripts (head)"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:23
+#: includes/class.SnS_Admin_Meta_Box.php:133
+msgid "Scripts"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:26
+msgid "Enqueued Scripts"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:31
+msgid "TinyMCE Formats"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:34
+#: includes/class.SnS_Admin_Meta_Box.php:134
+msgid "Styles"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:37
+msgid "Post Classes"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:40
+msgid "Body Classes"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:50
+msgid "Edit &#8220;%s&#8221;"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:53
+msgid "Edit"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:75
+msgid "Title"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:76
+msgid "ID"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:77
+msgid "Status"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:78
+msgid "Post Type"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:79
+msgid "Script Data"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:80
+msgid "Style Data"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:133
+msgid "Password protected"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:135
+msgid "Private"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:137
+msgid "Draft"
+msgstr ""
+
+#. translators: post state
+#: includes/class.SnS_List_Usage.php:140
+msgctxt "post state"
+msgid "Pending"
+msgstr ""
+
+#: includes/class.SnS_List_Usage.php:142
+msgid "Sticky"
+msgstr ""
+
+#: includes/class.SnS_Admin.php:86 includes/class.SnS_Global_Page.php:17
+msgid "Global"
+msgstr ""
+
+#: includes/class.SnS_Admin.php:87 includes/class.SnS_Admin.php:198
+#: includes/class.SnS_Settings_Page.php:22
+msgid "Settings"
+msgstr ""
+
+#: includes/class.SnS_Admin.php:105 includes/class.SnS_Admin.php:125
+msgid ""
+"<p>In default (non MultiSite) WordPress installs, both <em>Administrators</"
+"em> and \r\n"
+"\t\t\t\t\t\t<em>Editors</em> can access <em>Scripts-n-Styles</em> on "
+"individual edit screens. \r\n"
+"\t\t\t\t\t\tOnly <em>Administrators</em> can access this Options Page. In "
+"MultiSite WordPress installs, only \r\n"
+"\t\t\t\t\t\t<em>\"Super Admin\"</em> users can access either\r\n"
+"\t\t\t\t\t\t<em>Scripts-n-Styles</em> on individual edit screens or this "
+"Options Page. If other plugins change \r\n"
+"\t\t\t\t\t\tcapabilities (specifically \"unfiltered_html\"), \r\n"
+"\t\t\t\t\t\tother users can be granted access.</p>"
+msgstr ""
+
+#: includes/class.SnS_Admin.php:115
+msgid "For more information:"
+msgstr ""
+
+#: includes/class.SnS_Admin.php:116
+msgid ""
+"<a href=\"http://wordpress.org/extend/plugins/scripts-n-styles/faq/\" target="
+"\"_blank\">Frequently Asked Questions</a>"
+msgstr ""
+
+#: includes/class.SnS_Admin.php:117
+msgid ""
+"<a href=\"https://github.com/unFocus/Scripts-n-Styles\" target=\"_blank"
+"\">Source on github</a>"
+msgstr ""
+
+#: includes/class.SnS_Admin.php:118
+msgid ""
+"<a href=\"http://wordpress.org/tags/scripts-n-styles\" target=\"_blank"
+"\">Support Forums</a>"
+msgstr ""
+
+#: includes/class.SnS_Settings_Page.php:77
+msgid "Scripts n Styles Settings"
+msgstr ""
+
+#: includes/class.SnS_Settings_Page.php:83
+msgid "<strong>Menu Position</strong>: "
+msgstr ""
+
+#: includes/class.SnS_Settings_Page.php:97
+msgid "<strong>CodeMirror Theme</strong>: "
+msgstr ""
+
+#: includes/class.SnS_Settings_Page.php:111
+msgid "<strong>Hide Metabox by default</strong>: "
+msgstr ""
+
+#: includes/class.SnS_Settings_Page.php:120
+msgid "Hide Metabox by default"
+msgstr ""
+
+#: includes/class.SnS_Settings_Page.php:121
+msgid ""
+"<span class=\"description\" style=\"max-width: 500px; display: inline-block;"
+"\">This is overridable via Screen Options on each edit screen.</span>"
+msgstr ""
+
+#: includes/class.SnS_Settings_Page.php:126
+msgid "Code Mirror Demo"
+msgstr ""
+
+#: includes/class.SnS_Settings_Page.php:138
+msgid ""
+"Control how and where Scripts n Styles menus and metaboxes appear. These "
+"options are here because sometimes users really care about this stuff. Feel "
+"free to adjust to your liking. :-)"
+msgstr ""
+
+#: includes/class.SnS_Form.php:105
+msgid "Cheatin&#8217; uh?"
+msgstr ""
+
+#: includes/class.SnS_Form.php:108 includes/class.SnS_Form.php:135
+msgid "Settings saved."
+msgstr ""
+
+#: includes/class.SnS_Global_Page.php:53
+msgid "Global Scripts n Styles"
+msgstr ""
+
+#: includes/class.SnS_Global_Page.php:59
+msgid "<strong>Scripts:</strong> "
+msgstr ""
+
+#: includes/class.SnS_Global_Page.php:70
+msgid ""
+"<span class=\"description\" style=\"max-width: 500px; display: inline-block;"
+"\">The \"Scripts\" will be included <strong>verbatim</strong> in <code>&lt;"
+"script></code> tags at the bottom of the <code>&lt;body></code> element of "
+"your html.</span>"
+msgstr ""
+
+#: includes/class.SnS_Global_Page.php:74
+msgid "<strong>Styles:</strong> "
+msgstr ""
+
+#: includes/class.SnS_Global_Page.php:85
+msgid ""
+"<span class=\"description\" style=\"max-width: 500px; display: inline-block;"
+"\">The \"Styles\" will be included <strong>verbatim</strong> in <code>&lt;"
+"style></code> tags in the <code>&lt;head></code> element of your html.</span>"
+msgstr ""
+
+#: includes/class.SnS_Global_Page.php:89
+msgid "<strong>Scripts</strong><br />(for the <code>head</code> element): "
+msgstr ""
+
+#: includes/class.SnS_Global_Page.php:100
+msgid ""
+"<span class=\"description\" style=\"max-width: 500px; display: inline-block;"
+"\">The \"Scripts (in head)\" will be included <strong>verbatim</strong> in "
+"<code>&lt;script></code> tags in the <code>&lt;head></code> element of your "
+"html.</span>"
+msgstr ""
+
+#: includes/class.SnS_Global_Page.php:104
+msgid "<strong>Enqueue Scripts</strong>: "
+msgstr ""
+
+#: includes/class.SnS_Global_Page.php:115
+msgid "Currently Enqueued Scripts: "
+msgstr ""
+
+#: includes/class.SnS_Global_Page.php:126
+msgid ""
+"Code entered here will be included in <em>every page (and post) of your "
+"site</em>, including the homepage and archives. The code will appear "
+"<strong>before</strong> Scripts and Styles registered individually."
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:135
+#: includes/class.SnS_Admin_Meta_Box.php:156
+msgid "Classes"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:136
+msgid "Include Scripts"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:140
+msgid ""
+"This code will be included <strong>verbatim</strong> in <code>&lt;script></"
+"code> tags at the end of your page's (or post's)"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:141
+msgid "<strong>Scripts</strong> (for the <code>head</code> element):"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:143
+#: includes/class.SnS_Admin_Meta_Box.php:146
+msgid "tag"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:150
+msgid "<strong>Styles</strong>:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:152
+msgid ""
+"This code will be included <strong>verbatim</strong> in <code>&lt;style></"
+"code> tags in the <code>&lt;head></code> tag of your page (or post)."
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:159
+msgid "<strong>Body Classes</strong>:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:162
+#: includes/class.SnS_Admin_Meta_Box.php:168
+msgid "Standard:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:170
+msgid ""
+"These <strong>space separated</strong> class names will be added to the "
+"<code>body_class()</code> or <code>post_class()</code> function (provided "
+"your theme uses these functions)."
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:179
+msgid "The Styles Dropdown"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:181
+msgid "Add (or update) a class for the \"Styles\" drop-down:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:183
+msgid "Title:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:188
+msgid "Type:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:190
+msgctxt "css type"
+msgid "Inline"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:191
+msgctxt "css type"
+msgid "Block"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:192
+msgctxt "css type"
+msgid "Selector:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:196
+msgid "Element:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:201
+msgid "Classes:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:206
+msgid "Wrapper:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:212
+msgid "Classes currently in the dropdown:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:232
+msgid "Currently Enqueued Scripts:"
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:236
+msgid ""
+"The chosen scripts will be enqueued and placed before your codes if your "
+"code is dependant on certain scripts (like jQuery)."
+msgstr ""
+
+#: includes/class.SnS_Admin_Meta_Box.php:247
+msgid "(plus others once saved.)"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.unfocus.com/projects/scripts-n-styles/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Allows WordPress admin users the ability to add custom CSS and JavaScript "
+"directly to individual Post, Pages or custom post types."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "unFocus Projects"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.unfocus.com/"
+msgstr ""
