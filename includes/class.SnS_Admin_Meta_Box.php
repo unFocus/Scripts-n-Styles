@@ -372,11 +372,19 @@ class SnS_Admin_Meta_Box
 		if ( isset( $styles[ 'classes_mce' ] ) && empty( $styles[ 'classes_mce' ] ) )
 			unset( $styles[ 'classes_mce' ] );
 		
-		if ( empty( $scripts ) ) unset( $SnS['scripts'] );
-		else $SnS['scripts'] = $scripts;
+		if ( empty( $scripts ) ) {
+			if ( isset( $SnS['scripts'] ) )
+				unset( $SnS['scripts'] );
+		} else {
+			$SnS['scripts'] = $scripts;
+		}
 		
-		if ( empty( $styles ) ) unset( $SnS['styles'] );
-		else $SnS['styles'] = $styles;
+		if ( empty( $styles ) ) {
+			if ( isset( $SnS['styles'] ) )
+				unset( $SnS['styles'] );
+		} else {
+			$SnS['styles'] = $styles;
+		}
 		
 		if ( empty( $SnS ) )
 			delete_post_meta( $post_id, '_SnS' );
