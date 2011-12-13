@@ -2,8 +2,8 @@
 Contributors: WraithKenny, Touvan
 Donate link: http://wordpressfoundation.org/donate/
 Tags: admin, CSS, javascript, code, custom, Style
-Requires at least: 3.2
-Tested up to: 3.3-RC2
+Requires at least: 3.3
+Tested up to: 3.3
 Stable tag: 3.0.2
 License: GPLv2 or later
 
