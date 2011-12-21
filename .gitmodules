@@ -1,3 +1,8 @@
 [submodule "libraries/CodeMirror2"]
 	path = libraries/CodeMirror2
-	url = https://github.com/marijnh/CodeMirror2.git
+	url = https://github.com/WraithKenny/CodeMirror2.git
+
+[submodule "libraries/less"]
+
+	path = libraries/less
+	url = https://github.com/WraithKenny/less.js
