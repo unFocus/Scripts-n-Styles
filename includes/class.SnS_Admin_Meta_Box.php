@@ -97,8 +97,8 @@ class SnS_Admin_Meta_Box
 				add_meta_box( 'SnS_meta_box', __( 'Scripts n Styles', 'scripts-n-styles' ), array( __CLASS__, 'admin_meta_box' ), $post_type, 'normal', 'high' );
 			}
 			add_filter( 'default_hidden_meta_boxes', array( __CLASS__,  'default_hidden_meta_boxes' )  );
-			add_action( "admin_print_styles", array( __CLASS__, 'meta_box_styles'));
-			add_action( "admin_print_scripts", array( __CLASS__, 'meta_box_scripts'));
+			add_action( "admin_enqueue_scripts", array( __CLASS__, 'meta_box_styles'));
+			add_action( "admin_enqueue_scripts", array( __CLASS__, 'meta_box_scripts'));
 			add_filter( 'contextual_help', array( 'SnS_Admin', 'help' ) );
 		}
 	}
