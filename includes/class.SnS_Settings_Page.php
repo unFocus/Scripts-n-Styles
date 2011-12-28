@@ -79,6 +79,22 @@ class SnS_Settings_Page
 			SnS_Admin::MENU_SLUG );
 		
 		add_settings_field(
+			'metabox',
+			__( '<strong>Hide Metabox by default</strong>: ', 'scripts-n-styles' ),
+			array( 'SnS_Form', 'radio' ),
+			SnS_Admin::MENU_SLUG,
+			'settings',
+			array(
+				'label_for' => 'metabox',
+				'setting' => 'SnS_options',
+				'choices' => array( 'yes', 'no' ),
+				'layout' => 'horizontal',
+				'default' => 'yes',
+				'legend' => __( 'Hide Metabox by default', 'scripts-n-styles' ),
+				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">This is overridable via Screen Options on each edit screen.</span>', 'scripts-n-styles' )
+			) );
+		
+		add_settings_field(
 			'menu_position',
 			__( '<strong>Menu Position</strong>: ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'select' ),
@@ -92,40 +108,27 @@ class SnS_Settings_Page
 				'style' => 'height: auto;'
 			) );
 		
-		add_settings_field(
-			'cm_theme',
-			__( '<strong>CodeMirror Theme</strong>: ', 'scripts-n-styles' ),
-			array( 'SnS_Form', 'select' ),
-			SnS_Admin::MENU_SLUG,
-			'settings',
-			array(
-				'label_for' => 'cm_theme',
-				'setting' => 'SnS_options',
-				'choices' => array( 'cobalt', 'default', 'eclipse', 'elegant', 'monokai', 'neat', 'night', 'rubyblue' ),
-				'size' => 8,
-				'style' => 'height: auto;'
-			) );
-		
-		add_settings_field(
-			'metabox',
-			__( '<strong>Hide Metabox by default</strong>: ', 'scripts-n-styles' ),
-			array( 'SnS_Form', 'radio' ),
-			SnS_Admin::MENU_SLUG,
-			'settings',
-			array(
-				'label_for' => 'metabox',
-				'setting' => 'SnS_options',
-				'choices' => array( 'yes', 'no' ),
-				'default' => 'yes',
-				'legend' => __( 'Hide Metabox by default', 'scripts-n-styles' ),
-				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">This is overridable via Screen Options on each edit screen.</span>', 'scripts-n-styles' )
-			) );
-		
 		add_settings_section(
 			'demo',
 			__( 'Code Mirror Demo', 'scripts-n-styles' ),
 			array( __CLASS__, 'demo_section' ),
 			SnS_Admin::MENU_SLUG );
+		
+		add_settings_field(
+			'cm_theme',
+			__( '<strong>Theme</strong>: ', 'scripts-n-styles' ),
+			array( 'SnS_Form', 'radio' ),
+			SnS_Admin::MENU_SLUG,
+			'demo',
+			array(
+				'label_for' => 'cm_theme',
+				'setting' => 'SnS_options',
+				'choices' => array( 'default', 'cobalt', 'eclipse', 'elegant', 'monokai', 'neat', 'night', 'rubyblue' ),
+				'default' => 'default',
+				'legend' => __( 'Theme', 'scripts-n-styles' ),
+				'layout' => 'horizontal',
+				'description' => ''
+			) );
 	}
 	
     /**

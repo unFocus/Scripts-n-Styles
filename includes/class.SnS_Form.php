@@ -49,7 +49,7 @@ class SnS_Form
 			$output .= checked( $value, $choice, false );
 			$output .= ' value="' . $choice . '" name="' . $setting . '[' . $label_for . ']"> ' . $choice;
 			$output .= '</label>';
-			$output .= '<br>';
+			$output .= ( ! isset( $layout ) || 'horizontal' != $layout ) ? '<br>' : ' &nbsp; ';
 		}
 		$output .= '</p></fieldset>';
 		if ( $description ) {
