@@ -1,0 +1,24 @@
+/* Loosely based on the Midlesscss Textmate theme */
+
+.cm-s-lesscss { background: #262626; color: #f8f8f8; }
+.cm-s-lesscss span.CodeMirror-selected { background: #a8f !important; }
+.cm-s-lesscss .CodeMirror-gutter { background: #0a001f; border-right: 1px solid #aaa; }
+.cm-s-lesscss .CodeMirror-gutter-text { color: #f8f8f8; }
+.cm-s-lesscss .CodeMirror-cursor { border-left: 1px solid white !important; }
+
+.cm-s-lesscss span.cm-variable { color: #D9BF8C; }
+.cm-s-lesscss span.cm-comment { color: #666; }
+.cm-s-lesscss span.cm-atom { color: #C2B470; /*#845dc4;*/ }
+.cm-s-lesscss span.cm-number,
+.cm-s-lesscss span.cm-attribute { color: #B35E4D; }
+.cm-s-lesscss span.cm-keyword { color: #599eff; }
+.cm-s-lesscss span.cm-string { color: #BCD279; }
+.cm-s-lesscss span.cm-meta { color: #738C73; }
+.cm-s-lesscss span.cm-variable-2,
+.cm-s-lesscss span.cm-tag { color: #669199; }
+.cm-s-lesscss span.cm-variable-3,
+.cm-s-lesscss span.cm-def { color: white; }
+.cm-s-lesscss span.cm-error { color: #9d1e15; }
+.cm-s-lesscss span.cm-bracket { color: #EBEFE7; }
+.cm-s-lesscss span.cm-builtin,
+.cm-s-lesscss span.cm-special { color: #ff9e59; }
