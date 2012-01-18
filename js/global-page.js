@@ -2,23 +2,31 @@
 
 jQuery( document ).ready( function( $ ) {
 	var theme = _SnS_options.theme ? _SnS_options.theme: 'default';
+	var lessMirror, lessOutput;
+	
 	$( "textarea.js" ).each( function() {
 		CodeMirror.fromTextArea( this, { lineNumbers: true, mode: "javascript", theme: theme } );
 	});
-	$( "textarea.css" ).each( function() {
+	
+	$( "textarea.css" ).not( '#compiled' ).each( function() {
 		CodeMirror.fromTextArea( this, { lineNumbers: true, mode: "css", theme: theme } );
 	});
+	
+	lessOutput = CodeMirror.fromTextArea( $( '#compiled' ).get(0), { lineNumbers: true, mode: "css", theme: theme, readOnly: true } );
+	
 	$( "textarea.less" ).each( function() {
-		CodeMirror.fromTextArea( this, { lineNumbers: true, mode: "less", theme: theme } );
+		lessMirror = CodeMirror.fromTextArea( this, { lineNumbers: true, mode: "less", theme: theme, onChange: compile } );
 	});
-	$( "textarea#less" ).closest('form').submit(function() {
-		//console.log( $( "textarea#less" ).val() );
+	
+	$( "textarea#less" ).closest('form').submit( compile );
+	
+	function compile() {
+		lessMirror.save();
 		var parser = new( less.Parser );
-
-		console.log( parser );
-		parser.parse( $( "textarea#less" ).val(), function (err, tree) {
-			if (err) { return console.error(err) }
-			console.log( tree.toCSS() );
+		parser.parse( lessMirror.getValue(), function ( err, tree ) {
+			if ( err ) return console.error( err );
+			lessOutput.setValue( tree.toCSS() );
+			lessOutput.save();
 		});
-	});
+	}
 });

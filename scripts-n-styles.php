@@ -175,8 +175,13 @@ class Scripts_n_Styles
 		// Global
 		$options = get_option( 'SnS_options' );
 		if ( ! empty( $options ) && ! empty( $options[ 'styles' ] ) ) {
-			?><style type="text/css"><?php
+			?><style type="text/css" id="sns_global_styles"><?php
 			echo $options[ 'styles' ];
+			?></style><?php
+		}
+		if ( ! empty( $options ) && ! empty( $options[ 'compiled' ] ) ) {
+			?><style type="text/css" id="sns_global_less_compiled"><?php
+			echo $options[ 'compiled' ];
 			?></style><?php
 		}
 		
@@ -186,7 +191,7 @@ class Scripts_n_Styles
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
 		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		if ( ! empty( $styles ) && ! empty( $styles[ 'styles' ] ) ) {
-			?><style type="text/css"><?php
+			?><style type="text/css" id="sns_styles"><?php
 			echo $styles[ 'styles' ];
 			?></style><?php
 		}
@@ -200,7 +205,7 @@ class Scripts_n_Styles
 		// Global
 		$options = get_option( 'SnS_options' );
 		if ( ! empty( $options ) && ! empty( $options[ 'scripts' ] ) ) {
-			?><script type="text/javascript"><?php
+			?><script type="text/javascript" id="sns_global_scripts"><?php
 			echo $options[ 'scripts' ];
 			?></script><?php
 		}
@@ -211,7 +216,7 @@ class Scripts_n_Styles
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
 		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 		if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts' ] ) ) {
-			?><script type="text/javascript"><?php
+			?><script type="text/javascript" id="sns_scripts"><?php
 			echo $scripts[ 'scripts' ];
 			?></script><?php
 		}
@@ -225,7 +230,7 @@ class Scripts_n_Styles
 		// Global
 		$options = get_option( 'SnS_options' );
 		if ( ! empty( $options ) && ! empty( $options[ 'scripts_in_head' ] ) ) {
-			?><script type="text/javascript"><?php
+			?><script type="text/javascript" id="sns_global_scripts_in_head"><?php
 			echo $options[ 'scripts_in_head' ];
 			?></script><?php
 		}
@@ -236,7 +241,7 @@ class Scripts_n_Styles
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
 		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 		if ( ! empty( $scripts ) && ! empty( $scripts[ 'scripts_in_head' ] ) ) {
-			?><script type="text/javascript"><?php
+			?><script type="text/javascript" id="sns_scripts_in_head"><?php
 			echo $scripts[ 'scripts_in_head' ];
 			?></script><?php
 		}
