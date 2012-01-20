@@ -8,6 +8,7 @@
  */
  
 require_once( 'class.SnS_Admin_Meta_Box.php' );
+require_once( 'class.SnS_Admin_Code_Editor.php' );
 require_once( 'class.SnS_Settings_Page.php' );
 require_once( 'class.SnS_Usage_Page.php' );
 require_once( 'class.SnS_Global_Page.php' );
@@ -30,6 +31,7 @@ class SnS_Admin
      */
 	static function init() {
 		add_action( 'admin_menu', array( 'SnS_Admin_Meta_Box', 'init' ) );
+		add_action( 'admin_menu', array( 'SnS_Admin_Code_Editor', 'init' ) );
 		
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 		
