@@ -9,10 +9,10 @@
 		
 class SnS_Form
 {
-    /**
+	/**
 	 * Settings Page
 	 * Outputs a textarea for setting 'scripts_in_head'.
-     */
+	 */
 	function textarea( $args ) {
 		extract( $args );
 		$options = get_option( $setting );
@@ -58,10 +58,10 @@ class SnS_Form
 		echo $output;
 	}
 	
-    /**
+	/**
 	 * Settings Page
 	 * Outputs a select element for selecting options to set scripts for including.
-     */
+	 */
 	function select( $args ) {
 		extract( $args );
 		$options = get_option( $setting );
@@ -94,10 +94,10 @@ class SnS_Form
 		echo $output;
 	}
 	
-    /**
+	/**
 	 * Settings Page
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API.
-     */
+	 */
 	function take_action() {
 		global $action, $option_page, $page, $new_whitelist_options;
 		
@@ -149,10 +149,10 @@ class SnS_Form
 		return;
 	}
 
-    /**
+	/**
 	 * Settings Page
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
-     */
+	 */
 	function page() {
 		?>
 		<div class="wrap">

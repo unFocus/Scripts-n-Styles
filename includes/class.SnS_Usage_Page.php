@@ -9,15 +9,15 @@
 		
 class SnS_Usage_Page
 {
-    /**
-     * Constants
-     */
+	/**
+	 * Constants
+	 */
 	const MENU_SLUG = 'sns_usage';
 	
-    /**
+	/**
 	 * Initializing method.
-     * @static
-     */
+	 * @static
+	 */
 	function init() {
 		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Usage', 'scripts-n-styles' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
 		
@@ -37,10 +37,10 @@ class SnS_Usage_Page
 		return $parent_file;
 	}
 	
-    /**
+	/**
 	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
-     */
+	 */
 	function admin_load() {
 		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array(), Scripts_n_Styles::VERSION );
 		
@@ -69,7 +69,7 @@ class SnS_Usage_Page
 		return $value;
 	}
 	
-    /**
+	/**
 	 * Settings Page
 	 * Outputs the Usage Section.
 	 */

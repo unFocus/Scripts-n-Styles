@@ -9,15 +9,15 @@
 		
 class SnS_Settings_Page
 {
-    /**
-     * Constants
-     */
+	/**
+	 * Constants
+	 */
 	const MENU_SLUG = 'sns_settings';
 	
-    /**
+	/**
 	 * Initializing method.
-     * @static
-     */
+	 * @static
+	 */
 	function init() {
 		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Settings' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
 		
@@ -48,7 +48,7 @@ class SnS_Settings_Page
 		wp_enqueue_script( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.js', Scripts_n_Styles::$file), array(), '2.2' );
 		wp_enqueue_script( 'codemirror-css', plugins_url( 'libraries/CodeMirror2/mode/css/css.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.2' );
 		wp_enqueue_script( 'codemirror-javascript', plugins_url( 'libraries/CodeMirror2/mode/javascript/javascript.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.2' );
-
+	
 		wp_enqueue_script( 'codemirror-xml', plugins_url( 'libraries/CodeMirror2/mode/xml/xml.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.2' );
 		wp_enqueue_script( 'codemirror-clike', plugins_url( 'libraries/CodeMirror2/mode/clike/clike.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.2' );
 		wp_enqueue_script( 'codemirror-php', plugins_url( 'libraries/CodeMirror2/mode/php/php.js', Scripts_n_Styles::$file), array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript', 'codemirror-clike' ), '2.2' );
@@ -59,12 +59,12 @@ class SnS_Settings_Page
 		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = SnS_Admin::MENU_SLUG;
 		return $parent_file;
 	}
-
 	
-    /**
+	
+	/**
 	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
-     */
+	 */
 	function admin_load() {
 		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array(), Scripts_n_Styles::VERSION );
 		
@@ -131,7 +131,7 @@ class SnS_Settings_Page
 			) );
 	}
 	
-    /**
+	/**
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
 	 */
@@ -143,7 +143,7 @@ class SnS_Settings_Page
 		<?php
 	}
 	
-    /**
+	/**
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
 	 */

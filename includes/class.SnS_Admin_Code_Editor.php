@@ -5,13 +5,13 @@
 		
 class SnS_Admin_Code_Editor
 {
-    /**
+	/**
 	 * Initializing method. 
 	 */
 	function init() {
 		add_action( 'admin_head-theme-editor.php', array( __CLASS__, 'styles' ) );
 		add_action( 'admin_head-plugin-editor.php', array( __CLASS__, 'styles' ) );
-
+	
 	}
 	
 	function styles() {

@@ -9,14 +9,14 @@
 		
 class SnS_Admin_Meta_Box
 {
-    /*
-     * Constants
-     */
+	/*
+	 * Constants
+	 */
 	const NONCE_NAME = 'scripts_n_styles_noncename';
 	
 	static $post_types;
 	
-    /**
+	/**
 	 * Initializing method. 
 	 */
 	static function init() {
@@ -72,10 +72,10 @@ class SnS_Admin_Meta_Box
 		return $initArray;
 	}
 	
-    /**
+	/**
 	 * Admin Action: 'mce_css'
 	 * Adds a styles sheet to TinyMCE via ajax that contains the current styles data.
-     */
+	 */
 	static function mce_css( $mce_css ) {
 		global $post;
 		$url = admin_url( 'admin-ajax.php' );
@@ -85,11 +85,11 @@ class SnS_Admin_Meta_Box
 		$mce_css .= ',' . $url;
 		return $mce_css;
 	}
-
-    /**
+	
+	/**
 	 * Admin Action: 'add_meta_boxes'
 	 * Main Meta Box function. Checks restriction options and display options, calls add_meta_box() and adds actions for adding admin CSS and JavaScript.
-     */
+	 */
 	static function add_meta_boxes() {
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			self::$post_types = get_post_types( array('show_ui' => true, 'public' => true) ); // updated for http://core.trac.wordpress.org/changeset/18234
@@ -110,14 +110,14 @@ class SnS_Admin_Meta_Box
 		else if ( 'yes' == $options[ 'metabox' ] )
 			$hidden[] = 'SnS_meta_box';
 		
-    	return $hidden;
+		return $hidden;
 	}
 	
-    /**
+	/**
 	 * Admin Action: 'add_meta_boxes'
 	 * Outputs the Meta Box. Only called on callback from add_meta_box() during the add_meta_boxes action.
 	 * @param unknown_type WordPress Post object.
-     */
+	 */
 	static function admin_meta_box( $post ) {
 		$registered_handles = Scripts_n_Styles::get_wp_registered();
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
@@ -259,10 +259,10 @@ class SnS_Admin_Meta_Box
 		}
 	}
 	
-    /**
+	/**
 	 * Admin Action: 'admin_print_styles' Action added during 'add_meta_boxes' (which restricts output to Edit Screens).
 	 * Enqueues the CSS for admin styling of the Meta Box.
-     */
+	 */
 	static function meta_box_styles() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
@@ -273,10 +273,10 @@ class SnS_Admin_Meta_Box
 		wp_enqueue_style( 'sns-meta-box-styles', plugins_url( 'css/meta-box-styles.css', Scripts_n_Styles::$file), array( 'codemirror' ), Scripts_n_Styles::VERSION );
 	}
 	
-    /**
+	/**
 	 * Admin Action: 'admin_print_styles' Action added during 'add_meta_boxes' (which restricts output to Edit Screens).
 	 * Enqueues the JavaScript for the admin Meta Box.
-     */
+	 */
 	static function meta_box_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
@@ -338,11 +338,11 @@ class SnS_Admin_Meta_Box
 		wp_localize_script( 'sns-meta-box-scripts', 'codemirror_options', array( 'theme' => $cm_theme ) );
 	}
 	
-    /**
+	/**
 	 * Admin Action: 'save_post'
 	 * Saves the values entered in the Meta Box when a post is saved (on the Edit Screen only, excluding autosaves) if the user has permission.
 	 * @param int $post_id ID value of the WordPress post.
-     */
+	 */
 	static function save_post( $post_id ) {
 		if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], Scripts_n_Styles::$file )
 			|| ! current_user_can( 'unfiltered_html' ) 
@@ -393,10 +393,10 @@ class SnS_Admin_Meta_Box
 			update_post_meta( $post_id, '_SnS', $SnS );
 	}
 	
-    /**
+	/**
 	 * maybe_set()
 	 * Filters $o and Checks if the sent data $i is empty (intended to clear). If not, updates.
-     */
+	 */
 	function maybe_set( $o, $i, $p = 'SnS_' ) {
 		if ( empty( $_REQUEST[ $p . $i ] ) ) {
 			if ( isset( $o[ $i ] ) ) unset( $o[ $i ] );

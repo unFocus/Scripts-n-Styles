@@ -9,10 +9,10 @@
 		
 class SnS_Global_Page
 {
-    /**
+	/**
 	 * Initializing method.
-     * @static
-     */
+	 * @static
+	 */
 	function init() {
 		if ( SnS_Admin::$parent_slug == SnS_Admin::MENU_SLUG ) $menu_title = __( 'Global', 'scripts-n-styles' );
 		else $menu_title = __( 'Scripts n Styles', 'scripts-n-styles' );
@@ -44,10 +44,10 @@ class SnS_Global_Page
 		wp_enqueue_script( 'codemirror-javascript', plugins_url( 'libraries/CodeMirror2/mode/javascript/javascript.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.2' );
 		wp_enqueue_script( 'codemirror-less', plugins_url( 'libraries/CodeMirror2/mode/less/less.js', Scripts_n_Styles::$file), array( 'codemirror' ), '2.2' );
 	}
-    /**
+	/**
 	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
-     */
+	 */
 	function admin_load() {
 		
 		register_setting(
@@ -146,7 +146,7 @@ class SnS_Global_Page
 		<?php
 	}
 	
-    /**
+	/**
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
 	 */

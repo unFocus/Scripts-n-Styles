@@ -69,17 +69,17 @@ Network: true
 
 class Scripts_n_Styles
 {
-    /**#@+
-     * @static
-     */
+	/**#@+
+	 * @static
+	 */
 	const VERSION = '3.0.2';
 	static $file = __FILE__;
-    /**#@-*/
+	/**#@-*/
 	
-    /**
+	/**
 	 * Initializing method. Checks if is_admin() and registers action hooks for admin if true. Sets filters and actions for Theme side functions.
-     * @static
-     */
+	 * @static
+	 */
 	static function init() {
 		if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERED_HTML ) ) {
 			/*	NOTE: Setting the DISALLOW_UNFILTERED_HTML constant to
@@ -102,7 +102,7 @@ class Scripts_n_Styles
 	
 	/**
 	 * Utility Method
-     */
+	 */
 	static function get_wp_registered() {
 		return array(
 				// Starting with the list of Scripts registered by default on the Theme side (index page of twentyten).
@@ -167,10 +167,10 @@ class Scripts_n_Styles
 			);
 	}
 	
-    /**
+	/**
 	 * Theme Action: 'wp_head()'
 	 * Outputs the globally and individually set Styles in the Theme's head element.
-     */
+	 */
 	static function styles() {
 		// Global
 		$options = get_option( 'SnS_options' );
@@ -197,10 +197,10 @@ class Scripts_n_Styles
 		}
 	}
 	
-    /**
+	/**
 	 * Theme Action: 'wp_footer()'
 	 * Outputs the globally and individually set Scripts at the end of the Theme's body element.
-     */
+	 */
 	static function scripts() {
 		// Global
 		$options = get_option( 'SnS_options' );
@@ -222,10 +222,10 @@ class Scripts_n_Styles
 		}
 	}
 	
-    /**
+	/**
 	 * Theme Action: 'wp_head()'
 	 * Outputs the globally and individually set Scripts in the Theme's head element.
-     */
+	 */
 	static function scripts_in_head() {
 		// Global
 		$options = get_option( 'SnS_options' );
@@ -247,13 +247,13 @@ class Scripts_n_Styles
 		}
 	}
 	
-    /**
+	/**
 	 * Theme Filter: 'body_class()'
 	 * Adds classes to the Theme's body tag.
 	 * @uses self::get_styles()
 	 * @param array $classes 
 	 * @return array $classes 
-     */
+	 */
 	static function body_classes( $classes ) {
 		if ( ! is_singular() || is_admin() ) return $classes;
 		
@@ -266,12 +266,12 @@ class Scripts_n_Styles
 		return $classes;
 	}
 	
-    /**
+	/**
 	 * Theme Filter: 'post_class()'
 	 * Adds classes to the Theme's post container.
 	 * @param array $classes 
 	 * @return array $classes 
-     */
+	 */
 	static function post_classes( $classes ) {
 		if ( ! is_singular() || is_admin() ) return $classes;
 		
@@ -285,10 +285,10 @@ class Scripts_n_Styles
 		return $classes;
 	}
 	
-    /**
+	/**
 	 * Theme Action: 'wp_enqueue_scripts'
 	 * Enqueues chosen Scripts.
-     */
+	 */
 	static function enqueue_scripts() {
 		// Global
 		$options = get_option( 'SnS_options' );
@@ -312,9 +312,9 @@ class Scripts_n_Styles
 		}
 	}
 	
-    /**
+	/**
 	 * Utility Method: Compares VERSION to stored 'version' value.
-     */
+	 */
 	static function upgrade_check() {
 		$options = get_option( 'SnS_options' );
 		if ( ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) ) {
