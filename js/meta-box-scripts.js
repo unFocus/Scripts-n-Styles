@@ -396,14 +396,14 @@ jQuery( document ).ready( function( $ ) {
 		refreshMCE();
 	}
 	function refreshMCE() {
-		if ( tinyMCE.editors["content"] ) {
+		var ed = tinyMCE.editors["content"];
+		// If Visual has been activated.
+		if ( ed ) {
 			// needed for < 3.3 editor initialization.
 			if ( ! $( '#content' ).hasClass( '.theEditor' ) ) $( '#content' ).addClass( 'theEditor' );
 			
-			if ( tinyMCE.editors["content"].isHidden() ) {
-				tinyMCE.editors["content"].remove();
-				tinyMCE.init( initData );
-				tinyMCE.editors["content"].hide();
+			if ( ed.isHidden() ) {
+				refreshMCEhelper(ed);
 			} else {
 				// you've got to be kidding me.
 				if ( 1 == $('#content-html').length )
@@ -411,9 +411,7 @@ jQuery( document ).ready( function( $ ) {
 				else if( 1 == $('#edButtonHTML').length )
 					switchEditors.go('content', 'html'); // 3.2
 				
-				tinyMCE.editors["content"].remove();
-				tinyMCE.init( initData );
-				tinyMCE.editors["content"].hide();
+				refreshMCEhelper(ed);
 				
 				if ( 1 == $('#content-tmce').length )
 					$('#content-tmce').click(); // 3.3
@@ -422,7 +420,19 @@ jQuery( document ).ready( function( $ ) {
 			}
 			
 		}
+		// Else nothing.
+		
 		$('.sns-ajax-loading').hide();
+	}
+	function refreshMCEhelper(ed) {
+		ed.save();
+		ed.destroy();
+		ed.remove();
+		if ( initData && initData.wpautop )
+			$('#content').val( switchEditors.wpautop( $('#content').val() ) );
+		ed = new tinymce.Editor( 'content', initData );
+		ed.render();
+		ed.hide();
 	}
 	
 });
