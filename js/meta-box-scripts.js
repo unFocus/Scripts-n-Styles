@@ -388,23 +388,33 @@ jQuery( document ).ready( function( $ ) {
 		refreshMCE();
 	}
 	function refreshMCE() {
-		if ( tinyMCE.editors["content"] ) {
-			if ( tinyMCE.editors["content"].isHidden() ) {
-				tinyMCE.editors["content"].remove();
-				tinyMCE.init( initData );
-				tinyMCE.editors["content"].hide();
+		var ed = tinyMCE.editors["content"];
+		// If Visual has been activated.
+		if ( ed ) {
+			if ( ed.isHidden() ) {
+				refreshMCEhelper(ed);
 			} else {
 				$('#content-html').click(); // 3.3
 				
-				tinyMCE.editors["content"].remove();
-				tinyMCE.init( initData );
-				tinyMCE.editors["content"].hide();
+				refreshMCEhelper(ed);
 				
 				$('#content-tmce').click(); // 3.3
 			}
 			
 		}
+		// Else nothing.
+		
 		$('.sns-ajax-loading').hide();
+	}
+	function refreshMCEhelper(ed) {
+		ed.save();
+		ed.destroy();
+		ed.remove();
+		if ( initData && initData.wpautop )
+			$('#content').val( switchEditors.wpautop( $('#content').val() ) );
+		ed = new tinymce.Editor( 'content', initData );
+		ed.render();
+		ed.hide();
 	}
 	
 });

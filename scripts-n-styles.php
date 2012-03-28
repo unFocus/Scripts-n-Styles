@@ -5,13 +5,13 @@ Plugin URI: http://www.unfocus.com/projects/scripts-n-styles/
 Description: Allows WordPress admin users the ability to add custom CSS and JavaScript directly to individual Post, Pages or custom post types.
 Author: unFocus Projects
 Author URI: http://www.unfocus.com/
-Version: 3.0.2
+Version: 3.0.3
 License: GPLv2 or later
 Text Domain: scripts-n-styles
 Network: true
 */
 
-/*  Copyright 2010-2011  Kenneth Newman  www.unfocus.com
+/*  Copyright 2010-2012  Kenneth Newman  www.unfocus.com
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -26,6 +26,8 @@ Network: true
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+	
+	This file incorporates work covered by other licenses and permissions.
 */
 
 /**
@@ -47,9 +49,9 @@ Network: true
  * @link http://www.unfocus.com/projects/scripts-n-styles/ Plugin URI
  * @author unFocus Projects
  * @link http://www.unfocus.com/ Author URI
- * @version 3.0.2
+ * @version 3.0.3
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @copyright Copyright (c) 2010 - 2011, Kenneth Newman
+ * @copyright Copyright (c) 2010 - 2012, Kenneth Newman
  * 
  * @todo Add Post Type Selection on Options Page? Not sure that's useful.
  * @todo Add Conditional Tags support as alternative to Globally applying Scripts n Styles.
@@ -72,7 +74,7 @@ class Scripts_n_Styles
 	/**#@+
 	 * @static
 	 */
-	const VERSION = '3.0.2';
+	const VERSION = '3.0.3';
 	static $file = __FILE__;
 	/**#@-*/
 	
