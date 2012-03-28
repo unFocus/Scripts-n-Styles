@@ -1,7 +1,7 @@
 jQuery( document ).ready( function( $ ) {
 	
 	// For compat: 3.3 || 3.2 
-	var initData = tinyMCEPreInit.mceInit["content"] || tinyMCEPreInit.mceInit,
+	var initData = tinyMCEPreInit.mceInit["content"],
 		context = '#SnS_meta_box',
 		currentCodeMirror = [],
 		mceBodyClass = getMCEBodyClasses(),
@@ -339,8 +339,6 @@ jQuery( document ).ready( function( $ ) {
 	function refreshBodyClass( data ) {
 		initData.body_class = mceBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
 		
-		// needed for < 3.3
-		if ( tinymce.settings ) tinymce.settings.body_class = initData.body_class;
 		refreshMCE();
 	}
 	function refreshStyleFormats( data ) {
@@ -373,22 +371,16 @@ jQuery( document ).ready( function( $ ) {
 			}
 			initData.style_formats = style_formats;
 			
-			// needed for < 3.3
-			if ( tinymce.settings ) tinymce.settings.style_formats = initData.style_formats;
 			if ( initData.theme_advanced_buttons2.indexOf( "styleselect" ) == -1 ) {
 				var tempString = "styleselect,";
 				initData.theme_advanced_buttons2 = tempString.concat(initData.theme_advanced_buttons2);
 			}
 			
-			// needed for < 3.3
-			if ( tinymce.settings ) tinymce.settings.theme_advanced_buttons2 = initData.theme_advanced_buttons2;
 			$( '#delete-mce-dropdown-names', context ).show();
 		} else {
 			delete initData.style_formats;
 			initData.theme_advanced_buttons2 = initData.theme_advanced_buttons2.replace("styleselect,", "");
 			
-			// needed for < 3.3
-			if ( tinymce.settings ) tinymce.settings.theme_advanced_buttons2 = initData.theme_advanced_buttons2;
 			$( '#delete-mce-dropdown-names', context ).hide();
 		}
 		
@@ -397,28 +389,18 @@ jQuery( document ).ready( function( $ ) {
 	}
 	function refreshMCE() {
 		if ( tinyMCE.editors["content"] ) {
-			// needed for < 3.3 editor initialization.
-			if ( ! $( '#content' ).hasClass( '.theEditor' ) ) $( '#content' ).addClass( 'theEditor' );
-			
 			if ( tinyMCE.editors["content"].isHidden() ) {
 				tinyMCE.editors["content"].remove();
 				tinyMCE.init( initData );
 				tinyMCE.editors["content"].hide();
 			} else {
-				// you've got to be kidding me.
-				if ( 1 == $('#content-html').length )
-					$('#content-html').click(); // 3.3
-				else if( 1 == $('#edButtonHTML').length )
-					switchEditors.go('content', 'html'); // 3.2
+				$('#content-html').click(); // 3.3
 				
 				tinyMCE.editors["content"].remove();
 				tinyMCE.init( initData );
 				tinyMCE.editors["content"].hide();
 				
-				if ( 1 == $('#content-tmce').length )
-					$('#content-tmce').click(); // 3.3
-				else if( 1 == $('#edButtonPreview').length )
-					switchEditors.go('content', 'tinymce'); // 3.2
+				$('#content-tmce').click(); // 3.3
 			}
 			
 		}
