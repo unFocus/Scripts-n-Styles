@@ -22,10 +22,6 @@ class SnS_Admin_Meta_Box
 	static function init() {
 		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( __CLASS__, 'save_post' ) );
-		
-		add_filter( 'mce_buttons_2', array( __CLASS__, 'mce_buttons_2' ) );
-		add_filter( 'tiny_mce_before_init', array( __CLASS__, 'tiny_mce_before_init' ) );
-		add_filter( 'mce_css', array( __CLASS__, 'mce_css' ) );
 	}
 	
 	function mce_buttons_2( $buttons ) {
@@ -92,14 +88,17 @@ class SnS_Admin_Meta_Box
 	 */
 	static function add_meta_boxes() {
 		if ( current_user_can( 'unfiltered_html' ) ) {
-			self::$post_types = get_post_types( array('show_ui' => true, 'public' => true) ); // updated for http://core.trac.wordpress.org/changeset/18234
-			foreach ( self::$post_types as $post_type ) {
+			$post_type = get_current_screen()->post_type;
+			if ( in_array( $post_type, get_post_types( array('show_ui' => true, 'public' => true ) ) ) ) {
 				add_meta_box( 'SnS_meta_box', __( 'Scripts n Styles', 'scripts-n-styles' ), array( __CLASS__, 'admin_meta_box' ), $post_type, 'normal', 'high' );
+				add_filter( 'default_hidden_meta_boxes', array( __CLASS__,  'default_hidden_meta_boxes' )  );
+				add_action( "admin_print_styles", array( __CLASS__, 'meta_box_styles'));
+				add_action( "admin_print_scripts", array( __CLASS__, 'meta_box_scripts'));
+				add_filter( 'contextual_help', array( 'SnS_Admin', 'help' ) );
+				add_filter( 'mce_buttons_2', array( __CLASS__, 'mce_buttons_2' ) );
+				add_filter( 'tiny_mce_before_init', array( __CLASS__, 'tiny_mce_before_init' ) );
+				add_filter( 'mce_css', array( __CLASS__, 'mce_css' ) );
 			}
-			add_filter( 'default_hidden_meta_boxes', array( __CLASS__,  'default_hidden_meta_boxes' )  );
-			add_action( "admin_enqueue_scripts", array( __CLASS__, 'meta_box_styles'));
-			add_action( "admin_enqueue_scripts", array( __CLASS__, 'meta_box_scripts'));
-			add_filter( 'contextual_help', array( 'SnS_Admin', 'help' ) );
 		}
 	}
 	
@@ -124,7 +123,6 @@ class SnS_Admin_Meta_Box
 		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 		
-		$screen = get_current_screen();
 		$position = get_user_option( "current_sns_tab" );
 		if ( ! in_array( $position, array( 's0', 's1', 's2', 's3' ) ) ) $position = 's0';
 		wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME );
