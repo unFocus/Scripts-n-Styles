@@ -24,7 +24,7 @@ class SnS_Form
 		$output .= ( $cols ) ? ' cols="' . $cols . '"': '';
 		$output .= ' name="' . $setting . '[' . $label_for . ']"';
 		$output .= ' id="' . $label_for . '">';
-		$output .= $value . '</textarea>';
+		$output .= esc_textarea( $value ) . '</textarea>';
 		if ( $description ) {
 			$output .= $description;
 		}

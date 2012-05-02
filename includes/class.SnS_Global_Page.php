@@ -136,10 +136,10 @@ class SnS_Global_Page
 		?>
 		<div style="overflow: hidden;">
 			<div style="width: 49%; float: left; overflow: hidden; margin-right: 2%;">
-				<textarea id="less" name="SnS_options[less]" style="min-width: 250px; width:47%; float: left" class="code less" rows="5" cols="40"><?php echo $less ?></textarea>
+				<textarea id="less" name="SnS_options[less]" style="min-width: 250px; width:47%; float: left" class="code less" rows="5" cols="40"><?php echo esc_textarea( $less ) ?></textarea>
 			</div>
 			<div style="width: 49%; float: left; overflow: hidden;">
-				<textarea id="compiled" name="SnS_options[compiled]" style="min-width: 250px; width:47%;" class="code css" rows="5" cols="40"><?php echo $compiled ?></textarea>
+				<textarea id="compiled" name="SnS_options[compiled]" style="min-width: 250px; width:47%;" class="code css" rows="5" cols="40"><?php echo esc_textarea( $compiled ) ?></textarea>
 				<div id="compiled_error" style="display: none" class="error settings-error below-h2"></div>
 			</div>
 		</div>

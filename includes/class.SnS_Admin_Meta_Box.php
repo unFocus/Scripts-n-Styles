@@ -218,17 +218,17 @@ class SnS_Admin_Meta_Box
 					<?php 
 					if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) {
 						foreach ( $registered_handles as $value ) { ?>
-							<option value="<?php echo $value ?>"<?php foreach ( $scripts[ 'enqueue_scripts' ] as $handle ) selected( $handle, $value ); ?>><?php echo $value ?></option> 
+							<option value="<?php echo esc_attr( $value ) ?>"<?php foreach ( $scripts[ 'enqueue_scripts' ] as $handle ) selected( $handle, $value ); ?>><?php echo esc_html( $value ) ?></option> 
 						<?php }
 					} else {
 						foreach ( $registered_handles as $value ) { ?>
-							<option value="<?php echo $value ?>"><?php echo $value ?></option> 
+							<option value="<?php echo esc_attr( $value ) ?>"><?php echo esc_html( $value ) ?></option> 
 						<?php }
 					} ?>
 				</select>
 				<?php if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) { ?>
 					<p><?php _e( 'Currently Enqueued Scripts:', 'scripts-n-styles' ) ?>
-					<?php foreach ( $scripts[ 'enqueue_scripts' ] as $handle )  echo '<code>' . $handle . '</code> '; ?>
+					<?php foreach ( $scripts[ 'enqueue_scripts' ] as $handle )  echo '<code>' . esc_html( $handle ) . '</code> '; ?>
 					</p>
 				<?php } ?>
 				<p><em><?php _e( 'The chosen scripts will be enqueued and placed before your codes if your code is dependant on certain scripts (like jQuery).', 'scripts-n-styles' ) ?></em></p>
