@@ -266,22 +266,32 @@ jQuery( document ).ready( function( $ ) {
 					indentUnit: 4,
 					indentWithTabs: true
 				};
-			/*else if ( $(this).hasClass( 'htmlmixed' ) )
+			else if ( $(this).hasClass( 'less' ) )
 				settings = {
-					mode: "text/html",
+					mode: "text/x-less",
+					theme: theme,
 					lineNumbers: true,
 					tabMode: "shift",
-					indentUnit: 8,
+					indentUnit: 4,
+					indentWithTabs: true,
+				};
+			else if ( $(this).hasClass( 'htmlmixed' ) )
+				settings = {
+					mode: "text/html",
+					theme: theme,
+					lineNumbers: true,
+					tabMode: "shift",
+					indentUnit: 4,
 					indentWithTabs: true,
 					enterMode: "keep",
 					matchBrackets: true
 				};
-			else if ( $(this).hasClass( 'php' ) )
+			/*else if ( $(this).hasClass( 'php' ) )
 				settings = {
 					mode: "application/x-httpd-php",
 					lineNumbers: true,
 					tabMode: "shift",
-					indentUnit: 8,
+					indentUnit: 4,
 					indentWithTabs: true,
 					enterMode: "keep",
 					matchBrackets: true

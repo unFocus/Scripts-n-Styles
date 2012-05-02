@@ -90,7 +90,6 @@ class SnS_Admin_Meta_Box
 		if ( current_user_can( 'unfiltered_html' ) ) {
 			$post_type = get_current_screen()->post_type;
 			if ( in_array( $post_type, get_post_types( array('show_ui' => true, 'public' => true ) ) ) ) {
-				add_meta_box( 'SnS_shortcode', __( 'Scripts n Styles Shortcodes', 'scripts-n-styles' ), array( __CLASS__, 'shortcode_meta_box' ), $post_type, 'normal', 'high' );
 				add_meta_box( 'SnS_meta_box', __( 'Scripts n Styles', 'scripts-n-styles' ), array( __CLASS__, 'admin_meta_box' ), $post_type, 'normal', 'high' );
 				add_filter( 'default_hidden_meta_boxes', array( __CLASS__,  'default_hidden_meta_boxes' )  );
 				add_action( "admin_print_styles", array( __CLASS__, 'meta_box_styles'));
@@ -124,7 +123,7 @@ class SnS_Admin_Meta_Box
 		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 		
 		$position = get_user_option( "current_sns_tab" );
-		if ( ! in_array( $position, array( 's0', 's1', 's2', 's3' ) ) ) $position = 's0';
+		if ( ! in_array( $position, array( 's0', 's1', 's2', 's3', 's4' ) ) ) $position = 's0';
 		wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME );
 		?>
 			<ul class="wp-tab-bar">
@@ -132,6 +131,7 @@ class SnS_Admin_Meta_Box
 				<li<?php echo ( 's1' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_styles-tab"><?php _e( 'Styles', 'scripts-n-styles' ) ?></a></li>
 				<li<?php echo ( 's2' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_classes_body-tab"><?php _e( 'Classes', 'scripts-n-styles' ) ?></a></li>
 				<li<?php echo ( 's3' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_enqueue_scripts-tab"><?php _e( 'Include Scripts', 'scripts-n-styles' ) ?></a></li>
+				<li<?php echo ( 's4' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_shortcodes-tab"><?php _e( 'Shortcodes', 'scripts-n-styles' ) ?></a></li>
 			</ul>
 			
 			<div class="wp-tab-panel" id="SnS_scripts-tab">
@@ -233,30 +233,30 @@ class SnS_Admin_Meta_Box
 				<?php } ?>
 				<p><em><?php _e( 'The chosen scripts will be enqueued and placed before your codes if your code is dependant on certain scripts (like jQuery).', 'scripts-n-styles' ) ?></em></p>
 			</div>
-		<?php
-	}
-	
-    function shortcode_meta_box( $post ) {
-		$meta_name = 'SnS_shortcodes';
-		$SnS = get_post_meta( $post->ID, '_SnS', true );
-		$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ] : array();
-		
-		wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME );
-		?>
-		<h4>Add New</h4>
-		<label for="<?php echo $meta_name; ?>" class="title">Name: </label>
-		<input id="<?php echo $meta_name; ?>" name="<?php echo $meta_name . '[new][name]'; ?>" type="text" />
-		<textarea name="<?php echo $meta_name . '[new][value]'; ?>" rows="5" cols="40" style="width: 98%;"></textarea>
-		<?php if ( ! empty( $shortcodes ) ) { ?>
-			<h4>Existing</h4>
-			<?php
-			foreach ( $shortcodes as $key => $value ) {
-				?>
-				<label for="<?php echo $meta_name . '[existing][' . $key . ']'; ?>" class="title">[sns_shortcode name="<?php echo $key ?>"]</label>
-				<textarea name="<?php echo $meta_name . '[existing][' . $key . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
+			
+			<div class="wp-tab-panel" id="SnS_shortcodes-tab">
 				<?php
-			}
-		}
+				$meta_name = 'SnS_shortcodes';
+				$SnS = get_post_meta( $post->ID, '_SnS', true );
+				$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ] : array();
+				?>
+				<strong class="title">Shortcodes</strong>
+				<h4>Add New</h4>
+				<label for="<?php echo $meta_name; ?>">Name: </label>
+				<input id="<?php echo $meta_name; ?>" name="<?php echo $meta_name . '[new][name]'; ?>" type="text" />
+				<textarea class="codemirror htmlmixed" name="<?php echo $meta_name . '[new][value]'; ?>" rows="5" cols="40" style="width: 98%;"></textarea>
+				<?php if ( ! empty( $shortcodes ) ) { ?>
+					<h4>Existing</h4>
+					<?php
+					foreach ( $shortcodes as $key => $value ) {
+						?>
+						<label for="<?php echo $meta_name . '[existing][' . $key . ']'; ?>">[sns_shortcode name="<?php echo $key ?>"]</label>
+						<textarea class="codemirror htmlmixed" name="<?php echo $meta_name . '[existing][' . $key . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
+						<?php
+					}
+				} ?>
+			</div>
+		<?php
 	}
 	
 	function current_classes( $type, $post_id ) {
@@ -287,10 +287,10 @@ class SnS_Admin_Meta_Box
 	static function meta_box_styles() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
-		
-		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.css', Scripts_n_Styles::$file), array(), '2.2' );
+		$cm_version = '2.4';
+		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.css', Scripts_n_Styles::$file), array(), $cm_version );
 		if ( in_array( $cm_theme, array( 'cobalt', 'eclipse', 'elegant', 'monokai', 'neat', 'night', 'rubyblue' ) ) )
-			wp_enqueue_style( "codemirror-$cm_theme", plugins_url( "libraries/CodeMirror2/theme/$cm_theme.css", Scripts_n_Styles::$file), array( 'codemirror' ), '2.2' );
+			wp_enqueue_style( "codemirror-$cm_theme", plugins_url( "libraries/CodeMirror2/theme/$cm_theme.css", Scripts_n_Styles::$file), array( 'codemirror' ), $cm_version );
 		wp_enqueue_style( 'sns-meta-box-styles', plugins_url( 'css/meta-box-styles.css', Scripts_n_Styles::$file), array( 'codemirror' ), Scripts_n_Styles::VERSION );
 	}
 	
@@ -301,60 +301,21 @@ class SnS_Admin_Meta_Box
 	static function meta_box_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
+		$cm_version = '2.4';
+		$cm_dir = plugins_url( 'libraries/CodeMirror2/', Scripts_n_Styles::$file);
 		
-		wp_enqueue_script(
-			'codemirror',
-			plugins_url( 'libraries/CodeMirror2/lib/codemirror.js', Scripts_n_Styles::$file),
-			array(),
-			'2.18' );
-		wp_enqueue_script(
-			'codemirror-css',
-			plugins_url( 'libraries/CodeMirror2/mode/css/css.js', Scripts_n_Styles::$file),
-			array(  'codemirror' ),
-			'2.18' );
-		wp_enqueue_script(
-			'codemirror-javascript',
-			plugins_url( 'libraries/CodeMirror2/mode/javascript/javascript.js', Scripts_n_Styles::$file),
-			array(  'codemirror' ),
-			'2.18' );
-		/*wp_register_script(
-			'codemirror-xml',
-			plugins_url( 'libraries/CodeMirror2/mode/xml/xml.js', Scripts_n_Styles::$file),
-			array(  'codemirror' ),
-			'2.11' );*/
-		/*wp_register_script(
-			'codemirror-htmlmixed',
-			plugins_url( 'libraries/CodeMirror2/mode/htmlmixed/htmlmixed.js', Scripts_n_Styles::$file),
-			array( 	'codemirror-xml',
-					'codemirror-css',
-					'codemirror-javascript'
-				),
-			'2.11' );*/
-		/*wp_register_script(
-			'codemirror-clike',
-			plugins_url( 'libraries/CodeMirror2/mode/clike/clike.js', Scripts_n_Styles::$file),
-			array(  'codemirror' ),
-			'2.11' );
-		wp_register_script(
-			'codemirror-php',
-			plugins_url( 'libraries/CodeMirror2/mode/php/php.js', Scripts_n_Styles::$file),
-			array( 	'codemirror-xml',
-					'codemirror-css',
-					'codemirror-javascript',
-					'codemirror-clike'
-				),
-			'2.11' );*/
-		wp_enqueue_script(
-			'sns-meta-box-scripts',
-			plugins_url( 'js/meta-box-scripts.js', Scripts_n_Styles::$file),
-			array( 	'editor',
-					'jquery-ui-tabs',
-					'codemirror-javascript',
-					'codemirror-css'//,
-					//'codemirror-htmlmixed',
-					//'codemirror-php'
-				),
-			Scripts_n_Styles::VERSION, true );
+		wp_register_script( 'codemirror',            $cm_dir . 'lib/codemirror.js',             array(), $cm_version );
+		wp_register_script( 'codemirror-css',        $cm_dir . 'mode/css/css.js',               array( 'codemirror' ), $cm_version );
+		wp_register_script( 'codemirror-less',       $cm_dir . 'mode/less/less.js',             array( 'codemirror' ), $cm_version );
+		wp_register_script( 'codemirror-javascript', $cm_dir . 'mode/javascript/javascript.js', array( 'codemirror' ), $cm_version );
+		wp_register_script( 'codemirror-htmlmixed',  $cm_dir . 'mode/htmlmixed/htmlmixed.js',   array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript' ), $cm_version );
+		wp_register_script( 'codemirror-clike',      $cm_dir . 'mode/clike/clike.js',           array( 'codemirror' ), $cm_version );
+		wp_register_script( 'codemirror-xml',        $cm_dir . 'mode/xml/xml.js',               array( 'codemirror' ), $cm_version );
+		wp_register_script( 'codemirror-php',        $cm_dir . 'mode/php/php.js',               array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript', 'codemirror-clike' ), $cm_version );
+		
+		wp_enqueue_script( 'sns-meta-box-scripts', plugins_url( 'js/meta-box-scripts.js', Scripts_n_Styles::$file), array( 'editor', 'jquery-ui-tabs', 'codemirror-less', 'codemirror-htmlmixed',
+			//'codemirror-php',
+			), Scripts_n_Styles::VERSION, true );
 			
 		wp_localize_script( 'sns-meta-box-scripts', 'codemirror_options', array( 'theme' => $cm_theme ) );
 	}
