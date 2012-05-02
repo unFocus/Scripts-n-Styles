@@ -100,6 +100,35 @@ class Scripts_n_Styles
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ), 11 );
 		add_action( 'wp_head', array( __CLASS__, 'scripts_in_head' ), 11 );
 		add_action( 'wp_footer', array( __CLASS__, 'scripts' ), 11 );
+		
+		add_shortcode( 'sns_shortcode', array( __CLASS__, 'shortcode' ) );
+	}
+	
+	function shortcode( $atts, $content = null, $tag ) {
+		global $post;
+		
+		if ( isset( $post->ID ) ) $id = $post->ID;
+		else $id = get_the_ID();
+		if ( ! $id ) return '<pre>There was an error.</pre>';
+		
+		extract(
+			shortcode_atts(
+				array(
+					'name' => 0,
+				),
+				$atts
+			)
+		);
+		$output = '';
+		
+		$SnS = get_post_meta( $post->ID, '_SnS', true );
+		$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
+		if ( isset( $shortcodes[ $name ] ) )
+			$output .= $shortcodes[ $name ];
+		if ( isset( $content ) && empty( $output ) ) $output = $content;
+		$output = do_shortcode( $output );
+		
+		return $output;
 	}
 	
 	/**
