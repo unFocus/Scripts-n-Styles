@@ -1,10 +1,10 @@
 # Scripts n Styles #
-Contributors: WraithKenny, Touvan
-Tags: admin, CSS, javascript, code, custom, Style
-Requires at least: 3.3
-Tested up to: 3.3
-Stable tag: 3.0.3
-License: GPLv3 or later
+Contributors: WraithKenny, Touvan  
+Tags: admin, CSS, javascript, code, custom, Style  
+Requires at least: 3.3  
+Tested up to: 3.3  
+Stable tag: 3.0.3  
+License: GPLv3 or later  
 
 This plugin allows Admin users to individually add custom CSS, Classes and JavaScript directly to Post, Pages or any other custom post types.
 
