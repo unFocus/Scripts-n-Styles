@@ -39,7 +39,7 @@ class SnS_Global_Page
 		wp_enqueue_script( 'sns-global-page-scripts', plugins_url('js/global-page.js', Scripts_n_Styles::$file), array( 'jquery', 'codemirror-less', 'codemirror-css', 'codemirror-javascript', 'less.js' ), Scripts_n_Styles::VERSION, true );
 		wp_localize_script( 'sns-global-page-scripts', '_SnS_options', $localize );
 		
-		wp_enqueue_script( 'less.js', plugins_url( 'libraries/less/dist/less-1.1.6.min.js', Scripts_n_Styles::$file), array(), '1.3.0' );
+		wp_enqueue_script( 'less.js', plugins_url( 'libraries/less/dist/less-1.3.0.min.js', Scripts_n_Styles::$file), array(), '1.3.0' );
 		wp_enqueue_script( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.js', Scripts_n_Styles::$file), array(), $cm_version );
 		wp_enqueue_script( 'codemirror-css', plugins_url( 'libraries/CodeMirror2/mode/css/css.js', Scripts_n_Styles::$file), array( 'codemirror' ), $cm_version );
 		wp_enqueue_script( 'codemirror-javascript', plugins_url( 'libraries/CodeMirror2/mode/javascript/javascript.js', Scripts_n_Styles::$file), array( 'codemirror' ), $cm_version );
