@@ -111,14 +111,7 @@ class Scripts_n_Styles
 		else $id = get_the_ID();
 		if ( ! $id ) return '<pre>There was an error.</pre>';
 		
-		extract(
-			shortcode_atts(
-				array(
-					'name' => 0,
-				),
-				$atts
-			)
-		);
+		extract( shortcode_atts( array( 'name' => 0, ), $atts ) );
 		$output = '';
 		
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
