@@ -3,7 +3,7 @@
 jQuery( document ).ready( function( $ ) {
 	var theme = _SnS_options.theme ? _SnS_options.theme: 'default';
 	var lessMirror, lessOutput, errorLine, errorText, errors, loaded,
-		lessMirrorConfig = { lineNumbers: true, mode: "less", theme: theme, indentWithTabs: true };
+		lessMirrorConfig = { lineNumbers: true, mode: "text/x-less", theme: theme, indentWithTabs: true };
 	
 	CodeMirror.commands.save = saveLessMirror;
 	lessMirrorConfig.onChange = compile;

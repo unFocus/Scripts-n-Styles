@@ -306,7 +306,7 @@ class SnS_Admin_Meta_Box
 		
 		wp_register_script( 'codemirror',            $cm_dir . 'lib/codemirror.js',             array(), $cm_version );
 		wp_register_script( 'codemirror-css',        $cm_dir . 'mode/css/css.js',               array( 'codemirror' ), $cm_version );
-		wp_register_script( 'codemirror-less',       $cm_dir . 'mode/less/less.js',             array( 'codemirror' ), $cm_version );
+		wp_register_script( 'codemirror-less',       $cm_dir . 'mode/less/less.js',             array( 'codemirror-css' ), $cm_version ); // load css first so less doesn't overwrite mime.
 		wp_register_script( 'codemirror-javascript', $cm_dir . 'mode/javascript/javascript.js', array( 'codemirror' ), $cm_version );
 		wp_register_script( 'codemirror-htmlmixed',  $cm_dir . 'mode/htmlmixed/htmlmixed.js',   array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript' ), $cm_version );
 		wp_register_script( 'codemirror-clike',      $cm_dir . 'mode/clike/clike.js',           array( 'codemirror' ), $cm_version );
