@@ -1,11 +1,10 @@
 === Scripts n Styles ===
 Contributors: WraithKenny, Touvan
-Donate link: http://wordpressfoundation.org/donate/
 Tags: admin, CSS, javascript, code, custom, Style
 Requires at least: 3.3
 Tested up to: 3.3
 Stable tag: 3.0.3
-License: GPLv2 or later
+License: GPLv3 or later
 
 This plugin allows Admin users to individually add custom CSS, Classes and JavaScript directly to Post, Pages or any other custom post types.
 
@@ -52,6 +51,10 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 6. Your styles are reflected in the Editor.
 
 == Changelog ==
+
+= 3.1 =
+* New Features.
+* Bug Fixes.
 
 = 3.0.3 =
 * Bug Fix: wpautop formatting.
@@ -102,6 +105,9 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 3.1 =
+New Features and Bug fixes
 
 = 3.0.3 =
 Bug fix (wpauto issue)
