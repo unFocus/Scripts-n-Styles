@@ -33,7 +33,7 @@ class SnS_Global_Page
 		
 		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array( 'codemirror' ), Scripts_n_Styles::VERSION );
 		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.css', Scripts_n_Styles::$file), array(), $cm_version );
-		if ( in_array( $cm_theme, array( 'cobalt', 'eclipse', 'elegant', 'lesser-dark', 'monokai', 'neat', 'night', 'rubyblue', 'xq-dark' ) ) )
+		if ( in_array( $cm_theme, SnS_Admin::$cm_themes ) && 'default' !== $cm_theme )
 			wp_enqueue_style( "codemirror-$cm_theme", plugins_url( "libraries/CodeMirror2/theme/$cm_theme.css", Scripts_n_Styles::$file), array( 'codemirror' ), $cm_version );
 		
 		wp_enqueue_script( 'sns-global-page-scripts', plugins_url('js/global-page.js', Scripts_n_Styles::$file), array( 'jquery', 'codemirror-less', 'codemirror-css', 'codemirror-javascript', 'less.js' ), Scripts_n_Styles::VERSION, true );

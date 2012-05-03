@@ -289,8 +289,8 @@ class SnS_Admin_Meta_Box
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
 		$cm_version = '2.4';
 		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.css', Scripts_n_Styles::$file), array(), $cm_version );
-		if ( in_array( $cm_theme, array( 'cobalt', 'eclipse', 'elegant', 'monokai', 'neat', 'night', 'rubyblue' ) ) )
-			wp_enqueue_style( "codemirror-$cm_theme", plugins_url( "libraries/CodeMirror2/theme/$cm_theme.css", Scripts_n_Styles::$file), array( 'codemirror' ), $cm_version );
+		if ( in_array( $cm_theme, SnS_Admin::$cm_themes ) && 'default' !== $cm_theme )
+			wp_enqueue_style( "codemirror_$cm_theme", plugins_url( "libraries/CodeMirror2/theme/$cm_theme.css", Scripts_n_Styles::$file), array( 'codemirror' ), $cm_version );
 		wp_enqueue_style( 'sns-meta-box-styles', plugins_url( 'css/meta-box-styles.css', Scripts_n_Styles::$file), array( 'codemirror' ), Scripts_n_Styles::VERSION );
 	}
 	

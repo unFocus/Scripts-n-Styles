@@ -40,8 +40,8 @@ class SnS_Settings_Page
 		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array( 'codemirror' ), Scripts_n_Styles::VERSION );
 		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.css', Scripts_n_Styles::$file), array(), $cm_version );
 		
-		foreach ( array( 'cobalt', 'eclipse', 'elegant', 'lesser-dark', 'monokai', 'neat', 'night', 'rubyblue', 'xq-dark' ) as $theme )
-			wp_enqueue_style( "codemirror-$theme", plugins_url( "libraries/CodeMirror2/theme/$theme.css", Scripts_n_Styles::$file), array( 'codemirror' ), $cm_version );
+		foreach ( SnS_Admin::$cm_themes as $theme )
+			if ( 'default' !== $theme ) wp_enqueue_style( "codemirror-$theme", plugins_url( "libraries/CodeMirror2/theme/$theme.css", Scripts_n_Styles::$file), array( 'codemirror' ), $cm_version );
 		
 		wp_enqueue_script( 'sns-settings-page-scripts', plugins_url('js/settings-page.js', Scripts_n_Styles::$file), array( 'jquery', 'codemirror-less', 'codemirror-css', 'codemirror-javascript' ), Scripts_n_Styles::VERSION, true );
 		wp_localize_script( 'sns-settings-page-scripts', 'codemirror_options', array( 'theme' => $cm_theme ) );
@@ -125,7 +125,7 @@ class SnS_Settings_Page
 			array(
 				'label_for' => 'cm_theme',
 				'setting' => 'SnS_options',
-				'choices' => array( 'cobalt', 'eclipse', 'elegant', 'lesser-dark', 'monokai', 'neat', 'night', 'rubyblue', 'xq-dark' ),
+				'choices' => SnS_Admin::$cm_themes,
 				'default' => 'default',
 				'legend' => __( 'Theme', 'scripts-n-styles' ),
 				'layout' => 'horizontal',
