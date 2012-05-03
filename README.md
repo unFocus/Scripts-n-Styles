@@ -2,8 +2,8 @@
 Contributors: WraithKenny, Touvan  
 Tags: admin, CSS, javascript, code, custom, Style  
 Requires at least: 3.3  
-Tested up to: 3.3  
-Stable tag: 3.0.3  
+Tested up to: 3.4-beta3  
+Stable tag: 3.1  
 License: GPLv3 or later  
 
 This plugin allows Admin users to individually add custom CSS, Classes and JavaScript directly to Post, Pages or any other custom post types.
@@ -53,8 +53,9 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 ## Changelog ##
 
 ### 3.1 ###
-* New Features.
-* Bug Fixes.
+* Feature: Dynamic Shortcodes.
+* Feature: LESS.js support.
+* Bug Fix: Proper output escaping.
 
 ### 3.0.3 ###
 * Bug Fix: wpautop formatting.
