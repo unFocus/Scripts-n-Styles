@@ -1,23 +1,5 @@
 /* MetaBox.css */
 
-
-.wp-tab-bar {
-	display: none;
-}
-body.js .wp-tab-bar {
-	display: block;
-}
-#SnS_meta_box .title {
-	margin-top: 1.5em;
-}
-body.js #SnS_meta_box .title,
-body.js .wp-tab-panel {
-	display: none;
-}
-body.js .wp-tabs-panel-active {
-	display: block;
-}
-
 .CodeMirror {
 	border: 1px solid #DFDFDF;
 	background-color: white;
@@ -38,91 +20,101 @@ body.js .wp-tabs-panel-active {
 	overflow: auto;
 }
 
-/* temp fix border-bottom rounding error problem. 
-#side-sortables .wp-tab-bar {
-	margin-bottom: 0px;
-	min-height: 19px;
-}*/
+/*
+ * 
+ */
 
-/* core styles */
-#post-body .wp-tab-bar a {
-	text-decoration: underline;
+#SnS_meta_box .inside {
+	height: 200px;
+	overflow: auto;
+	padding: 6px 10px 8px;
+	margin: 0;
 }
-#post-body .wp-tab-bar {
+body.js #SnS_meta_box .inside {
+	height: auto;
+	padding: 0 10px;
+	margin: 6px 0 8px;
+}
+body.js #SnS_meta_box .wp-tab-bar { display: block; }
+
+		#SnS_meta_box .wp-tab-bar { display: none;  }
+body.js #SnS_meta_box .wp-tab-bar { display: block; }
+
+#SnS_meta_box .wp-tab-bar {
+	text-align: right;
+	overflow: auto;
+	width: 100%;
+	margin-bottom: -1px;
+}
+#SnS_meta_box .wp-tab-bar li {
+	float: left;
+	background-color: inherit;
+	border: 0 none;
+	margin: 0;
+	padding: 0;
+	display: inline;
+}
+#SnS_meta_box .wp-tab-bar a {
+	display: block;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	border: 1px solid transparent;
+	border-bottom: 0px none;
+	padding: 3px 5px 5px;
+	margin-right: 3px;
+	text-decoration: none;
+}
+#SnS_meta_box .wp-tab-active a {
+	background-color: #FFFFFF;
+	border-color: #DFDFDF;
+}
+
+#normal-sortables   #SnS_meta_box .wp-tab-bar,
+#advanced-sortables #SnS_meta_box .wp-tab-bar {
 	float: left;
 	margin: 0 -120px 0 5px;
 	padding: 0;
 	text-align: right;
 	width: 120px;
 }
-#post-body .wp-tab-bar li {
-	padding: 8px;
-	display: list-item;
-}
-#post-body .wp-tab-active {
-	border-radius: 3px 0 0 3px;
-	border-style: solid none solid solid;
-	border-width: 1px 0 1px 1px;
-	margin-right: -1px;
-}
-#post-body .wp-tab-active a {
-	font-weight: bold;
-	text-decoration: none;
-}
-#post-body .wp-tab-panel {
-	margin: 0 5px 0 125px;
-	border-style: solid;
-	border-width: 1px;
-	height: 200px;
-	overflow: auto;
-	padding: 0.5em 0.9em;
-}
-/* end core styles */
 
-#post-body #SnS_meta_box .wp-tab-bar li {
-	padding: 0px;
-}
-#post-body #SnS_meta_box .wp-tab-bar a {
-	padding: 8px;
-	display: block;
+/*
+ * .wp-tab-panel rules
+ */
+body.js #SnS_meta_box .wp-tab-panel { display: none; }
+#SnS_meta_box .wp-tabs-panel-active { display: block; }
+
+		#SnS_meta_box .wp-tab-panel { margin-bottom: 1em; }
+body.js #SnS_meta_box .wp-tab-panel { margin-bottom: 0; }
+
+#SnS_meta_box .wp-tab-panel {
+	margin-bottom: 1em;
 }
 #SnS_meta_box .wp-tab-panel {
-	height: auto;
+	border-style: solid;
+	border-width: 1px;
+	overflow: auto;
+	padding: 0.5em 0.9em;
 	min-height: 200px;
+	height: auto;
+}
+body.js #normal-sortables   #SnS_meta_box .wp-tab-panel,
+body.js #advanced-sortables #SnS_meta_box .wp-tab-panel {
+	margin-left: 125px;
+	margin-right: 5px;
 }
 
-#add-mce-dropdown-names label {
-	width: 50px;
-	display: inline-block
-}
-.sns-ajax-loading {
-	vertical-align: middle;
-}
-.sns-ajax-wrap {
-	height: 23px;
-}
-#sns-classes {
-	overflow: hidden;
-	width: 100%;
-}
-#SnS_classes_mce_wrapper {
-	margin: 6px 0;
-}
-#mce-dropdown-names {
-	display: none;
-}
-body.js #mce-dropdown-names {
-	display: block;
-}
-#delete-mce-dropdown-names .sns-ajax-delete {
-	cursor: pointer;
-	display: inline-block;
-	height: 10px;
-	overflow: hidden;
-	text-indent: -9999px;
-	width: 10px;
-	background: url("/wp-admin/images/xit.gif") no-repeat scroll 0 0 transparent;
-}
-#delete-mce-dropdown-names .sns-ajax-delete:hover {
-	background: url("/wp-admin/images/xit.gif") no-repeat scroll -10px 0 transparent;
+
+/* one column on the post write/edit screen */
+@media only screen and (max-width: 1050px) {
+	#normal-sortables   #SnS_meta_box .wp-tab-bar,
+	#advanced-sortables #SnS_meta_box .wp-tab-bar {
+		float: none;
+		margin: 12px 0 -1px;
+		width: 100%;
+	}
+	body.js #normal-sortables   #SnS_meta_box .wp-tab-panel,
+	body.js #advanced-sortables #SnS_meta_box .wp-tab-panel {
+		margin: 0;
+	}
 }
