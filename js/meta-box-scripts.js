@@ -11,22 +11,21 @@ jQuery( document ).ready( function( $ ) {
 	//$('textarea', context).attr('autocomplete','off');
 	
 	// Refresh when panel becomes unhidden
-	$( context + '-hide, '
-		+ context + ' .hndle, '
-		+ context + ' .handlediv ' )
-		.live( 'click', refreshCodeMirrors );
+	$( '#adv-settings' ).on( 'click', context + '-hide, ', refreshCodeMirrors );
+	$( context ).on( 'click', '.hndle, .handlediv', refreshCodeMirrors );
 	
 	// add tab-switch handler
-	$( '.wp-tab-bar a', context ).live( 'click', onTabSwitch );
+	$( context ).on( 'click', '.wp-tab-bar a', onTabSwitch );
 	
 	// activate first run
-	$( '.wp-tab-active a', context ).trigger( 'click' );
+	$( '.wp-tab-active a', context ).click();
 	
 	// must run before ajax click handlers are added.
 	setupAjaxUI();
 	
 	refreshDeleteBtns();
 	
+
 	
 	$('#sns-ajax-update-scripts').click(function( event ){
 		event.preventDefault();
@@ -67,6 +66,12 @@ jQuery( document ).ready( function( $ ) {
 		
 		$.post( ajaxurl, args, function( data ) { refreshBodyClass( data ); } );
 	});
+	$('#SnS_classes_body, #SnS_classes_body').keypress(function( event ) {
+		if ( event.which == 13 ) {
+			event.preventDefault();
+			$("#sns-ajax-update-classes").click();
+		}
+	});
 	
 	/*
 	 * Expects return data.
@@ -99,11 +104,17 @@ jQuery( document ).ready( function( $ ) {
 		
 		$.post( ajaxurl, args, function( data ) { refreshStyleFormats( data ); } );
 	});
+	$('#SnS_classes_mce_classes, #SnS_classes_mce_element, #SnS_classes_mce_title').keypress(function( event ) {
+		if ( event.which == 13 ) {
+			event.preventDefault();
+			$("#sns-ajax-update-dropdown").click();
+		}
+	});
 	
 	/*
 	 * Expects return data.
 	 */
-	$('#delete-mce-dropdown-names .sns-ajax-delete').live( "click", function( event ){
+	$('#delete-mce-dropdown-names').on( "click", ".sns-ajax-delete", function( event ){
 		event.preventDefault();
 		$(this).next().show();
 		var args = { _ajax_nonce: nonce, post_id: $( '#post_ID' ).val(), };
@@ -112,6 +123,56 @@ jQuery( document ).ready( function( $ ) {
 		args.delete = $( this ).attr( 'id' );
 		
 		$.post( ajaxurl, args, function( data ) { refreshStyleFormats( data ); } );
+	});
+	
+	
+	
+	/*
+	 * Expects return data.
+	 */
+	$('#sns-ajax-add-shortcode').click(function( event ){
+		event.preventDefault();
+		$(this).next().show();
+		$(currentCodeMirror).each(function (){ this.save(); });
+		
+		var args = { _ajax_nonce: nonce, post_id: $( '#post_ID' ).val(), };
+		
+		args.action = 'sns_shortcodes';
+		args.subaction = 'add';
+		args.shortcode = $( '#SnS_shortcodes_new' ).val();
+		
+		console.dir(args);
+		//$.post( ajaxurl, args, function( data ) { refreshShortcodes(); } );
+	});
+	$('#SnS_shortcodes').keypress(function( event ) {
+		if ( event.which == 13 ) {
+			event.preventDefault();
+			$("#sns-ajax-add-shortcode").click();
+		}
+	});
+	$('#sns-shortcodes').on( "click", ".sns-ajax-delete-shortcode", function( event ){
+		event.preventDefault();
+		$(this).next().show();
+		var args = { _ajax_nonce: nonce, post_id: $( '#post_ID' ).val(), };
+		
+		args.action = 'sns_shortcodes';
+		args.subaction = 'delete';
+		args.delete = $( this ).prev('textarea').id;
+		
+		console.dir(args);
+		//$.post( ajaxurl, args, function( data ) { refreshStyleFormats( data ); } );
+	});
+	$('#sns-shortcodes').on( "click", ".sns-ajax-update-shortcode", function( event ){
+		event.preventDefault();
+		$(this).next().show();
+		var args = { _ajax_nonce: nonce, post_id: $( '#post_ID' ).val(), };
+		
+		args.action = 'sns_shortcodes';
+		args.subaction = 'update';
+		args.shortcode = $( this ).prev('textarea');
+		
+		console.dir(args);
+		//$.post( ajaxurl, args, function( data ) { refreshStyleFormats( data ); } );
 	});
 	
 	/*
@@ -176,9 +237,17 @@ jQuery( document ).ready( function( $ ) {
 			 + '</div>'
 			);
 		
-		$('#sns-classes').append(
+		$('#SnS_shortcodes').after(
+			' &nbsp; '
+			 + '<a id="sns-ajax-add-shortcode" href="#" class="button">Add New</a>'
+			 + ' '
+			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			);
+		$('#sns-shortcodes .sns-shortcode .inside').append(
 			'<div class="sns-ajax-wrap">'
-			 + '<a id="sns-ajax-update-classes" href="#" class="button">Update Classes</a>'
+			 + '<a class="sns-ajax-delete-shortcode button" href="#">Delete</a>'
+			 + ' &nbsp; '
+			 + '<a class="sns-ajax-update-shortcode button" href="#">Update</a>'
 			 + ' '
 			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
 			 + '</div>'
@@ -404,6 +473,10 @@ jQuery( document ).ready( function( $ ) {
 		
 		refreshDeleteBtns();
 		refreshMCE();
+	}
+	function refreshShortcodes( data ) {
+		// error check
+		console.dir(data);
 	}
 	function refreshMCE() {
 		var ed = tinyMCE.editors["content"];

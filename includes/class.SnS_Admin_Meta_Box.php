@@ -236,27 +236,27 @@ class SnS_Admin_Meta_Box
 			
 			<div class="wp-tab-panel" id="SnS_shortcodes-tab">
 				<strong class="title">Shortcodes</strong>
-				<div id="sns-shortcodes">
-				<?php
-				$meta_name = 'SnS_shortcodes';
-				$SnS = get_post_meta( $post->ID, '_SnS', true );
-				$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ] : array();
-				?>
-				<h4>Add New</h4>
-				<label for="<?php echo $meta_name; ?>">Name: </label>
-				<input id="<?php echo $meta_name; ?>" name="<?php echo $meta_name . '[new][name]'; ?>" type="text" />
-				<textarea class="codemirror htmlmixed" name="<?php echo $meta_name . '[new][value]'; ?>" rows="5" cols="40" style="width: 98%;"></textarea>
-				<?php if ( ! empty( $shortcodes ) ) { ?>
-					<h4>Existing</h4>
+				<div id="sns-add-shortcode">
 					<?php
-					foreach ( $shortcodes as $key => $value ) {
-						?>
-						<label for="<?php echo $meta_name . '[existing][' . $key . ']'; ?>">[sns_shortcode name="<?php echo $key ?>"]</label>
-						<textarea class="codemirror htmlmixed" name="<?php echo $meta_name . '[existing][' . $key . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
-						<?php
-					}
-				} ?>
+					$meta_name = 'SnS_shortcodes';
+					$SnS = get_post_meta( $post->ID, '_SnS', true );
+					$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ] : array();
+					?>
+					<label for="<?php echo $meta_name; ?>">Name: </label>
+					<input id="<?php echo $meta_name; ?>" name="<?php echo $meta_name . '[new][name]'; ?>" type="text" />
+					<textarea id="<?php echo $meta_name; ?>_new" class="codemirror htmlmixed" name="<?php echo $meta_name . '[new][value]'; ?>" rows="5" cols="40" style="width: 98%;"></textarea>
 				</div>
+				<?php if ( ! empty( $shortcodes ) ) { ?>
+					<div id="sns-shortcodes">
+						<h4>Existing Codes: </h4>
+						<?php foreach ( $shortcodes as $key => $value ) { ?>
+							<div class="sns-shortcode widget"><div class="inside">
+							<label style="display: inline-block; min-width: 200px;" for="<?php echo $meta_name . '[existing][' . $key . ']'; ?>">[sns_shortcode name="<?php echo $key ?>"]</label>
+							<textarea class="codemirror htmlmixed" data-sns-shortcode-key="<?php echo $key ?>" name="<?php echo $meta_name . '[existing][' . $key . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
+							</div></div>
+						<?php } ?>
+					</div>
+				<?php } ?>
 			</div>
 		<?php
 	}

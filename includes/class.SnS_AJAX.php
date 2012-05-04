@@ -211,7 +211,7 @@ class SnS_AJAX
 		
 		
 		$shortcodes = array();
-		$SnS_shortcodes = isset( $_REQUEST[ 'SnS_shortcodes' ] ) ? $_REQUEST[ 'SnS_shortcodes' ]: array();
+		$SnS_shortcodes = isset( $_REQUEST[ 'shortcodes' ] ) ? $_REQUEST[ 'shortcodes' ]: array();
 		
 		$existing_shortcodes = isset( $SnS_shortcodes[ 'existing' ] ) ? $SnS_shortcodes[ 'existing' ]: array();
 		foreach ( $existing_shortcodes as $key => $value )

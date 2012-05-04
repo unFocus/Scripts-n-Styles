@@ -63,18 +63,18 @@ body.js #mce-dropdown-names {
 
 body.js #SnS_meta_box .title { display: none; }
 
-#SnS_meta_box .inside {
+#SnS_meta_box > .inside {
 	height: 300px;
 	overflow: auto;
 	padding: 6px 10px 8px;
 	margin: 0;
 	position: static;
 }
-body.no-js #side-sortables #SnS_meta_box .inside {
+body.no-js #side-sortables #SnS_meta_box > .inside {
 	margin-top: 33px;
 	padding-top: 0;
 }
-body.js #SnS_meta_box .inside {
+body.js #SnS_meta_box > .inside {
 	height: auto;
 	padding: 0 10px;
 	margin: 6px 0 8px;
@@ -163,7 +163,7 @@ body.js    #SnS_meta_box .wp-tab-panel { margin-bottom: 0; }
 }
 
 @media only screen and (max-width: 1050px) {
-	body.no-js #SnS_meta_box .inside {
+	body.no-js #SnS_meta_box > .inside {
 		margin-top: 33px;
 		padding-top: 0;
 	}
