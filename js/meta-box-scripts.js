@@ -175,6 +175,14 @@ jQuery( document ).ready( function( $ ) {
 			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
 			 + '</div>'
 			);
+		
+		$('#sns-classes').append(
+			'<div class="sns-ajax-wrap">'
+			 + '<a id="sns-ajax-update-classes" href="#" class="button">Update Classes</a>'
+			 + ' '
+			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			 + '</div>'
+			);
 	
 		$('.sns-ajax-loading').hide();
 		

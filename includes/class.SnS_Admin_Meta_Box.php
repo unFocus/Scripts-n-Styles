@@ -235,12 +235,13 @@ class SnS_Admin_Meta_Box
 			</div>
 			
 			<div class="wp-tab-panel" id="SnS_shortcodes-tab">
+				<strong class="title">Shortcodes</strong>
+				<div id="sns-shortcodes">
 				<?php
 				$meta_name = 'SnS_shortcodes';
 				$SnS = get_post_meta( $post->ID, '_SnS', true );
 				$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ] : array();
 				?>
-				<strong class="title">Shortcodes</strong>
 				<h4>Add New</h4>
 				<label for="<?php echo $meta_name; ?>">Name: </label>
 				<input id="<?php echo $meta_name; ?>" name="<?php echo $meta_name . '[new][name]'; ?>" type="text" />
@@ -255,6 +256,7 @@ class SnS_Admin_Meta_Box
 						<?php
 					}
 				} ?>
+				</div>
 			</div>
 		<?php
 	}

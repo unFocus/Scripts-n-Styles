@@ -13,6 +13,7 @@ class SnS_AJAX
 		add_action( 'wp_ajax_sns_styles', array( __CLASS__, 'styles' ) );
 		add_action( 'wp_ajax_sns_dropdown', array( __CLASS__, 'dropdown' ) );
 		add_action( 'wp_ajax_sns_delete_class', array( __CLASS__, 'delete_class' ) );
+		add_action( 'wp_ajax_sns_shortcodes', array( __CLASS__, 'shortcodes' ) );
 	}
 	function update_tab() {
 		check_ajax_referer( Scripts_n_Styles::$file );
@@ -195,6 +196,38 @@ class SnS_AJAX
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
 			"classes_mce" => array_values( $styles[ 'classes_mce' ] )
+		) );
+		
+		exit();
+	}
+	function shortcodes() {
+		check_ajax_referer( Scripts_n_Styles::$file );
+		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
+		
+		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
+		$post_id = absint( $_REQUEST[ 'post_id' ] );
+		$SnS = get_post_meta( $post_id, '_SnS', true );
+		$old_shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
+		
+		
+		$shortcodes = array();
+		$SnS_shortcodes = isset( $_REQUEST[ 'SnS_shortcodes' ] ) ? $_REQUEST[ 'SnS_shortcodes' ]: array();
+		
+		$existing_shortcodes = isset( $SnS_shortcodes[ 'existing' ] ) ? $SnS_shortcodes[ 'existing' ]: array();
+		foreach ( $existing_shortcodes as $key => $value )
+			if ( ! empty( $value ) )
+				$shortcodes[ $key ] = $value;
+		
+		$new_shortcode = isset( $SnS_shortcodes[ 'new' ] ) ? $SnS_shortcodes[ 'new' ]: array();
+		if ( ! empty( $new_shortcode[ 'value' ] ) ) {
+			$key = ( empty( $new_shortcode[ 'name' ] ) ) ? count( $shortcodes ): $new_shortcode[ 'name' ];
+			$shortcodes[ $key ] = $new_shortcode[ 'value' ];
+		}
+		
+		
+		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		echo json_encode( array(
+			"shortcodes" => array_values( $shortcodes[ 'shortcodes' ] )
 		) );
 		
 		exit();
