@@ -20,30 +20,77 @@
 	overflow: auto;
 }
 
-/*
- * 
- */
+
+
+#add-mce-dropdown-names label {
+	width: 50px;
+	display: inline-block
+}
+.sns-ajax-loading {
+	vertical-align: middle;
+}
+.sns-ajax-wrap {
+	height: 23px;
+}
+#sns-classes {
+	overflow: hidden;
+	width: 100%;
+}
+#SnS_classes_mce_wrapper {
+	margin: 6px 0;
+}
+#mce-dropdown-names {
+	display: none;
+}
+body.js #mce-dropdown-names {
+	display: block;
+}
+#delete-mce-dropdown-names .sns-ajax-delete {
+	cursor: pointer;
+	display: inline-block;
+	height: 10px;
+	overflow: hidden;
+	text-indent: -9999px;
+	width: 10px;
+	background: url("/wp-admin/images/xit.gif") no-repeat scroll 0 0 transparent;
+}
+#delete-mce-dropdown-names .sns-ajax-delete:hover {
+	background: url("/wp-admin/images/xit.gif") no-repeat scroll -10px 0 transparent;
+}
+
+
+
+
+body.js #SnS_meta_box .title { display: none; }
 
 #SnS_meta_box .inside {
-	height: 200px;
+	height: 300px;
 	overflow: auto;
 	padding: 6px 10px 8px;
 	margin: 0;
+	position: static;
+}
+body.no-js #side-sortables #SnS_meta_box .inside {
+	margin-top: 33px;
+	padding-top: 0;
 }
 body.js #SnS_meta_box .inside {
 	height: auto;
 	padding: 0 10px;
 	margin: 6px 0 8px;
 }
-body.js #SnS_meta_box .wp-tab-bar { display: block; }
 
-		#SnS_meta_box .wp-tab-bar { display: none;  }
-body.js #SnS_meta_box .wp-tab-bar { display: block; }
+body.no-js #SnS_meta_box .wp-tab-bar {
+	position: absolute;
+	top: 36px;
+}
 
 #SnS_meta_box .wp-tab-bar {
 	text-align: right;
 	overflow: auto;
 	width: 100%;
+	padding: 0;
+	margin-top: 3px;
 	margin-bottom: -1px;
 }
 #SnS_meta_box .wp-tab-bar li {
@@ -56,10 +103,9 @@ body.js #SnS_meta_box .wp-tab-bar { display: block; }
 }
 #SnS_meta_box .wp-tab-bar a {
 	display: block;
-	border-top-left-radius: 3px;
-	border-top-right-radius: 3px;
-	border: 1px solid transparent;
-	border-bottom: 0px none;
+	border-radius: 3px 3px 0 0;
+	border-style: none;
+	border-width: 1px 1px 0 1px;
 	padding: 3px 5px 5px;
 	margin-right: 3px;
 	text-decoration: none;
@@ -67,29 +113,19 @@ body.js #SnS_meta_box .wp-tab-bar { display: block; }
 #SnS_meta_box .wp-tab-active a {
 	background-color: #FFFFFF;
 	border-color: #DFDFDF;
-}
-
-#normal-sortables   #SnS_meta_box .wp-tab-bar,
-#advanced-sortables #SnS_meta_box .wp-tab-bar {
-	float: left;
-	margin: 0 -120px 0 5px;
-	padding: 0;
-	text-align: right;
-	width: 120px;
+	border-style: solid;
+	margin-bottom: -1px;
 }
 
 /*
  * .wp-tab-panel rules
  */
-body.js #SnS_meta_box .wp-tab-panel { display: none; }
-#SnS_meta_box .wp-tabs-panel-active { display: block; }
+body.js #SnS_meta_box .wp-tab-panel 		{ display: none; }
+body.js #SnS_meta_box .wp-tabs-panel-active { display: block; }
 
-		#SnS_meta_box .wp-tab-panel { margin-bottom: 1em; }
-body.js #SnS_meta_box .wp-tab-panel { margin-bottom: 0; }
+body.no-js #SnS_meta_box .wp-tab-panel { margin-bottom: 1em; }
+body.js    #SnS_meta_box .wp-tab-panel { margin-bottom: 0; }
 
-#SnS_meta_box .wp-tab-panel {
-	margin-bottom: 1em;
-}
 #SnS_meta_box .wp-tab-panel {
 	border-style: solid;
 	border-width: 1px;
@@ -98,23 +134,65 @@ body.js #SnS_meta_box .wp-tab-panel { margin-bottom: 0; }
 	min-height: 200px;
 	height: auto;
 }
-body.js #normal-sortables   #SnS_meta_box .wp-tab-panel,
-body.js #advanced-sortables #SnS_meta_box .wp-tab-panel {
+
+/* See @media */
+#normal-sortables   #SnS_meta_box .wp-tab-bar,
+#advanced-sortables #SnS_meta_box .wp-tab-bar {
+	float: left;
+	margin: 0 -1px 0 5px;
+	width: 121px;
+	overflow: visible;
+}
+#normal-sortables   #SnS_meta_box .wp-tab-panel,
+#advanced-sortables #SnS_meta_box .wp-tab-panel {
 	margin-left: 125px;
 	margin-right: 5px;
 }
+#normal-sortables   #SnS_meta_box .wp-tab-bar a,
+#advanced-sortables #SnS_meta_box .wp-tab-bar a {
+	padding: 8px;
+	width: 104px;
+}
+#normal-sortables   #SnS_meta_box .wp-tab-active a,
+#advanced-sortables #SnS_meta_box .wp-tab-active a {
+	border-radius: 3px 0 0 3px;
+	border-style: solid none solid solid;
+	border-width: 1px 0 1px 1px;
+	margin-right: -1px;
+	font-weight: bold;
+}
 
-
-/* one column on the post write/edit screen */
 @media only screen and (max-width: 1050px) {
+	body.no-js #SnS_meta_box .inside {
+		margin-top: 33px;
+		padding-top: 0;
+	}
 	#normal-sortables   #SnS_meta_box .wp-tab-bar,
 	#advanced-sortables #SnS_meta_box .wp-tab-bar {
 		float: none;
-		margin: 12px 0 -1px;
+		margin: 3px 0 -1px;
 		width: 100%;
+		overflow: hidden;
+	}
+	#normal-sortables   #SnS_meta_box .wp-tab-panel,
+	#advanced-sortables #SnS_meta_box .wp-tab-panel {
+		margin: 0 0 1em;
 	}
 	body.js #normal-sortables   #SnS_meta_box .wp-tab-panel,
 	body.js #advanced-sortables #SnS_meta_box .wp-tab-panel {
 		margin: 0;
+	}
+	#normal-sortables   #SnS_meta_box .wp-tab-bar a,
+	#advanced-sortables #SnS_meta_box .wp-tab-bar a {
+		padding: 3px 5px 5px;
+		width: auto;
+	}
+	#normal-sortables   #SnS_meta_box .wp-tab-active a,
+	#advanced-sortables #SnS_meta_box .wp-tab-active a {
+		border-radius: 3px 3px 0 0;
+		border-style: solid solid none solid;
+		border-width: 1px 1px 0 1px;
+		margin-right: 3px;
+		font-weight: normal;
 	}
 }
