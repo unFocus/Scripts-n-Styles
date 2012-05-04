@@ -52,6 +52,10 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 ## Changelog 
 
+### 3.2 
+* Add Markdown mode to code editor
+* Add (fix) code editor themes
+
 ### 3.1.1 
 * Add (fix) CodeMirror Themes
 
@@ -109,6 +113,9 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 * Initial Release.
 
 ## Upgrade Notice 
+
+### 3.2 
+New Features and Bug fixes
 
 ### 3.1.1 
 Add (fix) CodeMirror Themes
