@@ -36,7 +36,7 @@ class SnS_Settings_Page
 	function admin_enqueue_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : '';
-		$cm_version = '2.4';
+		$cm_version = SnS_Admin::$cm_version;
 		wp_enqueue_style( 'sns-options-styles', plugins_url('css/options-styles.css', Scripts_n_Styles::$file), array( 'codemirror' ), Scripts_n_Styles::VERSION );
 		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.css', Scripts_n_Styles::$file), array(), $cm_version );
 		

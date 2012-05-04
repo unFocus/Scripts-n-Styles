@@ -23,6 +23,7 @@ class SnS_Admin
 	const OPTION_GROUP = 'scripts_n_styles';
 	const MENU_SLUG = 'sns';
 	static $cm_themes = array( 'default', 'ambiance', 'blackboard', 'cobalt', 'eclipse', 'elegant', 'lesser-dark', 'monokai', 'neat', 'night', 'rubyblue', 'xq-dark' );
+	static $cm_version = '2.4';
 	static $parent_slug = '';
 	/**#@-*/
 	

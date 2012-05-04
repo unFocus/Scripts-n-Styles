@@ -289,7 +289,7 @@ class SnS_Admin_Meta_Box
 	static function meta_box_styles() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
-		$cm_version = '2.4';
+		$cm_version = SnS_Admin::$cm_version;
 		wp_enqueue_style( 'codemirror', plugins_url( 'libraries/CodeMirror2/lib/codemirror.css', Scripts_n_Styles::$file), array(), $cm_version );
 		if ( in_array( $cm_theme, SnS_Admin::$cm_themes ) && 'default' !== $cm_theme )
 			wp_enqueue_style( "codemirror_$cm_theme", plugins_url( "libraries/CodeMirror2/theme/$cm_theme.css", Scripts_n_Styles::$file), array( 'codemirror' ), $cm_version );
@@ -303,7 +303,7 @@ class SnS_Admin_Meta_Box
 	static function meta_box_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
-		$cm_version = '2.4';
+		$cm_version = SnS_Admin::$cm_version;
 		$cm_dir = plugins_url( 'libraries/CodeMirror2/', Scripts_n_Styles::$file);
 		
 		wp_register_script( 'codemirror',            $cm_dir . 'lib/codemirror.js',             array(), $cm_version );

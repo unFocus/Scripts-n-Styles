@@ -32,7 +32,7 @@ jQuery( document ).ready( function( $ ) {
 	else if ( "php" == fileType ) 
 		config.mode = "php";
 	else 
-		config.mode = "txt";
+		config.mode = "markdown";
 	
 	CodeMirror.commands.save = function (){ jQuery('#submit').click(); };
 	
