@@ -69,8 +69,8 @@ class SnS_AJAX
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			"classes_post" => $_REQUEST[ 'classes_post' ],
-			"classes_body" => $_REQUEST[ 'classes_body' ]
+			"classes_post" => $_REQUEST[ 'classes_post' ]
+			, "classes_body" => $_REQUEST[ 'classes_body' ]
 		) );
 		
 		exit();
@@ -99,8 +99,8 @@ class SnS_AJAX
 		
 		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		echo json_encode( array(
-			"scripts" => $_REQUEST[ 'scripts' ],
-			"scripts_in_head" => $_REQUEST[ 'scripts_in_head' ],
+			"scripts" => $_REQUEST[ 'scripts' ]
+			, "scripts_in_head" => $_REQUEST[ 'scripts_in_head' ]
 		) );
 		
 		exit();
@@ -200,36 +200,105 @@ class SnS_AJAX
 		
 		exit();
 	}
-	function shortcodes() {
+	function shortcodes( $action ) {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
 		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
+		if ( empty( $_REQUEST[ 'subaction' ] ) ) exit( 'missing directive' );
+		
+		if ( in_array( $_REQUEST[ 'subaction' ], array( 'add', 'update', 'delete' ) ) )
+			$subaction = $_REQUEST[ 'subaction' ];
+		else
+			exit( 'unknown directive' );
+		
 		$post_id = absint( $_REQUEST[ 'post_id' ] );
 		$SnS = get_post_meta( $post_id, '_SnS', true );
-		$old_shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
+		$shortcodes = isset( $SnS[ 'shortcodes' ] ) ? $SnS[ 'shortcodes' ]: array();
+		$message = '';
+		$code = 0;
+		$key = '';
+		$value = '';
 		
+		if ( isset( $_REQUEST[ 'name' ] ) )
+			$key = $_REQUEST[ 'name' ];
+		else
+			exit( 'bad directive.' );
 		
-		$shortcodes = array();
-		$SnS_shortcodes = isset( $_REQUEST[ 'shortcodes' ] ) ? $_REQUEST[ 'shortcodes' ]: array();
-		
-		$existing_shortcodes = isset( $SnS_shortcodes[ 'existing' ] ) ? $SnS_shortcodes[ 'existing' ]: array();
-		foreach ( $existing_shortcodes as $key => $value )
-			if ( ! empty( $value ) )
-				$shortcodes[ $key ] = $value;
-		
-		$new_shortcode = isset( $SnS_shortcodes[ 'new' ] ) ? $SnS_shortcodes[ 'new' ]: array();
-		if ( ! empty( $new_shortcode[ 'value' ] ) ) {
-			$key = ( empty( $new_shortcode[ 'name' ] ) ) ? count( $shortcodes ): $new_shortcode[ 'name' ];
-			$shortcodes[ $key ] = $new_shortcode[ 'value' ];
+		if ( '' == $key ) {
+			$key = count( $shortcodes );
+			while ( isset( $shortcodes[ $key ] ) )
+				$key++;
 		}
 		
+		switch ( $subaction ) {
+			case 'add':
+				if ( empty( $_REQUEST[ 'shortcode' ] ) )
+					exit( 'empty value.' );
+				else
+					$value = $_REQUEST[ 'shortcode' ];
+				
+				if ( isset( $shortcodes[ $key ] ) ) {
+					$code = 2;
+					$message = 'updated ' . $key;
+				} else {
+					$code = 1;
+				}
+				$shortcodes[ $key ] = $value;
+				break;
+				
+			case 'update':
+				if ( empty( $_REQUEST[ 'shortcode' ] ) ) {
+					if ( isset( $shortcodes[ $key ] ) )
+						unset( $shortcodes[ $key ] );
+					$code = 3;
+					$message = $key;
+				} else {
+					$value = $_REQUEST[ 'shortcode' ];
+					if ( isset( $shortcodes[ $key ] ) )
+						$shortcodes[ $key ] = $value;
+					else
+						exit( 'wrong key.' );
+					$code = 2;
+					$message = 'updated ' . $key;
+				}
+				break;
+				
+			case 'delete':
+				if ( isset( $shortcodes[ $key ] ) )
+					unset( $shortcodes[ $key ] );
+				else
+					exit( 'bad key.' );
+				$code = 3;
+				$message = $key;
+				break;
+		}
 		
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
-		echo json_encode( array(
-			"shortcodes" => array_values( $shortcodes[ 'shortcodes' ] )
-		) );
+		if ( empty( $shortcodes ) ) {
+			if ( isset( $SnS[ 'shortcodes' ] ) )
+				unset( $SnS[ 'shortcodes' ] );
+		} else {
+			$SnS[ 'shortcodes' ] = $shortcodes;
+		}
+		self::maybe_update( $post_id, '_SnS', $SnS );
 		
+		if ( 1 < $code ) {
+			header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+			echo json_encode( array(
+				"message"      => $message
+				, "code"       => $code
+			) );
+		} else {
+			header('Content-Type: text/html; charset=' . get_option('blog_charset'));
+			?><div class="sns-shortcode widget">
+	<div class="inside">
+		<label for="SnS_shortcodes[existing][<?php echo esc_attr( $key ) ?>]" style="display: inline-block; min-width: 200px;">[sns_shortcode name="<?php echo esc_attr( $key ) ?>"]</label>
+		<textarea style="width: 98%;" cols="40" rows="5" name="SnS_shortcodes[existing][<?php echo esc_attr( $key ) ?>]"
+			data-sns-shortcode-key="<?php echo esc_attr( $key ) ?>" class="codemirror-new htmlmixed"><?php echo esc_textarea( $value ) ?></textarea>
+		<div class="sns-ajax-wrap"><a href="#" class="sns-ajax-delete-shortcode button">Delete</a> &nbsp; <a href="#" class="sns-ajax-update-shortcode button">Update</a> <img src="/wp-admin/images/wpspin_light.gif" class="sns-ajax-loading" style="display: none;"></div>
+	</div>
+</div><?php
+		}
 		exit();
 	}
 	
@@ -241,8 +310,11 @@ class SnS_AJAX
 		return $o;
 	}
 	function maybe_update( $id, $name, $meta ) {
-		if ( empty( $meta ) ) delete_post_meta( $id, $name );
-		else update_post_meta( $id, $name, $meta );
+		if ( empty( $meta ) ) {
+			delete_post_meta( $id, $name );
+		} else {
+			update_post_meta( $id, $name, $meta );
+		}
 	}
 }
 ?>

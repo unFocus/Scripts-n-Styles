@@ -139,10 +139,10 @@ jQuery( document ).ready( function( $ ) {
 		
 		args.action = 'sns_shortcodes';
 		args.subaction = 'add';
+		args.name = $( '#SnS_shortcodes' ).val();
 		args.shortcode = $( '#SnS_shortcodes_new' ).val();
 		
-		console.dir(args);
-		//$.post( ajaxurl, args, function( data ) { refreshShortcodes(); } );
+		$.post( ajaxurl, args, function( data ) { refreshShortcodes( data ); } );
 	});
 	$('#SnS_shortcodes').keypress(function( event ) {
 		if ( event.which == 13 ) {
@@ -150,29 +150,33 @@ jQuery( document ).ready( function( $ ) {
 			$("#sns-ajax-add-shortcode").click();
 		}
 	});
+	
 	$('#sns-shortcodes').on( "click", ".sns-ajax-delete-shortcode", function( event ){
 		event.preventDefault();
+		if($(this).data('lock'))return;else $(this).data('lock',true);
+
 		$(this).next().show();
+		$(currentCodeMirror).each(function (){ this.save(); });
 		var args = { _ajax_nonce: nonce, post_id: $( '#post_ID' ).val(), };
 		
 		args.action = 'sns_shortcodes';
 		args.subaction = 'delete';
-		args.delete = $( this ).prev('textarea').id;
+		args.name = $( this ).parent().siblings('textarea').attr( 'data-sns-shortcode-key' );
 		
-		console.dir(args);
-		//$.post( ajaxurl, args, function( data ) { refreshStyleFormats( data ); } );
+		$.post( ajaxurl, args, function( data ) { refreshShortcodes( data ); } );
 	});
 	$('#sns-shortcodes').on( "click", ".sns-ajax-update-shortcode", function( event ){
 		event.preventDefault();
 		$(this).next().show();
+		$(currentCodeMirror).each(function (){ this.save(); });
 		var args = { _ajax_nonce: nonce, post_id: $( '#post_ID' ).val(), };
 		
 		args.action = 'sns_shortcodes';
 		args.subaction = 'update';
-		args.shortcode = $( this ).prev('textarea');
+		args.name = $( this ).parent().siblings('textarea').attr( 'data-sns-shortcode-key' );
+		args.shortcode = $( this ).parent().siblings('textarea').val();
 		
-		console.dir(args);
-		//$.post( ajaxurl, args, function( data ) { refreshStyleFormats( data ); } );
+		$.post( ajaxurl, args, function( data ) { refreshShortcodes( data ); } );
 	});
 	
 	/*
@@ -475,8 +479,45 @@ jQuery( document ).ready( function( $ ) {
 		refreshMCE();
 	}
 	function refreshShortcodes( data ) {
-		// error check
-		console.dir(data);
+		if ( data.code ) {
+			switch ( data.code ) {
+				case 2:
+					console.log( data.message );
+					break;
+				case 3:
+					$( 'textarea[data-sns-shortcode-key=' + data.message + ']', '#sns-shortcodes' ).closest('.sns-shortcode').slideUp(function(){
+						$(this).remove();
+						if ( 0 == $( '.sns-shortcode', '#sns-shortcodes' ).length )
+							$( 'h4', '#sns-shortcodes' ).slideUp();
+					});
+					break;
+			}
+		} else {
+			if ( 0 == data.indexOf( "<" ) ) {
+				var codemirrorNew = $('#sns-shortcodes').append( data ).find( '.codemirror-new' ).removeClass('codemirror-new').get(0);
+				currentCodeMirror.push( CodeMirror.fromTextArea( codemirrorNew, {
+					mode: "text/html",
+					theme: theme,
+					lineNumbers: true,
+					tabMode: "shift",
+					indentUnit: 4,
+					indentWithTabs: true,
+					enterMode: "keep",
+					matchBrackets: true
+				} ) );
+				if ( 0 == $( 'h4', '#sns-shortcodes' ).length )
+					$( '#sns-shortcodes' ).prepend('<h4>Existing Codes: </h4>');
+				if ( ! $( 'h4', '#sns-shortcodes' ).is( ":visible" )  )
+					$( 'h4', '#sns-shortcodes' ).slideDown();
+			} else if ( 0 == data.indexOf( "empty value." ) ) {
+				console.log('empty value');
+			} else if ( 0 == data.indexOf( "Use delete instead." ) ) {
+				console.log('Use delete instead');
+			} else {
+				alert( 'Scripts n Styles: ' + '\n\n' + 'Sorry, there was an AJAX error: (' + data + ')' + '\n\n' + 'Please use the post update button instead.' );
+			}
+		}
+		$('.sns-ajax-loading').hide();
 	}
 	function refreshMCE() {
 		var ed = tinyMCE.editors["content"];

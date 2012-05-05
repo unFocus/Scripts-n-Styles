@@ -246,8 +246,8 @@ class SnS_Admin_Meta_Box
 					<input id="<?php echo $meta_name; ?>" name="<?php echo $meta_name . '[new][name]'; ?>" type="text" />
 					<textarea id="<?php echo $meta_name; ?>_new" class="codemirror htmlmixed" name="<?php echo $meta_name . '[new][value]'; ?>" rows="5" cols="40" style="width: 98%;"></textarea>
 				</div>
+				<div id="sns-shortcodes">
 				<?php if ( ! empty( $shortcodes ) ) { ?>
-					<div id="sns-shortcodes">
 						<h4>Existing Codes: </h4>
 						<?php foreach ( $shortcodes as $key => $value ) { ?>
 							<div class="sns-shortcode widget"><div class="inside">
@@ -255,8 +255,8 @@ class SnS_Admin_Meta_Box
 							<textarea class="codemirror htmlmixed" data-sns-shortcode-key="<?php echo $key ?>" name="<?php echo $meta_name . '[existing][' . $key . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
 							</div></div>
 						<?php } ?>
-					</div>
 				<?php } ?>
+				</div>
 			</div>
 		<?php
 	}
