@@ -53,6 +53,7 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 ## Changelog 
 
 ### 3.2 
+* Add AJAX to Shortcode Tab
 * Add Markdown mode to code editor
 * Add (fix) code editor themes
 
