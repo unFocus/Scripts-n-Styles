@@ -10,6 +10,18 @@
 	background-clip: padding-box;
 	overflow: hidden;
 }
+.style > .CodeMirror,
+.script > .CodeMirror,
+.body-script > .CodeMirror,
+.head-script > .CodeMirror,
+.head-style > .CodeMirror { padding: .5em; }
+.style > .CodeMirror:before { content: '<style type="text/css">'; }
+.style > .CodeMirror:after { content: "</style>"; }
+.script > .CodeMirror:before { content: '<script type="text/javascript">'; }
+.script > .CodeMirror:after { content: "</script>"; }
+.head-style > .CodeMirror:after { content: "</style> </head>"; }
+.head-script > .CodeMirror:after { content: "</script> </head>"; }
+.body-script > .CodeMirror:after { content: "</script> </body>"; }
 .CodeMirror, #editorcontainer #content {
 	font-family: "Courier New", Courier, monospace;
 }
@@ -18,6 +30,10 @@
 	min-height: 50px;
 	max-height: 300px;
 	overflow: auto;
+}
+.style > .CodeMirror .CodeMirror-scroll,
+.script > .CodeMirror .CodeMirror-scroll {
+	margin: .5em -.5em;
 }
 
 

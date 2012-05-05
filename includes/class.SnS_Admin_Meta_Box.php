@@ -137,16 +137,22 @@ class SnS_Admin_Meta_Box
 			<div class="wp-tab-panel" id="SnS_scripts-tab">
 				<p><em><?php _e( "This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's)", 'scripts-n-styles' ) ?> ...</em></p>
 				<label for="SnS_scripts_in_head" class="title"><?php _e( '<strong>Scripts</strong> (for the <code>head</code> element):', 'scripts-n-styles' ) ?> </label>
+				<div class="script">
 				<textarea class="codemirror js" name="SnS_scripts_in_head" id="SnS_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts_in_head' ] ) ? esc_textarea( $scripts[ 'scripts_in_head' ] ) : ''; ?></textarea>
+				</div>
 				<p><em>... <code>&lt;/head></code> <?php _e( 'tag', 'scripts-n-styles' ) ?>.</em></p>
 				<label for="SnS_scripts" class="title"><strong>Scripts</strong>: </label>
+				<div class="script">
 				<textarea class="codemirror js" name="SnS_scripts" id="SnS_scripts" rows="5" cols="40" style="width: 98%;"><?php echo isset( $scripts[ 'scripts' ] ) ? esc_textarea( $scripts[ 'scripts' ] ) : ''; ?></textarea>
+				</div>
 				<p><em>... <code>&lt;/body></code> <?php _e( 'tag', 'scripts-n-styles' ) ?>.</em></p>
 			</div>
 			
 			<div class="wp-tab-panel" id="SnS_styles-tab">
 				<label for="SnS_styles" class="title"><?php _e( '<strong>Styles</strong>:', 'scripts-n-styles' ) ?> </label>
+				<div class="style">
 				<textarea class="codemirror css" name="SnS_styles" id="SnS_styles" rows="5" cols="40" style="width: 98%;"><?php echo isset( $styles[ 'styles' ] ) ? esc_textarea( $styles[ 'styles' ] ) : ''; ?></textarea>
+				</div>
 				<p><em><?php _e( 'This code will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> tag of your page (or post).', 'scripts-n-styles' ) ?></em></p>
 			</div>
 			
