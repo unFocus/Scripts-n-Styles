@@ -10,18 +10,36 @@
 	background-clip: padding-box;
 	overflow: hidden;
 }
-.style > .CodeMirror,
-.script > .CodeMirror,
-.body-script > .CodeMirror,
-.head-script > .CodeMirror,
-.head-style > .CodeMirror { padding: .5em; }
+
+/*.style > .CodeMirror,
+.script > .CodeMirror { padding: .5em; }*/
+
+.style > .CodeMirror:before,
+.script > .CodeMirror:before,
+.style > .CodeMirror:after,
+.script > .CodeMirror:after {
+	display: block;
+	padding: .5em;
+	background-color: #f5f5f5;
+}
+.style > .CodeMirror:before,
+.script > .CodeMirror:before {
+	border-bottom: 1px solid #dfdfdf;
+}
+.style > .CodeMirror:after,
+.script > .CodeMirror:after {
+	border-top: 1px solid #dfdfdf;
+}
 .style > .CodeMirror:before { content: '<style type="text/css">'; }
-.style > .CodeMirror:after { content: "</style>"; }
 .script > .CodeMirror:before { content: '<script type="text/javascript">'; }
+
+.style > .CodeMirror:after { content: "</style>"; }
 .script > .CodeMirror:after { content: "</script>"; }
+/* over-writes. */
 .head-style > .CodeMirror:after { content: "</style> </head>"; }
 .head-script > .CodeMirror:after { content: "</script> </head>"; }
 .body-script > .CodeMirror:after { content: "</script> </body>"; }
+
 .CodeMirror, #editorcontainer #content {
 	font-family: "Courier New", Courier, monospace;
 }
@@ -31,10 +49,10 @@
 	max-height: 300px;
 	overflow: auto;
 }
-.style > .CodeMirror .CodeMirror-scroll,
+/*.style > .CodeMirror .CodeMirror-scroll,
 .script > .CodeMirror .CodeMirror-scroll {
 	margin: .5em -.5em;
-}
+}*/
 
 
 
