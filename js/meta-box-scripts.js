@@ -494,7 +494,11 @@ jQuery( document ).ready( function( $ ) {
 			}
 		} else {
 			if ( 0 == data.indexOf( "<" ) ) {
-				var codemirrorNew = $('#sns-shortcodes').append( data ).find( '.codemirror-new' ).removeClass('codemirror-new').get(0);
+				var codemirrorNew = $('#sns-shortcodes-wrap')
+					.prepend( data )
+					.find( '.widget' ).hide().slideDown()
+					.find( '.codemirror-new' ).removeClass('codemirror-new').addClass('codemirror')
+					.get(0);
 				currentCodeMirror.push( CodeMirror.fromTextArea( codemirrorNew, {
 					mode: "text/html",
 					theme: theme,
@@ -509,6 +513,11 @@ jQuery( document ).ready( function( $ ) {
 					$( '#sns-shortcodes' ).prepend('<h4>Existing Codes: </h4>');
 				if ( ! $( 'h4', '#sns-shortcodes' ).is( ":visible" )  )
 					$( 'h4', '#sns-shortcodes' ).slideDown();
+				clearCodeMirrors();
+				$('#SnS_shortcodes').val('');
+				$('#SnS_shortcodes_new').val('');
+				loadCodeMirrors();
+				
 			} else if ( 0 == data.indexOf( "empty value." ) ) {
 				console.log('empty value');
 			} else if ( 0 == data.indexOf( "Use delete instead." ) ) {
@@ -518,6 +527,14 @@ jQuery( document ).ready( function( $ ) {
 			}
 		}
 		$('.sns-ajax-loading').hide();
+	}
+	addShortcodeBtns();
+	function addShortcodeBtns() {
+		$( '.sns-shortcode > .inside > label' ).after('<span class="sns-collapsed-shortcode-btn"></span>');
+		$('#sns-shortcodes-wrap').on("click",'.sns-collapsed-shortcode-btn', function(event){
+			$(this).parent().toggleClass('sns-collapsed-shortcode');
+		});
+		$('.sns-collapsed-shortcode-btn').click();
 	}
 	function refreshMCE() {
 		var ed = tinyMCE.editors["content"];

@@ -239,11 +239,13 @@ class SnS_AJAX
 					$value = $_REQUEST[ 'shortcode' ];
 				
 				if ( isset( $shortcodes[ $key ] ) ) {
-					$code = 2;
-					$message = 'updated ' . $key;
-				} else {
-					$code = 1;
-				}
+					$countr = 1;
+					while ( isset( $shortcodes[ $key . '_' . $countr ] ) )
+						$countr++;
+					$key .= '_' . $countr;
+				} 
+				
+				$code = 1;
 				$shortcodes[ $key ] = $value;
 				break;
 				

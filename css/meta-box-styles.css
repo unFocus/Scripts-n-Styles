@@ -54,7 +54,20 @@
 	margin: .5em -.5em;
 }*/
 
-
+.sns-collapsed-shortcode {
+	overflow: hidden;
+}
+.sns-collapsed-shortcode-btn:before {
+	content: "   (collapse)";
+}
+.sns-collapsed-shortcode .sns-collapsed-shortcode-btn:before {
+	content: "   (expand)";
+}
+.sns-collapsed-shortcode .CodeMirror,
+.sns-collapsed-shortcode .sns-ajax-wrap {
+	visibility: hidden;
+	position: absolute;
+}
 
 #add-mce-dropdown-names label {
 	width: 50px;

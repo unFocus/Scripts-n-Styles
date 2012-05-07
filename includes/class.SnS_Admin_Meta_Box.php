@@ -253,15 +253,17 @@ class SnS_Admin_Meta_Box
 					<textarea id="<?php echo $meta_name; ?>_new" class="codemirror htmlmixed" name="<?php echo $meta_name . '[new][value]'; ?>" rows="5" cols="40" style="width: 98%;"></textarea>
 				</div>
 				<div id="sns-shortcodes">
-				<?php if ( ! empty( $shortcodes ) ) { ?>
-						<h4>Existing Codes: </h4>
+					<h4>Existing Codes: </h4>
+					<div id="sns-shortcodes-wrap">
+					<?php if ( ! empty( $shortcodes ) ) { ?>
 						<?php foreach ( $shortcodes as $key => $value ) { ?>
 							<div class="sns-shortcode widget"><div class="inside">
-							<label style="display: inline-block; min-width: 200px;" for="<?php echo $meta_name . '[existing][' . $key . ']'; ?>">[sns_shortcode name="<?php echo $key ?>"]</label>
+							<label for="<?php echo $meta_name . '[existing][' . $key . ']'; ?>">[sns_shortcode name="<?php echo $key ?>"]</label>
 							<textarea class="codemirror htmlmixed" data-sns-shortcode-key="<?php echo $key ?>" name="<?php echo $meta_name . '[existing][' . $key . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
 							</div></div>
 						<?php } ?>
-				<?php } ?>
+					<?php } ?>
+					</div>
 				</div>
 			</div>
 		<?php
@@ -369,8 +371,24 @@ class SnS_Admin_Meta_Box
 		
 		$new_shortcode = isset( $SnS_shortcodes[ 'new' ] ) ? $SnS_shortcodes[ 'new' ]: array();
 		if ( ! empty( $new_shortcode[ 'value' ] ) ) {
-			$key = ( empty( $new_shortcode[ 'name' ] ) ) ? count( $shortcodes ): $new_shortcode[ 'name' ];
+			
+			$key = ( isset( $new_shortcode[ 'name' ] ) ) ? $new_shortcode[ 'name' ] : '';
+			
+			if ( '' == $key ) {
+				$key = count( $shortcodes );
+				while ( isset( $shortcodes[ $key ] ) )
+					$key++;
+			}
+			
+			if ( isset( $shortcodes[ $key ] ) ) {
+				$countr = 1;
+				while ( isset( $shortcodes[ $key . '_' . $countr ] ) )
+					$countr++;
+				$key .= '_' . $countr;
+			} 
+			
 			$shortcodes[ $key ] = $new_shortcode[ 'value' ];
+			
 		}
 		
 		// This one isn't posted, it's ajax only. Cleanup anyway.
