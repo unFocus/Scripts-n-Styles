@@ -45,6 +45,49 @@ class SnS_Admin
 		add_filter( "plugin_action_links_$plugin_file", array( __CLASS__, 'plugin_action_links') );
 		
 		register_activation_hook( Scripts_n_Styles::$file, array( __CLASS__, 'upgrade' ) );
+		
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
+	}
+	
+	function admin_enqueue_scripts() {
+		$cm_version = self::$cm_version;
+		$dir = plugins_url( '/', Scripts_n_Styles::$file);
+		$cm_dir = $dir . 'libraries/CodeMirror2/';
+		$less_dir = $dir . 'libraries/less/dist/';
+		$js = $dir . 'js/';
+		$css = $dir . 'css/';
+		//$localize = array( 'theme' => $cm_theme );
+		$options = get_option( 'SnS_options' );
+		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
+		
+		wp_register_script( 'less.js', $less_dir . 'less-1.3.0.min.js', array(), '1.3.0' );
+		
+		wp_register_script( 'codemirror',            $cm_dir . 'lib/codemirror.js',             array(), $cm_version );
+		wp_register_script( 'codemirror-css',        $cm_dir . 'mode/css/css.js',               array( 'codemirror' ), $cm_version );
+		wp_register_script( 'codemirror-less',       $cm_dir . 'mode/less/less.js',             array( 'codemirror' ), $cm_version );
+		wp_register_script( 'codemirror-javascript', $cm_dir . 'mode/javascript/javascript.js', array( 'codemirror' ), $cm_version );
+		wp_register_script( 'codemirror-xml',        $cm_dir . 'mode/xml/xml.js',               array( 'codemirror' ), $cm_version );
+		wp_register_script( 'codemirror-clike',      $cm_dir . 'mode/clike/clike.js',           array( 'codemirror' ), $cm_version );
+		wp_register_script( 'codemirror-markdown',   $cm_dir . 'mode/markdown/markdown.js',     array( 'codemirror-xml' ), $cm_version );
+		wp_register_script( 'codemirror-gfm',        $cm_dir . 'mode/gfm/gfm.js',               array( 'codemirror-php', 'codemirror-htmlmixed' ), $cm_version );
+		wp_register_script( 'codemirror-htmlmixed',  $cm_dir . 'mode/htmlmixed/htmlmixed.js',   array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript' ), $cm_version );
+		wp_register_script( 'codemirror-php',        $cm_dir . 'mode/php/php.js',               array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript', 'codemirror-clike' ), $cm_version );
+		wp_register_style(  'codemirror-default',    $cm_dir . 'lib/codemirror.css',            array(), $cm_version );
+		foreach ( self::$cm_themes as $theme ) if ( 'default' !== $theme )
+			wp_register_style( "codemirror-$theme",  $cm_dir . "theme/$theme.css",              array( 'codemirror-default' ), $cm_version );
+		
+		if ( 'default' == $cm_theme )
+			wp_register_style( 'codemirror-theme', $cm_dir . 'lib/codemirror.css', array(), $cm_version );
+		else
+			wp_register_style( 'codemirror-theme', $cm_dir . "theme/$cm_theme.css", array( 'codemirror-default' ), $cm_version );
+			
+		wp_register_style(  'sns-options', $css . 'options-styles.css', array(), Scripts_n_Styles::VERSION );
+		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror-less', 'codemirror-css', 'codemirror-javascript', 'less.js' ), Scripts_n_Styles::VERSION, true );
+		wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'codemirror-php' ), Scripts_n_Styles::VERSION, true );
+		wp_register_style(  'sns-meta-box', $css . 'meta-box.css', array( 'codemirror-theme' ), Scripts_n_Styles::VERSION );
+		wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'codemirror-less', 'codemirror-htmlmixed' ), Scripts_n_Styles::VERSION, true );
+		wp_register_style(  'sns-code-editor', $css . 'code-editor.css', array( 'codemirror-theme' ), Scripts_n_Styles::VERSION );
+		wp_register_script( 'sns-code-editor',  $js . 'code-editor.js',  array( 'editor', 'jquery-ui-tabs', 'codemirror-less', 'codemirror-htmlmixed', 'codemirror-php', 'codemirror-markdown' ), Scripts_n_Styles::VERSION, true );
 	}
 	
 	function load_plugin_textdomain() {
