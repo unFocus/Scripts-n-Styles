@@ -5,6 +5,9 @@ jQuery( document ).ready( function( $ ) {
 	var lessMirror, lessOutput, errorLine, errorText, errors, loaded,
 		lessMirrorConfig = { lineNumbers: true, mode: "text/x-less", theme: theme, indentWithTabs: true };
 	
+	$("#enqueue_scripts").data( 'placeholder', 'Enqueue Registered Scripts...' ).width(350).chosen();
+	$(".chzn-container-multi .chzn-choices .search-field input").height('26px');
+	
 	CodeMirror.commands.save = saveLessMirror;
 	lessMirrorConfig.onChange = compile;
 	

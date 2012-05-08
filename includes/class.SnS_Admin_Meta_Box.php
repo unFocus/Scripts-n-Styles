@@ -295,6 +295,7 @@ class SnS_Admin_Meta_Box
 	 * Enqueues the CSS for admin styling of the Meta Box.
 	 */
 	static function meta_box_styles() {
+		wp_enqueue_style( 'chosen' );
 		wp_enqueue_style( 'sns-meta-box' );
 	}
 	

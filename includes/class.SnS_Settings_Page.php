@@ -36,7 +36,6 @@ class SnS_Settings_Page
 	function admin_enqueue_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : '';
-		$cm_version = SnS_Admin::$cm_version;
 		wp_enqueue_style( 'sns-options' );
 		
 		foreach ( SnS_Admin::$cm_themes as $theme )

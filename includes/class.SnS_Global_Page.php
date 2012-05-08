@@ -29,6 +29,7 @@ class SnS_Global_Page
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
 		
+		wp_enqueue_style( 'chosen' );
 		wp_enqueue_style( 'sns-options' );
 		wp_enqueue_style( 'codemirror-theme' );
 		

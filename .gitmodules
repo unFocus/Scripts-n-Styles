@@ -4,3 +4,6 @@
 [submodule "libraries/CodeMirror2"]
 	path = libraries/CodeMirror2
 	url = https://github.com/marijnh/CodeMirror2.git
+[submodule "libraries/chosen"]
+	path = libraries/chosen
+	url = https://github.com/harvesthq/chosen.git

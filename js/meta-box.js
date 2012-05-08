@@ -8,6 +8,10 @@ jQuery( document ).ready( function( $ ) {
 		nonce = $( '#scripts_n_styles_noncename' ).val(),
 		theme = codemirror_options.theme ? codemirror_options.theme: 'default';
 	
+	$("#SnS_enqueue_scripts").data( 'placeholder', 'Enqueue Registered Scripts...' ).width(350).chosen();
+	$(".chzn-container-multi .chzn-choices .search-field input").height('26px');
+	$(".chzn-container .chzn-results").css( 'max-height', '176px');
+
 	//$('textarea', context).attr('autocomplete','off');
 	
 	// Refresh when panel becomes unhidden
