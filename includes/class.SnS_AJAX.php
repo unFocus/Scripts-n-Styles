@@ -294,7 +294,7 @@ class SnS_AJAX
 			header('Content-Type: text/html; charset=' . get_option('blog_charset'));
 			?><div class="sns-shortcode widget">
 	<div class="inside">
-		<label for="SnS_shortcodes[existing][<?php echo esc_attr( $key ) ?>]" style="display: inline-block; min-width: 200px;">[sns_shortcode name="<?php echo esc_attr( $key ) ?>"]</label>
+		<p>[sns_shortcode name="<?php echo esc_attr( $key ) ?>"]</p>
 		<textarea style="width: 98%;" cols="40" rows="5" name="SnS_shortcodes[existing][<?php echo esc_attr( $key ) ?>]"
 			data-sns-shortcode-key="<?php echo esc_attr( $key ) ?>" class="codemirror-new htmlmixed"><?php echo esc_textarea( $value ) ?></textarea>
 		<div class="sns-ajax-wrap"><a href="#" class="sns-ajax-delete-shortcode button">Delete</a> &nbsp; <a href="#" class="sns-ajax-update-shortcode button">Update</a> <img src="/wp-admin/images/wpspin_light.gif" class="sns-ajax-loading" style="display: none;"></div>

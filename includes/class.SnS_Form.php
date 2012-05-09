@@ -44,7 +44,7 @@ class SnS_Form
 		}
 		$output .= '<p>';
 		foreach ( $choices as $choice ) {
-			$output .= '<label>';
+			$output .= '<label style="white-space: pre;">';
 			$output .= '<input type="radio"';
 			$output .= checked( $value, $choice, false );
 			$output .= ' value="' . $choice . '" name="' . $setting . '[' . $label_for . ']"> ' . $choice;

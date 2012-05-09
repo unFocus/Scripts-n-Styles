@@ -123,7 +123,7 @@ class SnS_Admin_Meta_Box
 		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 		
 		$position = get_user_option( "current_sns_tab" );
-		if ( ! in_array( $position, array( 's0', 's1', 's2', 's3', 's4' ) ) ) $position = 's0';
+		if ( ! in_array( $position, array( 's0', 's1', 's2', 's3', 's4', 's5' ) ) ) $position = 's0';
 		wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME );
 		?>
 			<ul class="wp-tab-bar">
@@ -132,6 +132,7 @@ class SnS_Admin_Meta_Box
 				<li<?php echo ( 's2' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_classes_body-tab"><?php _e( 'Classes', 'scripts-n-styles' ) ?></a></li>
 				<li<?php echo ( 's3' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_enqueue_scripts-tab"><?php _e( 'Include Scripts', 'scripts-n-styles' ) ?></a></li>
 				<li<?php echo ( 's4' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_shortcodes-tab"><?php _e( 'Shortcodes', 'scripts-n-styles' ) ?></a></li>
+				<li<?php echo ( 's5' == $position ) ? ' class="wp-tab-active"': ''; ?> style="display:none"><a href="#SnS_post_styles-tab"><?php _e( 'Dropdown', 'scripts-n-styles' ) ?></a></li>
 			</ul>
 			
 			<div class="wp-tab-panel" id="SnS_scripts-tab">
@@ -173,13 +174,15 @@ class SnS_Admin_Meta_Box
 					</p>
 					<p><em><?php _e( 'These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).', 'scripts-n-styles' ) ?></em></p>
 				</div>
-				
+			</div>
 				<?php 
 				/*
 				 * Note: Styles Dropdown section only makes sense when Javascript is enabled. (Otherwise, no TinyMCE.)
 				 */
 				?>
-				<div id="mce-dropdown-names" style="display: none;">
+			<div class="wp-tab-panel" id="SnS_post_styles-tab" style="display: none;">
+				<strong class="title"><?php _e( 'Post Styles', 'scripts-n-styles' ) ?></strong>
+				<div id="mce-dropdown-names">
 					<h4><?php _e( 'The Styles Dropdown', 'scripts-n-styles' ) ?></h4>
 					<div id="add-mce-dropdown-names">
 						<p><?php _e( 'Add (or update) a class for the "Styles" drop-down:', 'scripts-n-styles' ) ?></p>
@@ -258,7 +261,7 @@ class SnS_Admin_Meta_Box
 					<?php if ( ! empty( $shortcodes ) ) { ?>
 						<?php foreach ( $shortcodes as $key => $value ) { ?>
 							<div class="sns-shortcode widget"><div class="inside">
-							<label for="<?php echo $meta_name . '[existing][' . $key . ']'; ?>">[sns_shortcode name="<?php echo $key ?>"]</label>
+							<p>[sns_shortcode name="<?php echo $key ?>"]</p>
 							<textarea class="codemirror htmlmixed" data-sns-shortcode-key="<?php echo $key ?>" name="<?php echo $meta_name . '[existing][' . $key . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
 							</div></div>
 						<?php } ?>

@@ -277,7 +277,7 @@ jQuery( document ).ready( function( $ ) {
 			}
 		});
 		
-		$( '#mce-dropdown-names', context ).show();
+		$( '.wp-tab-bar li', context ).show();
 	}
 	
 	/*
@@ -482,6 +482,8 @@ jQuery( document ).ready( function( $ ) {
 		refreshDeleteBtns();
 		refreshMCE();
 	}
+	if ( 0 == $( '.sns-shortcode', '#sns-shortcodes' ).length )
+		$( 'h4', '#sns-shortcodes' ).hide();
 	function refreshShortcodes( data ) {
 		if ( data.code ) {
 			switch ( data.code ) {
@@ -498,11 +500,9 @@ jQuery( document ).ready( function( $ ) {
 			}
 		} else {
 			if ( 0 == data.indexOf( "<" ) ) {
-				var codemirrorNew = $('#sns-shortcodes-wrap')
-					.prepend( data )
-					.find( '.widget' ).hide().slideDown()
-					.find( '.codemirror-new' ).removeClass('codemirror-new').addClass('codemirror')
-					.get(0);
+				$('#sns-shortcodes-wrap').prepend( data ).find( '.widget' ).hide().slideDown();
+				$( '.codemirror-new' ).parent().prepend( '<span class="sns-collapsed-shortcode-btn"></span>' );
+				var codemirrorNew = $( '.codemirror-new' ).removeClass('codemirror-new').addClass('codemirror').get(0);
 				currentCodeMirror.push( CodeMirror.fromTextArea( codemirrorNew, {
 					mode: "text/html",
 					theme: theme,
@@ -534,7 +534,7 @@ jQuery( document ).ready( function( $ ) {
 	}
 	addShortcodeBtns();
 	function addShortcodeBtns() {
-		$( '.sns-shortcode > .inside > label' ).after('<span class="sns-collapsed-shortcode-btn"></span>');
+		$( '.sns-shortcode > .inside > p' ).before('<span class="sns-collapsed-shortcode-btn"></span>');
 		$('#sns-shortcodes-wrap').on("click",'.sns-collapsed-shortcode-btn', function(event){
 			$(this).parent().toggleClass('sns-collapsed-shortcode');
 		});
