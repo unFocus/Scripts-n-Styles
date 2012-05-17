@@ -164,13 +164,11 @@ class SnS_Admin_Meta_Box
 						<label for="SnS_classes_body"><?php _e( '<strong>Body Classes</strong>:', 'scripts-n-styles' ) ?> </label>
 						<input name="SnS_classes_body" id="SnS_classes_body" type="text" class="code" style="width: 99%;"
 							value="<?php echo isset( $styles[ 'classes_body' ] ) ? esc_attr( $styles[ 'classes_body' ] ) : ''; ?>" />
-						<small><?php _e( 'Standard:', 'scripts-n-styles' ) ?> <code><?php self::current_classes( 'body', $post->ID ); ?></code></small>
 					</p>
 					<p>
 						<label for="SnS_classes_post"><strong>Post Classes</strong>: </label>
 						<input name="SnS_classes_post" id="SnS_classes_post" type="text" class="code" style="width: 99%;"
 							value="<?php echo isset( $styles[ 'classes_post' ] ) ? esc_attr( $styles[ 'classes_post' ] ) : ''; ?>" />
-						<small><?php _e( 'Standard:', 'scripts-n-styles' ) ?> <code><?php self::current_classes( 'post', $post->ID ); ?></code></small>
 					</p>
 					<p><em><?php _e( 'These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).', 'scripts-n-styles' ) ?></em></p>
 				</div>
