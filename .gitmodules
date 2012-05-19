@@ -7,3 +7,6 @@
 [submodule "libraries/chosen"]
 	path = libraries/chosen
 	url = https://github.com/harvesthq/chosen.git
+[submodule "libraries/coffeescript"]
+	path = libraries/coffeescript
+	url = https://github.com/jashkenas/coffee-script.git
