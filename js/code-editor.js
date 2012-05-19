@@ -27,6 +27,8 @@ jQuery( document ).ready( function( $ ) {
 		config.mode = "css";
 	else if ( "less" == fileType )
 		config.mode = "less";
+	else if ( "coffee" == fileType )
+		config.mode = "coffeescript";
 	else if ( "html" == fileType || "htm" == fileType )
 		config.mode = "html";
 	else if ( "php" == fileType ) 

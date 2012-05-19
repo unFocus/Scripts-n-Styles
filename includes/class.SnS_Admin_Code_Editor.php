@@ -11,7 +11,13 @@ class SnS_Admin_Code_Editor
 	function init() {
 		add_action( 'admin_head-theme-editor.php', array( __CLASS__, 'styles' ) );
 		add_action( 'admin_head-plugin-editor.php', array( __CLASS__, 'styles' ) );
+		add_filter( 'editable_extensions', array( __CLASS__, 'extend' ) );
+	}
 	
+	function extend( $editable_extensions ) {
+		$editable_extensions[] = 'less';
+		$editable_extensions[] = 'coffee';
+		return $editable_extensions;
 	}
 	
 	function styles() {
