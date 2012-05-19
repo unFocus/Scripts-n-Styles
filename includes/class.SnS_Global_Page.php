@@ -60,6 +60,13 @@ class SnS_Global_Page
 			'global',
 			array( 'label_for' => 'less' ) );
 		add_settings_field(
+			'coffee',
+			__( '<strong>CoffeeScript:</strong> ', 'scripts-n-styles' ),
+			array( __CLASS__, 'coffee_fields' ),
+			SnS_Admin::MENU_SLUG,
+			'global',
+			array( 'label_for' => 'coffee' ) );
+		add_settings_field(
 			'styles',
 			__( '<strong>Styles:</strong> ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'textarea' ),
@@ -133,6 +140,22 @@ class SnS_Global_Page
 			<div style="width: 49%; float: left; overflow: hidden;">
 				<textarea id="compiled" name="SnS_options[compiled]" style="min-width: 250px; width:47%;" class="code css" rows="5" cols="40"><?php echo esc_textarea( $compiled ) ?></textarea>
 				<div id="compiled_error" style="display: none" class="error settings-error below-h2"></div>
+			</div>
+		</div>
+		<?php
+	}
+	function coffee_fields() {
+		$options = get_option( 'SnS_options' );
+		$coffee =  isset( $options[ 'coffee' ] ) ? $options[ 'coffee' ] : '';
+		$compiled =  isset( $options[ 'coffee_compiled' ] ) ? $options[ 'coffee_compiled' ] : '';
+		?>
+		<div style="overflow: hidden;">
+			<div style="width: 49%; float: left; overflow: hidden; margin-right: 2%;">
+				<textarea id="coffee" name="SnS_options[coffee]" style="min-width: 250px; width:47%; float: left" class="code coffee" rows="5" cols="40"><?php echo esc_textarea( $coffee ) ?></textarea>
+			</div>
+			<div style="width: 49%; float: left; overflow: hidden;">
+				<textarea id="coffee_compiled" name="SnS_options[coffee_compiled]" style="min-width: 250px; width:47%;" class="code js" rows="5" cols="40"><?php echo esc_textarea( $compiled ) ?></textarea>
+				<div id="coffee_compiled_error" style="display: none" class="error settings-error below-h2"></div>
 			</div>
 		</div>
 		<?php

@@ -205,7 +205,7 @@ class Scripts_n_Styles
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
 		
 		wp_register_script( 'less.js', $less_dir . 'less-1.3.0.min.js', array(), '1.3.0' );
-		wp_register_script( 'coffee-script.js', $coffee_dir . 'coffee-script.js', array(), '1.3.3' );
+		wp_register_script( 'coffeescript', $coffee_dir . 'coffee-script.js', array(), '1.3.3' );
 		wp_register_script( 'chosen', $chosen_dir . 'chosen.jquery.min.js', array( 'jquery' ), $chosen_version, true );
 		wp_register_style(  'chosen', $chosen_dir . 'chosen.css', array(), $chosen_version );
 		
@@ -304,6 +304,11 @@ class Scripts_n_Styles
 		if ( ! empty( $options ) && ! empty( $options[ 'scripts_in_head' ] ) ) {
 			?><script type="text/javascript" id="sns_global_scripts_in_head"><?php
 			echo $options[ 'scripts_in_head' ];
+			?></script><?php
+		}
+		if ( ! empty( $options ) && ! empty( $options[ 'coffee_compiled' ] ) ) {
+			?><script type="text/javascript" id="sns_global_coffee_compiled"><?php
+			echo $options[ 'coffee_compiled' ];
 			?></script><?php
 		}
 		
