@@ -7,6 +7,7 @@ jQuery( document ).ready( function( $ ) {
 	
 	$("#enqueue_scripts").data( 'placeholder', 'Enqueue Registered Scripts...' ).width(350).chosen();
 	$(".chzn-container-multi .chzn-choices .search-field input").height('26px');
+	$(".chzn-container .chzn-results").css( 'max-height', '176px');
 	
 	CodeMirror.commands.save = saveLessMirror;
 	lessMirrorConfig.onChange = compile;
