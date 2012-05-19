@@ -1,18 +1,20 @@
 // Options JavaScript
 
 jQuery( document ).ready( function( $ ) {
+	var compiled, source;
 	var theme = _SnS_options.theme ? _SnS_options.theme: 'default';
 	var lessMirror, lessOutput, errorLine, errorText, errors, loaded,
-		lessMirrorConfig = { lineNumbers: true, mode: "text/x-less", theme: theme, indentWithTabs: true };
+		coffeeMirror, coffeeOutput, coffee_errorLine, coffee_errorText, coffee_errors, coffee_loaded,
+		lessMirrorConfig = { lineNumbers: true, mode: "text/x-less", theme: theme, indentWithTabs: true, onChange: compile },
+		coffeeMirrorConfig = { lineNumbers: true, mode: "text/x-coffeescript", theme: theme, onChange: coffee_compile };
 	
 	$("#enqueue_scripts").data( 'placeholder', 'Enqueue Registered Scripts...' ).width(350).chosen();
 	$(".chzn-container-multi .chzn-choices .search-field input").height('26px');
 	$(".chzn-container .chzn-results").css( 'max-height', '176px');
 	
-	CodeMirror.commands.save = saveLessMirror;
-	lessMirrorConfig.onChange = compile;
+	//CodeMirror.commands.save = saveLessMirror;
 	
-	$( "textarea.js" ).each( function() {
+	$( "textarea.js" ).not( '#coffee_compiled' ).each( function() {
 		CodeMirror.fromTextArea( this, { lineNumbers: true, mode: "javascript", theme: theme } );
 	});
 	
@@ -21,18 +23,26 @@ jQuery( document ).ready( function( $ ) {
 	});
 	
 	lessOutput = CodeMirror.fromTextArea( $( '#compiled' ).get(0), { lineNumbers: true, mode: "css", theme: theme, readOnly: true } );
+	coffeeOutput = CodeMirror.fromTextArea( $( '#coffee_compiled' ).get(0), { lineNumbers: true, mode: "javascript", theme: theme, readOnly: true } );
 	
 	$( "textarea.less" ).each( function() {
 		lessMirror = CodeMirror.fromTextArea( this, lessMirrorConfig );
 	});
-	
+	$( "textarea.coffee" ).each( function() {
+		coffeeMirror = CodeMirror.fromTextArea( this, coffeeMirrorConfig );
+	});
+	$('#coffee').parent().append('<label><input type="checkbox" id="coffee_spacing"> Double Spaced</label>');
+	$('#coffee_spacing').change( coffee_compile );
 	compile();
+	coffee_compile();
 	loaded = true;
+	coffee_loaded = true;
 	$( "#less" ).closest('form').submit( compile );
+	$( "#coffee" ).closest('form').submit( coffee_compile );
 	
-	function saveLessMirror(){
+	//function saveLessMirror(){
 		// Ajax Save.
-	}
+	//}
 	function compile() {
 		lessMirror.save();
 		var parser = new( less.Parser );
@@ -53,6 +63,28 @@ jQuery( document ).ready( function( $ ) {
 				}
 			}
 		});
+	}
+	function coffee_compile() {
+		coffeeMirror.save();
+		try {
+			$( '#coffee_compiled_error' ).hide();
+			source = $('#coffee').val();
+			compiled = CoffeeScript.compile( source );
+			trimmed = $('#coffee_spacing').is(':checked') ? compiled : compiled.replace(/(\n\n)/gm,"\n");
+			coffeeOutput.setValue( trimmed );
+			coffeeOutput.save();
+			
+			$( '#coffee_compiled' ).next( '.CodeMirror' ).show();
+		}
+		catch ( err ) {
+			$( '#coffee_compiled' ).next( '.CodeMirror' ).hide();
+			if ( coffee_loaded ) {
+				$( '#coffee_compiled_error' ).removeClass( 'error' ).addClass( 'updated' );
+				$( '#coffee_compiled_error' ).show().html( "<p><strong>Warning: &nbsp; </strong>" + err.message + "</p>" );
+			} else {
+				$( '#coffee_compiled_error' ).show().html( "<p><strong>Error: &nbsp; </strong>" + err.message + "</p>" );
+			}
+		}
 	}
 	function doError( err ) {
 		//console.dir( err );
