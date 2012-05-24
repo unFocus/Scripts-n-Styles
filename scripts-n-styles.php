@@ -196,15 +196,15 @@ class Scripts_n_Styles
 		$css = $dir . 'css/';
 		$cm_version = '2.4';
 		$chosen_version = '0.9.8';
-		$cm_dir = $dir . 'libraries/CodeMirror2/';
-		$less_dir = $dir . 'libraries/less/dist/';
-		$coffee_dir = $dir . 'libraries/coffeescript/extras/';
-		$chosen_dir = $dir . 'libraries/chosen/chosen/';
+		$cm_dir = $dir . 'vendor/CodeMirror2/';
+		$less_dir = $dir . 'vendor/';
+		$coffee_dir = $dir . 'vendor/';
+		$chosen_dir = $dir . 'vendor/chosen/';
 		//$localize = array( 'theme' => $cm_theme );
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
 		
-		wp_register_script( 'less.js', $less_dir . 'less-1.3.0.min.js', array(), '1.3.0' );
+		wp_register_script( 'less.js', $less_dir . 'less.js', array(), '1.3.0' );
 		wp_register_script( 'coffeescript', $coffee_dir . 'coffee-script.js', array(), '1.3.3' );
 		wp_register_script( 'chosen', $chosen_dir . 'chosen.jquery.min.js', array( 'jquery' ), $chosen_version, true );
 		wp_register_style(  'chosen', $chosen_dir . 'chosen.css', array(), $chosen_version );
