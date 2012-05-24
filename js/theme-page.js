@@ -13,7 +13,9 @@ jQuery( document ).ready( function( $ ) {
 	
 	lessOutput = CodeMirror.fromTextArea( $( '#compiled' ).get(0), { lineNumbers: true, mode: "css", theme: theme, readOnly: true } );
 	
-	lessMirror = CodeMirror.fromTextArea( $( '#less' ).get(0), lessMirrorConfig );
+	$( "textarea.less" ).each( function() {
+		lessMirror = CodeMirror.fromTextArea( this, lessMirrorConfig );
+	});
 	
 	compile();
 	loaded = true;
@@ -23,7 +25,7 @@ jQuery( document ).ready( function( $ ) {
 		lessMirror.save();
 		var parser = new( less.Parser );
 		parser.parse( lessMirror.getValue(), function ( err, tree ) {
-			if ( err  ){
+			if ( err ){
 				doError( err );
 			} else {
 				try {
