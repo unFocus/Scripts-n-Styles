@@ -232,6 +232,7 @@ class Scripts_n_Styles
 			
 		wp_register_style(  'sns-options', $css . 'options-styles.css', array(), self::VERSION );
 		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror-less', 'codemirror-coffeescript', 'codemirror-css', 'codemirror-javascript', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
+		wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror-less', 'codemirror-coffeescript', 'codemirror-css', 'codemirror-javascript', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
 		wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'codemirror-php' ), self::VERSION, true );
 		wp_register_style(  'sns-meta-box', $css . 'meta-box.css', array( 'codemirror-theme' ), self::VERSION );
 		wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'codemirror-less', 'codemirror-htmlmixed', 'chosen' ), self::VERSION, true );

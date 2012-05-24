@@ -29,7 +29,7 @@ class SnS_Settings_Page
 		// Make the page into a tab.
 		if ( SnS_Admin::MENU_SLUG != SnS_Admin::$parent_slug ) {
 			remove_submenu_page( SnS_Admin::$parent_slug, self::MENU_SLUG );
-			add_filter( 'parent_file', array( __CLASS__, 'parent_file') );
+			add_filter( 'parent_file', array( 'SnS_Admin', 'parent_file') );
 		}
 	}
 	
@@ -44,13 +44,6 @@ class SnS_Settings_Page
 		wp_enqueue_script(  'sns-settings-page' );
 		wp_localize_script( 'sns-settings-page', 'codemirror_options', array( 'theme' => $cm_theme ) );
 	}
-	
-	static function parent_file( $parent_file ) {
-		global $plugin_page, $submenu_file;
-		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = SnS_Admin::MENU_SLUG;
-		return $parent_file;
-	}
-	
 	
 	/**
 	 * Settings Page

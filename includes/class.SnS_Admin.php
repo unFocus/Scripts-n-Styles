@@ -12,6 +12,7 @@ require_once( 'class.SnS_Admin_Code_Editor.php' );
 require_once( 'class.SnS_Settings_Page.php' );
 require_once( 'class.SnS_Usage_Page.php' );
 require_once( 'class.SnS_Global_Page.php' );
+require_once( 'class.SnS_Theme_Page.php' );
 require_once( 'class.SnS_AJAX.php' );
 require_once( 'class.SnS_Form.php' );
 
@@ -77,6 +78,7 @@ class SnS_Admin
 		SnS_Global_Page::init();
 		SnS_Settings_Page::init();
 		SnS_Usage_Page::init();
+		SnS_Theme_Page::init();
 	}
 	
 	/**
@@ -91,11 +93,18 @@ class SnS_Admin
 		<?php if ( ! isset( $options[ 'menu_position' ] ) || 'options-general.php' != $options[ 'menu_position' ] ) settings_errors(); ?>
 		<?php screen_icon( 'none' ); ?>
 		<h3 class="nav-tab-wrapper">
-			<a class="nav-tab<?php echo ( self::MENU_SLUG == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG ); ?>"><?php _e( 'Global', 'scripts-n-styles' ); ?></a>
+			<a class="nav-tab<?php echo ( self::MENU_SLUG == $page )               ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG );               ?>"><?php _e( 'Global',   'scripts-n-styles' ); ?></a>
+			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_theme' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_theme' );    ?>"><?php _e( 'Theme',    'scripts-n-styles' ); ?></a>
 			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_settings' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_settings' ); ?>"><?php _e( 'Settings', 'scripts-n-styles' ); ?></a>
-			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_usage' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_usage' ); ?>"><?php _e( 'Usage', 'scripts-n-styles' ); ?></a>
+			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_usage' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_usage' );    ?>"><?php _e( 'Usage',    'scripts-n-styles' ); ?></a>
 		</h3>
 		<?php
+	}
+	
+	static function parent_file( $parent_file ) {
+		global $plugin_page, $submenu_file;
+		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = SnS_Admin::MENU_SLUG;
+		return $parent_file;
 	}
 	
 	/**
