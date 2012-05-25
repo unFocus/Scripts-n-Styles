@@ -4,6 +4,10 @@
  * 
  * Allows WordPress admin users the ability to edit theme CSS
  * and LESS directly in the admin via CodeMirror.
+ * 
+ * On the `wp_enqueue_scripts` action, use `wp_enqueue_style( 'theme_style', get_stylesheet_uri() );` to add your style.css instead of inline.
+ * On the `after_setup_theme` action, use `add_theme_support( 'scripts-n-styles', array( '/less/variables.less', '/less/mixins.less' ) );` but use the appropriate file locations.
+ * 
  */
 		
 class SnS_Theme_Page
@@ -54,6 +58,7 @@ class SnS_Theme_Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
 	 */
 	function admin_load() {
+		
 		register_setting(
 			SnS_Admin::OPTION_GROUP,
 			'SnS_options' );
@@ -77,45 +82,51 @@ class SnS_Theme_Page
 		foreach( $support_files[0] as $file ) {
 			if ( is_file( $root . $file ) )
 				$files[] = $root . $file;
-			else if ( is_dir( $root . $file ) )
-				foreach ( glob( $root . $file  . '*.{less}', GLOB_BRACE ) as $i => $less )
-					if ( is_file( $less ) ) 
-						$files[] = $less;
 		}
 		
 		$slug = get_stylesheet();
 		$options = get_option( 'SnS_options' );
-		$stored =  isset( $options[ 'themes' ][ $slug ] ) ? $options[ 'themes' ][ $slug ] : array();
-		echo '<div id="less_area">';
+		// Stores data on a theme by theme basis.
+		$theme =  isset( $options[ 'themes' ][ $slug ] ) ? $options[ 'themes' ][ $slug ] : array();
+		$stored =  isset( $theme[ 'less' ] ) ? $theme[ 'less' ] : array(); // is an array of stored imported less file data
+		$compiled = isset( $theme[ 'compiled' ] ) ? $theme[ 'compiled' ] : ''; // the complete compiled down css
+		?>
+		<div style="overflow: hidden">
+		<div id="less_area" style="width: 49%; float: left; overflow: hidden; margin-right: 2%;">
+		<?php
 		foreach ( $files as $file ) {
 			$name = basename( $file );
+			$raw = file_get_contents( $file );
 			if ( isset( $stored[ $name ] ) ) {
 				$source = $stored[ $name ];
-				$less = isset( $source[ 'less' ] ) ? $source[ 'less' ] : '';
-				$compiled = isset( $source[ 'compiled' ] ) ? $source[ 'compiled' ] : '';
+				$less = isset( $source ) ? $source : '';
+				$compiled = isset( $compiled ) ? $compiled : '';
 			} else {
-				$less = file_get_contents( $file );
+				$less = $raw;
 				$compiled = '';
 			}
 			?>
-			<div style="overflow: hidden;">
-				<div style="width: 49%; float: left; overflow: hidden; margin-right: 2%;">
-					<textarea id="less"
-					name="SnS_options[themes][<?php echo $slug ?>][<?php echo $name ?>][less]"
-					style="min-width: 250px; width:47%; float: left"
-					class="code less" rows="5" cols="40"><?php echo esc_textarea( $less ) ?></textarea>
-				</div>
-				<div style="width: 49%; float: left; overflow: hidden;">
-					<textarea id="compiled"
-					name="SnS_options[themes][<?php echo $slug ?>][<?php echo $name ?>][compiled_less]"
+			<div class="sns-less-ide" style="overflow: hidden">
+				<label style="margin-bottom: 0;"><?php echo $name ?></label>
+				<input type="hidden" class="raw" value=<?php echo esc_attr( $raw ) ?> />
+				<textarea
+					name="SnS_options[themes][<?php echo $slug ?>][less][<?php echo $name ?>]"
 					style="min-width: 250px; width:47%;"
-					class="code css" rows="5" cols="40"><?php echo esc_textarea( $compiled ) ?></textarea>
-					<div id="compiled_error" style="display: none" class="error settings-error below-h2"></div>
-				</div>
+					class="code less" rows="5" cols="40"><?php echo esc_textarea( $less ) ?></textarea>
 			</div>
 			<?php
 		}
-		echo '</div>';
+		?>
+		</div>
+		<div id="css_area" style="width: 49%; float: left; overflow: hidden;">
+			<textarea
+				name="SnS_options[themes][<?php echo $slug ?>][compiled]"
+				style="min-width: 250px; width:47%;"
+				class="code css" rows="5" cols="40"><?php echo esc_textarea( $compiled ) ?></textarea>
+			<div id="compiled_error" style="display: none" class="error settings-error below-h2"></div>
+		</div>
+		</div>
+		<?php
 	}
 	
 	/**

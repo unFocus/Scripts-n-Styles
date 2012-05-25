@@ -1,39 +1,75 @@
 // Options JavaScript
 
-jQuery( document ).ready( function( $ ) {
-	var compiled, source, context = "#less_area";
-	var theme = _SnS_options.theme ? _SnS_options.theme: 'default';
-	var lessMirror, lessOutput, errorLine, errorText, errors, loaded,
-		lessMirrorConfig = { lineNumbers: true, mode: "text/x-less", theme: theme, indentWithTabs: true, onChange: compile }
-		;
+jQuery( document ).ready( function( $ ) { "use strict"
+	var collection = []
+	  , context = "#less_area"
+	  , theme = _SnS_options.theme ? _SnS_options.theme: 'default'
+	  , loaded = false
+	  , compiled, $codemirror, $error, timer, onChange, errorMarker, errorText, errorMirror;
 	
-	$( "textarea.css" ).not( '#compiled' ).each( function() {
-		CodeMirror.fromTextArea( this, { lineNumbers: true, mode: "css", theme: theme } );
+	onChange = function onChange(){
+		clearTimeout( timer );
+		console.log( 'foo' );
+		timer = setTimeout( 'compile_all()', 100 );
+	}
+	$( ".sns-less-ide", context ).each( function() {
+		var ide = {
+			raw : $('.raw',this).get(0),
+			lines : 0,
+			startLine : 0,
+			endLine : 0,
+			errorLine : null,
+			errorText : null,
+		};
+		
+		ide.less = CodeMirror.fromTextArea(
+			$('.less',this).get(0),
+			{
+				lineNumbers: true,
+				mode: "text/x-less",
+				theme: theme,
+				indentWithTabs: true,
+				onChange: onChange
+			}
+		);
+		
+		collection.push( ide );
 	});
 	
-	lessOutput = CodeMirror.fromTextArea( $( '#compiled' ).get(0), { lineNumbers: true, mode: "css", theme: theme, readOnly: true } );
+	compiled = CodeMirror.fromTextArea(
+		$('.css',"#css_area").get(0),
+		{ lineNumbers: true, mode: "css", theme: theme, readOnly: true }
+	);
+	$codemirror = $('.css',"#css_area").next( '.CodeMirror' );
+	$error = $("#compiled_error");
 	
-	$( "textarea.less" ).each( function() {
-		lessMirror = CodeMirror.fromTextArea( this, lessMirrorConfig );
-	});
-	
-	compile();
+	compile_all();
 	loaded = true;
-	$( "#less" ).closest('form').submit( compile );
 	
-	function compile() {
-		lessMirror.save();
+	$( "#less_area" ).closest('form').submit( compile_all );
+	
+	function compile_all() {
+		var lessValue = '';
+		var totalLines = 0;
+		$( collection ).each(function(){
+			this.less.save();
+			lessValue += "\n" + this.less.getValue();
+			this.lines = this.less.lineCount();
+			this.startLine = totalLines;
+			totalLines += this.lines;
+			this.endLine = totalLines;
+		});
 		var parser = new( less.Parser );
-		parser.parse( lessMirror.getValue(), function ( err, tree ) {
+		parser.parse( lessValue, function ( err, tree ) {
 			if ( err ){
 				doError( err );
 			} else {
 				try {
-					$( '#compiled_error' ).hide();
-					lessOutput.setValue( tree.toCSS() );
-					lessOutput.save();
-					$( '#compiled' ).next( '.CodeMirror' ).show();
-					lessOutput.refresh();
+					$error.hide();
+					compiled.setValue( tree.toCSS() );
+					compiled.save();
+					$codemirror.show();
+					compiled.refresh();
 					clearCompileError();
 				}
 				catch ( err ) {
@@ -43,35 +79,59 @@ jQuery( document ).ready( function( $ ) {
 		});
 	}
 	function doError( err ) {
-		//console.dir( err );
-		$( '#compiled' ).next( '.CodeMirror' ).hide();
+		console.log( err );
+		var pos, token, start, end, errLine, fileNum;
+		errLine = err.line-1;
+		
+		errorMirror = null;
+		$( collection ).each(function( i ){
+			if ( this.startLine <= errLine && errLine < this.endLine ) {
+				errorMirror = this.less;
+				errLine = errLine - this.startLine -1;
+				fileNum = i+1;
+			}
+		});
+		
+		$codemirror
+			.hide();
+		
 		if ( loaded ) {
-			$( '#compiled_error' ).removeClass( 'error' ).addClass( 'updated' );
-			$( '#compiled_error' ).show().html( "<p><strong>Warning: &nbsp; </strong>" + err.message + "</p>" );
+			$error
+				.removeClass( 'error' )
+				.addClass( 'updated' );
+			$error
+				.show()
+				.html( "<p><strong>Warning: &nbsp; </strong>LESS " + err.type + " Error on line " + (errLine+1) + " of the " + fileNum + " file.</p>" );
 		} else {
-			$( '#compiled_error' ).show().html( "<p><strong>Error: &nbsp; </strong>" + err.message + "</p>" );
+			$error
+				.show()
+				.html( "<p><strong>Error: &nbsp; </strong>" + err.message + "</p>" );
 		}
+		
 		clearCompileError();
 		
-		errorLine = lessMirror.setMarker( err.line - 1, '<strong>*%N%</strong>', "cm-error");
-		lessMirror.setLineClass( errorLine, "cm-error");
+		errorMarker = errorMirror.setMarker( errLine, '<strong>*%N%</strong>', "cm-error");
 		
-		var pos = lessMirror.posFromIndex( err.index + 1 );
-		var token = lessMirror.getTokenAt( pos );
-		var start = lessMirror.posFromIndex( err.index );
-		var end = lessMirror.posFromIndex( err.index + token.string.length )
-		errorText = lessMirror.markText( start, end, "cm-error");
+		errorMirror.setLineClass( errorMarker, "cm-error");
 		
-		lessOutput.setValue( "" );
-		lessOutput.save();
+		pos = errorMirror.posFromIndex( err.index + 1 );
+		token = errorMirror.getTokenAt( pos );
+		start = errorMirror.posFromIndex( err.index );
+		end = errorMirror.posFromIndex( err.index + token.string.length );
+		
+		errorText = errorMirror.markText( start, end, "cm-error");
+		
+		compiled.setValue( "" );
+		compiled.save();
 	}
 	function clearCompileError() {
-		if ( errorLine ) {
-			lessMirror.clearMarker( errorLine );
-			lessMirror.setLineClass( errorLine, null );
-			errorLine = false;
+		if ( errorMarker ) {
+			errorMirror.clearMarker( errorMarker );
+			errorMirror.setLineClass( errorMarker, null );
+			errorMarker = false;
 		}
 		if ( errorText ) errorText.clear();
 		errorText = false;
 	}
+	window.compile_all = compile_all;
 });

@@ -76,7 +76,7 @@ class SnS_Admin
 				break;
 		}
 		SnS_Global_Page::init();
-		if ( get_theme_support( 'scripts-n-styles' ) ) 
+		if ( current_theme_supports( 'scripts-n-styles' ) ) 
 			SnS_Theme_Page::init();
 		SnS_Settings_Page::init();
 		SnS_Usage_Page::init();
@@ -95,7 +95,7 @@ class SnS_Admin
 		<?php screen_icon( 'none' ); ?>
 		<h3 class="nav-tab-wrapper">
 			<a class="nav-tab<?php echo ( self::MENU_SLUG == $page )               ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG );               ?>"><?php _e( 'Global',   'scripts-n-styles' ); ?></a>
-			<?php if ( get_theme_support( 'scripts-n-styles' ) ) { ?>
+			<?php if ( current_theme_supports( 'scripts-n-styles' ) ) { ?>
 			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_theme' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_theme' );    ?>"><?php _e( 'Theme',    'scripts-n-styles' ); ?></a>
 			<?php } ?>
 			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_settings' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_settings' ); ?>"><?php _e( 'Settings', 'scripts-n-styles' ); ?></a>

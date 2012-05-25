@@ -99,6 +99,31 @@ class Scripts_n_Styles
 		
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register' ) );
+		
+		add_action( 'wp_print_styles', array( __CLASS__, 'theme_style' ) );
+		add_action( 'wp_ajax_sns_theme_css', array( __CLASS__, 'theme_css' ) );
+		add_action( 'wp_ajax_nopriv_sns_theme_css', array( __CLASS__, 'theme_css' ) );
+	}
+	function theme_style() {
+		if ( current_theme_supports( 'scripts-n-styles' ) ) {
+			$options = get_option( 'SnS_options' );
+			$slug = get_stylesheet();
+			$compiled = $options[ 'themes' ][ $slug ][ 'compiled' ];
+			if ( ! empty( $compiled ) ) {
+				wp_deregister_style( 'theme_style' );
+				wp_enqueue_style( 'theme_style', add_query_arg( array( 'action' => 'sns_theme_css' ), admin_url( "admin-ajax.php" ) ) );
+			}
+		}
+	}
+	function theme_css() {
+		$options = get_option( 'SnS_options' );
+		$slug = get_stylesheet();
+		$compiled = $options[ 'themes' ][ $slug ][ 'compiled' ];
+		header('Expires: ' . gmdate( "D, d M Y H:i:s", time() + 864000 ) . ' GMT');
+		header("Cache-Control: public, max-age=864000");
+		header('Content-Type: text/css; charset=UTF-8');
+		echo $compiled;
+		die();
 	}
 	
 	function shortcode( $atts, $content = null, $tag ) {
