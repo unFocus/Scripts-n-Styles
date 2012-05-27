@@ -1,10 +1,11 @@
 # Scripts n Styles 
-Contributors: WraithKenny, Touvan  
+Contributors: WraithKenny, CaptainN  
 Tags: admin, CSS, javascript, code, custom, Style  
 Requires at least: 3.3  
-Tested up to: 3.4-beta3  
+Tested up to: 3.4-beta4  
 Stable tag: 3.1.1  
 License: GPLv3 or later  
+License URI: http://www.gnu.org/licenses/gpl-3.0.html  
 
 This plugin allows Admin users to individually add custom CSS, Classes and JavaScript directly to Post, Pages or any other custom post types.
 
@@ -16,12 +17,17 @@ Admin's can also add classes to the TinyMCE "Formats" dropdown which users can u
 
 Because only well trusted users should ever be allowed to insert JavaScript directly into the pages of your site, this plugin restricts usage to admin type users. Admin's have access to even more sensitive areas by definition, so that should be relatively safe ;)
 
-A few notes about the implementation:
+### Notes about the implementation:
 
 *   Admin users, or more specifically, *any user with the `manage_options` and `unfiltered_html` capabilities* (which by default is *only* the admin type user) can use this plugin's functionality. Some plugins extend user rolls, and so this plugin would naturally extend include rolls that have the appropriate capability.
 *   CSS Styles are embeded, not linked, at the bottom of the `head` element with `style` tags by using `wp-head`. If your theme doesn't have this hook, this plugin (as well as most others) won't work.
 *   JavaScript is embeded, not linked, at the bottom of the `body` (or `head`) element with `script` tags by using `wp-footer` (or `wp-head`). If your theme doesn't have this hook, this plugin (as well as most others) won't work.
 *   **There is no input validation.** This plugin puts exactly what you type in the meta box directly into the `html` with no error checking. You are an Admin, and we trust you to be carefull. Try not to break anything.
+*	Do to the licensing of the libraries used, this plugin is released "GPL 3.0 or later" if you care about those things.
+
+### Contact:
+
+You'll have better luck contacting the other if you try me on [Twitter](http://twitter.com/WraithKenny) and [Github](https://github.com/unFocus/Scripts-n-Styles/issues). If that fails, I have an [open thread](http://wordpress.org/support/topic/contacting-scripts-n-styles-author "Contacting Scripts n Styles' author") on the support forums that will trigger an email.
 
 ## Installation 
 
@@ -56,6 +62,7 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 * Add AJAX to Shortcode Tab
 * Add Markdown mode to code editor
 * Add (fix) code editor themes
+* Theme Support
 
 ### 3.1.1 
 * Add (fix) CodeMirror Themes
