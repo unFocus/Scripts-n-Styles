@@ -1,7 +1,7 @@
 jQuery( document ).ready( function( $ ) {
 	
-	// For compat: 3.3 || 3.2 
-	var initData = tinyMCEPreInit.mceInit["content"],
+	// For CPTs that don't have an editor, prevent "tinyMCEPreInit is 'undefined'"
+	var initData = ( typeof tinyMCEPreInit !== 'undefined' && tinyMCEPreInit.mceInit["content"] ) ? tinyMCEPreInit.mceInit["content"]: false,
 		context = '#SnS_meta_box',
 		currentCodeMirror = [],
 		mceBodyClass = getMCEBodyClasses(),
