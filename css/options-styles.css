@@ -19,8 +19,8 @@ body .CodeMirror-scroll {
 	max-height: 300px;
 	overflow: auto;
 }
-.scripts-n-styles_page_sns_theme #css_area .CodeMirror-scroll {
-	max-height: 900px;
+.scripts-n-styles_page_sns_theme .CodeMirror-scroll {
+	max-height: none;
 }
 #icon-sns {
 	background: no-repeat center url('../images/icon32.png');
