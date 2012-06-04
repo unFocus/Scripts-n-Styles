@@ -14,38 +14,24 @@ class SnS_AJAX
 		add_action( 'wp_ajax_sns_dropdown', array( __CLASS__, 'dropdown' ) );
 		add_action( 'wp_ajax_sns_delete_class', array( __CLASS__, 'delete_class' ) );
 		add_action( 'wp_ajax_sns_shortcodes', array( __CLASS__, 'shortcodes' ) );
-		add_action( 'wp_ajax_sns_save_theme', array( __CLASS__, 'save_theme' ) );
+		add_action( 'wp_ajax_sns_open_theme_panels', array( __CLASS__, 'open_theme_panels' ) );
 	}
-	function save_theme() {
+	function open_theme_panels() {
 		check_ajax_referer( SnS_Admin::OPTION_GROUP . "-options" );
 		
-		$files = array();
-		$support_files = get_theme_support( 'scripts-n-styles' );
+		$name = isset( $_POST[ 'file-name' ] ) ? $_POST[ 'file-name' ] : '';
+		if ( empty( $name ) ) exit( 'empty name');
 		
-		if ( is_child_theme() )
-			$root = get_stylesheet_directory();
-		else
-			$root = get_template_directory();
+		$collapsed = isset( $_POST[ 'collapsed' ] ) ? $_POST[ 'collapsed' ] : '';
+		if ( empty( $collapsed ) ) exit( 'empty value');
 		
-		foreach( $support_files[0] as $file ) {
-			if ( is_file( $root . $file ) )
-				$files[] = $root . $file;
-		}
+		if ( ! $user = get_current_user_id() ) exit( 'Bad User' );
 		
-		$slug = get_stylesheet();
-		$options = get_option( 'SnS_options' );
-		// Stores data on a theme by theme basis.
-		$theme =  isset( $options[ 'themes' ][ $slug ] ) ? $options[ 'themes' ][ $slug ] : array();
-		$stored =  isset( $theme[ 'less' ] ) ? $theme[ 'less' ] : array(); // is an array of stored imported less file data
-		$compiled = isset( $theme[ 'compiled' ] ) ? $theme[ 'compiled' ] : ''; // the complete compiled down css
-		$slug = esc_attr( $slug );
-		
-		$data = isset( $_REQUEST[ 'data' ] ) ? $_REQUEST[ 'data' ] : '';
-		
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
-		echo json_encode( array(
-			"data" => $data
-		) );
+		$open_theme_panels = json_decode( get_user_option( 'sns_open_theme_panels', $user ), true );
+		$open_theme_panels = is_array( $open_theme_panels ) ? $open_theme_panels : array();
+		$open_theme_panels[ $name ] = $collapsed;
+		$open_theme_panels = json_encode( $open_theme_panels );
+		update_user_option( $user, 'sns_open_theme_panels', $open_theme_panels );
 		
 		exit();
 	}

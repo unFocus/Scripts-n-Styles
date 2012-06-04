@@ -44,8 +44,18 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	
 	// Collapsable
 	$( context ).on( "click", '.sns-collapsed-btn, .sns-collapsed-btn + label', function( event ){
-		$( this ).parent().toggleClass( 'sns-collapsed' );
+		var $this = $( this );
+		$this.parent().toggleClass( 'sns-collapsed' );
+		$.post( ajaxurl,
+			{   action: 'sns_open_theme_panels'
+			  , _ajax_nonce: $( '#_wpnonce' ).val()
+			  , 'file-name':  $this.siblings( '.code' ).data( 'file-name' )
+			  , 'collapsed':  $this.parent().hasClass( 'sns-collapsed' ) ? 'yes' : 'no'
+			}
+		);
 	});
+	
+	
 	$( '.single-status' ).hide();
 	$( '.sns-ajax-loading' ).hide();
 	// Load

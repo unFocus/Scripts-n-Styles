@@ -91,6 +91,9 @@ class SnS_Theme_Page
 		$stored =  isset( $theme[ 'less' ] ) ? $theme[ 'less' ] : array(); // is an array of stored imported less file data
 		$compiled = isset( $theme[ 'compiled' ] ) ? $theme[ 'compiled' ] : ''; // the complete compiled down css
 		$slug = esc_attr( $slug );
+		
+		$open_theme_panels = json_decode( get_user_option( 'sns_open_theme_panels', get_current_user_id() ), true );
+		
 		?>
 		<div style="overflow: hidden">
 		<div id="less_area" style="width: 49%; float: left; overflow: hidden; margin-right: 2%;">
@@ -108,9 +111,13 @@ class SnS_Theme_Page
 			}
 			$name = esc_attr( $name );
 			$lead_break = 0 == strpos( $less, PHP_EOL ) ? PHP_EOL : '';
+			if ( isset( $open_theme_panels[ $name ] ) )
+				$collapse = $open_theme_panels[ $name ] == 'yes' ? 'sns-collapsed ' : '';
+			else
+				$collapse = $less == $raw ? 'sns-collapsed ': '';
 			?>
 			<div class="sns-less-ide" style="overflow: hidden">
-			<div class="widget"><div class="<?php echo $less == $raw ? 'sns-collapsed ': ''; ?>inside">
+			<div class="widget"><div class="<?php echo $collapse; ?>inside">
 				<span class="sns-collapsed-btn"></span>
 				<label style="margin-bottom: 0;"><?php echo $name ?></label>
 				<textarea data-file-name="<?php echo $name ?>" data-raw="<?php echo esc_attr( $raw ) ?>"
