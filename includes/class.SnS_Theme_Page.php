@@ -24,11 +24,11 @@ class SnS_Theme_Page
 	 * @static
 	 */
 	function init() {
-		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Theme' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
+		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Theme' ), 'unfiltered_html', self::MENU_SLUG, array( __CLASS__, 'page' ) );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
-		add_action( "load-$hook_suffix", array( 'SnS_Form', 'take_action' ), 49 );
+		add_action( "load-$hook_suffix", array( 'SnS_Form', 'take_action'), 49 );
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
 		
 		// Make the page into a tab.
@@ -90,6 +90,7 @@ class SnS_Theme_Page
 		$theme =  isset( $options[ 'themes' ][ $slug ] ) ? $options[ 'themes' ][ $slug ] : array();
 		$stored =  isset( $theme[ 'less' ] ) ? $theme[ 'less' ] : array(); // is an array of stored imported less file data
 		$compiled = isset( $theme[ 'compiled' ] ) ? $theme[ 'compiled' ] : ''; // the complete compiled down css
+		$slug = esc_attr( $slug );
 		?>
 		<div style="overflow: hidden">
 		<div id="less_area" style="width: 49%; float: left; overflow: hidden; margin-right: 2%;">
@@ -105,25 +106,36 @@ class SnS_Theme_Page
 				$less = $raw;
 				$compiled = '';
 			}
+			$name = esc_attr( $name );
+			$lead_break = 0 == strpos( $less, PHP_EOL ) ? PHP_EOL : '';
 			?>
 			<div class="sns-less-ide" style="overflow: hidden">
+			<div class="widget"><div class="<?php echo $less == $raw ? 'sns-collapsed ': ''; ?>inside">
+				<span class="sns-collapsed-btn"></span>
 				<label style="margin-bottom: 0;"><?php echo $name ?></label>
-				<input type="hidden" class="raw" value=<?php echo esc_attr( $raw ) ?> />
-				<textarea
+				<textarea data-file-name="<?php echo $name ?>" data-raw="<?php echo esc_attr( $raw ) ?>"
 					name="SnS_options[themes][<?php echo $slug ?>][less][<?php echo $name ?>]"
 					style="min-width: 250px; width:47%;"
-					class="code less" rows="5" cols="40"><?php echo esc_textarea( $less ) ?></textarea>
+					class="code less" rows="5" cols="40"><?php echo $lead_break . esc_textarea( $less ) ?></textarea>
+				<div class="sns-ajax-wrap">
+					<a class="sns-ajax-load button" href="#">Load Source File</a>
+					<a class="sns-ajax-save button" href="#">Save All Changes</a>
+					<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif" style="display: none;">
+					<div class="single-status"><div class="updated settings-error below-h2"></div></div>
+				</div>
+			</div></div>
 			</div>
 			<?php
 		}
 		?>
 		</div>
 		<div id="css_area" style="width: 49%; float: left; overflow: hidden;">
+			<div id="compile_status" style="display: none" class="updated settings-error below-h2"><p><img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif" /> <span class="status-text">Keystokes detected. 1 second delay, then compiling...</span></p></div>
 			<textarea
 				name="SnS_options[themes][<?php echo $slug ?>][compiled]"
 				style="min-width: 250px; width:47%;"
 				class="code css" rows="5" cols="40"><?php echo esc_textarea( $compiled ) ?></textarea>
-			<div id="compiled_error" style="display: none" class="error settings-error below-h2"></div>
+			<div id="compiled_error" class="error settings-error below-h2"></div>
 		</div>
 		</div>
 		<?php
@@ -137,6 +149,20 @@ class SnS_Theme_Page
 		?>
 		<div style="max-width: 55em;">
 			<p><?php _e( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.', 'scripts-n-styles' )?></p>
+		</div>
+		<?php
+	}
+	function page() {
+		?>
+		<div class="wrap">
+			<?php SnS_Admin::nav(); ?>
+			<form action="" method="post" autocomplete="off">
+			<?php
+				settings_fields( SnS_Admin::OPTION_GROUP );
+				do_settings_sections( SnS_Admin::MENU_SLUG );
+				// no submit button.
+			?>
+			</form>
 		</div>
 		<?php
 	}

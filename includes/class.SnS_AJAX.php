@@ -14,6 +14,40 @@ class SnS_AJAX
 		add_action( 'wp_ajax_sns_dropdown', array( __CLASS__, 'dropdown' ) );
 		add_action( 'wp_ajax_sns_delete_class', array( __CLASS__, 'delete_class' ) );
 		add_action( 'wp_ajax_sns_shortcodes', array( __CLASS__, 'shortcodes' ) );
+		add_action( 'wp_ajax_sns_save_theme', array( __CLASS__, 'save_theme' ) );
+	}
+	function save_theme() {
+		check_ajax_referer( SnS_Admin::OPTION_GROUP . "-options" );
+		
+		$files = array();
+		$support_files = get_theme_support( 'scripts-n-styles' );
+		
+		if ( is_child_theme() )
+			$root = get_stylesheet_directory();
+		else
+			$root = get_template_directory();
+		
+		foreach( $support_files[0] as $file ) {
+			if ( is_file( $root . $file ) )
+				$files[] = $root . $file;
+		}
+		
+		$slug = get_stylesheet();
+		$options = get_option( 'SnS_options' );
+		// Stores data on a theme by theme basis.
+		$theme =  isset( $options[ 'themes' ][ $slug ] ) ? $options[ 'themes' ][ $slug ] : array();
+		$stored =  isset( $theme[ 'less' ] ) ? $theme[ 'less' ] : array(); // is an array of stored imported less file data
+		$compiled = isset( $theme[ 'compiled' ] ) ? $theme[ 'compiled' ] : ''; // the complete compiled down css
+		$slug = esc_attr( $slug );
+		
+		$data = isset( $_REQUEST[ 'data' ] ) ? $_REQUEST[ 'data' ] : '';
+		
+		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		echo json_encode( array(
+			"data" => $data
+		) );
+		
+		exit();
 	}
 	function update_tab() {
 		check_ajax_referer( Scripts_n_Styles::$file );
