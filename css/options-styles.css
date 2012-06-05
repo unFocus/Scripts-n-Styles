@@ -7,7 +7,7 @@ textarea.code {
 	border: 1px solid #DFDFDF;
 	background-color: white;
 	border-radius: 3px;
-	margin: 8px 0;
+	margin: 8px 0 6px;
 	-moz-background-clip: padding;
 	-webkit-background-clip: padding-box;
 	background-clip: padding-box;
@@ -31,7 +31,7 @@ body .CodeMirror-scroll {
 	cursor: default;
 }
 .sns-less-ide .inside {
-	margin: 6px 0 8px;
+	margin: 6px 0;
 	padding: 0 10px;
 	line-height: 1.4em;
 }
@@ -40,6 +40,10 @@ body .CodeMirror-scroll {
 }
 .sns-collapsed .sns-collapsed-btn {
 	background-position: 1px -107px;
+}
+.sns-collapsed-btn + label {
+	height: 1.4em;
+	display: block;
 }
 .sns-collapsed-btn {
 	cursor: pointer;
