@@ -17,8 +17,8 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		$status.show();
 		cm.save();
 		if ( timeout ) {
-			window.clearTimeout( window._SnS_options.theme_compiler_timer );
-			window._SnS_options.theme_compiler_timer = window.setTimeout( window._SnS_options.theme_compiler, timeout );
+			clearTimeout( _SnS_options.theme_compiler_timer );
+			_SnS_options.theme_compiler_timer = setTimeout( _SnS_options.theme_compiler, timeout );
 		} else {
 			compile();
 		}
@@ -57,7 +57,10 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	
 	// Collapsable
 	$( context ).on( "click", '.sns-collapsed-btn, .sns-collapsed-btn + label', function( event ){
-		var $this = $( this ), collapsed, fileName, thisIDE;
+		var $this = $( this )
+		  , collapsed
+		  , fileName
+		  , thisIDE;
 		$this.parent().toggleClass( 'sns-collapsed' );
 		fileName = $this.siblings( '.code' ).data( 'file-name' );
 		collapsed = $this.parent().hasClass( 'sns-collapsed' );
@@ -77,6 +80,11 @@ jQuery( document ).ready( function( $ ) { "use strict"
 			  , 'collapsed':  collapsed ? 'yes' : 'no'
 			}
 		);
+	});
+	$( '#css_area' ).on( "click", '.sns-collapsed-btn, .sns-collapsed-btn + label', function( event ){
+		var $this = $( this ).parent();
+		$this.toggleClass( 'sns-collapsed' );
+		compiled.refresh();
 	});
 	
 	$( '.single-status' ).hide();
@@ -161,7 +169,6 @@ jQuery( document ).ready( function( $ ) { "use strict"
 					$error.hide();
 					compiledValue = tree.toCSS();
 					//compiledValue = tree.toCSS({ compress: true });
-					
 					compiled.setValue( compiledValue );
 					//compiled.autoFormatRange( compiled.posFromIndex( 0 ), compiled.posFromIndex( compiledValue.length ) );
 					compiled.save();
@@ -175,7 +182,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 				}
 			}
 		});
-		window.clearTimeout( window._SnS_options.theme_compiler_timer );
+		clearTimeout( _SnS_options.theme_compiler_timer );
 		$status.hide();
 	}
 	function doError( err ) {
@@ -242,5 +249,5 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		if ( errorText ) errorText.clear();
 		errorText = false;
 	}
-	window._SnS_options.theme_compiler = compile;
+	_SnS_options.theme_compiler = compile;
 });

@@ -136,14 +136,20 @@ class SnS_Theme_Page
 		}
 		?>
 		</div>
-		<div id="css_area" style="width: 49%; float: left; overflow: hidden;">
-			<div id="compile_status" style="display: none" class="updated settings-error below-h2"><p><img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif" /> <span class="status-text">Keystokes detected. 1 second delay, then compiling...</span></p></div>
-			<textarea
-				name="SnS_options[themes][<?php echo $slug ?>][compiled]"
-				style="min-width: 250px; width:47%;"
-				class="code css" rows="5" cols="40"><?php echo esc_textarea( $compiled ) ?></textarea>
+		<div id="css_area" class="sns-less-ide" style="width: 49%; float: left; overflow: hidden;">
+			<div id="compile_status" style="display: none" class="updated settings-error below-h2">
+				<p><img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif" />
+				<span class="status-text">Keystokes detected. 1 second delay, then compiling...</span></p>
+			</div>
+			<div class="widget"><div class="sns-collapsed inside">
+				<span class="sns-collapsed-btn"></span>
+				<label style="margin-bottom: 0;">Preview Window</label>
+				<textarea
+					name="SnS_options[themes][<?php echo $slug ?>][compiled]"
+					style="min-width: 250px; width:47%;"
+					class="code css" rows="5" cols="40"><?php echo esc_textarea( $compiled ) ?></textarea>
+			</div></div>
 			<div id="compiled_error" class="error settings-error below-h2"></div>
-		</div>
 		</div>
 		<?php
 	}
