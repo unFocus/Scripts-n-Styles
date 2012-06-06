@@ -213,6 +213,8 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		
 		clearCompileError();
 		
+		if (!errorMirror) return;
+		
 		errorMarker = errorMirror.setMarker( errLine, '<strong>*%N%</strong>', "cm-error" );
 		
 		errorMirror.setLineClass( errorMarker, "cm-error" );
