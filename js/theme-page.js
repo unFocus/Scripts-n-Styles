@@ -4,7 +4,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	var collection = []
 	  , context = "#less_area"
 	  , theme = _SnS_options.theme ? _SnS_options.theme: 'default'
-	  , timeout = _SnS_options.timeout ? _SnS_options.timeout : 1000
+	  , timeout = _SnS_options.timeout || 1000
 	  , loaded = false
 	  , compiled
 	  , $codemirror, $error, $status, $form, $css
@@ -30,6 +30,10 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		indentWithTabs: true,
 		onChange: onChange
 	};
+	
+	CodeMirror.commands.save = function() {
+		$form.submit();
+	}; 
 	
 	// Each "IDE"
 	$( ".sns-less-ide", context ).each( function() {
@@ -75,9 +79,9 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		);
 	});
 	
-	
 	$( '.single-status' ).hide();
 	$( '.sns-ajax-loading' ).hide();
+	
 	// Load
 	$( context ).on( "click", ".sns-ajax-load", function( event ){
 		event.preventDefault();
@@ -123,14 +127,13 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		event.preventDefault();
 		compile();
 		$.ajax({  
-		  type: "POST",  
-		  url: window.location,  
-		  data: $(this).serialize()+'&ajaxsubmit=1',
-		  cache: false,
-		  success: saved 
+			type: "POST",  
+			url: window.location,  
+			data: $(this).serialize()+'&ajaxsubmit=1',
+			cache: false,
+			success: saved 
 		});
 	});
-	
 	function createCSSEditor() {
 		return CodeMirror.fromTextArea(
 			$css.get(0),
