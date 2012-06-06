@@ -5,7 +5,7 @@ Plugin URI: http://www.unfocus.com/projects/scripts-n-styles/
 Description: Allows WordPress admin users the ability to add custom CSS and JavaScript directly to individual Post, Pages or custom post types.
 Author: unFocus Projects
 Author URI: http://www.unfocus.com/
-Version: 3.2b2
+Version: 3.2b3
 License: GPLv3 or later
 Text Domain: scripts-n-styles
 Network: true
@@ -49,7 +49,7 @@ Network: true
  * @link http://www.unfocus.com/projects/scripts-n-styles/ Plugin URI
  * @author unFocus Projects
  * @link http://www.unfocus.com/ Author URI
- * @version 3.2b2
+ * @version 3.2b3
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2010 - 2012, Kenneth Newman
  * 
@@ -57,7 +57,6 @@ Network: true
  * @todo Create selection on Option page of which to pick registered scripts to make available on edit screens.
  * @todo Create shortcode registration on Options page to make those snippets available on edit screens.
  * @todo Add Error messaging.
- * @todo Replace Multi-Select element with something better.
  * @todo Clean up tiny_mce_before_init in SnS_Admin_Meta_Box.
  */
 
@@ -66,7 +65,7 @@ class Scripts_n_Styles
 	/**#@+
 	 * @static
 	 */
-	const VERSION = '3.2b2';
+	const VERSION = '3.2b3';
 	static $file = __FILE__;
 	static $cm_themes = array( 'default', 'ambiance', 'blackboard', 'cobalt', 'eclipse', 'elegant', 'lesser-dark', 'monokai', 'neat', 'night', 'rubyblue', 'xq-dark' );
 	/**#@-*/
@@ -219,7 +218,7 @@ class Scripts_n_Styles
 		$dir = plugins_url( '/', __FILE__);
 		$js = $dir . 'js/';
 		$css = $dir . 'css/';
-		$cm_version = '2.4';
+		$cm_version = '2.25';
 		$chosen_version = '0.9.8';
 		$cm_dir = $dir . 'vendor/CodeMirror2/';
 		$less_dir = $dir . 'vendor/';
@@ -229,8 +228,8 @@ class Scripts_n_Styles
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
 		
-		wp_register_script( 'less.js', $less_dir . 'less.js', array(), '1.3.0' );
-		wp_register_script( 'coffeescript', $coffee_dir . 'coffee-script.js', array(), '1.3.3' );
+		wp_register_script( 'less.js', $less_dir . 'less.js', array(), '1.3.0-min' );
+		wp_register_script( 'coffeescript', $coffee_dir . 'coffee-script.js', array(), '1.3.3-min' );
 		wp_register_script( 'chosen', $chosen_dir . 'chosen.jquery.min.js', array( 'jquery' ), $chosen_version, true );
 		wp_register_style(  'chosen', $chosen_dir . 'chosen.css', array(), $chosen_version );
 		
@@ -246,6 +245,8 @@ class Scripts_n_Styles
 		wp_register_script( 'codemirror-htmlmixed',    $cm_dir . 'mode/htmlmixed/htmlmixed.js',       array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript' ), $cm_version );
 		wp_register_script( 'codemirror-php',          $cm_dir . 'mode/php/php.js',                   array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript', 'codemirror-clike' ), $cm_version );
 		
+		wp_register_script( 'codemirror-util-formatting', $cm_dir . 'lib/util/formatting.js', array( 'codemirror' ), $cm_version );
+		
 		wp_register_style(  'codemirror-default',    $cm_dir . 'lib/codemirror.css', array(), $cm_version );
 		foreach ( self::$cm_themes as $theme ) if ( 'default' !== $theme )
 			wp_register_style( "codemirror-$theme",  $cm_dir . "theme/$theme.css",   array( 'codemirror-default' ), $cm_version );
@@ -257,7 +258,7 @@ class Scripts_n_Styles
 			
 		wp_register_style(  'sns-options', $css . 'options-styles.css', array(), self::VERSION );
 		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror-less', 'codemirror-coffeescript', 'codemirror-css', 'codemirror-javascript', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
-		wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror-less', 'codemirror-coffeescript', 'codemirror-css', 'codemirror-javascript', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
+		wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror-less', 'codemirror-css', 'less.js', 'codemirror-util-formatting' ), self::VERSION, true );
 		wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'codemirror-php' ), self::VERSION, true );
 		wp_register_style(  'sns-meta-box', $css . 'meta-box.css', array( 'codemirror-theme' ), self::VERSION );
 		wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'codemirror-less', 'codemirror-htmlmixed', 'chosen' ), self::VERSION, true );

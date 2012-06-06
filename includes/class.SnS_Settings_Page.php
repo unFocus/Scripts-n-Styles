@@ -94,7 +94,7 @@ class SnS_Settings_Page
 				'setting' => 'SnS_options',
 				'choices' => array( 'menu', 'object', 'utility', 'tools.php', 'options-general.php', 'themes.php' ),
 				'size' => 6,
-				'style' => 'height: auto;'
+				'style' => 'height: auto;',
 			) );
 		
 		add_settings_section(
@@ -116,7 +116,7 @@ class SnS_Settings_Page
 				'default' => 'default',
 				'legend' => __( 'Theme', 'scripts-n-styles' ),
 				'layout' => 'horizontal',
-				'description' => ''
+				'description' => '',
 			) );
 	}
 	

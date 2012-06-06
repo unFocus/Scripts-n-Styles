@@ -58,6 +58,7 @@ body .CodeMirror-scroll {
 
 }
 .sns-collapsed .CodeMirror,
+.sns-collapsed .code,
 .sns-collapsed .sns-ajax-wrap {
 	visibility: hidden;
 	position: absolute;

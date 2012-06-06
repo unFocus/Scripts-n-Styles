@@ -4,53 +4,73 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	var collection = []
 	  , context = "#less_area"
 	  , theme = _SnS_options.theme ? _SnS_options.theme: 'default'
+	  , timeout = _SnS_options.timeout ? _SnS_options.timeout : 1000
 	  , loaded = false
-	  , compiled, $codemirror, $error, $status,
-	  timer, onChange, errorMarker, errorText, errorMirror;
+	  , compiled
+	  , $codemirror, $error, $status, $form, $css
+	  , onChange
+	  , errorMarker, errorText, errorMirror
+	  , config;
 	
 	// Prevent keystoke compile buildup
-	onChange = function onChange(){
+	onChange = function onChange( cm ){
 		$status.show();
-		clearTimeout( timer );
-		timer = setTimeout( compile_all, 1000 );
+		cm.save();
+		if ( timeout ) {
+			window.clearTimeout( window._SnS_options.theme_compiler_timer );
+			window._SnS_options.theme_compiler_timer = window.setTimeout( window._SnS_options.theme_compiler, timeout );
+		} else {
+			compile();
+		}
 	}
+	config = {
+		lineNumbers: true,
+		mode: "text/x-less",
+		theme: theme,
+		indentWithTabs: true,
+		onChange: onChange
+	};
 	
 	// Each "IDE"
 	$( ".sns-less-ide", context ).each( function() {
+		var $text = $('.code',this);
 		var ide = {
-			name : $('.code',this).data('file-name'),
-			raw : $('.code',this).data('raw'),
-			data : $('.code',this).val(),
+			name : $text.data('file-name'),
+			raw : $text.data('raw'),
+			data : $text.val(),
+			$text : $text,
 			lines : 0,
 			startLine : 0,
 			endLine : 0,
 			errorLine : null,
 			errorText : null,
+			cm : CodeMirror.fromTextArea( $text.get(0), config )
 		};
-		
-		ide.cm = CodeMirror.fromTextArea(
-			$('.less',this).get(0),
-			{
-				lineNumbers: true,
-				mode: "text/x-less",
-				theme: theme,
-				indentWithTabs: true,
-				onChange: onChange
-			}
-		);
-		
+		if ( $text.parent().hasClass( 'sns-collapsed' ) )
+			ide.cm.toTextArea();
 		collection.push( ide );
 	});
 	
 	// Collapsable
 	$( context ).on( "click", '.sns-collapsed-btn, .sns-collapsed-btn + label', function( event ){
-		var $this = $( this );
+		var $this = $( this ), collapsed, fileName, thisIDE;
 		$this.parent().toggleClass( 'sns-collapsed' );
+		fileName = $this.siblings( '.code' ).data( 'file-name' );
+		collapsed = $this.parent().hasClass( 'sns-collapsed' );
+		$(collection).each(function(index, element) {
+			if ( element.name == fileName )
+				thisIDE = element;
+		});
+		if ( collapsed ) {
+			thisIDE.cm.toTextArea();
+		} else {
+			thisIDE.cm = CodeMirror.fromTextArea( thisIDE.$text.get(0), config );
+		}
 		$.post( ajaxurl,
 			{   action: 'sns_open_theme_panels'
 			  , _ajax_nonce: $( '#_wpnonce' ).val()
-			  , 'file-name':  $this.siblings( '.code' ).data( 'file-name' )
-			  , 'collapsed':  $this.parent().hasClass( 'sns-collapsed' ) ? 'yes' : 'no'
+			  , 'file-name':  fileName
+			  , 'collapsed':  collapsed ? 'yes' : 'no'
 			}
 		);
 	});
@@ -69,7 +89,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 				return;
 			}
 		});
-		compile_all();
+		compile();
 		$( '.sns-ajax-loading' ).hide();
 		$( this ).nextAll( '.single-status' )
 			.show().delay(3000).fadeOut()
@@ -80,45 +100,50 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	$( context ).on( "click", ".sns-ajax-save", function( event ){
 		event.preventDefault();
 		$( this ).nextAll( '.sns-ajax-loading' ).show();
-		$( "#less_area" ).closest( 'form' ).submit();
+		$form.submit();
 	});
 	function saved( data ) {
-		
-		$(data).find('#setting-error-settings_updated').insertAfter( '#icon-sns + h2' ).delay(3000).fadeOut();
+		$(data).insertAfter( '#icon-sns + h2' ).delay(3000).fadeOut();
 		$( '.sns-ajax-loading' ).hide();
 	}
 	
 	// The CSS output side.
-	compiled = CodeMirror.fromTextArea(
-		$( '.css', "#css_area" ).get(0),
-		{ lineNumbers: true, mode: "css", theme: theme, readOnly: true }
-	);
-	$codemirror = $( '.css', "#css_area" ).next( '.CodeMirror' );
+	$css = $( '.css', "#css_area" );
+	compiled = createCSSEditor();
+	$codemirror = $css.next( '.CodeMirror' );
 	$error = $( "#compiled_error" );
 	$status = $( "#compile_status" );
 	
 	// Start.
-	compile_all();
+	compile();
 	loaded = true;
 	
-	$( "#less_area" ).closest( 'form' ).submit( function( event ){
+	$form = $( "#less_area" ).closest( 'form' );
+	$form.submit( function( event ){
 		event.preventDefault();
-		compile_all();
+		compile();
 		$.ajax({  
 		  type: "POST",  
 		  url: window.location,  
-		  data: $(this).serialize(),
+		  data: $(this).serialize()+'&ajaxsubmit=1',
 		  cache: false,
 		  success: saved 
 		});
 	});
 	
-	function compile_all() {
+	function createCSSEditor() {
+		return CodeMirror.fromTextArea(
+			$css.get(0),
+			{ lineNumbers: true, mode: "css", theme: theme, readOnly: true }
+		);
+	}
+	function compile() {
 		var lessValue = '';
 		var totalLines = 0;
+		var compiledValue;
 		$( collection ).each(function(){
-			this.cm.save();
-			lessValue += "\n" + this.cm.getValue();
+			//this.cm.save();
+			lessValue += "\n" + this.$text.val();
 			this.lines = this.cm.lineCount();
 			this.startLine = totalLines;
 			totalLines += this.lines;
@@ -131,8 +156,13 @@ jQuery( document ).ready( function( $ ) { "use strict"
 			} else {
 				try {
 					$error.hide();
-					compiled.setValue( tree.toCSS() );
+					compiledValue = tree.toCSS();
+					//compiledValue = tree.toCSS({ compress: true });
+					
+					compiled.setValue( compiledValue );
+					//compiled.autoFormatRange( compiled.posFromIndex( 0 ), compiled.posFromIndex( compiledValue.length ) );
 					compiled.save();
+					
 					$codemirror.show();
 					compiled.refresh();
 					clearCompileError();
@@ -142,12 +172,12 @@ jQuery( document ).ready( function( $ ) { "use strict"
 				}
 			}
 		});
-		clearTimeout( timer );
+		window.clearTimeout( window._SnS_options.theme_compiler_timer );
 		$status.hide();
 	}
 	function doError( err ) {
 		console.log( err );
-		var pos, token, start, end, errLine, fileNum;
+		var pos, token, start, end, errLine, fileName, errMessage;
 		errLine = err.line-1;
 		
 		errorMirror = null;
@@ -155,24 +185,30 @@ jQuery( document ).ready( function( $ ) { "use strict"
 			if ( this.startLine <= errLine && errLine < this.endLine ) {
 				errorMirror = this.cm;
 				errLine = errLine - this.startLine -1;
-				fileNum = i+1;
+				fileName = this.name;
 				return;
 			}
 		});
 		
 		$codemirror
 			.hide();
+		var errMessage = '';
+		
+		if ( err.type == 'Parse' )
+			errMessage = " &nbsp; <em>LESS Parse Error</em> <br /> on line " + ( errLine + 1 ) + " of " + fileName + ".</p>";
+		else
+			errMessage = " &nbsp; <em>LESS " + err.type +" Error</em> on line " + ( errLine + 1 ) + " of " + fileName + ". <br />" + err.message + "</p>";
 		
 		if ( loaded ) {
 			$error
 				.removeClass( 'error' )
 				.addClass( 'updated' )
 				.show()
-				.html( "<p><strong>Warning: &nbsp; </strong>LESS " + err.type + " Error on line " + (errLine+1) + " of the " + fileNum + " file.</p>" );
+				.html( "<p><strong>Warning:</strong>" + errMessage + "</p>" );
 		} else {
 			$error
 				.show()
-				.html( "<p><strong>Error: &nbsp; </strong>" + err.message + "</p>" );
+				.html( "<p><strong>Error: &nbsp; </strong>" + errMessage + "</p>" );
 		}
 		
 		clearCompileError();
@@ -190,6 +226,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		
 		compiled.setValue( "" );
 		compiled.save();
+		compiled.refresh();
 	}
 	function clearCompileError() {
 		if ( errorMarker ) {
@@ -200,4 +237,5 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		if ( errorText ) errorText.clear();
 		errorText = false;
 	}
+	window._SnS_options.theme_compiler = compile;
 });

@@ -104,6 +104,7 @@ class SnS_Form
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) || ( is_multisite() && ! is_super_admin() ) )
 			wp_die( __( 'Cheatin&#8217; uh?' ) );
 		
+		// Handle menu-redirected update message.
 		if ( isset( $_REQUEST[ 'message' ] ) && $_REQUEST[ 'message' ] )
 			add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
 		
@@ -134,15 +135,24 @@ class SnS_Form
 		if ( ! count( get_settings_errors() ) )
 			add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
 		
+		if ( isset( $_REQUEST[ 'ajaxsubmit' ] ) && $_REQUEST[ 'ajaxsubmit' ] ) {
+			ob_start();
+			settings_errors( $page );
+			$output = ob_get_contents();
+			ob_end_clean();
+			exit( $output );
+		}
+		
+		// Redirect to new page if changed.
 		if ( isset( $_POST[ $option ][ 'menu_position' ] ) && ( $value[ 'menu_position' ] != SnS_Admin::$parent_slug ) ) {
 			switch( $value[ 'menu_position' ] ) {
 				case 'menu':
 				case 'object':
 				case 'utility':
-					wp_redirect( add_query_arg( 'message', 1, admin_url( 'admin.php?page=sns_settings' ) ) );
+					wp_redirect( add_query_arg( array( 'message' => 1, 'page' => 'sns_settings' ), admin_url( 'admin.php' ) ) );
 					break;
 				default:
-					wp_redirect( add_query_arg( 'message', 1, admin_url( $value[ 'menu_position' ].'?page=sns_settings' ) ) );
+					wp_redirect( add_query_arg( array( 'message' => 1, 'page' => 'sns_settings' ), admin_url( $value[ 'menu_position' ] ) ) );
 					break;
 			}
 		}
