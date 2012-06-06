@@ -11,21 +11,23 @@ Text Domain: scripts-n-styles
 Network: true
 */
 
-/*  Copyright 2010-2012  Kenneth Newman  www.unfocus.com
+/*  The Scripts n Styles WordPress Plugin
+	Copyright (c) 2010-2012  Kenneth Newman  <http://www.unfocus.com/>
+	Copyright (c) 2012  Kevin Newman  <http://www.unfocus.com/>
+	Copyright (c) 2012  adcSTUDIO LLC <http://www.adcstudio.com/>
 
-	This program is free software; you can redistribute it and/or
+	Scripts n Styles is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 3
 	of the License, or (at your option) any later version.
 	
-	This program is distributed in the hope that it will be useful,
+	Scripts n Styles is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 	
 	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+	along with this program. If not, see <http://www.gnu.org/licenses/>.
 	
 	This file incorporates work covered by other licenses and permissions.
 */
@@ -52,6 +54,8 @@ Network: true
  * @version 3.2b3
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2010 - 2012, Kenneth Newman
+ * @copyright Copyright (c) 2012, Kevin Newman
+ * @copyright Copyright (c) 2012, adcSTUDIO LLC
  * 
  * @todo Create ability to add and register scripts and styles for enqueueing (via Options page).
  * @todo Create selection on Option page of which to pick registered scripts to make available on edit screens.
