@@ -6,6 +6,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	  , theme = _SnS_options.theme ? _SnS_options.theme: 'default'
 	  , timeout = _SnS_options.timeout || 1000
 	  , loaded = false
+	  , preview = false
 	  , compiled
 	  , $codemirror, $error, $status, $form, $css
 	  , onChange
@@ -84,7 +85,11 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	$( '#css_area' ).on( "click", '.sns-collapsed-btn, .sns-collapsed-btn + label', function( event ){
 		var $this = $( this ).parent();
 		$this.toggleClass( 'sns-collapsed' );
-		compiled.refresh();
+		preview = ! $this.hasClass( 'sns-collapsed' );
+		if ( preview )
+			compiled = createCSSEditor();
+		else
+			compiled.toTextArea();
 	});
 	
 	$( '.single-status' ).hide();
@@ -121,7 +126,9 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	
 	// The CSS output side.
 	$css = $( '.css', "#css_area" );
-	compiled = createCSSEditor();
+	if ( preview ) {
+		compiled = createCSSEditor();
+	}
 	$codemirror = $css.next( '.CodeMirror' );
 	$error = $( "#compiled_error" );
 	$status = $( "#compile_status" );
@@ -167,15 +174,18 @@ jQuery( document ).ready( function( $ ) { "use strict"
 			} else {
 				try {
 					$error.hide();
-					compiledValue = tree.toCSS();
-					//compiledValue = tree.toCSS({ compress: true });
-					compiled.setValue( compiledValue );
-					//compiled.autoFormatRange( compiled.posFromIndex( 0 ), compiled.posFromIndex( compiledValue.length ) );
-					compiled.save();
-					
-					$codemirror.show();
-					compiled.refresh();
-					clearCompileError();
+					if ( preview ) {
+						compiledValue = tree.toCSS();
+						compiled.setValue( compiledValue );
+						compiled.save();
+						//$codemirror.show();
+						compiled.refresh();
+						clearCompileError();
+					} else {
+						compiledValue = tree.toCSS({ compress: true });
+						$css.val( compiledValue );
+						clearCompileError();
+					}
 				}
 				catch ( err ) {
 					doError( err );
@@ -200,8 +210,8 @@ jQuery( document ).ready( function( $ ) { "use strict"
 			}
 		});
 		
-		$codemirror
-			.hide();
+		//$codemirror.hide();
+		
 		var errMessage = '';
 		
 		if ( err.type == 'Parse' )
@@ -235,10 +245,11 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		end = errorMirror.posFromIndex( err.index + token.string.length );
 		
 		errorText = errorMirror.markText( start, end, "cm-error" );
-		
-		compiled.setValue( "" );
-		compiled.save();
-		compiled.refresh();
+		if ( preview ) {
+			compiled.setValue( "" );
+			compiled.save();
+			compiled.refresh();
+		}
 	}
 	function clearCompileError() {
 		if ( errorMarker ) {
