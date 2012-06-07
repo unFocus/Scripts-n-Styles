@@ -111,8 +111,8 @@ class Scripts_n_Styles
 		if ( current_theme_supports( 'scripts-n-styles' ) ) {
 			$options = get_option( 'SnS_options' );
 			$slug = get_stylesheet();
-			$compiled = $options[ 'themes' ][ $slug ][ 'compiled' ];
-			if ( ! empty( $compiled ) ) {
+			
+			if ( ! empty( $options[ 'themes' ][ $slug ][ 'compiled' ] ) ) {
 				wp_deregister_style( 'theme_style' );
 				wp_enqueue_style( 'theme_style', add_query_arg( array( 'action' => 'sns_theme_css' ), admin_url( "admin-ajax.php" ) ) );
 			}
