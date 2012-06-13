@@ -7,14 +7,14 @@
  * post types.
  */
  
-require_once( 'class.SnS_Admin_Meta_Box.php' );
-require_once( 'class.SnS_Admin_Code_Editor.php' );
-require_once( 'class.SnS_Settings_Page.php' );
-require_once( 'class.SnS_Usage_Page.php' );
-require_once( 'class.SnS_Global_Page.php' );
-require_once( 'class.SnS_Theme_Page.php' );
-require_once( 'class.SnS_AJAX.php' );
-require_once( 'class.SnS_Form.php' );
+require_once( 'class-sns-admin-meta-box.php' );
+require_once( 'class-sns-admin-code-editor.php' );
+require_once( 'class-sns-settings-page.php' );
+require_once( 'class-sns-usage-page.php' );
+require_once( 'class-sns-global-page.php' );
+require_once( 'class-sns-theme-page.php' );
+require_once( 'class-sns-ajax.php' );
+require_once( 'class-sns-form.php' );
 
 class SnS_Admin
 {

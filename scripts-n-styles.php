@@ -84,7 +84,7 @@ class Scripts_n_Styles
 				true in the wp-config.php would effectively disable this
 				plugin's admin because no user would have the capability.
 			*/
-			include_once( 'includes/class.SnS_Admin.php' );
+			include_once( 'includes/class-sns-admin.php' );
 			SnS_Admin::init();
 		}
 		add_action( 'plugins_loaded', array( __CLASS__, 'upgrade_check' ) );
@@ -424,7 +424,7 @@ class Scripts_n_Styles
 	static function upgrade_check() {
 		$options = get_option( 'SnS_options' );
 		if ( ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) ) {
-			include_once( 'includes/class.SnS_Admin.php' );
+			include_once( 'includes/class-sns-admin.php' );
 			SnS_Admin::upgrade();
 		}
 	}

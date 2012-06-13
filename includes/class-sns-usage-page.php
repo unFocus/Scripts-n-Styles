@@ -81,7 +81,7 @@ class SnS_Usage_Page
 			<p><?php _e( 'The following table shows content that utilizes Scripts n Styles.', 'scripts-n-styles' ) ?></p>
 		</div>
 		<?php
-		require_once( 'class.SnS_List_Usage.php' );
+		require_once( 'class-sns-list-usage.php' );
 		$usageTable = new SnS_List_Usage();
 		$usageTable->prepare_items();
 		$usageTable->display();
