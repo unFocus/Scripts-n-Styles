@@ -47,9 +47,15 @@ class SnS_Global_Page
 			'SnS_options' );
 		
 		add_settings_section(
-			'global',
-			__( 'Global Scripts n Styles', 'scripts-n-styles' ),
-			array( __CLASS__, 'global_section' ),
+			'global_styles',
+			__( 'Blog Wide Scripts', 'scripts-n-styles' ),
+			array( __CLASS__, 'global_styles_section' ),
+			SnS_Admin::MENU_SLUG );
+		
+		add_settings_section(
+			'global_scripts',
+			__( 'Blog Wide Styles', 'scripts-n-styles' ),
+			array( __CLASS__, 'global_scripts_section' ),
 			SnS_Admin::MENU_SLUG );
 		
 		add_settings_field(
@@ -57,21 +63,21 @@ class SnS_Global_Page
 			__( '<strong>LESS:</strong> ', 'scripts-n-styles' ),
 			array( __CLASS__, 'less_fields' ),
 			SnS_Admin::MENU_SLUG,
-			'global',
+			'global_styles',
 			array( 'label_for' => 'less' ) );
 		add_settings_field(
 			'coffee',
 			__( '<strong>CoffeeScript:</strong> ', 'scripts-n-styles' ),
 			array( __CLASS__, 'coffee_fields' ),
 			SnS_Admin::MENU_SLUG,
-			'global',
+			'global_scripts',
 			array( 'label_for' => 'coffee' ) );
 		add_settings_field(
 			'styles',
 			__( '<strong>Styles:</strong> ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'textarea' ),
 			SnS_Admin::MENU_SLUG,
-			'global',
+			'global_styles',
 			array(
 				'label_for' => 'styles',
 				'setting' => 'SnS_options',
@@ -86,7 +92,7 @@ class SnS_Global_Page
 			__( '<strong>Scripts</strong><br />(for the <code>head</code> element): ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'textarea' ),
 			SnS_Admin::MENU_SLUG,
-			'global',
+			'global_scripts',
 			array(
 				'label_for' => 'scripts_in_head',
 				'setting' => 'SnS_options',
@@ -101,7 +107,7 @@ class SnS_Global_Page
 			__( '<strong>Scripts:</strong> ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'textarea' ),
 			SnS_Admin::MENU_SLUG,
-			'global',
+			'global_scripts',
 			array(
 				'label_for' => 'scripts',
 				'setting' => 'SnS_options',
@@ -116,7 +122,7 @@ class SnS_Global_Page
 			__( '<strong>Enqueue Scripts</strong>: ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'select' ),
 			SnS_Admin::MENU_SLUG,
-			'global',
+			'global_scripts',
 			array(
 				'label_for' => 'enqueue_scripts',
 				'setting' => 'SnS_options',
@@ -165,10 +171,22 @@ class SnS_Global_Page
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
 	 */
-	function global_section() {
+	function global_scripts_section() {
 		?>
 		<div style="max-width: 55em;">
-			<p><?php _e( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.', 'scripts-n-styles' )?></p>
+			<p><?php _e( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts that were registered individually.', 'scripts-n-styles' )?></p>
+		</div>
+		<?php
+	}
+	
+	/**
+	 * Settings Page
+	 * Outputs Description text for the Global Section.
+	 */
+	function global_styles_section() {
+		?>
+		<div style="max-width: 55em;">
+			<p><?php _e( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Styles that were registered individually.', 'scripts-n-styles' )?></p>
 		</div>
 		<?php
 	}
