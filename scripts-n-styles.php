@@ -87,6 +87,10 @@ class Scripts_n_Styles
 			include_once( 'includes/class.SnS_Admin.php' );
 			SnS_Admin::init();
 		}
+		
+		include_once( 'includes/class-sns-widgets.php' );
+		SnS_Widgets::init();
+		
 		add_action( 'plugins_loaded', array( __CLASS__, 'upgrade_check' ) );
 		
 		add_filter( 'body_class', array( __CLASS__, 'body_classes' ) );
@@ -106,7 +110,13 @@ class Scripts_n_Styles
 		add_action( 'wp_print_styles', array( __CLASS__, 'theme_style' ) );
 		add_action( 'wp_ajax_sns_theme_css', array( __CLASS__, 'theme_css' ) );
 		add_action( 'wp_ajax_nopriv_sns_theme_css', array( __CLASS__, 'theme_css' ) );
+		add_action( 'widgets_init', array( __CLASS__, 'widgets_init' ) );
 	}
+	
+	function widgets_init() {
+		register_widget( 'SnS_Hoops_Widget' );
+	}
+	
 	function theme_style() {
 		if ( current_theme_supports( 'scripts-n-styles' ) ) {
 			$options = get_option( 'SnS_options' );
