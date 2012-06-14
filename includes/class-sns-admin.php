@@ -12,6 +12,7 @@ require_once( 'class-sns-admin-code-editor.php' );
 require_once( 'class-sns-settings-page.php' );
 require_once( 'class-sns-usage-page.php' );
 require_once( 'class-sns-global-page.php' );
+require_once( 'class-sns-hoops-page.php' );
 require_once( 'class-sns-theme-page.php' );
 require_once( 'class-sns-ajax.php' );
 require_once( 'class-sns-form.php' );
@@ -76,6 +77,7 @@ class SnS_Admin
 				break;
 		}
 		SnS_Global_Page::init();
+		SnS_Hoops_Page::init();
 		if ( current_theme_supports( 'scripts-n-styles' ) ) 
 			SnS_Theme_Page::init();
 		SnS_Settings_Page::init();
@@ -95,6 +97,7 @@ class SnS_Admin
 		<?php screen_icon( 'none' ); ?>
 		<h3 class="nav-tab-wrapper">
 			<a class="nav-tab<?php echo ( self::MENU_SLUG == $page )               ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG );               ?>"><?php _e( 'Global',   'scripts-n-styles' ); ?></a>
+			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_hoops' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_hoops' );    ?>"><?php _e( 'Hoops',   'scripts-n-styles' ); ?></a>
 			<?php if ( current_theme_supports( 'scripts-n-styles' ) ) { ?>
 			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_theme' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_theme' );    ?>"><?php _e( 'Theme',    'scripts-n-styles' ); ?></a>
 			<?php } ?>
