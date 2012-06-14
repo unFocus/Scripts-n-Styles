@@ -259,7 +259,7 @@ class SnS_Admin_Meta_Box
 					<?php if ( ! empty( $shortcodes ) ) { ?>
 						<?php foreach ( $shortcodes as $key => $value ) { ?>
 							<div class="sns-shortcode widget"><div class="inside">
-							<p>[sns_shortcode name="<?php echo $key ?>"]</p>
+							<p>[hoops name="<?php echo $key ?>"]</p>
 							<textarea class="codemirror htmlmixed" data-sns-shortcode-key="<?php echo $key ?>" name="<?php echo $meta_name . '[existing][' . $key . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
 							</div></div>
 						<?php } ?>
