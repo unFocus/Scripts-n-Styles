@@ -24,11 +24,11 @@ class SnS_Theme_Page
 	 * @static
 	 */
 	function init() {
-		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Theme' ), 'unfiltered_html', self::MENU_SLUG, array( __CLASS__, 'page' ) );
+		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Theme' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
-		add_action( "load-$hook_suffix", array( 'SnS_Form', 'take_action'), 49 );
+		add_action( "load-$hook_suffix", array( 'SnS_Form', 'take_action' ), 49 );
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
 		
 		// Make the page into a tab.
@@ -58,6 +58,8 @@ class SnS_Theme_Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
 	 */
 	function admin_load() {
+		// added here to not effect other pages. Theme page requires JavaScript (less.js) or it doesn't make sense to save.
+		add_filter( 'sns_show_submit_button', '__return_false' );
 		
 		register_setting(
 			SnS_Admin::OPTION_GROUP,
@@ -162,20 +164,6 @@ class SnS_Theme_Page
 		?>
 		<div style="max-width: 55em;">
 			<p><?php _e( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.', 'scripts-n-styles' )?></p>
-		</div>
-		<?php
-	}
-	function page() {
-		?>
-		<div class="wrap">
-			<?php SnS_Admin::nav(); ?>
-			<form action="" method="post" autocomplete="off">
-			<?php
-				settings_fields( SnS_Admin::OPTION_GROUP );
-				do_settings_sections( SnS_Admin::MENU_SLUG );
-				// no submit button.
-			?>
-			</form>
 		</div>
 		<?php
 	}
