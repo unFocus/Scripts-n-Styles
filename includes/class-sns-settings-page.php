@@ -86,15 +86,17 @@ class SnS_Settings_Page
 		add_settings_field(
 			'menu_position',
 			__( '<strong>Menu Position</strong>: ', 'scripts-n-styles' ),
-			array( 'SnS_Form', 'select' ),
+			array( 'SnS_Form', 'radio' ),
 			SnS_Admin::MENU_SLUG,
 			'settings',
 			array(
 				'label_for' => 'menu_position',
 				'setting' => 'SnS_options',
 				'choices' => array( 'menu', 'object', 'utility', 'tools.php', 'options-general.php', 'themes.php' ),
-				'size' => 6,
-				'style' => 'height: auto;',
+				'default' => 'tools.php',
+				'legend' => __( 'Theme', 'scripts-n-styles' ),
+				'layout' => 'vertical',
+				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">Some people are fussy about where the menu goes, so I made an option.</span>', 'scripts-n-styles' ),
 			) );
 		
 		add_settings_section(
@@ -117,6 +119,21 @@ class SnS_Settings_Page
 				'legend' => __( 'Theme', 'scripts-n-styles' ),
 				'layout' => 'horizontal',
 				'description' => '',
+			) );
+		add_settings_field(
+			'hoops_widget',
+			__( '<strong>Shortcode Widgets</strong>: ', 'scripts-n-styles' ),
+			array( 'SnS_Form', 'radio' ),
+			SnS_Admin::MENU_SLUG,
+			'settings',
+			array(
+				'label_for' => 'hoops_widget',
+				'setting' => 'SnS_options',
+				'choices' => array( 'yes', 'no' ),
+				'layout' => 'horizontal',
+				'default' => 'no',
+				'legend' => __( 'Shortcode Widgets', 'scripts-n-styles' ),
+				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">This enables Hoops (and also any other shortcodes) to be used via a "Hoops" Text Widget.</span>', 'scripts-n-styles' )
 			) );
 	}
 	

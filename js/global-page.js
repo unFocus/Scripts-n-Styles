@@ -69,9 +69,13 @@ jQuery( document ).ready( function( $ ) {
 		try {
 			$( '#coffee_compiled_error' ).hide();
 			source = $('#coffee').val();
-			compiled = CoffeeScript.compile( source );
-			trimmed = $('#coffee_spacing').is(':checked') ? compiled : compiled.replace(/(\n\n)/gm,"\n");
-			coffeeOutput.setValue( trimmed );
+			if ( '' == source || ' ' == source ) {
+				coffeeOutput.setValue( '' );
+			} else {
+				compiled = CoffeeScript.compile( source );
+				trimmed = $('#coffee_spacing').is(':checked') ? compiled : compiled.replace(/(\n\n)/gm,"\n");
+				coffeeOutput.setValue( trimmed );
+			}
 			coffeeOutput.save();
 			
 			$( '#coffee_compiled' ).next( '.CodeMirror' ).show();

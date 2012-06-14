@@ -84,7 +84,7 @@ class Scripts_n_Styles
 				true in the wp-config.php would effectively disable this
 				plugin's admin because no user would have the capability.
 			*/
-			include_once( 'includes/class.SnS_Admin.php' );
+			include_once( 'includes/class-sns-admin.php' );
 			SnS_Admin::init();
 		}
 		
@@ -101,8 +101,7 @@ class Scripts_n_Styles
 		add_action( 'wp_head', array( __CLASS__, 'scripts_in_head' ), 11 );
 		add_action( 'wp_footer', array( __CLASS__, 'scripts' ), 11 );
 		
-		add_shortcode( 'sns_shortcode', array( __CLASS__, 'shortcode' ) );
-		add_shortcode( 'hoops', array( __CLASS__, 'shortcode' ) );
+		add_action( 'plugins_loaded', array( __CLASS__, 'add_shortcodes' ) );
 		
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register' ) );
@@ -138,24 +137,31 @@ class Scripts_n_Styles
 		echo $compiled;
 		die();
 	}
-	
+	function add_shortcodes() {
+		add_shortcode( 'sns_shortcode', array( __CLASS__, 'shortcode' ) );
+		add_shortcode( 'hoops', array( __CLASS__, 'shortcode' ) );
+	}
 	function shortcode( $atts, $content = null, $tag ) {
 		global $post;
 		
-		if ( isset( $post->ID ) ) $id = $post->ID;
-		else $id = get_the_ID();
-		if ( ! $id ) return '<pre>There was an error.</pre>';
+		if ( isset( $post->ID ) )
+			$id = $post->ID;
+		else
+			$id = get_the_ID();
+			
+		Debug_Bar_Extender::instance()->trace_var( $id );
 		
-		extract( shortcode_atts( array( 'name' => 0, ), $atts ) );
-		$output = '';
-		
-		$SnS = get_post_meta( $post->ID, '_SnS', true );
-		$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
-		if ( isset( $shortcodes[ $name ] ) )
-			$output .= $shortcodes[ $name ];
-		if ( isset( $content ) && empty( $output ) ) $output = $content;
-		$output = do_shortcode( $output );
-		
+		if ( $id ) {
+			extract( shortcode_atts( array( 'name' => 0, ), $atts ) );
+			$output = '';
+			
+			$SnS = get_post_meta( $post->ID, '_SnS', true );
+			$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
+			if ( isset( $shortcodes[ $name ] ) )
+				$output .= $shortcodes[ $name ];
+			if ( isset( $content ) && empty( $output ) ) $output = $content;
+			$output = do_shortcode( $output );
+		}
 		return $output;
 	}
 	
@@ -270,7 +276,8 @@ class Scripts_n_Styles
 			
 		wp_register_style(  'sns-options', $css . 'options-styles.css', array(), self::VERSION );
 		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror-less', 'codemirror-coffeescript', 'codemirror-css', 'codemirror-javascript', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
-		wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror-less', 'codemirror-css', 'less.js' ), self::VERSION, true );
+		wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror-css', 'codemirror-less', 'less.js', ), self::VERSION, true );
+		wp_register_script( 'sns-hoops-page', $js . 'hoops-page.js', array( 'jquery', 'codemirror-htmlmixed' ), self::VERSION, true );
 		wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'codemirror-php' ), self::VERSION, true );
 		wp_register_style(  'sns-meta-box', $css . 'meta-box.css', array( 'codemirror-theme' ), self::VERSION );
 		wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'codemirror-less', 'codemirror-htmlmixed', 'chosen' ), self::VERSION, true );
@@ -434,7 +441,7 @@ class Scripts_n_Styles
 	static function upgrade_check() {
 		$options = get_option( 'SnS_options' );
 		if ( ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) ) {
-			include_once( 'includes/class.SnS_Admin.php' );
+			include_once( 'includes/class-sns-admin.php' );
 			SnS_Admin::upgrade();
 		}
 	}
