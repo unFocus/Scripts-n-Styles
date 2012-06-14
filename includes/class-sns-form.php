@@ -129,6 +129,10 @@ class SnS_Form
 				$value = trim( $value );
 			
 			$value = array_merge( $old, stripslashes_deep( $value ) );
+			
+			// Allow modification of $value
+			$value = apply_filters( 'sns_options_pre_update_option', $value, $page, $action );
+			
 			update_option( $option, $value );
 		}
 		
@@ -170,7 +174,7 @@ class SnS_Form
 			<form action="" method="post" autocomplete="off">
 			<?php settings_fields( SnS_Admin::OPTION_GROUP ); ?>
 			<?php do_settings_sections( SnS_Admin::MENU_SLUG ); ?>
-			<?php submit_button(); ?>
+			<?php if ( apply_filters( 'sns_show_submit_button', true ) ) submit_button(); ?>
 			</form>
 		</div>
 		<?php
