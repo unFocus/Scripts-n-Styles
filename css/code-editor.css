@@ -15,6 +15,9 @@ body .CodeMirror-scroll {
 	height: auto;
 	overflow: auto;
 }
+#template .CodeMirror {
+	margin-right: 30px;
+}
 #template .CodeMirror div {
 	margin-right: 0;
 }
