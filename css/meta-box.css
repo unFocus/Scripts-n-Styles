@@ -9,66 +9,83 @@
   background-clip: padding-box;
   overflow: hidden;
 }
+
+/* Code Decorations */
 .style > .CodeMirror:before,
-.less > .CodeMirror:before,
-.style > .CodeMirror:after,
-.less > .CodeMirror:after {
+.style > .CodeMirror:after {
   display: block;
   padding: .5em;
   background-color: #f5f5f5;
 }
-.style > .CodeMirror:before,
-.less > .CodeMirror:before {
-  border-botto: 1px solid #dfdfdf;
+.style > .CodeMirror:before {
+  border-bottom: 1px solid #dfdfdf;
+}
+.style > .CodeMirror:after {
+  border-top: 1px solid #dfdfdf;
+}
+.style > .CodeMirror:before {
   content: '<style type="text/css">';
 }
-.style > .CodeMirror:after,
-.less > .CodeMirror:after {
-  border-top: 1px solid #dfdfdf;
-  content: "</style>";
+.style > .CodeMirror:after {
+  content: '</style>';
 }
 .script > .CodeMirror:before,
-.coffee > .CodeMirror:before,
-.script > .CodeMirror:after,
-.coffee > .CodeMirror:after {
+.script > .CodeMirror:after {
   display: block;
   padding: .5em;
   background-color: #f5f5f5;
 }
-.script > .CodeMirror:before,
-.coffee > .CodeMirror:before {
-  border-botto: 1px solid #dfdfdf;
+.script > .CodeMirror:before {
+  border-bottom: 1px solid #dfdfdf;
+}
+.script > .CodeMirror:after {
+  border-top: 1px solid #dfdfdf;
+}
+.script > .CodeMirror:before {
   content: '<script type="text/javascript">';
 }
-.script > .CodeMirror:after,
-.coffee > .CodeMirror:after {
-  border-top: 1px solid #dfdfdf;
-  content: "</script>";
+.script > .CodeMirror:after {
+  content: '</script>';
 }
-.html > .CodeMirror:before,
-.html > .CodeMirror:after {
+.less > .CodeMirror:before,
+.less > .CodeMirror:after {
   display: block;
   padding: .5em;
   background-color: #f5f5f5;
 }
-.html > .CodeMirror:before {
-  border-botto: 1px solid #dfdfdf;
-  content: '<html>...<body>...';
+.less > .CodeMirror:before {
+  border-bottom: 1px solid #dfdfdf;
 }
-.html > .CodeMirror:after {
+.less > .CodeMirror:after {
   border-top: 1px solid #dfdfdf;
-  content: "...</body></html>";
 }
-/* over-writes. */
-.head-style > .CodeMirror:after {
-  content: "</style> </head>";
+.less > .CodeMirror:before {
+  content: '<style type="text/less">';
 }
-.head-script > .CodeMirror:after {
-  content: "</script> </head>";
+.less > .CodeMirror:after {
+  content: '</style>';
 }
-.body-script > .CodeMirror:after {
-  content: "</script> </body>";
+.coffee > .CodeMirror:before,
+.coffee > .CodeMirror:after {
+  display: block;
+  padding: .5em;
+  background-color: #f5f5f5;
 }
+.coffee > .CodeMirror:before {
+  border-bottom: 1px solid #dfdfdf;
+}
+.coffee > .CodeMirror:after {
+  border-top: 1px solid #dfdfdf;
+}
+.coffee > .CodeMirror:before {
+  content: '<script type="text/coffeescript">';
+}
+.coffee > .CodeMirror:after {
+  content: '</script>';
+}
+/* end Code Decorations */
+
+
 .CodeMirror,
 #editorcontainer #content {
   font-family: "Courier New", Courier, monospace;
