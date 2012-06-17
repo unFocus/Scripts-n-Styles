@@ -134,9 +134,11 @@ body .CodeMirror-scroll {
 	margin-right: .5em;
 
 }
+
 .sns-collapsed .CodeMirror,
 .sns-collapsed .code,
-.sns-collapsed .sns-ajax-wrap {
+.sns-collapsed .sns-ajax-wrap,
+.sns-collapsed textarea {
 	visibility: hidden;
 	position: absolute;
 }
@@ -153,4 +155,23 @@ body .CodeMirror-scroll {
 }
 .sns-ajax-wrap .single-status .settings-error {
 	margin: 0;
+}
+
+.sns-shortcode {
+	background-color: #F5F5F5;
+	background-image: -moz-linear-gradient(center top , #F9F9F9, #F5F5F5);
+	border-color: #DFDFDF;
+	border-radius: 3px 3px 3px 3px;
+	box-shadow: 0 1px 0 #FFFFFF inset;
+	border-style: solid;
+	border-width: 1px;
+	line-height: 1;
+	margin-bottom: 20px;
+	padding: 0;
+}
+.sns-shortcode .inside {
+	margin: 6px 0 8px;
+	position: relative;
+	line-height: 1.4em;
+	padding: 0 10px;
 }

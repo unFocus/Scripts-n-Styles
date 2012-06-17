@@ -151,23 +151,38 @@ class SnS_Hoops_Page
 		$shortcodes = isset( $hoops[ 'shortcodes' ] ) ? $hoops[ 'shortcodes' ] : array();
 		?>
 		<strong class="title">Add New: </strong>
-		<div id="sns-add-shortcode">
-			<?php
-			?>
-			<label for="<?php echo $meta_name; ?>">Name: </label>
-			<input id="<?php echo $meta_name; ?>" name="<?php echo $meta_name . '[new][name]'; ?>" type="text" />
-			<textarea id="<?php echo $meta_name; ?>_new" class="codemirror htmlmixed" name="<?php echo $meta_name . '[new][code]'; ?>" rows="5" cols="40" style="width: 98%;"></textarea>
-		</div>
 		<div id="sns-shortcodes">
+			<div class="sns-less-ide" style="overflow: hidden">
+				<div class="widget"><div class="inside">
+					<label style="display:inline" for="<?php echo $meta_name; ?>">Name: </label>
+					<input id="<?php echo $meta_name; ?>" name="<?php echo $meta_name . '[new][name]'; ?>" type="text" />
+						<?php /** / ?>
+					<a class="button" href="#" id="sns-ajax-add-shortcode">Add New</a>
+						<?php /**/ ?>
+					<textarea id="<?php echo $meta_name; ?>_new" class="code htmlmixed" name="<?php echo $meta_name . '[new][code]'; ?>" rows="5" cols="40" style="width: 98%;"></textarea>
+				</div></div>
+			</div>
+			
 			<?php if ( ! empty( $shortcodes ) ) { ?>
 			<h4>Existing Codes: </h4>
 			<div id="sns-shortcodes-wrap">
 				<?php if ( ! empty( $shortcodes ) ) { ?>
 				<?php foreach ( $shortcodes as $key => $value ) { ?>
-					<div class="sns-shortcode widget"><div class="inside">
-					<p>[hoops name="<?php echo $key ?>"]</p>
-					<textarea class="codemirror htmlmixed" data-sns-shortcode-key="<?php echo $key ?>" name="<?php echo $meta_name . '[shortcodes][' . $key . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
+					
+				<div class="sns-less-ide" style="overflow: hidden">
+					<div class="widget"><div class="sns-collapsed inside">
+						<span class="sns-collapsed-btn"></span>
+						<label style="margin-bottom: 0;">[hoops name="<?php echo $key ?>"]</label>
+						<textarea class="code htmlmixed" data-sns-shortcode-key="<?php echo $key ?>" name="<?php echo $meta_name . '[shortcodes][' . $key . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
+						<?php /** / ?>
+						<div class="sns-ajax-wrap">
+							<a class="sns-ajax-delete-shortcode button" href="#">Delete</a> &nbsp; 
+							<a class="sns-ajax-update-shortcode button" href="#">Update</a>
+							<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">
+						</div>
+						<?php /**/ ?>
 					</div></div>
+				</div>
 				<?php } ?>
 				<?php } ?>
 			</div>
