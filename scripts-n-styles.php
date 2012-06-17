@@ -138,8 +138,9 @@ class Scripts_n_Styles
 			$id = $post->ID;
 		else
 			$id = get_the_ID();
-			
-		Debug_Bar_Extender::instance()->trace_var( $id );
+		
+		$options = get_option( 'SnS_options' );
+		$hoops = $options['hoops']['shortcodes'];
 		
 		if ( $id ) {
 			extract( shortcode_atts( array( 'name' => 0, ), $atts ) );
@@ -147,8 +148,14 @@ class Scripts_n_Styles
 			
 			$SnS = get_post_meta( $post->ID, '_SnS', true );
 			$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
+			Debug_Bar_Extender::instance()->trace_var( $hoops );
+			Debug_Bar_Extender::instance()->trace_var( $shortcodes );
+			
 			if ( isset( $shortcodes[ $name ] ) )
 				$output .= $shortcodes[ $name ];
+			else if ( isset( $hoops[ $name ] ) )
+				$output .= $hoops[ $name ];
+			
 			if ( isset( $content ) && empty( $output ) ) $output = $content;
 			$output = do_shortcode( $output );
 		}

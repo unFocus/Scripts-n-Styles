@@ -118,9 +118,11 @@ body .CodeMirror-scroll {
 .sns-collapsed .sns-collapsed-btn {
 	background-position: 1px -107px;
 }
-.sns-collapsed-btn + label {
+.sns-collapsed-btn + label,
+.sns-collapsed-btn + p {
 	height: 1.4em;
 	display: block;
+	margin: 0;
 }
 .sns-collapsed-btn {
 	cursor: pointer;

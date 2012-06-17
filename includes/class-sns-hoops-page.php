@@ -172,7 +172,7 @@ class SnS_Hoops_Page
 				<div class="sns-less-ide" style="overflow: hidden">
 					<div class="widget"><div class="sns-collapsed inside">
 						<span class="sns-collapsed-btn"></span>
-						<label style="margin-bottom: 0;">[hoops name="<?php echo $key ?>"]</label>
+						<p style="margin-bottom: 0;">[hoops name="<?php echo $key ?>"]</p>
 						<textarea class="code htmlmixed" data-sns-shortcode-key="<?php echo $key ?>" name="<?php echo $meta_name . '[shortcodes][' . $key . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
 						<?php /** / ?>
 						<div class="sns-ajax-wrap">
