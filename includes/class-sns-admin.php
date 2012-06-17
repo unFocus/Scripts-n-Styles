@@ -7,8 +7,8 @@
  * post types.
  */
  
-require_once( 'class-sns-admin-meta-box.php' );
-require_once( 'class-sns-admin-code-editor.php' );
+require_once( 'class-sns-meta-box.php' );
+require_once( 'class-sns-code-editor.php' );
 require_once( 'class-sns-settings-page.php' );
 require_once( 'class-sns-usage-page.php' );
 require_once( 'class-sns-global-page.php' );
