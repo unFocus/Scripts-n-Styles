@@ -148,8 +148,6 @@ class Scripts_n_Styles
 			
 			$SnS = get_post_meta( $post->ID, '_SnS', true );
 			$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
-			Debug_Bar_Extender::instance()->trace_var( $hoops );
-			Debug_Bar_Extender::instance()->trace_var( $shortcodes );
 			
 			if ( isset( $shortcodes[ $name ] ) )
 				$output .= $shortcodes[ $name ];
@@ -324,6 +322,11 @@ class Scripts_n_Styles
 			echo $options[ 'scripts' ];
 			?></script><?php
 		}
+		if ( ! empty( $options ) && ! empty( $options[ 'coffee_compiled' ] ) ) {
+			?><script type="text/javascript" id="sns_global_coffee_compiled"><?php
+			echo $options[ 'coffee_compiled' ];
+			?></script><?php
+		}
 		
 		if ( ! is_singular() ) return;
 		// Individual
@@ -347,11 +350,6 @@ class Scripts_n_Styles
 		if ( ! empty( $options ) && ! empty( $options[ 'scripts_in_head' ] ) ) {
 			?><script type="text/javascript" id="sns_global_scripts_in_head"><?php
 			echo $options[ 'scripts_in_head' ];
-			?></script><?php
-		}
-		if ( ! empty( $options ) && ! empty( $options[ 'coffee_compiled' ] ) ) {
-			?><script type="text/javascript" id="sns_global_coffee_compiled"><?php
-			echo $options[ 'coffee_compiled' ];
 			?></script><?php
 		}
 		
