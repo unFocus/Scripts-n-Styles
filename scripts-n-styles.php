@@ -5,7 +5,7 @@ Plugin URI: http://www.unfocus.com/projects/scripts-n-styles/
 Description: Allows WordPress admin users the ability to add custom CSS and JavaScript directly to individual Post, Pages or custom post types.
 Author: unFocus Projects
 Author URI: http://www.unfocus.com/
-Version: 3.2b3
+Version: 3.2-rc1
 License: GPLv3 or later
 Text Domain: scripts-n-styles
 Network: true
@@ -51,7 +51,7 @@ Network: true
  * @link http://www.unfocus.com/projects/scripts-n-styles/ Plugin URI
  * @author unFocus Projects
  * @link http://www.unfocus.com/ Author URI
- * @version 3.2b3
+ * @version 3.2-rc1
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2010 - 2012, Kenneth Newman
  * @copyright Copyright (c) 2012, Kevin Newman
@@ -69,7 +69,7 @@ class Scripts_n_Styles
 	/**#@+
 	 * @static
 	 */
-	const VERSION = '3.2b3';
+	const VERSION = '3.2-rc1';
 	static $file = __FILE__;
 	static $cm_themes = array( 'default', 'ambiance', 'blackboard', 'cobalt', 'eclipse', 'elegant', 'lesser-dark', 'monokai', 'neat', 'night', 'rubyblue', 'xq-dark' );
 	/**#@-*/
@@ -102,6 +102,7 @@ class Scripts_n_Styles
 		add_action( 'wp_footer', array( __CLASS__, 'scripts' ), 11 );
 		
 		add_action( 'plugins_loaded', array( __CLASS__, 'add_shortcodes' ) );
+		add_action( 'widgets_init', array( __CLASS__, 'add_widget' ) );
 		
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register' ) );
@@ -137,31 +138,54 @@ class Scripts_n_Styles
 		echo $compiled;
 		die();
 	}
+	function add_widget() {
+		$options = get_option( 'SnS_options' );
+		if ( 'yes' == $options[ 'hoops_widget' ] )
+			register_widget( 'SnS_Widget' );
+	}
 	function add_shortcodes() {
 		add_shortcode( 'sns_shortcode', array( __CLASS__, 'shortcode' ) );
 		add_shortcode( 'hoops', array( __CLASS__, 'shortcode' ) );
 	}
 	function shortcode( $atts, $content = null, $tag ) {
-		global $post;
+		$id = get_the_ID();
 		
-		if ( isset( $post->ID ) )
-			$id = $post->ID;
-		else
-			$id = get_the_ID();
-			
-		Debug_Bar_Extender::instance()->trace_var( $id );
+		extract( shortcode_atts( array( 'name' => 0, ), $atts ) );
+		$output = '';
 		
-		if ( $id ) {
-			extract( shortcode_atts( array( 'name' => 0, ), $atts ) );
-			$output = '';
+		$options = get_option( 'SnS_options' );
+		$hoops = $options['hoops']['shortcodes'];
+		
+		$SnS = get_post_meta( $id, '_SnS', true );
+		$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
+		
+		if ( isset( $shortcodes[ $name ] ) )
+			$output .= $shortcodes[ $name ];
+		else if ( isset( $hoops[ $name ] ) )
+			$output .= $hoops[ $name ];
 			
-			$SnS = get_post_meta( $post->ID, '_SnS', true );
-			$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
-			if ( isset( $shortcodes[ $name ] ) )
-				$output .= $shortcodes[ $name ];
-			if ( isset( $content ) && empty( $output ) ) $output = $content;
-			$output = do_shortcode( $output );
-		}
+		if ( ! empty( $content ) && empty( $output ) )
+			$output = $content;
+		$output = do_shortcode( $output );
+		
+		return $output;
+	}
+	function hoops_widget( $atts, $content = null, $tag ) {
+		$options = get_option( 'SnS_options' );
+		$hoops = $options['hoops']['shortcodes'];
+		
+		extract( shortcode_atts( array( 'name' => 0, ), $atts ) );
+		$output = '';
+		
+		$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
+		
+		if ( isset( $hoops[ $name ] ) )
+			$output .= $hoops[ $name ];
+		
+		if ( ! empty( $content ) && empty( $output ) )
+			$output = $content;
+		$output = do_shortcode( $output );
+		
 		return $output;
 	}
 	
@@ -327,6 +351,11 @@ class Scripts_n_Styles
 			echo $options[ 'scripts' ];
 			?></script><?php
 		}
+		if ( ! empty( $options ) && ! empty( $options[ 'coffee_compiled' ] ) ) {
+			?><script type="text/javascript" id="sns_global_coffee_compiled"><?php
+			echo $options[ 'coffee_compiled' ];
+			?></script><?php
+		}
 		
 		if ( ! is_singular() ) return;
 		// Individual
@@ -350,11 +379,6 @@ class Scripts_n_Styles
 		if ( ! empty( $options ) && ! empty( $options[ 'scripts_in_head' ] ) ) {
 			?><script type="text/javascript" id="sns_global_scripts_in_head"><?php
 			echo $options[ 'scripts_in_head' ];
-			?></script><?php
-		}
-		if ( ! empty( $options ) && ! empty( $options[ 'coffee_compiled' ] ) ) {
-			?><script type="text/javascript" id="sns_global_coffee_compiled"><?php
-			echo $options[ 'coffee_compiled' ];
 			?></script><?php
 		}
 		
@@ -449,4 +473,65 @@ class Scripts_n_Styles
 
 Scripts_n_Styles::init();
 
+class SnS_Widget extends WP_Widget
+{
+	function __construct() {
+		$widget_ops = array( 'classname' => 'sns_widget_text', 'description' => __( 'Arbitrary text or HTML (including "hoops" shortcodes)', 'scripts-n-styles' ) );
+		$control_ops = array( 'width' => 400, 'height' => 350 );
+		parent::__construct( 'sns_hoops', __( 'Hoops', 'scripts-n-styles' ), $widget_ops, $control_ops );
+	}
+
+	function widget( $args, $instance ) {
+		global $shortcode_tags;
+		
+		extract( $args );
+		$title = apply_filters( 'widget_title', empty( $instance[ 'title' ] ) ? '' : $instance[ 'title' ], $instance, $this->id_base );
+		$text = apply_filters( 'widget_text', empty( $instance[ 'text' ] ) ? '' : $instance[ 'text' ], $instance );
+		
+		echo $before_widget;
+		if ( ! empty( $title ) )
+			echo $before_title . $title . $after_title;
+		echo '<div class="hoopstextwidget">';
+		$content = ! empty( $instance[ 'filter' ] ) ? wpautop( $text ) : $text;
+			
+		$backup = $shortcode_tags;
+		remove_all_shortcodes();
+		
+		add_shortcode( 'sns_shortcode', array( 'Scripts_n_Styles', 'hoops_widget' ) );
+		add_shortcode( 'hoops', array( 'Scripts_n_Styles', 'hoops_widget' ) );
+		
+		$content = do_shortcode( $content );
+		
+		$shortcode_tags = $backup;
+		
+		echo $content;
+		echo '</div>';
+		echo $after_widget;
+	}
+
+	function update( $new_instance, $old_instance ) {
+		$instance = $old_instance;
+		$instance[ 'title' ] = strip_tags( $new_instance[ 'title' ] );
+		if ( current_user_can( 'unfiltered_html' ) )
+			$instance[ 'text' ] =  $new_instance[ 'text' ];
+		else
+			$instance[ 'text' ] = stripslashes( wp_filter_post_kses( addslashes( $new_instance[ 'text' ] ) ) ); // wp_filter_post_kses() expects slashed
+		$instance[ 'filter' ] = isset( $new_instance[ 'filter' ] );
+		return $instance;
+	}
+
+	function form( $instance ) {
+		$instance = wp_parse_args( (array) $instance, array( 'title' => '', 'text' => '' ) );
+		$title = strip_tags( $instance[ 'title' ] );
+		$text = esc_textarea( $instance[ 'text' ] );
+		?>
+			<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" /></p>
+	
+			<textarea class="widefat" rows="16" cols="20" id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>"><?php echo $text; ?></textarea>
+	
+			<p><input id="<?php echo $this->get_field_id( 'filter' ); ?>" name="<?php echo $this->get_field_name( 'filter' ); ?>" type="checkbox" <?php checked( isset( $instance[ 'filter' ] ) ? $instance[ 'filter' ] : 0 ); ?> />&nbsp;<label for="<?php echo $this->get_field_id( 'filter' ); ?>"><?php _e( 'Automatically add paragraphs' ); ?></label></p>
+		<?php
+	}
+}
 ?>

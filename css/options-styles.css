@@ -14,6 +14,83 @@ textarea.code {
 	overflow: hidden;
 	font-family: "Courier New", Courier, monospace;
 }
+
+/* Code Decorations */
+.style > .CodeMirror:before,
+.style > .CodeMirror:after {
+  display: block;
+  padding: .5em;
+  background-color: #f5f5f5;
+}
+.style > .CodeMirror:before {
+  border-bottom: 1px solid #dfdfdf;
+}
+.style > .CodeMirror:after {
+  border-top: 1px solid #dfdfdf;
+}
+.style > .CodeMirror:before {
+  content: '<style type="text/css">';
+}
+.style > .CodeMirror:after {
+  content: '</style>';
+}
+.script > .CodeMirror:before,
+.script > .CodeMirror:after {
+  display: block;
+  padding: .5em;
+  background-color: #f5f5f5;
+}
+.script > .CodeMirror:before {
+  border-bottom: 1px solid #dfdfdf;
+}
+.script > .CodeMirror:after {
+  border-top: 1px solid #dfdfdf;
+}
+.script > .CodeMirror:before {
+  content: '<script type="text/javascript">';
+}
+.script > .CodeMirror:after {
+  content: '</script>';
+}
+.less > .CodeMirror:before,
+.less > .CodeMirror:after {
+  display: block;
+  padding: .5em;
+  background-color: #f5f5f5;
+}
+.less > .CodeMirror:before {
+  border-bottom: 1px solid #dfdfdf;
+}
+.less > .CodeMirror:after {
+  border-top: 1px solid #dfdfdf;
+}
+.less > .CodeMirror:before {
+  content: '<style type="text/less">';
+}
+.less > .CodeMirror:after {
+  content: '</style>';
+}
+.coffee > .CodeMirror:before,
+.coffee > .CodeMirror:after {
+  display: block;
+  padding: .5em;
+  background-color: #f5f5f5;
+}
+.coffee > .CodeMirror:before {
+  border-bottom: 1px solid #dfdfdf;
+}
+.coffee > .CodeMirror:after {
+  border-top: 1px solid #dfdfdf;
+}
+.coffee > .CodeMirror:before {
+  content: '<script type="text/coffeescript">';
+}
+.coffee > .CodeMirror:after {
+  content: '</script>';
+}
+/* end Code Decorations */
+
+
 body .CodeMirror-scroll {
 	height: auto;
 	min-height: 50px;
@@ -41,9 +118,11 @@ body .CodeMirror-scroll {
 .sns-collapsed .sns-collapsed-btn {
 	background-position: 1px -107px;
 }
-.sns-collapsed-btn + label {
+.sns-collapsed-btn + label,
+.sns-collapsed-btn + p {
 	height: 1.4em;
 	display: block;
+	margin: 0;
 }
 .sns-collapsed-btn {
 	cursor: pointer;
@@ -57,9 +136,11 @@ body .CodeMirror-scroll {
 	margin-right: .5em;
 
 }
+
 .sns-collapsed .CodeMirror,
 .sns-collapsed .code,
-.sns-collapsed .sns-ajax-wrap {
+.sns-collapsed .sns-ajax-wrap,
+.sns-collapsed textarea {
 	visibility: hidden;
 	position: absolute;
 }
@@ -76,4 +157,23 @@ body .CodeMirror-scroll {
 }
 .sns-ajax-wrap .single-status .settings-error {
 	margin: 0;
+}
+
+.sns-shortcode {
+	background-color: #F5F5F5;
+	background-image: -moz-linear-gradient(center top , #F9F9F9, #F5F5F5);
+	border-color: #DFDFDF;
+	border-radius: 3px 3px 3px 3px;
+	box-shadow: 0 1px 0 #FFFFFF inset;
+	border-style: solid;
+	border-width: 1px;
+	line-height: 1;
+	margin-bottom: 20px;
+	padding: 0;
+}
+.sns-shortcode .inside {
+	margin: 6px 0 8px;
+	position: relative;
+	line-height: 1.4em;
+	padding: 0 10px;
 }

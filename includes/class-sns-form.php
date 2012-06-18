@@ -17,6 +17,7 @@ class SnS_Form
 		extract( $args );
 		$options = get_option( $setting );
 		$value =  isset( $options[ $label_for ] ) ? $options[ $label_for ] : '';
+		if ( isset( $wrap_class ) ) echo '<div class="'. $wrap_class . '"';
 		$output = '<textarea';
 		$output .= ( $style ) ? ' style="' . $style . '"': '';
 		$output .= ( $class ) ? ' class="' . $class . '"': '';
@@ -25,6 +26,7 @@ class SnS_Form
 		$output .= ' name="' . $setting . '[' . $label_for . ']"';
 		$output .= ' id="' . $label_for . '">';
 		$output .= esc_textarea( $value ) . '</textarea>';
+		if ( isset( $wrap_class ) ) echo '</div>';
 		if ( $description ) {
 			$output .= $description;
 		}

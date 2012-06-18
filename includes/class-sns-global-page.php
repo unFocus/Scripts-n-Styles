@@ -48,13 +48,13 @@ class SnS_Global_Page
 		
 		add_settings_section(
 			'global_styles',
-			__( 'Blog Wide Scripts', 'scripts-n-styles' ),
+			__( 'Blog Wide CSS Styles', 'scripts-n-styles' ),
 			array( __CLASS__, 'global_styles_section' ),
 			SnS_Admin::MENU_SLUG );
 		
 		add_settings_section(
 			'global_scripts',
-			__( 'Blog Wide Styles', 'scripts-n-styles' ),
+			__( 'Blog Wide JavaScript', 'scripts-n-styles' ),
 			array( __CLASS__, 'global_scripts_section' ),
 			SnS_Admin::MENU_SLUG );
 		
@@ -74,7 +74,7 @@ class SnS_Global_Page
 			array( 'label_for' => 'coffee' ) );
 		add_settings_field(
 			'styles',
-			__( '<strong>Styles:</strong> ', 'scripts-n-styles' ),
+			__( '<strong>CSS Styles:</strong> ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'textarea' ),
 			SnS_Admin::MENU_SLUG,
 			'global_styles',
@@ -82,6 +82,7 @@ class SnS_Global_Page
 				'label_for' => 'styles',
 				'setting' => 'SnS_options',
 				'class' => 'code css',
+				'wrap_class' => 'style',
 				'rows' => 5,
 				'cols' => 40,
 				'style' => 'min-width: 500px; width:97%;',
@@ -97,6 +98,7 @@ class SnS_Global_Page
 				'label_for' => 'scripts_in_head',
 				'setting' => 'SnS_options',
 				'class' => 'code js',
+				'wrap_class' => 'script',
 				'rows' => 5,
 				'cols' => 40,
 				'style' => 'min-width: 500px; width:97%;',
@@ -104,7 +106,7 @@ class SnS_Global_Page
 			) );
 		add_settings_field(
 			'scripts',
-			__( '<strong>Scripts:</strong> ', 'scripts-n-styles' ),
+			__( '<strong>Scripts</strong><br />(end of the <code>body</code> tag):', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'textarea' ),
 			SnS_Admin::MENU_SLUG,
 			'global_scripts',
@@ -112,6 +114,7 @@ class SnS_Global_Page
 				'label_for' => 'scripts',
 				'setting' => 'SnS_options',
 				'class' => 'code js',
+				'wrap_class' => 'script',
 				'rows' => 5,
 				'cols' => 40,
 				'style' => 'min-width: 500px; width:97%;',
@@ -140,10 +143,10 @@ class SnS_Global_Page
 		$compiled =  isset( $options[ 'compiled' ] ) ? $options[ 'compiled' ] : '';
 		?>
 		<div style="overflow: hidden;">
-			<div style="width: 49%; float: left; overflow: hidden; margin-right: 2%;">
+			<div style="width: 49%; float: left; overflow: hidden; margin-right: 2%;" class="less">
 				<textarea id="less" name="SnS_options[less]" style="min-width: 250px; width:47%; float: left" class="code less" rows="5" cols="40"><?php echo esc_textarea( $less ) ?></textarea>
 			</div>
-			<div style="width: 49%; float: left; overflow: hidden;">
+			<div style="width: 49%; float: left; overflow: hidden;" class="style">
 				<textarea id="compiled" name="SnS_options[compiled]" style="min-width: 250px; width:47%;" class="code css" rows="5" cols="40"><?php echo esc_textarea( $compiled ) ?></textarea>
 				<div id="compiled_error" style="display: none" class="error settings-error below-h2"></div>
 			</div>
@@ -156,10 +159,10 @@ class SnS_Global_Page
 		$compiled =  isset( $options[ 'coffee_compiled' ] ) ? $options[ 'coffee_compiled' ] : '';
 		?>
 		<div style="overflow: hidden;">
-			<div style="width: 49%; float: left; overflow: hidden; margin-right: 2%;">
+			<div style="width: 49%; float: left; overflow: hidden; margin-right: 2%;" class="coffee">
 				<textarea id="coffee" name="SnS_options[coffee]" style="min-width: 250px; width:47%; float: left" class="code coffee" rows="5" cols="40"><?php echo esc_textarea( $coffee ) ?></textarea>
 			</div>
-			<div style="width: 49%; float: left; overflow: hidden;">
+			<div style="width: 49%; float: left; overflow: hidden;" class="script">
 				<textarea id="coffee_compiled" name="SnS_options[coffee_compiled]" style="min-width: 250px; width:47%;" class="code js" rows="5" cols="40"><?php echo esc_textarea( $compiled ) ?></textarea>
 				<div id="coffee_compiled_error" style="display: none" class="error settings-error below-h2"></div>
 			</div>
