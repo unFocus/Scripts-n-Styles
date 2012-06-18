@@ -1,8 +1,8 @@
 # Scripts n Styles 
 Contributors: WraithKenny, CaptainN  
 Tags: admin, CSS, javascript, code, custom, Style  
-Requires at least: 3.3  
-Tested up to: 3.4-beta4  
+Requires at least: 3.4  
+Tested up to: 3.4  
 Stable tag: 3.1.1  
 License: GPLv3 or later  
 License URI: http://www.gnu.org/licenses/gpl-3.0.html  
@@ -60,9 +60,14 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 ### 3.2 
 * Add AJAX to Shortcode Tab
+* Add "Chosen" for selects
+* General UI Improvements
+* Add CoffeeScript Support
+* Add Hoops Widget
+* Add Global Hoops Shortcodes
 * Add Markdown mode to code editor
 * Add (fix) code editor themes
-* Theme Support
+* Theme Support (Beta Feature)
 
 ### 3.1.1 
 * Add (fix) CodeMirror Themes
@@ -123,7 +128,7 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 ## Upgrade Notice 
 
 ### 3.2 
-New Features and Bug fixes
+New Major Features
 
 ### 3.1.1 
 Add (fix) CodeMirror Themes

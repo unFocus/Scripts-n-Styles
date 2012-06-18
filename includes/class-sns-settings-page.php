@@ -122,7 +122,7 @@ class SnS_Settings_Page
 			) );
 		add_settings_field(
 			'hoops_widget',
-			__( '<strong>Shortcode Widgets</strong>: ', 'scripts-n-styles' ),
+			__( '<strong>Hoops Widgets</strong>: ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'radio' ),
 			SnS_Admin::MENU_SLUG,
 			'settings',
@@ -133,7 +133,7 @@ class SnS_Settings_Page
 				'layout' => 'horizontal',
 				'default' => 'no',
 				'legend' => __( 'Shortcode Widgets', 'scripts-n-styles' ),
-				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">This enables Hoops (and also any other shortcodes) to be used via a "Hoops" Text Widget.</span>', 'scripts-n-styles' )
+				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">This enables Hoops shortcodes to be used via a "Hoops" Text Widget.</span>', 'scripts-n-styles' )
 			) );
 	}
 	

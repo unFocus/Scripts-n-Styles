@@ -48,13 +48,13 @@ class SnS_Global_Page
 		
 		add_settings_section(
 			'global_styles',
-			__( 'Blog Wide Styles', 'scripts-n-styles' ),
+			__( 'Blog Wide CSS Styles', 'scripts-n-styles' ),
 			array( __CLASS__, 'global_styles_section' ),
 			SnS_Admin::MENU_SLUG );
 		
 		add_settings_section(
 			'global_scripts',
-			__( 'Blog Wide Scripts', 'scripts-n-styles' ),
+			__( 'Blog Wide JavaScript', 'scripts-n-styles' ),
 			array( __CLASS__, 'global_scripts_section' ),
 			SnS_Admin::MENU_SLUG );
 		
@@ -74,7 +74,7 @@ class SnS_Global_Page
 			array( 'label_for' => 'coffee' ) );
 		add_settings_field(
 			'styles',
-			__( '<strong>Styles:</strong> ', 'scripts-n-styles' ),
+			__( '<strong>CSS Styles:</strong> ', 'scripts-n-styles' ),
 			array( 'SnS_Form', 'textarea' ),
 			SnS_Admin::MENU_SLUG,
 			'global_styles',
