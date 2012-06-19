@@ -130,7 +130,7 @@ class Scripts_n_Styles
 	}
 	function add_widget() {
 		$options = get_option( 'SnS_options' );
-		if ( 'yes' == $options[ 'hoops_widget' ] )
+		if ( isset( $options[ 'hoops_widget' ] ) && 'yes' == $options[ 'hoops_widget' ] )
 			register_widget( 'SnS_Widget' );
 	}
 	function add_shortcodes() {
@@ -144,7 +144,7 @@ class Scripts_n_Styles
 		$output = '';
 		
 		$options = get_option( 'SnS_options' );
-		$hoops = $options['hoops']['shortcodes'];
+		$hoops = isset( $options['hoops']['shortcodes'] ) ? $options['hoops']['shortcodes'] : array();
 		
 		$SnS = get_post_meta( $id, '_SnS', true );
 		$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
