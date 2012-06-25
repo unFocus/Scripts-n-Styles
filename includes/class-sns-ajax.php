@@ -55,7 +55,7 @@ class SnS_AJAX
 		$SnS = get_post_meta( $post_id, '_SnS', true );
 		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		
-		header('Content-Type: text/css; charset=' . get_option('blog_charset'));
+		header('Content-Type: text/css; charset=UTF-8');
 		
 		if ( ! empty( $options[ 'styles' ] ) ) echo $options[ 'styles' ];
 		
@@ -87,7 +87,7 @@ class SnS_AJAX
 		}
 		self::maybe_update( $post_id, '_SnS', $SnS );
 		
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		header('Content-Type: application/json; charset=UTF-8');
 		echo json_encode( array(
 			"classes_post" => $_REQUEST[ 'classes_post' ]
 			, "classes_body" => $_REQUEST[ 'classes_body' ]
@@ -117,7 +117,7 @@ class SnS_AJAX
 		}
 		self::maybe_update( $post_id, '_SnS', $SnS );
 		
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		header('Content-Type: application/json; charset=UTF-8');
 		echo json_encode( array(
 			"scripts" => $_REQUEST[ 'scripts' ]
 			, "scripts_in_head" => $_REQUEST[ 'scripts_in_head' ]
@@ -146,7 +146,7 @@ class SnS_AJAX
 		}
 		self::maybe_update( $post_id, '_SnS', $SnS );
 		
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		header('Content-Type: application/json; charset=UTF-8');
 		echo json_encode( array(
 			"styles" => $_REQUEST[ 'styles' ],
 		) );
@@ -180,7 +180,7 @@ class SnS_AJAX
 		$SnS[ 'styles' ] = $styles;
 		update_post_meta( $post_id, '_SnS', $SnS );
 		
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		header('Content-Type: application/json; charset=UTF-8');
 		echo json_encode( array(
 			"classes_mce" => array_values( $styles[ 'classes_mce' ] )
 		) );
@@ -213,7 +213,7 @@ class SnS_AJAX
 		
 		if ( ! isset( $styles[ 'classes_mce' ] ) ) $styles[ 'classes_mce' ] = array( 'Empty' );
 		
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		header('Content-Type: application/json; charset=UTF-8');
 		echo json_encode( array(
 			"classes_mce" => array_values( $styles[ 'classes_mce' ] )
 		) );
@@ -305,7 +305,7 @@ class SnS_AJAX
 		self::maybe_update( $post_id, '_SnS', $SnS );
 		
 		if ( 1 < $code ) {
-			header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+			header('Content-Type: application/json; charset=UTF-8');
 			echo json_encode( array(
 				"message"      => $message
 				, "code"       => $code
