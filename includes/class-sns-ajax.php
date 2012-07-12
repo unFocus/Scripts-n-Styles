@@ -316,7 +316,7 @@ class SnS_AJAX
 	<div class="inside">
 		<p>[sns_shortcode name="<?php echo esc_attr( $key ) ?>"]</p>
 		<textarea style="width: 98%;" cols="40" rows="5" name="SnS_shortcodes[existing][<?php echo esc_attr( $key ) ?>]"
-			data-sns-shortcode-key="<?php echo esc_attr( $key ) ?>" class="codemirror-new htmlmixed"><?php echo esc_textarea( $value ) ?></textarea>
+			data-sns-shortcode-key="<?php echo esc_attr( $key ) ?>" class="codemirror-new htmlmixed"><?php echo esc_textarea( stripslashes( $value ) ) ?></textarea>
 		<div class="sns-ajax-wrap"><a href="#" class="sns-ajax-delete-shortcode button">Delete</a> &nbsp; <a href="#" class="sns-ajax-update-shortcode button">Update</a> <img src="/wp-admin/images/wpspin_light.gif" class="sns-ajax-loading" style="display: none;"></div>
 	</div>
 </div><?php
