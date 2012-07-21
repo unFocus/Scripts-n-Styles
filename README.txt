@@ -3,7 +3,7 @@ Contributors: WraithKenny, CaptainN
 Tags: admin, CSS, javascript, code, custom, Style
 Requires at least: 3.4
 Tested up to: 3.4
-Stable tag: 3.1.1
+Stable tag: 3.2.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -57,6 +57,9 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 6. Your styles are reflected in the Editor.
 
 == Changelog ==
+
+= 3.2.1 =
+* metabox add shortcode bugfix
 
 = 3.2 =
 * Add AJAX to Shortcode Tab
@@ -126,6 +129,9 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 3.2.1 =
+Bug fix (add shortcode)
 
 = 3.2 =
 New Major Features
