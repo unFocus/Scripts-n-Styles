@@ -130,6 +130,7 @@
 }
 .sns-ajax-wrap {
   height: 23px;
+  height: auto;
 }
 #sns-classes {
   overflow: hidden;
@@ -245,6 +246,7 @@ body.js #SnS_meta_box .wp-tab-panel {
 #advanced-sortables #SnS_meta_box .wp-tab-panel {
   margin-left: 125px;
   margin-right: 5px;
+  max-height: none;
 }
 #normal-sortables #SnS_meta_box .wp-tab-bar a,
 #advanced-sortables #SnS_meta_box .wp-tab-bar a {
