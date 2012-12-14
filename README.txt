@@ -2,7 +2,7 @@
 Contributors: WraithKenny, CaptainN
 Tags: admin, CSS, javascript, code, custom, Style
 Requires at least: 3.4
-Tested up to: 3.4
+Tested up to: 3.5
 Stable tag: 3.2.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
