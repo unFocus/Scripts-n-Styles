@@ -29,6 +29,8 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		mode: "text/x-less",
 		theme: theme,
 		indentWithTabs: true,
+		tabSize: 4,
+		indentUnit: 4, 
 		onChange: onChange
 	};
 	
@@ -152,7 +154,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	function createCSSEditor() {
 		return CodeMirror.fromTextArea(
 			$css.get(0),
-			{ lineNumbers: true, mode: "css", theme: theme, readOnly: true }
+			{ lineNumbers: true, mode: "css", theme: theme, indentWithTabs: true, tabSize: 4, indentUnit: 4 }
 		);
 	}
 	function compile() {
