@@ -138,16 +138,15 @@ class Scripts_n_Styles
 		add_shortcode( 'hoops', array( __CLASS__, 'shortcode' ) );
 	}
 	function shortcode( $atts, $content = null, $tag ) {
-		
+		global $post;
 		extract( shortcode_atts( array( 'name' => 0, ), $atts ) );
 		$output = '';
 		
 		$options = get_option( 'SnS_options' );
 		$hoops = isset( $options['hoops']['shortcodes'] ) ? $options['hoops']['shortcodes'] : array();
 		
-		if ( in_the_loop() ) {
-			$id = get_the_ID();
-			$SnS = get_post_meta( $id, '_SnS', true );
+		if ( isset( $post->ID ) ) {
+			$SnS = get_post_meta( $post->ID, '_SnS', true );
 			$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
 		}
 		
