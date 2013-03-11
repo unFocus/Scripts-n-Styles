@@ -1,12 +1,17 @@
 jQuery( document ).ready( function( $ ) {
 	
-	// For CPTs that don't have an editor, prevent "tinyMCEPreInit is 'undefined'"
-	var initData = ( typeof tinyMCEPreInit !== 'undefined' && tinyMCEPreInit.mceInit["content"] ) ? tinyMCEPreInit.mceInit["content"]: false,
-		context = '#SnS_meta_box',
-		currentCodeMirror = [],
-		mceBodyClass = getMCEBodyClasses(),
+	var context = '#SnS_meta_box',
+		currentCodeMirror = [], keys = [],
 		nonce = $( '#scripts_n_styles_noncename' ).val(),
 		theme = codemirror_options.theme ? codemirror_options.theme: 'default';
+	
+	// For CPTs that don't have an editor, prevent "tinyMCEPreInit is 'undefined'"
+	var initDatas = ( typeof tinyMCEPreInit !== 'undefined' && tinyMCEPreInit.mceInit ) ? tinyMCEPreInit.mceInit: false;
+	for ( var prop in initDatas ) {
+		keys.push( prop );
+	}
+	
+	var mceBodyClass = getMCEBodyClasses();
 	
 	$("#SnS_enqueue_scripts").data( 'placeholder', 'Enqueue Registered Scripts...' ).width(350).chosen();
 	$(".chzn-container-multi .chzn-choices .search-field input").height('26px');
@@ -15,7 +20,7 @@ jQuery( document ).ready( function( $ ) {
 	//$('textarea', context).attr('autocomplete','off');
 	
 	// Refresh when panel becomes unhidden
-	$( '#adv-settings' ).on( 'click', context + '-hide, ', refreshCodeMirrors );
+	$( '#adv-settings' ).on( 'click', context + '-hide', refreshCodeMirrors );
 	$( context ).on( 'click', '.hndle, .handlediv', refreshCodeMirrors );
 	
 	// add tab-switch handler
@@ -187,25 +192,30 @@ jQuery( document ).ready( function( $ ) {
 	 * Returns the body_class of TinyMCE minus the Scripts n Styles values.
 	 */
 	function getMCEBodyClasses() {
-		var t = [];
-		if ( initData.body_class )
-			t = initData.body_class.split(' ');
-		
-		var bc = $('#SnS_classes_body').val().split(' ');
-		var pc = $('#SnS_classes_post').val().split(' ');
-		var p;
-		for ( var i = 0; i < t.length; i++ ) {
-			p = $.inArray( bc[i], t )
-			if ( -1 != p )
-				t.splice( p, 1 );
-		}
-		for ( var i = 0; i < t.length; i++ ) {
-			p = $.inArray( pc[i], t )
-			if ( -1 != p )
-				t.splice( p, 1 );
-		}
-		t = t.join(' ');
-		return t;
+		var t = [], a = [];
+		$(keys).each(function(index, element) {
+			var data = initDatas[element];
+			if ( data.body_class )
+				t = data.body_class.split(' ');
+			
+			var bc = $('#SnS_classes_body').val().split(' ');
+			var pc = $('#SnS_classes_post').val().split(' ');
+			var p;
+			for ( var i = 0; i < t.length; i++ ) {
+				p = $.inArray( bc[i], t )
+				if ( -1 != p )
+					t.splice( p, 1 );
+			}
+			for ( var i = 0; i < t.length; i++ ) {
+				p = $.inArray( pc[i], t )
+				if ( -1 != p )
+					t.splice( p, 1 );
+			}
+			t = t.join(' ');
+			
+			a[element] = t;
+		});
+		return a;
 	}
 	
 	/*
@@ -393,92 +403,99 @@ jQuery( document ).ready( function( $ ) {
 	 * Refresh after AJAX.
 	 */
 	function refreshDeleteBtns() {
-		// responsible for clearing out Delete Buttons, and Adding new ones.
-		// initData should always contain the latest settings.
-		if ( initData.style_formats && initData.style_formats.length ) {
-			$( '#delete-mce-dropdown-names .sns-ajax-delete-p' ).remove();
-			$( '#delete-mce-dropdown-names', context ).show();
-			var formats = initData.style_formats;
-			for ( var i = 0; i < formats.length; i++ ) {
-				var deleteBtn = {};
-				if ( formats[i].inline ) {
-					deleteBtn.element =  formats[i].inline;
-					deleteBtn.wrapper = '';
-				} else if ( formats[i].block ) {
-					deleteBtn.element =  formats[i].block;
-					if ( formats[i].wrapper )
-						deleteBtn.wrapper = ' (wrapper)';
-					else
+		$(keys).each(function(index, key) {
+			var initData = initDatas[key]
+			
+			// responsible for clearing out Delete Buttons, and Adding new ones.
+			// initData should always contain the latest settings.
+			if ( initData.style_formats && initData.style_formats.length ) {
+				$( '#delete-mce-dropdown-names .sns-ajax-delete-p' ).remove();
+				$( '#delete-mce-dropdown-names', context ).show();
+				var formats = initData.style_formats;
+				for ( var i = 0; i < formats.length; i++ ) {
+					var deleteBtn = {};
+					if ( formats[i].inline ) {
+						deleteBtn.element =  formats[i].inline;
 						deleteBtn.wrapper = '';
-				} else if ( formats[i].selector ) {
-					deleteBtn.element =  formats[i].selector;
-					deleteBtn.wrapper = '';
-				} else {
-					alert( 'ERROR!' ); 
+					} else if ( formats[i].block ) {
+						deleteBtn.element =  formats[i].block;
+						if ( formats[i].wrapper )
+							deleteBtn.wrapper = ' (wrapper)';
+						else
+							deleteBtn.wrapper = '';
+					} else if ( formats[i].selector ) {
+						deleteBtn.element =  formats[i].selector;
+						deleteBtn.wrapper = '';
+					} else {
+						alert( 'ERROR!' ); 
+					}
+					deleteBtn.title = formats[i].title;
+					deleteBtn.classes = formats[i].classes;
+					$( '#instructions-mce-dropdown-names', context ).after(
+						'<p class="sns-ajax-delete-p"><a title="delete" class="sns-ajax-delete" id="'
+						+ deleteBtn.title + '">X</a> "'
+						+ deleteBtn.title + '" <code>&lt;'
+						+ deleteBtn.element + ' class="'
+						+ deleteBtn.classes + '"&gt;</code>'
+						+ deleteBtn.wrapper + '</p>'
+					);
 				}
-				deleteBtn.title = formats[i].title;
-				deleteBtn.classes = formats[i].classes;
-				$( '#instructions-mce-dropdown-names', context ).after(
-					'<p class="sns-ajax-delete-p"><a title="delete" class="sns-ajax-delete" id="'
-					+ deleteBtn.title + '">X</a> "'
-					+ deleteBtn.title + '" <code>&lt;'
-					+ deleteBtn.element + ' class="'
-					+ deleteBtn.classes + '"&gt;</code>'
-					+ deleteBtn.wrapper + '</p>'
-				);
+			} else {
+				$( '#delete-mce-dropdown-names', context ).hide();
 			}
-		} else {
-			$( '#delete-mce-dropdown-names', context ).hide();
-		}
+		});
 	}
 	function refreshBodyClass( data ) {
-		initData.body_class = mceBodyClass + ' ' + data.classes_body + ' ' + data.classes_post;
-		
+		$(keys).each(function(index, key) {
+			initDatas[key].body_class = mceBodyClass[key] + ' ' + data.classes_body + ' ' + data.classes_post;
+		});
 		refreshMCE();
 	}
 	function refreshStyleFormats( data ) {
-		// error check
-		console.log(data.classes_mce);
-		if ( typeof data.classes_mce === 'undefined' ) {
-			alert( data );
-			$( '.sns-ajax-loading' ).hide();
-			return;
-		} else if ( data.classes_mce.length && data.classes_mce != 'Empty' ) {
-			var style_formats = [];
-			
-			for ( var i = 0; i < data.classes_mce.length; i++ ) { // loop returned classes_mce
-				var format = {};
-				format.title = data.classes_mce[i].title;
+		$(keys).each(function(index, key) {
+			var initData = initDatas[key]
+			// error check
+			//console.log(data.classes_mce);
+			if ( typeof data.classes_mce === 'undefined' ) {
+				alert( data );
+				/*$( '.sns-ajax-loading' ).hide();
+				return;*/ // Don't block
+			} else if ( data.classes_mce.length && data.classes_mce != 'Empty' ) {
+				var style_formats = [];
 				
-				if ( data.classes_mce[i].inline )
-					format.inline = data.classes_mce[i].inline;
-				else if ( data.classes_mce[i].block ) {
-					format.block = data.classes_mce[i].block;
-					if (data.classes_mce[i].wrapper)
-						format.wrapper = true;
-				} else if ( data.classes_mce[i].selector )
-					format.selector = data.classes_mce[i].selector;
-				else
-					alert('dropdown format has bad type.');
+				for ( var i = 0; i < data.classes_mce.length; i++ ) { // loop returned classes_mce
+					var format = {};
+					format.title = data.classes_mce[i].title;
+					
+					if ( data.classes_mce[i].inline )
+						format.inline = data.classes_mce[i].inline;
+					else if ( data.classes_mce[i].block ) {
+						format.block = data.classes_mce[i].block;
+						if (data.classes_mce[i].wrapper)
+							format.wrapper = true;
+					} else if ( data.classes_mce[i].selector )
+						format.selector = data.classes_mce[i].selector;
+					else
+						alert('dropdown format has bad type.');
+					
+					format.classes = data.classes_mce[i].classes;
+					style_formats.push( format );
+				}
+				initData.style_formats = style_formats;
 				
-				format.classes = data.classes_mce[i].classes;
-				style_formats.push( format );
+				if ( initData.theme_advanced_buttons2.indexOf( "styleselect" ) == -1 ) {
+					var tempString = "styleselect,";
+					initData.theme_advanced_buttons2 = tempString.concat(initData.theme_advanced_buttons2);
+				}
+				
+				$( '#delete-mce-dropdown-names', context ).show();
+			} else {
+				delete initData.style_formats;
+				initData.theme_advanced_buttons2 = initData.theme_advanced_buttons2.replace("styleselect,", "");
+				
+				$( '#delete-mce-dropdown-names', context ).hide();
 			}
-			initData.style_formats = style_formats;
-			
-			if ( initData.theme_advanced_buttons2.indexOf( "styleselect" ) == -1 ) {
-				var tempString = "styleselect,";
-				initData.theme_advanced_buttons2 = tempString.concat(initData.theme_advanced_buttons2);
-			}
-			
-			$( '#delete-mce-dropdown-names', context ).show();
-		} else {
-			delete initData.style_formats;
-			initData.theme_advanced_buttons2 = initData.theme_advanced_buttons2.replace("styleselect,", "");
-			
-			$( '#delete-mce-dropdown-names', context ).hide();
-		}
-		
+		});
 		refreshDeleteBtns();
 		refreshMCE();
 	}
@@ -541,31 +558,29 @@ jQuery( document ).ready( function( $ ) {
 		$('.sns-collapsed-shortcode-btn').click();
 	}
 	function refreshMCE() {
-		var ed = tinyMCE.editors["content"];
-		// If Visual has been activated.
-		if ( ed ) {
-			if ( ed.isHidden() ) {
-				refreshMCEhelper(ed);
-			} else {
-				$('#content-html').click(); // 3.3
-				
-				refreshMCEhelper(ed);
-				
-				$('#content-tmce').click(); // 3.3
+		$( tinyMCE.editors ).each( function( index, ed ){
+			// If Visual has been activated.
+			if ( ed ) {
+				if ( ed.isHidden() ) {
+					refreshMCEhelper( ed );
+				} else {
+					$('#'+ed.id+'-html').click(); // 3.3
+					
+					refreshMCEhelper( ed  );
+					
+					$('#'+ed.id+'-tmce').click(); // 3.3
+				}
 			}
-			
-		}
-		// Else nothing.
-		
+		});
 		$( '.sns-ajax-loading' ).hide();
 	}
-	function refreshMCEhelper(ed) {
+	function refreshMCEhelper( ed ) {
 		ed.save();
 		ed.destroy();
 		ed.remove();
-		if ( initData && initData.wpautop )
-			$('#content').val( switchEditors.wpautop( $('#content').val() ) );
-		ed = new tinymce.Editor( 'content', initData );
+		if ( initDatas[ed.id] && initDatas[ed.id].wpautop )
+			$('#'+ed.id).val( switchEditors.wpautop( $('#'+ed.id).val() ) );
+		ed = new tinymce.Editor( ed.id, initDatas[ed.id] );
 		ed.render();
 		ed.hide();
 	}
