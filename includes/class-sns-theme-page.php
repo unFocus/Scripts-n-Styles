@@ -129,7 +129,7 @@ class SnS_Theme_Page
 				<div class="sns-ajax-wrap">
 					<a class="sns-ajax-load button" href="#">Load Source File</a>
 					<a class="sns-ajax-save button" href="#">Save All Changes</a>
-					<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif" style="display: none;">
+					<span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>
 					<div class="single-status"><div class="updated settings-error below-h2"></div></div>
 				</div>
 			</div></div>
@@ -140,7 +140,7 @@ class SnS_Theme_Page
 		</div>
 		<div id="css_area" class="sns-less-ide" style="width: 49%; float: left; overflow: hidden;">
 			<div id="compile_status" style="display: none" class="updated settings-error below-h2">
-				<p><img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif" />
+				<p><span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>
 				<span class="status-text">Keystokes detected. 1 second delay, then compiling...</span></p>
 			</div>
 			<div class="widget"><div class="sns-collapsed inside">

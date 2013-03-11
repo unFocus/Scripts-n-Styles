@@ -178,7 +178,7 @@ class SnS_Hoops_Page
 						<div class="sns-ajax-wrap">
 							<a class="sns-ajax-delete-shortcode button" href="#">Delete</a> &nbsp; 
 							<a class="sns-ajax-update-shortcode button" href="#">Update</a>
-							<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">
+							<span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>
 						</div>
 						<?php /**/ ?>
 					</div></div>

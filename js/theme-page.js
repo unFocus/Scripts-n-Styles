@@ -123,7 +123,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	});
 	function saved( data ) {
 		$(data).insertAfter( '#icon-sns + h2' ).delay(3000).fadeOut();
-		$( '.sns-ajax-loading' ).hide();
+		$( '.sns-ajax-loading' ).show();
 	}
 	
 	// The CSS output side.

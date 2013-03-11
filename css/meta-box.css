@@ -126,7 +126,11 @@
   display: inline-block;
 }
 .sns-ajax-loading {
-  vertical-align: middle;
+	display: none;
+	vertical-align: top;
+}
+.sns-ajax-loading .spinner {
+	float: none;
 }
 .sns-ajax-wrap {
   height: 23px;

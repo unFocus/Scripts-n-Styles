@@ -217,7 +217,7 @@ jQuery( document ).ready( function( $ ) {
 			'<div class="sns-ajax-wrap">'
 			 + '<a id="sns-ajax-update-scripts" href="#" class="button">Update Scripts</a>'
 			 + ' '
-			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			 + '<span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>'
 			 + '</div>'
 			);
 		
@@ -225,7 +225,7 @@ jQuery( document ).ready( function( $ ) {
 			'<div class="sns-ajax-wrap">'
 			 + '<a id="sns-ajax-update-styles" href="#" class="button">Update Styles</a>'
 			 + ' '
-			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			 + '<span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>'
 			 + '</div>'
 			);
 		
@@ -233,7 +233,7 @@ jQuery( document ).ready( function( $ ) {
 			'<div class="sns-ajax-wrap">'
 			 + '<a id="sns-ajax-update-classes" href="#" class="button">Update Classes</a>'
 			 + ' '
-			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			 + '<span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>'
 			 + '</div>'
 			);
 		
@@ -241,7 +241,7 @@ jQuery( document ).ready( function( $ ) {
 			'<div class="sns-ajax-wrap">'
 			 + '<a id="sns-ajax-update-dropdown" href="#" class="button">Add Class</a>'
 			 + ' '
-			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			 + '<span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>'
 			 + '</div>'
 			);
 		
@@ -249,7 +249,7 @@ jQuery( document ).ready( function( $ ) {
 			' &nbsp; '
 			 + '<a id="sns-ajax-add-shortcode" href="#" class="button">Add New</a>'
 			 + ' '
-			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			 + '<span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>'
 			);
 		$('#sns-shortcodes .sns-shortcode .inside').append(
 			'<div class="sns-ajax-wrap">'
@@ -257,11 +257,11 @@ jQuery( document ).ready( function( $ ) {
 			 + ' &nbsp; '
 			 + '<a class="sns-ajax-update-shortcode button" href="#">Update</a>'
 			 + ' '
-			 + '<img class="sns-ajax-loading" src="/wp-admin/images/wpspin_light.gif">'
+			 + '<span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>'
 			 + '</div>'
 			);
 	
-		$('.sns-ajax-loading').hide();
+		$( '.sns-ajax-loading' ).hide();
 		
 		if ( $( '#SnS_classes_mce_type').val() == 'block' ) {
 			$('#add-mce-dropdown-names .sns-mce-wrapper').show();
@@ -441,7 +441,7 @@ jQuery( document ).ready( function( $ ) {
 		console.log(data.classes_mce);
 		if ( typeof data.classes_mce === 'undefined' ) {
 			alert( data );
-			$('.sns-ajax-loading').hide();
+			$( '.sns-ajax-loading' ).hide();
 			return;
 		} else if ( data.classes_mce.length && data.classes_mce != 'Empty' ) {
 			var style_formats = [];
@@ -530,7 +530,7 @@ jQuery( document ).ready( function( $ ) {
 				alert( 'Scripts n Styles: ' + '\n\n' + 'Sorry, there was an AJAX error: (' + data + ')' + '\n\n' + 'Please use the post update button instead.' );
 			}
 		}
-		$('.sns-ajax-loading').hide();
+		$( '.sns-ajax-loading' ).hide();
 	}
 	addShortcodeBtns();
 	function addShortcodeBtns() {
@@ -557,7 +557,7 @@ jQuery( document ).ready( function( $ ) {
 		}
 		// Else nothing.
 		
-		$('.sns-ajax-loading').hide();
+		$( '.sns-ajax-loading' ).hide();
 	}
 	function refreshMCEhelper(ed) {
 		ed.save();
