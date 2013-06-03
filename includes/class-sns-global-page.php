@@ -13,7 +13,7 @@ class SnS_Global_Page
 	 * Initializing method.
 	 * @static
 	 */
-	function init() {
+	static function init() {
 		if ( SnS_Admin::$parent_slug == SnS_Admin::MENU_SLUG ) $menu_title = __( 'Global', 'scripts-n-styles' );
 		else $menu_title = __( 'Scripts n Styles', 'scripts-n-styles' );
 		
@@ -25,7 +25,7 @@ class SnS_Global_Page
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
 	}
 	
-	function admin_enqueue_scripts() {
+	static function admin_enqueue_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
 		
@@ -40,7 +40,7 @@ class SnS_Global_Page
 	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
 	 */
-	function admin_load() {
+	static function admin_load() {
 		
 		register_setting(
 			SnS_Admin::OPTION_GROUP,
@@ -137,7 +137,7 @@ class SnS_Global_Page
 			) );
 	}
 	
-	function less_fields() {
+	static function less_fields() {
 		$options = get_option( 'SnS_options' );
 		$less =  isset( $options[ 'less' ] ) ? $options[ 'less' ] : '';
 		$compiled =  isset( $options[ 'compiled' ] ) ? $options[ 'compiled' ] : '';
@@ -153,7 +153,7 @@ class SnS_Global_Page
 		</div>
 		<?php
 	}
-	function coffee_fields() {
+	static function coffee_fields() {
 		$options = get_option( 'SnS_options' );
 		$coffee =  isset( $options[ 'coffee' ] ) ? $options[ 'coffee' ] : '';
 		$compiled =  isset( $options[ 'coffee_compiled' ] ) ? $options[ 'coffee_compiled' ] : '';
@@ -174,7 +174,7 @@ class SnS_Global_Page
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
 	 */
-	function global_scripts_section() {
+	static function global_scripts_section() {
 		?>
 		<div style="max-width: 55em;">
 			<p><?php _e( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts that were registered individually.', 'scripts-n-styles' )?></p>
@@ -186,7 +186,7 @@ class SnS_Global_Page
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
 	 */
-	function global_styles_section() {
+	static function global_styles_section() {
 		?>
 		<div style="max-width: 55em;">
 			<p><?php _e( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Styles that were registered individually.', 'scripts-n-styles' )?></p>

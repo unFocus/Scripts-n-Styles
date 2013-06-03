@@ -18,7 +18,7 @@ class SnS_Settings_Page
 	 * Initializing method.
 	 * @static
 	 */
-	function init() {
+	static function init() {
 		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Settings' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
@@ -38,7 +38,7 @@ class SnS_Settings_Page
 		return $parent_file;
 	}
 	
-	function admin_enqueue_scripts() {
+	static function admin_enqueue_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : '';
 		wp_enqueue_style( 'sns-options' );
@@ -54,7 +54,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
 	 */
-	function admin_load() {
+	static function admin_load() {
 		wp_enqueue_style( 'sns-options' );
 		
 		register_setting(
@@ -141,7 +141,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
 	 */
-	function settings_section() {
+	static function settings_section() {
 		?>
 		<div style="max-width: 55em;">
 			<p><?php _e( 'Control how and where Scripts n Styles menus and metaboxes appear. These options are here because sometimes users really care about this stuff. Feel free to adjust to your liking. :-)', 'scripts-n-styles' ) ?></p>
@@ -153,7 +153,7 @@ class SnS_Settings_Page
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
 	 */
-	function demo_section() {
+	static function demo_section() {
 		?>
 		<div style="max-width: 55em;">
 <textarea id="codemirror_demo" name="code" style="min-width: 500px; width:97%;" rows="5" cols="40">

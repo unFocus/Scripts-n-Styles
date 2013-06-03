@@ -23,7 +23,7 @@ class SnS_Theme_Page
 	 * Initializing method.
 	 * @static
 	 */
-	function init() {
+	static function init() {
 		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Theme' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
@@ -43,7 +43,7 @@ class SnS_Theme_Page
 		return $parent_file;
 	}
 	
-	function admin_enqueue_scripts() {
+	static function admin_enqueue_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
 		
@@ -57,7 +57,7 @@ class SnS_Theme_Page
 	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
 	 */
-	function admin_load() {
+	static function admin_load() {
 		// added here to not effect other pages. Theme page requires JavaScript (less.js) or it doesn't make sense to save.
 		add_filter( 'sns_show_submit_button', '__return_false' );
 		
@@ -72,7 +72,7 @@ class SnS_Theme_Page
 			SnS_Admin::MENU_SLUG );
 	}
 	
-	function less_fields() {
+	static function less_fields() {
 		$files = array();
 		$support_files = get_theme_support( 'scripts-n-styles' );
 		
@@ -160,7 +160,7 @@ class SnS_Theme_Page
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
 	 */
-	function global_section() {
+	static function global_section() {
 		?>
 		<div style="max-width: 55em;">
 			<p><?php _e( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts and Styles registered individually.', 'scripts-n-styles' )?></p>

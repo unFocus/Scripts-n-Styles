@@ -107,7 +107,7 @@ class Scripts_n_Styles
 		add_action( 'wp_ajax_sns_theme_css', array( __CLASS__, 'theme_css' ) );
 		add_action( 'wp_ajax_nopriv_sns_theme_css', array( __CLASS__, 'theme_css' ) );
 	}
-	function theme_style() {
+	static function theme_style() {
 		if ( current_theme_supports( 'scripts-n-styles' ) ) {
 			$options = get_option( 'SnS_options' );
 			$slug = get_stylesheet();
@@ -118,7 +118,7 @@ class Scripts_n_Styles
 			}
 		}
 	}
-	function theme_css() {
+	static function theme_css() {
 		$options = get_option( 'SnS_options' );
 		$slug = get_stylesheet();
 		$compiled = $options[ 'themes' ][ $slug ][ 'compiled' ];
@@ -128,16 +128,16 @@ class Scripts_n_Styles
 		echo $compiled;
 		die();
 	}
-	function add_widget() {
+	static function add_widget() {
 		$options = get_option( 'SnS_options' );
 		if ( isset( $options[ 'hoops_widget' ] ) && 'yes' == $options[ 'hoops_widget' ] )
 			register_widget( 'SnS_Widget' );
 	}
-	function add_shortcodes() {
+	static function add_shortcodes() {
 		add_shortcode( 'sns_shortcode', array( __CLASS__, 'shortcode' ) );
 		add_shortcode( 'hoops', array( __CLASS__, 'shortcode' ) );
 	}
-	function shortcode( $atts, $content = null, $tag ) {
+	static function shortcode( $atts, $content = null, $tag ) {
 		global $post;
 		extract( shortcode_atts( array( 'name' => 0, ), $atts ) );
 		$output = '';
@@ -161,7 +161,7 @@ class Scripts_n_Styles
 		
 		return $output;
 	}
-	function hoops_widget( $atts, $content = null, $tag ) {
+	static function hoops_widget( $atts, $content = null, $tag ) {
 		$options = get_option( 'SnS_options' );
 		$hoops = $options['hoops']['shortcodes'];
 		
@@ -249,7 +249,7 @@ class Scripts_n_Styles
 				'chosen',
 			);
 	}
-	function register() {
+	static function register() {
 		$dir = plugins_url( '/', __FILE__);
 		$js = $dir . 'js/';
 		$css = $dir . 'css/';

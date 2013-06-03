@@ -18,7 +18,7 @@ class SnS_Hoops_Page
 	 * Initializing method.
 	 * @static
 	 */
-	function init() {
+	static function init() {
 		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Hoops' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
 		
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
@@ -38,7 +38,7 @@ class SnS_Hoops_Page
 		return $parent_file;
 	}
 	
-	function admin_enqueue_scripts() {
+	static function admin_enqueue_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
 		
@@ -52,7 +52,7 @@ class SnS_Hoops_Page
 	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
 	 */
-	function admin_load() {
+	static function admin_load() {
 		// added here to not effect other pages.
 		add_filter( 'sns_options_pre_update_option', array( __CLASS__, 'new_hoops') );
 		
@@ -66,7 +66,7 @@ class SnS_Hoops_Page
 			array( __CLASS__, 'hoops_section' ),
 			SnS_Admin::MENU_SLUG );
 	}
-	function new_hoops( $options ) {
+	static function new_hoops( $options ) {
 		// Get Hoops. (Shouldn't be empty.)
 		$hoops = $options[ 'hoops' ];
 		
@@ -134,7 +134,7 @@ class SnS_Hoops_Page
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
 	 */
-	function hoops_section() {
+	static function hoops_section() {
 		echo '<div style="max-width: 55em;">';
 		_e( '<p>"Hoops" are shortcodes invented to get around some limitations of vanilla WordPress.</p>' 
 			. '<p> Normally, certain HTML is very problematic to use in the Post Editor, because it either gets '

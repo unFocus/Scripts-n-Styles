@@ -1,7 +1,7 @@
 <?php
 class SnS_AJAX
 {
-	function init() {
+	static function init() {
 		// Keep track of current tab.
 		add_action( 'wp_ajax_sns_update_tab', array( __CLASS__, 'update_tab' ) );
 		// TinyMCE requests a css file.
@@ -16,7 +16,7 @@ class SnS_AJAX
 		add_action( 'wp_ajax_sns_shortcodes', array( __CLASS__, 'shortcodes' ) );
 		add_action( 'wp_ajax_sns_open_theme_panels', array( __CLASS__, 'open_theme_panels' ) );
 	}
-	function open_theme_panels() {
+	static function open_theme_panels() {
 		check_ajax_referer( SnS_Admin::OPTION_GROUP . "-options" );
 		
 		$name = isset( $_POST[ 'file-name' ] ) ? $_POST[ 'file-name' ] : '';
@@ -35,7 +35,7 @@ class SnS_AJAX
 		
 		exit();
 	}
-	function update_tab() {
+	static function update_tab() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		
 		$active_tab = isset( $_POST[ 'active_tab' ] ) ? 's'.$_POST[ 'active_tab' ] : 's0';
@@ -45,7 +45,7 @@ class SnS_AJAX
 		$success = update_user_option( $user->ID, 'current_sns_tab', $active_tab, true);
 		exit();
 	}
-	function tinymce_styles() {
+	static function tinymce_styles() {
 		check_ajax_referer( 'sns_tinymce_styles' );
 		
 		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
@@ -65,7 +65,7 @@ class SnS_AJAX
 	}
 	
 	// AJAX handlers
-	function classes() {
+	static function classes() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
@@ -95,7 +95,7 @@ class SnS_AJAX
 		
 		exit();
 	}
-	function scripts() {
+	static function scripts() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
@@ -125,7 +125,7 @@ class SnS_AJAX
 		
 		exit();
 	}
-	function styles() {
+	static function styles() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
@@ -153,7 +153,7 @@ class SnS_AJAX
 		
 		exit();
 	}
-	function dropdown() {
+	static function dropdown() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
@@ -187,7 +187,7 @@ class SnS_AJAX
 		
 		exit();
 	}
-	function delete_class() {
+	static function delete_class() {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
@@ -220,7 +220,7 @@ class SnS_AJAX
 		
 		exit();
 	}
-	function shortcodes( $action ) {
+	static function shortcodes( $action ) {
 		check_ajax_referer( Scripts_n_Styles::$file );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 		
@@ -325,13 +325,13 @@ class SnS_AJAX
 	}
 	
 	// Differs from SnS_Admin_Meta_Box::maybe_set() in that this needs no prefix.
-	function maybe_set( $o, $i ) {
+	static function maybe_set( $o, $i ) {
 		if ( empty( $_REQUEST[ $i ] ) ) {
 			if ( isset( $o[ $i ] ) ) unset( $o[ $i ] );
 		} else $o[ $i ] = $_REQUEST[ $i ];
 		return $o;
 	}
-	function maybe_update( $id, $name, $meta ) {
+	static function maybe_update( $id, $name, $meta ) {
 		if ( empty( $meta ) ) {
 			delete_post_meta( $id, $name );
 		} else {

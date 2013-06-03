@@ -48,10 +48,10 @@ class SnS_Admin
 		register_activation_hook( Scripts_n_Styles::$file, array( __CLASS__, 'upgrade' ) );
 	}
 	
-	function load_plugin_textdomain() {
+	static function load_plugin_textdomain() {
 		load_plugin_textdomain( 'scripts-n-styles', false, dirname( plugin_basename( Scripts_n_Styles::$file ) ) . '/languages/' );
 	}
-	function menu() {
+	static function menu() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 		
 		$options = get_option( 'SnS_options' );
@@ -87,7 +87,7 @@ class SnS_Admin
 	/**
 	 * Nav Tabs
 	 */
-	function nav() {
+	static function nav() {
 		$options = get_option( 'SnS_options' );
 		$page = $_REQUEST[ 'page' ];
 		?>
@@ -110,7 +110,7 @@ class SnS_Admin
 	/**
 	 * Settings Page help
 	 */
-	function help() {
+	static function help() {
 		$help    = '<p>' . __( 'In default (non MultiSite) WordPress installs, both <em>Administrators</em> and <em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either <em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically "unfiltered_html"), other users can be granted access.', 'scripts-n-styles' ) . '</p>';
 		$help   .= '<p><strong>' . __( 'Reference: jQuery Wrappers', 'scripts-n-styles' ) . '</strong></p>' .
 				   '<pre><code>jQuery(document).ready(function($) {

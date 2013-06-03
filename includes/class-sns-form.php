@@ -13,7 +13,7 @@ class SnS_Form
 	 * Settings Page
 	 * Outputs a textarea for setting 'scripts_in_head'.
 	 */
-	function textarea( $args ) {
+	static function textarea( $args ) {
 		extract( $args );
 		$options = get_option( $setting );
 		$value =  isset( $options[ $label_for ] ) ? $options[ $label_for ] : '';
@@ -33,7 +33,7 @@ class SnS_Form
 		echo $output;
 	}
 	
-	function radio( $args ) {
+	static function radio( $args ) {
 		extract( $args );
 		$options = get_option( $setting );
 		$default =  isset( $default ) ? $default : '';
@@ -64,7 +64,7 @@ class SnS_Form
 	 * Settings Page
 	 * Outputs a select element for selecting options to set scripts for including.
 	 */
-	function select( $args ) {
+	static function select( $args ) {
 		extract( $args );
 		$options = get_option( $setting );
 		$selected = isset( $options[ $label_for ] ) ? $options[ $label_for ] : array();
@@ -100,7 +100,7 @@ class SnS_Form
 	 * Settings Page
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API.
 	 */
-	function take_action() {
+	static function take_action() {
 		global $action, $option_page, $page, $new_whitelist_options;
 		
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) || ( is_multisite() && ! is_super_admin() ) )
@@ -169,7 +169,7 @@ class SnS_Form
 	 * Settings Page
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
 	 */
-	function page() {
+	static function page() {
 		?>
 		<div class="wrap">
 			<?php SnS_Admin::nav(); ?>

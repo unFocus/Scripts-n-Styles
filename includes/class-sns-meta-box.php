@@ -24,7 +24,7 @@ class SnS_Admin_Meta_Box
 		add_action( 'save_post', array( __CLASS__, 'save_post' ) );
 	}
 	
-	function mce_buttons_2( $buttons ) {
+	static function mce_buttons_2( $buttons ) {
 		global $post;
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
 		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
@@ -34,7 +34,7 @@ class SnS_Admin_Meta_Box
 		
 		return $buttons;
 	}
-	function tiny_mce_before_init( $initArray ) {
+	static function tiny_mce_before_init( $initArray ) {
 		global $post;
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
 		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
@@ -270,7 +270,7 @@ class SnS_Admin_Meta_Box
 		<?php
 	}
 	
-	function current_classes( $type, $post_id ) {
+	static function current_classes( $type, $post_id ) {
 		if ( 'body' == $type ) {
 			global $wp_query, $pagenow;
 			
@@ -408,7 +408,7 @@ class SnS_Admin_Meta_Box
 	 * maybe_set()
 	 * Filters $o and Checks if the sent data $i is empty (intended to clear). If not, updates.
 	 */
-	function maybe_set( $o, $i, $p = 'SnS_' ) {
+	static function maybe_set( $o, $i, $p = 'SnS_' ) {
 		if ( empty( $_REQUEST[ $p . $i ] ) ) {
 			if ( isset( $o[ $i ] ) ) unset( $o[ $i ] );
 		} else {
