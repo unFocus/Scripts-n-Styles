@@ -2,24 +2,24 @@
 /**
  * SnS_Admin_Code_Editor
  */
-		
+
 class SnS_Admin_Code_Editor
 {
 	/**
-	 * Initializing method. 
+	 * Initializing method.
 	 */
 	static function init() {
 		add_action( 'admin_head-theme-editor.php', array( __CLASS__, 'styles' ) );
 		add_action( 'admin_head-plugin-editor.php', array( __CLASS__, 'styles' ) );
 		add_filter( 'editable_extensions', array( __CLASS__, 'extend' ) );
 	}
-	
+
 	static function extend( $editable_extensions ) {
 		$editable_extensions[] = 'less';
 		$editable_extensions[] = 'coffee';
 		return $editable_extensions;
 	}
-	
+
 	static function styles() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';

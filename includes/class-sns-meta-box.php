@@ -1,73 +1,73 @@
 <?php
 /**
  * SnS_Admin_Meta_Box
- * 
+ *
  * Allows WordPress admin users the ability to add custom CSS
  * and JavaScript directly to individual Post, Pages or custom
  * post types.
  */
-		
+
 class SnS_Admin_Meta_Box
 {
 	/*
 	 * Constants
 	 */
 	const NONCE_NAME = 'scripts_n_styles_noncename';
-	
+
 	static $post_types;
-	
+
 	/**
-	 * Initializing method. 
+	 * Initializing method.
 	 */
 	static function init() {
 		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( __CLASS__, 'save_post' ) );
 	}
-	
+
 	static function mce_buttons_2( $buttons ) {
 		global $post;
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
 		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
-		
+
 		if ( ! empty( $styles[ 'classes_mce' ] ) )
 			array_unshift( $buttons, 'styleselect' );
-		
+
 		return $buttons;
 	}
 	static function tiny_mce_before_init( $initArray ) {
 		global $post;
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
 		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
-		
+
 		// Add div as a format option, should probably use a string replace thing here.
 		// Better yet, a setting for adding these. Postpone for now.
 		//$initArray['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div";
-		
+
 		if ( ( ! empty( $styles[ 'classes_body' ] ) || ! empty( $styles[ 'classes_post' ] ) ) && ! isset( $initArray['body_class'] ) )
-			$initArray['body_class'] = '';	
-		
+			$initArray['body_class'] = '';
+
 		// Add body_class (and/or maybe post_class) values... somewhat problematic.
 		if ( ! empty( $styles[ 'classes_body' ] ) )
 			$initArray['body_class'] .= ' ' . $styles[ 'classes_body' ];
 		if ( ! empty( $styles[ 'classes_post' ] ) )
 			$initArray['body_class'] .= ' ' . $styles[ 'classes_post' ];
-		
+
 		// In case Themes or plugins have added style_formats, not tested.
 		if ( isset( $initArray['style_formats'] ) )
 			$style_formats = json_decode( $initArray['style_formats'], true );
 		else
 			$style_formats = array();
-		
+
 		if ( ! empty( $styles[ 'classes_mce' ] ) )
 			foreach ( $styles[ 'classes_mce' ] as $format )
 				$style_formats[] = $format;
-		
+
 		if ( ! empty( $style_formats ) )
 			$initArray['style_formats'] = json_encode( $style_formats );
-		
+
 		return $initArray;
 	}
-	
+
 	/**
 	 * Admin Action: 'mce_css'
 	 * Adds a styles sheet to TinyMCE via ajax that contains the current styles data.
@@ -81,7 +81,7 @@ class SnS_Admin_Meta_Box
 		$mce_css .= ',' . $url;
 		return $mce_css;
 	}
-	
+
 	/**
 	 * Admin Action: 'add_meta_boxes'
 	 * Main Meta Box function. Checks restriction options and display options, calls add_meta_box() and adds actions for adding admin CSS and JavaScript.
@@ -101,7 +101,7 @@ class SnS_Admin_Meta_Box
 			}
 		}
 	}
-	
+
 	static function default_hidden_meta_boxes( $hidden ) {
 		$options = get_option( 'SnS_options' );
 		if ( ! ( isset( $options[ 'metabox' ] ) && 'yes' == $options[ 'metabox' ] ) ) {
@@ -110,7 +110,7 @@ class SnS_Admin_Meta_Box
 		}
 		return $hidden;
 	}
-	
+
 	/**
 	 * Admin Action: 'add_meta_boxes'
 	 * Outputs the Meta Box. Only called on callback from add_meta_box() during the add_meta_boxes action.
@@ -121,7 +121,7 @@ class SnS_Admin_Meta_Box
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
 		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
-		
+
 		$position = get_user_option( "current_sns_tab" );
 		if ( ! in_array( $position, array( 's0', 's1', 's2', 's3', 's4', 's5' ) ) ) $position = 's0';
 		wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME );
@@ -134,7 +134,7 @@ class SnS_Admin_Meta_Box
 				<li<?php echo ( 's4' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_shortcodes-tab"><?php _e( 'Shortcodes', 'scripts-n-styles' ) ?></a></li>
 				<li<?php echo ( 's5' == $position ) ? ' class="wp-tab-active"': ''; ?> style="display:none"><a href="#SnS_post_styles-tab"><?php _e( 'Dropdown', 'scripts-n-styles' ) ?></a></li>
 			</ul>
-			
+
 			<div class="wp-tab-panel" id="SnS_scripts-tab">
 				<p><em><?php _e( "This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's)", 'scripts-n-styles' ) ?> ...</em></p>
 				<label for="SnS_scripts_in_head" class="title"><?php _e( '<strong>Scripts</strong> (for the <code>head</code> element):', 'scripts-n-styles' ) ?> </label>
@@ -148,7 +148,7 @@ class SnS_Admin_Meta_Box
 				</div>
 				<p><em>... <code>&lt;/body></code> <?php _e( 'tag', 'scripts-n-styles' ) ?>.</em></p>
 			</div>
-			
+
 			<div class="wp-tab-panel" id="SnS_styles-tab">
 				<label for="SnS_styles" class="title"><?php _e( '<strong>Styles</strong>:', 'scripts-n-styles' ) ?> </label>
 				<div class="style">
@@ -156,7 +156,7 @@ class SnS_Admin_Meta_Box
 				</div>
 				<p><em><?php _e( 'This code will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> tag of your page (or post).', 'scripts-n-styles' ) ?></em></p>
 			</div>
-			
+
 			<div class="wp-tab-panel" id="SnS_classes_body-tab">
 				<strong class="title"><?php _e( 'Classes', 'scripts-n-styles' ) ?></strong>
 				<div id="sns-classes">
@@ -173,7 +173,7 @@ class SnS_Admin_Meta_Box
 					<p><em><?php _e( 'These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).', 'scripts-n-styles' ) ?></em></p>
 				</div>
 			</div>
-				<?php 
+				<?php
 				/*
 				 * Note: Styles Dropdown section only makes sense when Javascript is enabled. (Otherwise, no TinyMCE.)
 				 */
@@ -212,24 +212,24 @@ class SnS_Admin_Meta_Box
 							<input name="SnS_classes_mce_wrapper" id="SnS_classes_mce_wrapper" type="checkbox" value="true" />
 						</p>
 					</div>
-					
+
 					<div id="delete-mce-dropdown-names" style="display: none;">
 						<p id="instructions-mce-dropdown-names"><?php _e( 'Classes currently in the dropdown:', 'scripts-n-styles' ) ?></p>
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="wp-tab-panel" id="SnS_enqueue_scripts-tab">
 				<strong class="title">Include Scripts</strong>
 				<select name="SnS_enqueue_scripts[]" id="SnS_enqueue_scripts" size="5" multiple="multiple" style="height: auto; float: left; margin: 6px 10px 8px 0;">
-					<?php 
+					<?php
 					if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) {
 						foreach ( $registered_handles as $value ) { ?>
-							<option value="<?php echo esc_attr( $value ) ?>"<?php foreach ( $scripts[ 'enqueue_scripts' ] as $handle ) selected( $handle, $value ); ?>><?php echo esc_html( $value ) ?></option> 
+							<option value="<?php echo esc_attr( $value ) ?>"<?php foreach ( $scripts[ 'enqueue_scripts' ] as $handle ) selected( $handle, $value ); ?>><?php echo esc_html( $value ) ?></option>
 						<?php }
 					} else {
 						foreach ( $registered_handles as $value ) { ?>
-							<option value="<?php echo esc_attr( $value ) ?>"><?php echo esc_html( $value ) ?></option> 
+							<option value="<?php echo esc_attr( $value ) ?>"><?php echo esc_html( $value ) ?></option>
 						<?php }
 					} ?>
 				</select>
@@ -240,7 +240,7 @@ class SnS_Admin_Meta_Box
 				<?php } ?>
 				<p><em><?php _e( 'The chosen scripts will be enqueued and placed before your codes if your code is dependant on certain scripts (like jQuery).', 'scripts-n-styles' ) ?></em></p>
 			</div>
-			
+
 			<div class="wp-tab-panel" id="SnS_shortcodes-tab">
 				<strong class="title">Shortcodes</strong>
 				<div id="sns-add-shortcode">
@@ -269,11 +269,11 @@ class SnS_Admin_Meta_Box
 			</div>
 		<?php
 	}
-	
+
 	static function current_classes( $type, $post_id ) {
 		if ( 'body' == $type ) {
 			global $wp_query, $pagenow;
-			
+
 			if ( 'post-new.php' == $pagenow ) {
 				echo join( ' ', get_body_class( '', $post_id ) );
 				echo ' ' . __( '(plus others once saved.)', 'scripts-n-styles' );
@@ -285,12 +285,12 @@ class SnS_Admin_Meta_Box
 			$wp_query = new WP_Query( "$param=$post_id" );
 			echo join( ' ', get_body_class( '', $post_id ) );
 			$wp_query = $save;
-			
+
 		} else {
 			echo join( ' ', get_post_class( '', $post_id ) );
 		}
 	}
-	
+
 	/**
 	 * Admin Action: 'admin_print_styles' Action added during 'add_meta_boxes' (which restricts output to Edit Screens).
 	 * Enqueues the CSS for admin styling of the Meta Box.
@@ -299,7 +299,7 @@ class SnS_Admin_Meta_Box
 		wp_enqueue_style( 'chosen' );
 		wp_enqueue_style( 'sns-meta-box' );
 	}
-	
+
 	/**
 	 * Admin Action: 'admin_print_styles' Action added during 'add_meta_boxes' (which restricts output to Edit Screens).
 	 * Enqueues the JavaScript for the admin Meta Box.
@@ -307,11 +307,11 @@ class SnS_Admin_Meta_Box
 	static function meta_box_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
-		
+
 		wp_enqueue_script(  'sns-meta-box' );
 		wp_localize_script( 'sns-meta-box', 'codemirror_options', array( 'theme' => $cm_theme ) );
 	}
-	
+
 	/**
 	 * Admin Action: 'save_post'
 	 * Saves the values entered in the Meta Box when a post is saved (on the Edit Screen only, excluding autosaves) if the user has permission.
@@ -319,91 +319,91 @@ class SnS_Admin_Meta_Box
 	 */
 	static function save_post( $post_id ) {
 		if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], Scripts_n_Styles::$file )
-			|| ! current_user_can( 'unfiltered_html' ) 
+			|| ! current_user_can( 'unfiltered_html' )
 			|| wp_is_post_revision( $post_id ) // is needed for get_post_meta compatibility.
 			|| ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 		) return;
-			
-		/* 
-			NOTE: There is no current_user_can( 'edit_post' ) check here, because as far as I 
-			can tell, in /wp-admin/post.php the calls edit_post(), write_post(), post_preview(), 
-			wp_untrash_post(), etc., the check is already done prior to the 'save_post' action, 
-			which is where this function is called. Other calls are from other pages so the 
-			NONCE covers those cases, and that leaves autosave, which is also checked here. 
+
+		/*
+			NOTE: There is no current_user_can( 'edit_post' ) check here, because as far as I
+			can tell, in /wp-admin/post.php the calls edit_post(), write_post(), post_preview(),
+			wp_untrash_post(), etc., the check is already done prior to the 'save_post' action,
+			which is where this function is called. Other calls are from other pages so the
+			NONCE covers those cases, and that leaves autosave, which is also checked here.
 		*/
-		
+
 		$SnS = get_post_meta( $post_id, '_SnS', true );
 		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 		$styles  = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
-		
+
 		$scripts = self::maybe_set( $scripts, 'scripts_in_head' );
 		$scripts = self::maybe_set( $scripts, 'scripts' );
 		$scripts = self::maybe_set( $scripts, 'enqueue_scripts' );
 		$styles  = self::maybe_set( $styles, 'styles' );
 		$styles  = self::maybe_set( $styles, 'classes_body' );
 		$styles  = self::maybe_set( $styles, 'classes_post' );
-		
+
 		$shortcodes = array();
 		$SnS_shortcodes = isset( $_REQUEST[ 'SnS_shortcodes' ] ) ? $_REQUEST[ 'SnS_shortcodes' ]: array();
-		
+
 		$existing_shortcodes = isset( $SnS_shortcodes[ 'existing' ] ) ? $SnS_shortcodes[ 'existing' ]: array();
 		foreach ( $existing_shortcodes as $key => $value )
 			if ( ! empty( $value ) )
 				$shortcodes[ $key ] = $value;
-		
+
 		$new_shortcode = isset( $SnS_shortcodes[ 'new' ] ) ? $SnS_shortcodes[ 'new' ]: array();
 		if ( ! empty( $new_shortcode[ 'value' ] ) ) {
-			
+
 			$key = ( isset( $new_shortcode[ 'name' ] ) ) ? $new_shortcode[ 'name' ] : '';
-			
+
 			if ( '' == $key ) {
 				$key = count( $shortcodes );
 				while ( isset( $shortcodes[ $key ] ) )
 					$key++;
 			}
-			
+
 			if ( isset( $shortcodes[ $key ] ) ) {
 				$countr = 1;
 				while ( isset( $shortcodes[ $key . '_' . $countr ] ) )
 					$countr++;
 				$key .= '_' . $countr;
-			} 
-			
+			}
+
 			$shortcodes[ $key ] = $new_shortcode[ 'value' ];
-			
+
 		}
-		
+
 		// This one isn't posted, it's ajax only. Cleanup anyway.
 		if ( isset( $styles[ 'classes_mce' ] ) && empty( $styles[ 'classes_mce' ] ) )
 			unset( $styles[ 'classes_mce' ] );
-		
+
 		if ( empty( $scripts ) ) {
 			if ( isset( $SnS['scripts'] ) )
 				unset( $SnS['scripts'] );
 		} else {
 			$SnS['scripts'] = $scripts;
 		}
-		
+
 		if ( empty( $styles ) ) {
 			if ( isset( $SnS['styles'] ) )
 				unset( $SnS['styles'] );
 		} else {
 			$SnS['styles'] = $styles;
 		}
-		
+
 		if ( empty( $shortcodes ) ) {
 			if ( isset( $SnS['shortcodes'] ) )
 				unset( $SnS['shortcodes'] );
 		} else {
 			$SnS['shortcodes'] = $shortcodes;
 		}
-		
+
 		if ( empty( $SnS ) )
 			delete_post_meta( $post_id, '_SnS' );
 		else
 			update_post_meta( $post_id, '_SnS', $SnS );
 	}
-	
+
 	/**
 	 * maybe_set()
 	 * Filters $o and Checks if the sent data $i is empty (intended to clear). If not, updates.

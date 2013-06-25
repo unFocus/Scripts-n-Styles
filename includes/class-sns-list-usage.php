@@ -2,11 +2,11 @@
 if ( ! class_exists( 'WP_List_Table' ) ) require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 
 class SnS_List_Usage extends WP_List_Table {
-	
+
 	function ajax_user_can() {
 		return current_user_can( 'unfiltered_html' ) && current_user_can( 'manage_options' );
 	}
-	
+
 	function column_default( $post, $column_name ) {
 		$return = '';
 		switch( $column_name ){
@@ -44,15 +44,15 @@ class SnS_List_Usage extends WP_List_Table {
 				return print_r( $post, true );
 		}
 	}
-	
+
 	function column_title( $post ) {
 		$edit_link = esc_url( get_edit_post_link( $post->ID ) );
 		$edit_title = esc_attr( sprintf( __( 'Edit &#8220;%s&#8221;' ), $post->post_title ) );
-		
+
 		$actions = array(
 			'edit'      => sprintf( '<a title="%s" href="%s">%s</a>', $edit_title, $edit_link, __( 'Edit' ) ),
 		);
-		
+
 		$return = '<strong>';
 		if ( $this->ajax_user_can() && $post->post_status != 'trash' ) {
 			$return .= '<a class="row-title"';
@@ -66,10 +66,10 @@ class SnS_List_Usage extends WP_List_Table {
 		$this->_post_states( $post );
 		$return .= '</strong>';
 		$return .= $this->row_actions( $actions );
-		
+
 		return $return;
 	}
-	
+
 	function get_columns() {
 		$columns = array(
 			'title'			=> __( 'Title' ),
@@ -79,20 +79,20 @@ class SnS_List_Usage extends WP_List_Table {
 			'script_data'	=> __( 'Script Data', 'scripts-n-styles' ),
 			'style_data'	=> __( 'Style Data', 'scripts-n-styles' )
 		);
-		
+
 		return $columns;
 	}
-	
+
 	function prepare_items() {
 		$screen_id = get_current_screen()->id;
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$screen_id}_per_page" ) );
-		
+
         $this->_column_headers = array(
 			$this->get_columns(),
 			array(),
 			$this->get_sortable_columns()
 		);
-		
+
 		/**
 		 * Get Relavent Posts.
 		 */
@@ -104,23 +104,23 @@ class SnS_List_Usage extends WP_List_Table {
 			'order' => 'ASC',
 			'meta_key' => '_SnS'
 		) );
-		
+
 		$items = $this->_add_meta_data( $posts );
-		
+
 		$total_items = count( $items );
-		
+
 		/**
-		 * Reduce items to current page's posts. 
+		 * Reduce items to current page's posts.
 		 */
 		$this->items = array_slice(
 			$items,
 			( ( $this->get_pagenum() - 1 ) * $per_page ),
 			$per_page
 		);
-		
+
 		$this->set_pagination_args( compact( 'total_items', 'per_page' ) );
 	}
-	
+
 	function _post_states( $post ) {
 		$post_states = array();
 		$return = '';
@@ -128,7 +128,7 @@ class SnS_List_Usage extends WP_List_Table {
 			$post_status = $_GET[ 'post_status' ];
 		else
 			$post_status = '';
-	
+
 		if ( ! empty( $post->post_password ) )
 			$post_states[ 'protected' ] = __( 'Password protected' );
 		if ( 'private' == $post->post_status && 'private' != $post_status )
@@ -140,9 +140,9 @@ class SnS_List_Usage extends WP_List_Table {
 			$post_states[ 'pending' ] = _x( 'Pending', 'post state' );
 		if ( is_sticky($post->ID) )
 			$post_states[ 'sticky' ] = __( 'Sticky' );
-	
+
 		$post_states = apply_filters( 'display_post_states', $post_states );
-	
+
 		if ( ! empty( $post_states ) ) {
 			$state_count = count( $post_states );
 			$i = 0;
@@ -153,21 +153,21 @@ class SnS_List_Usage extends WP_List_Table {
 				$return .= "<span class='post-state'>$state$sep</span>";
 			}
 		}
-	
+
 		if ( get_post_format( $post->ID ) )
 			$return .= ' - <span class="post-state-format">' . get_post_format_string( get_post_format( $post->ID ) ) . '</span>';
-		
+
 		return $return;
 	}
-	
+
 	function _add_meta_data( $posts ) {
 		foreach( $posts as $post) {
 			$SnS = get_post_meta( $post->ID, '_SnS', true );
 			$styles = isset( $SnS[ 'styles' ] ) ? $SnS[ 'styles' ]: array();
 			$scripts = isset( $SnS[ 'scripts' ] ) ? $SnS[ 'scripts' ]: array();
-			if ( ! empty( $styles ) ) 
+			if ( ! empty( $styles ) )
 				$post->sns_styles = $styles;
-			if ( ! empty( $scripts ) ) 
+			if ( ! empty( $scripts ) )
 				$post->sns_scripts = $scripts;
 		}
 		return $posts;
