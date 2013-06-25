@@ -1,12 +1,12 @@
 <?php
 /**
  * SnS_Global_Page
- * 
+ *
  * Allows WordPress admin users the ability to add custom CSS
  * and JavaScript directly to individual Post, Pages or custom
  * post types.
  */
-		
+
 class SnS_Form
 {
 	/**
@@ -17,8 +17,9 @@ class SnS_Form
 		extract( $args );
 		$options = get_option( $setting );
 		$value =  isset( $options[ $label_for ] ) ? $options[ $label_for ] : '';
-		if ( isset( $wrap_class ) ) echo '<div class="'. $wrap_class . '"';
-		$output = '<textarea';
+		$output = '';
+		if ( isset( $wrap_class ) ) $output .= '<div class="'. $wrap_class . '">';
+		$output .= '<textarea';
 		$output .= ( $style ) ? ' style="' . $style . '"': '';
 		$output .= ( $class ) ? ' class="' . $class . '"': '';
 		$output .= ( $rows ) ? ' rows="' . $rows . '"': '';
@@ -26,13 +27,13 @@ class SnS_Form
 		$output .= ' name="' . $setting . '[' . $label_for . ']"';
 		$output .= ' id="' . $label_for . '">';
 		$output .= esc_textarea( $value ) . '</textarea>';
-		if ( isset( $wrap_class ) ) echo '</div>';
+		if ( isset( $wrap_class ) ) $output .= '</div>';
 		if ( $description ) {
 			$output .= $description;
 		}
 		echo $output;
 	}
-	
+
 	static function radio( $args ) {
 		extract( $args );
 		$options = get_option( $setting );
@@ -59,7 +60,7 @@ class SnS_Form
 		}
 		echo $output;
 	}
-	
+
 	/**
 	 * Settings Page
 	 * Outputs a select element for selecting options to set scripts for including.
@@ -68,7 +69,7 @@ class SnS_Form
 		extract( $args );
 		$options = get_option( $setting );
 		$selected = isset( $options[ $label_for ] ) ? $options[ $label_for ] : array();
-		
+
 		$output = '<select';
 		$output .= ' id="' . $label_for . '"';
 		$output .= ' name="' . $setting . '[' . $label_for . ']';
@@ -95,31 +96,31 @@ class SnS_Form
 		}
 		echo $output;
 	}
-	
+
 	/**
 	 * Settings Page
 	 * Outputs the Admin Page and calls the Settings registered with the Settings API.
 	 */
 	static function take_action() {
 		global $action, $option_page, $page, $new_whitelist_options;
-		
+
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) || ( is_multisite() && ! is_super_admin() ) )
 			wp_die( __( 'Cheatin&#8217; uh?' ) );
-		
+
 		// Handle menu-redirected update message.
 		if ( isset( $_REQUEST[ 'message' ] ) && $_REQUEST[ 'message' ] )
 			add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
-		
+
 		if ( ! isset( $_REQUEST[ 'action' ], $_REQUEST[ 'option_page' ], $_REQUEST[ 'page' ] ) )
 			return;
-		
+
 		wp_reset_vars( array( 'action', 'option_page', 'page' ) );
-		
+
 		check_admin_referer(  $option_page  . '-options' );
-		
+
 		if ( ! isset( $new_whitelist_options[ $option_page ] ) )
 			return;
-		
+
 		$options = $new_whitelist_options[ $option_page ];
 		foreach ( (array) $options as $option ) {
 			$old = get_option( $option );
@@ -129,18 +130,18 @@ class SnS_Form
 				$value = $_POST[ $option ];
 			if ( !is_array( $value ) )
 				$value = trim( $value );
-			
+
 			$value = array_merge( $old, stripslashes_deep( $value ) );
-			
+
 			// Allow modification of $value
 			$value = apply_filters( 'sns_options_pre_update_option', $value, $page, $action );
-			
+
 			update_option( $option, $value );
 		}
-		
+
 		if ( ! count( get_settings_errors() ) )
 			add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
-		
+
 		if ( isset( $_REQUEST[ 'ajaxsubmit' ] ) && $_REQUEST[ 'ajaxsubmit' ] ) {
 			ob_start();
 			settings_errors( $page );
@@ -148,7 +149,7 @@ class SnS_Form
 			ob_end_clean();
 			exit( $output );
 		}
-		
+
 		// Redirect to new page if changed.
 		if ( isset( $_POST[ $option ][ 'menu_position' ] ) && ( $value[ 'menu_position' ] != SnS_Admin::$parent_slug ) ) {
 			switch( $value[ 'menu_position' ] ) {
