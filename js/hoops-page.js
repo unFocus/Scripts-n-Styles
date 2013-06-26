@@ -6,7 +6,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	  , theme = _SnS_options.theme ? _SnS_options.theme: 'default'
 	  , $form
 	  , config;
-	
+
 	config = {
 		mode: "text/html",
 		theme: theme,
@@ -17,11 +17,11 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		enterMode: "keep",
 		matchBrackets: true
 	};
-	
+
 	CodeMirror.commands.save = function() {
 		$form.submit();
-	}; 
-	
+	};
+
 	// Each "IDE"
 	$( ".sns-less-ide", context ).each( function() {
 		var $text = $('.code',this);
@@ -35,7 +35,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 			ide.cm.toTextArea();
 		collection.push( ide );
 	});
-	
+
 	// Collapsable
 	$( context ).on( "click", '.sns-collapsed-btn, .sns-collapsed-btn + label', function( event ){
 		var $this = $( this )
@@ -60,12 +60,12 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	$form = $( context ).closest( 'form' );
 	$form.submit( function( event ){
 		event.preventDefault();
-		$.ajax({  
-			type: "POST",  
-			url: window.location,  
+		$.ajax({
+			type: "POST",
+			url: window.location,
 			data: $(this).serialize()+'&ajaxsubmit=1',
 			cache: false,
-			success: saved 
+			success: saved
 		});
 	});
 	// Save
@@ -79,20 +79,20 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		$(data).insertAfter( '#icon-sns + h2' ).delay(3000).fadeOut();
 		$( '.sns-ajax-loading' ).hide();
 	}
-	
+
 	 * Expects return data.
 	$('#sns-ajax-add-shortcode').click(function( event ){
 		event.preventDefault();
 		$(this).next().show();
 		$(collection).each(function (){ this.save(); });
-		
+
 		var args = { _ajax_nonce: nonce };
-		
+
 		args.action = 'sns_hoops';
 		args.subaction = 'add';
 		args.name = $( '#SnS_shortcodes' ).val();
 		args.shortcode = $( '#SnS_shortcodes_new' ).val();
-		
+
 		$.post( ajaxurl, args, function( data ) { refreshShortcodes( data ); } );
 	});
 	$('#SnS_shortcodes').keypress(function( event ) {

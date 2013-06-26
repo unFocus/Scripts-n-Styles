@@ -7,20 +7,20 @@ jQuery( document ).ready( function( $ ) {
 	var $new = $( '#newcontent' );
 	var $submitWrap = $( '#submit' ).parent();
 	var modHeight = $submitWrap.height()
-		+ parseInt( $submitWrap.css( 'marginTop' ) ) 
-		+ parseInt( $submitWrap.css( 'marginBottom' ) ) 
-		+ parseInt( $submitWrap.css( 'paddingTop' ) ) 
+		+ parseInt( $submitWrap.css( 'marginTop' ) )
+		+ parseInt( $submitWrap.css( 'marginBottom' ) )
+		+ parseInt( $submitWrap.css( 'paddingTop' ) )
 		+ parseInt( $submitWrap.css( 'paddingBottom' ) );
-	
+
 	var $documentation = $( '#documentation:visible' );
 	if ( $documentation.length ) {
 		modHeight += $documentation.height() + parseInt( $documentation.css( 'marginTop' ) );
 	}
-	
+
 	var height = $(window).height() - $new.offset().top - $( '#wpadminbar' ).height() - modHeight;
-	
+
 	var config = { lineNumbers: true, mode: "javascript", theme: theme };
-	
+
 	switch ( fileType ) {
 		case "js":
 			config.mode = "javascript";
@@ -45,10 +45,10 @@ jQuery( document ).ready( function( $ ) {
 			config.mode = "markdown";
 		break;
 	}
-	
+
 	CodeMirror.commands.save = function (){ jQuery('#submit').click(); };
-	
+
 	CodeMirror.fromTextArea( $new.get(0), config );
-	
+
 	if ( height < $( '.CodeMirror-scroll ' ).height() ) $( '.CodeMirror-scroll ' ).height( height );
 });

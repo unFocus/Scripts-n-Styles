@@ -12,7 +12,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	  , onChange
 	  , errorMarker, errorText, errorMirror
 	  , config;
-	
+
 	// Prevent keystoke compile buildup
 	onChange = function onChange( cm ){
 		$status.show();
@@ -30,14 +30,14 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		theme: theme,
 		indentWithTabs: true,
 		tabSize: 4,
-		indentUnit: 4, 
+		indentUnit: 4,
 		onChange: onChange
 	};
-	
+
 	CodeMirror.commands.save = function() {
 		$form.submit();
-	}; 
-	
+	};
+
 	// Each "IDE"
 	$( ".sns-less-ide", context ).each( function() {
 		var $text = $('.code',this);
@@ -57,7 +57,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 			ide.cm.toTextArea();
 		collection.push( ide );
 	});
-	
+
 	// Collapsable
 	$( context ).on( "click", '.sns-collapsed-btn, .sns-collapsed-btn + label', function( event ){
 		var $this = $( this )
@@ -93,10 +93,10 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		else
 			compiled.toTextArea();
 	});
-	
+
 	$( '.single-status' ).hide();
 	$( '.sns-ajax-loading' ).hide();
-	
+
 	// Load
 	$( context ).on( "click", ".sns-ajax-load", function( event ){
 		event.preventDefault();
@@ -114,7 +114,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 			.show().delay(3000).fadeOut()
 			.children('.settings-error').text( 'Original Source File Loaded.' );
 	});
-	
+
 	// Save
 	$( context ).on( "click", ".sns-ajax-save", function( event ){
 		event.preventDefault();
@@ -125,7 +125,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		$(data).insertAfter( '#icon-sns + h2' ).delay(3000).fadeOut();
 		$( '.sns-ajax-loading' ).show();
 	}
-	
+
 	// The CSS output side.
 	$css = $( '.css', "#css_area" );
 	if ( preview ) {
@@ -134,21 +134,21 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	$codemirror = $css.next( '.CodeMirror' );
 	$error = $( "#compiled_error" );
 	$status = $( "#compile_status" );
-	
+
 	// Start.
 	compile();
 	loaded = true;
-	
+
 	$form = $( "#less_area" ).closest( 'form' );
 	$form.submit( function( event ){
 		event.preventDefault();
 		compile();
-		$.ajax({  
-			type: "POST",  
-			url: window.location,  
+		$.ajax({
+			type: "POST",
+			url: window.location,
 			data: $(this).serialize()+'&ajaxsubmit=1',
 			cache: false,
-			success: saved 
+			success: saved
 		});
 	});
 	function createCSSEditor() {
@@ -201,7 +201,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 		console.log( err );
 		var pos, token, start, end, errLine, fileName, errMessage;
 		errLine = err.line-1;
-		
+
 		errorMirror = null;
 		$( collection ).each(function( i ){
 			if ( this.startLine <= errLine && errLine < this.endLine ) {
@@ -211,16 +211,16 @@ jQuery( document ).ready( function( $ ) { "use strict"
 				return;
 			}
 		});
-		
+
 		//$codemirror.hide();
-		
+
 		var errMessage = '';
-		
+
 		if ( err.type == 'Parse' )
 			errMessage = " &nbsp; <em>LESS Parse Error</em> <br /> on line " + ( errLine + 1 ) + " of " + fileName + ".</p>";
 		else
 			errMessage = " &nbsp; <em>LESS " + err.type +" Error</em> on line " + ( errLine + 1 ) + " of " + fileName + ". <br />" + err.message + "</p>";
-		
+
 		if ( loaded ) {
 			$error
 				.removeClass( 'error' )
@@ -232,20 +232,20 @@ jQuery( document ).ready( function( $ ) { "use strict"
 				.show()
 				.html( "<p><strong>Error: &nbsp; </strong>" + errMessage + "</p>" );
 		}
-		
+
 		clearCompileError();
-		
+
 		if (!errorMirror) return;
-		
+
 		errorMarker = errorMirror.setMarker( errLine, '<strong>*%N%</strong>', "cm-error" );
-		
+
 		errorMirror.setLineClass( errorMarker, "cm-error" );
-		
+
 		pos = errorMirror.posFromIndex( err.index + 1 );
 		token = errorMirror.getTokenAt( pos );
 		start = errorMirror.posFromIndex( err.index );
 		end = errorMirror.posFromIndex( err.index + token.string.length );
-		
+
 		errorText = errorMirror.markText( start, end, "cm-error" );
 		if ( preview ) {
 			compiled.setValue( "" );
