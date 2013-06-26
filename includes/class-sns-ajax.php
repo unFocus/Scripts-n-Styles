@@ -312,14 +312,15 @@ class SnS_AJAX
 			) );
 		} else {
 			header('Content-Type: text/html; charset=' . get_option('blog_charset'));
-			?><div class="sns-shortcode widget">
-	<div class="inside">
-		<p>[sns_shortcode name="<?php echo esc_attr( $key ) ?>"]</p>
-		<textarea style="width: 98%;" cols="40" rows="5" name="SnS_shortcodes[existing][<?php echo esc_attr( $key ) ?>]"
-			data-sns-shortcode-key="<?php echo esc_attr( $key ) ?>" class="codemirror-new htmlmixed"><?php echo esc_textarea( stripslashes( $value ) ) ?></textarea>
-		<div class="sns-ajax-wrap"><a href="#" class="sns-ajax-delete-shortcode button">Delete</a> &nbsp; <a href="#" class="sns-ajax-update-shortcode button">Update</a> <span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span></div>
-	</div>
-</div><?php
+			?>
+			<div class="sns-shortcode widget">
+				<div class="inside">
+					<p>[hoops name="<?php echo esc_attr( $key ) ?>"]</p>
+					<textarea style="width: 98%;" cols="40" rows="5" name="SnS_shortcodes[existing][<?php echo esc_attr( $key ) ?>]"
+						data-sns-shortcode-key="<?php echo esc_attr( $key ) ?>" class="codemirror-new htmlmixed"><?php echo esc_textarea( stripslashes( $value ) ) ?></textarea>
+					<div class="sns-ajax-wrap"><a href="#" class="sns-ajax-delete-shortcode button">Delete</a> &nbsp; <a href="#" class="sns-ajax-update-shortcode button">Update</a> <span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span></div>
+				</div>
+			</div><?php
 		}
 		exit();
 	}
