@@ -5,31 +5,35 @@ jQuery( document ).ready( function( $ ) {
 	var theme = _SnS_options.theme ? _SnS_options.theme: 'default';
 	var lessMirror, lessOutput, errorLine, errorText, errors, loaded,
 		coffeeMirror, coffeeOutput, coffee_errorLine, coffee_errorText, coffee_errors, coffee_loaded,
-		lessMirrorConfig = { lineNumbers: true, mode: "text/x-less", theme: theme, indentWithTabs: true, onChange: compile },
-		coffeeMirrorConfig = { lineNumbers: true, mode: "text/x-coffeescript", theme: theme, onChange: coffee_compile };
-	
+		lessMirrorConfig = { gutters: ["note-gutter", "CodeMirror-linenumbers"],
+			lineNumbers: true, mode: "text/x-less", theme: theme, indentWithTabs: true },
+		coffeeMirrorConfig = { lineNumbers: true, mode: "text/x-coffeescript", theme: theme };
+
+	var parser = new( less.Parser )({});
 	$("#enqueue_scripts").data( 'placeholder', 'Enqueue Registered Scripts...' ).width(350).chosen();
 	$(".chzn-container-multi .chzn-choices .search-field input").height('26px');
 	$(".chzn-container .chzn-results").css( 'max-height', '176px');
-	
+
 	//CodeMirror.commands.save = saveLessMirror;
-	
+
 	$( "textarea.js" ).not( '#coffee_compiled' ).each( function() {
 		CodeMirror.fromTextArea( this, { lineNumbers: true, mode: "javascript", theme: theme } );
 	});
-	
+
 	$( "textarea.css" ).not( '#compiled' ).each( function() {
 		CodeMirror.fromTextArea( this, { lineNumbers: true, mode: "css", theme: theme } );
 	});
-	
+
 	lessOutput = CodeMirror.fromTextArea( $( '#compiled' ).get(0), { lineNumbers: true, mode: "css", theme: theme, readOnly: true } );
 	coffeeOutput = CodeMirror.fromTextArea( $( '#coffee_compiled' ).get(0), { lineNumbers: true, mode: "javascript", theme: theme, readOnly: true } );
-	
+
 	$( "textarea.less" ).each( function() {
 		lessMirror = CodeMirror.fromTextArea( this, lessMirrorConfig );
+		lessMirror.on( "change", compile );
 	});
 	$( "textarea.coffee" ).each( function() {
 		coffeeMirror = CodeMirror.fromTextArea( this, coffeeMirrorConfig );
+		coffeeMirror.on( "change", coffee_compile );
 	});
 	$('#coffee').parent().append('<label><input type="checkbox" id="coffee_spacing"> Double Spaced</label>');
 	$('#coffee_spacing').change( coffee_compile );
@@ -39,13 +43,13 @@ jQuery( document ).ready( function( $ ) {
 	coffee_loaded = true;
 	$( "#less" ).closest('form').submit( compile );
 	$( "#coffee" ).closest('form').submit( coffee_compile );
-	
+
 	//function saveLessMirror(){
 		// Ajax Save.
 	//}
+
 	function compile() {
 		lessMirror.save();
-		var parser = new( less.Parser );
 		parser.parse( lessMirror.getValue(), function ( err, tree ) {
 			if ( err  ){
 				doError( err );
@@ -77,10 +81,11 @@ jQuery( document ).ready( function( $ ) {
 				coffeeOutput.setValue( trimmed );
 			}
 			coffeeOutput.save();
-			
+
 			$( '#coffee_compiled' ).next( '.CodeMirror' ).show();
 		}
 		catch ( err ) {
+			console.dir( err );
 			$( '#coffee_compiled' ).next( '.CodeMirror' ).hide();
 			if ( coffee_loaded ) {
 				$( '#coffee_compiled_error' ).removeClass( 'error' ).addClass( 'updated' );
@@ -100,23 +105,23 @@ jQuery( document ).ready( function( $ ) {
 			$( '#compiled_error' ).show().html( "<p><strong>Error: &nbsp; </strong>" + err.message + "</p>" );
 		}
 		clearCompileError();
-		
-		errorLine = lessMirror.setMarker( err.line - 1, '<strong>*%N%</strong>', "cm-error");
-		lessMirror.setLineClass( errorLine, "cm-error");
-		
+
+		errorLine = lessMirror.setGutterMarker( err.line - 1, 'note-gutter', document.createTextNode("*"), "cm-error");
+		//lessMirror.setLineClass( errorLine, "cm-error");
+
 		var pos = lessMirror.posFromIndex( err.index + 1 );
 		var token = lessMirror.getTokenAt( pos );
 		var start = lessMirror.posFromIndex( err.index );
 		var end = lessMirror.posFromIndex( err.index + token.string.length )
-		errorText = lessMirror.markText( start, end, "cm-error");
-		
+		errorText = lessMirror.markText( start, end, { className: "cm-error" } );
+
 		lessOutput.setValue( "" );
 		lessOutput.save();
 	}
 	function clearCompileError() {
 		if ( errorLine ) {
-			lessMirror.clearMarker( errorLine );
-			lessMirror.setLineClass( errorLine, null );
+			lessMirror.clearGutter( 'note-gutter' );
+			//lessMirror.setLineClass( errorLine, null );
 			errorLine = false;
 		}
 		if ( errorText ) errorText.clear();
