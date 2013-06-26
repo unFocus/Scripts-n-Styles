@@ -1,12 +1,12 @@
 <?php
 /**
  * SnS_Global_Page
- * 
+ *
  * Allows WordPress admin users the ability to add custom CSS
  * and JavaScript directly to individual Post, Pages or custom
  * post types.
  */
-		
+
 class SnS_Global_Page
 {
 	/**
@@ -16,23 +16,22 @@ class SnS_Global_Page
 	static function init() {
 		if ( SnS_Admin::$parent_slug == SnS_Admin::MENU_SLUG ) $menu_title = __( 'Global', 'scripts-n-styles' );
 		else $menu_title = __( 'Scripts n Styles', 'scripts-n-styles' );
-		
+
 		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), $menu_title, 'unfiltered_html', SnS_Admin::MENU_SLUG, array( 'SnS_Form', 'page' ) );
-		
+
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Form', 'take_action' ), 49 );
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
 	}
-	
+
 	static function admin_enqueue_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
-		
+
 		wp_enqueue_style( 'chosen' );
 		wp_enqueue_style( 'sns-options' );
-		wp_enqueue_style( 'codemirror-theme' );
-		
+
 		wp_enqueue_script(  'sns-global-page' );
 		wp_localize_script( 'sns-global-page', '_SnS_options', array( 'theme' => $cm_theme ) );
 	}
@@ -41,23 +40,23 @@ class SnS_Global_Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
 	 */
 	static function admin_load() {
-		
+
 		register_setting(
 			SnS_Admin::OPTION_GROUP,
 			'SnS_options' );
-		
+
 		add_settings_section(
 			'global_styles',
 			__( 'Blog Wide CSS Styles', 'scripts-n-styles' ),
 			array( __CLASS__, 'global_styles_section' ),
 			SnS_Admin::MENU_SLUG );
-		
+
 		add_settings_section(
 			'global_scripts',
 			__( 'Blog Wide JavaScript', 'scripts-n-styles' ),
 			array( __CLASS__, 'global_scripts_section' ),
 			SnS_Admin::MENU_SLUG );
-		
+
 		add_settings_field(
 			'less',
 			__( '<strong>LESS:</strong> ', 'scripts-n-styles' ),
@@ -136,7 +135,7 @@ class SnS_Global_Page
 				'show_current' => __( 'Currently Enqueued Scripts: ', 'scripts-n-styles' )
 			) );
 	}
-	
+
 	static function less_fields() {
 		$options = get_option( 'SnS_options' );
 		$less =  isset( $options[ 'less' ] ) ? $options[ 'less' ] : '';
@@ -169,7 +168,7 @@ class SnS_Global_Page
 		</div>
 		<?php
 	}
-	
+
 	/**
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
@@ -181,7 +180,7 @@ class SnS_Global_Page
 		</div>
 		<?php
 	}
-	
+
 	/**
 	 * Settings Page
 	 * Outputs Description text for the Global Section.

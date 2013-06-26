@@ -1,12 +1,12 @@
 <?php
 /**
  * Scripts n Styles Admin Class
- * 
+ *
  * Allows WordPress admin users the ability to add custom CSS
  * and JavaScript directly to individual Post, Pages or custom
  * post types.
  */
- 
+
 require_once( 'class-sns-meta-box.php' );
 require_once( 'class-sns-code-editor.php' );
 require_once( 'class-sns-settings-page.php' );
@@ -24,10 +24,9 @@ class SnS_Admin
 	 */
 	const OPTION_GROUP = 'scripts_n_styles';
 	const MENU_SLUG = 'sns';
-	static $cm_themes = array( 'default', 'ambiance', 'blackboard', 'cobalt', 'eclipse', 'elegant', 'lesser-dark', 'monokai', 'neat', 'night', 'rubyblue', 'xq-dark' );
 	static $parent_slug = '';
 	/**#@-*/
-	
+
 	/**
 	 * Initializing method.
 	 * @static
@@ -36,35 +35,35 @@ class SnS_Admin
 		add_action( 'admin_menu', array( 'SnS_Admin_Meta_Box', 'init' ) );
 		add_action( 'admin_menu', array( 'SnS_Admin_Code_Editor', 'init' ) );
 		add_action( 'network_admin_menu', array( 'SnS_Admin_Code_Editor', 'init' ) );
-		
+
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
-		
+
 		add_action( 'admin_init', array( 'SnS_AJAX', 'init' ) );
 		add_action( 'admin_init', array( __CLASS__, 'load_plugin_textdomain' ) );
-		
-		$plugin_file = plugin_basename( Scripts_n_Styles::$file ); 
+
+		$plugin_file = plugin_basename( Scripts_n_Styles::$file );
 		add_filter( "plugin_action_links_$plugin_file", array( __CLASS__, 'plugin_action_links') );
-		
+
 		register_activation_hook( Scripts_n_Styles::$file, array( __CLASS__, 'upgrade' ) );
 	}
-	
+
 	static function load_plugin_textdomain() {
 		load_plugin_textdomain( 'scripts-n-styles', false, dirname( plugin_basename( Scripts_n_Styles::$file ) ) . '/languages/' );
 	}
 	static function menu() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
-		
+
 		$options = get_option( 'SnS_options' );
 		$menu_spot = isset( $options[ 'menu_position' ] ) ? $options[ 'menu_position' ]: '';
 		$top_spots = array( 'menu', 'object', 'utility' );
 		$sub_spots = array( 'tools.php', 'options-general.php', 'themes.php' );
-		
+
 		if ( in_array( $menu_spot, $top_spots ) ) $parent_slug = SnS_Admin::MENU_SLUG;
 		else if ( in_array( $menu_spot, $sub_spots ) ) $parent_slug = $menu_spot;
 		else $parent_slug = 'tools.php';
-		
+
 		self::$parent_slug = $parent_slug;
-		
+
 		switch( $menu_spot ) {
 			case 'menu':
 				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
@@ -78,12 +77,12 @@ class SnS_Admin
 		}
 		SnS_Global_Page::init();
 		SnS_Hoops_Page::init();
-		if ( current_theme_supports( 'scripts-n-styles' ) ) 
+		if ( current_theme_supports( 'scripts-n-styles' ) )
 			SnS_Theme_Page::init();
 		SnS_Settings_Page::init();
 		SnS_Usage_Page::init();
 	}
-	
+
 	/**
 	 * Nav Tabs
 	 */
@@ -106,7 +105,7 @@ class SnS_Admin
 		</h3>
 		<?php
 	}
-	
+
 	/**
 	 * Settings Page help
 	 */
@@ -131,13 +130,13 @@ class SnS_Admin
 				'content' => $help
 				)
 			);
-			if ( 'post' != $screen->id ) 
+			if ( 'post' != $screen->id )
 				$screen->set_help_sidebar( $sidebar );
 		} else {
 			add_contextual_help( $screen, $help . $sidebar );
 		}
 	}
-	
+
 	/**
 	 * Utility Method: Sets defaults if not previously set. Sets stored 'version' to VERSION.
 	 */
@@ -146,7 +145,7 @@ class SnS_Admin
 		if ( ! $options ) $options = array();
 		$options[ 'version' ] = Scripts_n_Styles::VERSION;
 		update_option( 'SnS_options', $options );
-		
+
 		/*
 		 * upgrade proceedure
 		 */
@@ -164,34 +163,34 @@ class SnS_Admin
 				)
 			)
 		);
-		
+
 		foreach( $posts as $post) {
 			$styles = get_post_meta( $post->ID, '_SnS_styles', true );
 			if ( empty( $styles ) )
 				$styles = get_post_meta( $post->ID, 'uFp_styles', true );
-			
+
 			$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
 			if ( empty( $scripts ) )
 				$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
-			
+
 			$SnS = array();
-			if ( ! empty( $styles ) ) 
+			if ( ! empty( $styles ) )
 				$SnS[ 'styles' ] = $styles;
-			
-			if ( ! empty( $scripts ) ) 
+
+			if ( ! empty( $scripts ) )
 				$SnS[ 'scripts' ] = $scripts;
-			
-			if ( ! empty( $SnS ) ) 
+
+			if ( ! empty( $SnS ) )
 				update_post_meta( $post->ID, '_SnS', $SnS );
-			
+
 			delete_post_meta( $post->ID, 'uFp_styles' );
 			delete_post_meta( $post->ID, 'uFp_scripts' );
 			delete_post_meta( $post->ID, '_SnS_styles' );
 			delete_post_meta( $post->ID, '_SnS_scripts' );
 		}
-	
+
 	}
-	
+
 	/**
 	 * Adds link to the Settings Page in the WordPress "Plugin Action Links" array.
 	 * @param array $actions
@@ -201,7 +200,7 @@ class SnS_Admin
 		$actions[ 'settings' ] = '<a href="' . menu_page_url( SnS_Settings_Page::MENU_SLUG, false ) . '"/>' . __( 'Settings' ) . '</a>';
 		return $actions;
 	}
-	
+
 }
 
 ?>

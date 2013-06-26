@@ -1,31 +1,31 @@
 <?php
 /**
  * SnS_Settings_Page
- * 
+ *
  * Allows WordPress admin users the ability to add custom CSS
  * and JavaScript directly to individual Post, Pages or custom
  * post types.
  */
-		
+
 class SnS_Settings_Page
 {
 	/**
 	 * Constants
 	 */
 	const MENU_SLUG = 'sns_settings';
-	
+
 	/**
 	 * Initializing method.
 	 * @static
 	 */
 	static function init() {
 		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Settings' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
-		
+
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
 		add_action( "load-$hook_suffix", array( 'SnS_Form', 'take_action' ), 49 );
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
-		
+
 		// Make the page into a tab.
 		if ( SnS_Admin::MENU_SLUG != SnS_Admin::$parent_slug ) {
 			remove_submenu_page( SnS_Admin::$parent_slug, self::MENU_SLUG );
@@ -37,36 +37,34 @@ class SnS_Settings_Page
 		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = SnS_Admin::MENU_SLUG;
 		return $parent_file;
 	}
-	
+
 	static function admin_enqueue_scripts() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : '';
+
 		wp_enqueue_style( 'sns-options' );
-		
-		foreach ( SnS_Admin::$cm_themes as $theme )
-			wp_enqueue_style( "codemirror-$theme" );
-		
+
 		wp_enqueue_script(  'sns-settings-page' );
 		wp_localize_script( 'sns-settings-page', 'codemirror_options', array( 'theme' => $cm_theme ) );
 	}
-	
+
 	/**
 	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
 	 */
 	static function admin_load() {
 		wp_enqueue_style( 'sns-options' );
-		
+
 		register_setting(
 			SnS_Admin::OPTION_GROUP,
 			'SnS_options' );
-		
+
 		add_settings_section(
 			'settings',
 			__( 'Scripts n Styles Settings', 'scripts-n-styles' ),
 			array( __CLASS__, 'settings_section' ),
 			SnS_Admin::MENU_SLUG );
-		
+
 		add_settings_field(
 			'metabox',
 			__( '<strong>Hide Metabox by default</strong>: ', 'scripts-n-styles' ),
@@ -82,7 +80,7 @@ class SnS_Settings_Page
 				'legend' => __( 'Hide Metabox by default', 'scripts-n-styles' ),
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">This is overridable via Screen Options on each edit screen.</span>', 'scripts-n-styles' )
 			) );
-		
+
 		add_settings_field(
 			'menu_position',
 			__( '<strong>Menu Position</strong>: ', 'scripts-n-styles' ),
@@ -98,13 +96,13 @@ class SnS_Settings_Page
 				'layout' => 'vertical',
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">Some people are fussy about where the menu goes, so I made an option.</span>', 'scripts-n-styles' ),
 			) );
-		
+
 		add_settings_section(
 			'demo',
 			__( 'Code Mirror Demo', 'scripts-n-styles' ),
 			array( __CLASS__, 'demo_section' ),
 			SnS_Admin::MENU_SLUG );
-		
+
 		add_settings_field(
 			'cm_theme',
 			__( '<strong>Theme</strong>: ', 'scripts-n-styles' ),
@@ -114,7 +112,7 @@ class SnS_Settings_Page
 			array(
 				'label_for' => 'cm_theme',
 				'setting' => 'SnS_options',
-				'choices' => SnS_Admin::$cm_themes,
+				'choices' => Scripts_n_Styles::$cm_themes,
 				'default' => 'default',
 				'legend' => __( 'Theme', 'scripts-n-styles' ),
 				'layout' => 'horizontal',
@@ -136,7 +134,7 @@ class SnS_Settings_Page
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">This enables Hoops shortcodes to be used via a "Hoops" Text Widget.</span>', 'scripts-n-styles' )
 			) );
 	}
-	
+
 	/**
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
@@ -148,7 +146,7 @@ class SnS_Settings_Page
 		</div>
 		<?php
 	}
-	
+
 	/**
 	 * Settings Page
 	 * Outputs Description text for the Global Section.
