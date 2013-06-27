@@ -257,53 +257,28 @@ class Scripts_n_Styles
 	}
 	static function register() {
 		$dir = plugins_url( '/', __FILE__);
+
+		wp_register_script( 'less.js', $dir . 'vendor/less.js', array(), '1.4.0-min' );
+		wp_register_script( 'coffeescript', $dir . 'vendor/coffee-script.js', array(), '1.6.3-min' );
+		wp_register_script( 'chosen', $dir . 'vendor/chosen/chosen.jquery.min.js', array( 'jquery' ), '0.10.0', true );
+		wp_register_style(  'chosen', $dir . 'vendor/chosen/chosen.min.css', array(), '0.10.0' );
+
+		wp_register_script( 'google-diff-match-patch', $dir . 'vendor/codemirror/diff_match_patch.js', array() );
+		wp_register_script( 'codemirror', $dir . 'vendor/codemirror/codemirror-compressed.js', array( 'google-diff-match-patch' ), '3.14' );
+		wp_register_style(  'codemirror', $dir . 'vendor/codemirror/codemirror-compressed.css', array(), '3.14' );
+
 		$js = $dir . 'js/';
+		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
+		wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror', 'less.js', ), self::VERSION, true );
+		wp_register_script( 'sns-hoops-page', $js . 'hoops-page.js', array( 'jquery', 'codemirror' ), self::VERSION, true );
+		wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'codemirror' ), self::VERSION, true );
+		wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'codemirror', 'chosen' ), self::VERSION, true );
+		wp_register_script( 'sns-code-editor',  $js . 'code-editor.js',  array( 'editor', 'jquery-ui-tabs', 'codemirror' ), self::VERSION, true );
+
 		$css = $dir . 'css/';
-		$cm_version = '3.14';
-		$chosen_version = '0.10.0';
-		$cm_dir = $dir . 'vendor/codemirror/';
-		$less_dir = $dir . 'vendor/';
-		$coffee_dir = $dir . 'vendor/';
-		$chosen_dir = $dir . 'vendor/chosen/';
-		//$localize = array( 'theme' => $cm_theme );
-		$options = get_option( 'SnS_options' );
-		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
-
-		wp_register_script( 'less.js', $less_dir . 'less.dev.js', array(), '1.4.0-min' );
-		wp_register_script( 'coffeescript', $coffee_dir . 'coffee-script.js', array(), '1.6.3-min' );
-		wp_register_script( 'chosen', $chosen_dir . 'chosen.jquery.min.js', array( 'jquery' ), $chosen_version, true );
-		wp_register_style(  'chosen', $chosen_dir . 'chosen.min.css', array(), $chosen_version );
-
-		wp_register_script( 'codemirror',              $cm_dir . 'lib/codemirror.js',                 array(), $cm_version );
-		wp_register_script( 'codemirror-css',          $cm_dir . 'mode/css/css.js',                   array( 'codemirror' ), $cm_version );
-		wp_register_script( 'codemirror-coffeescript', $cm_dir . 'mode/coffeescript/coffeescript.js', array( 'codemirror' ), $cm_version );
-		wp_register_script( 'codemirror-less',         $cm_dir . 'mode/less/less.js',                 array( 'codemirror' ), $cm_version );
-		wp_register_script( 'codemirror-javascript',   $cm_dir . 'mode/javascript/javascript.js',     array( 'codemirror' ), $cm_version );
-		wp_register_script( 'codemirror-xml',          $cm_dir . 'mode/xml/xml.js',                   array( 'codemirror' ), $cm_version );
-		wp_register_script( 'codemirror-clike',        $cm_dir . 'mode/clike/clike.js',               array( 'codemirror' ), $cm_version );
-		wp_register_script( 'codemirror-markdown',     $cm_dir . 'mode/markdown/markdown.js',         array( 'codemirror-xml' ), $cm_version );
-		wp_register_script( 'codemirror-gfm',          $cm_dir . 'mode/gfm/gfm.js',                   array( 'codemirror-php', 'codemirror-htmlmixed' ), $cm_version );
-		wp_register_script( 'codemirror-htmlmixed',    $cm_dir . 'mode/htmlmixed/htmlmixed.js',       array( 'codemirror-xml', 'codemirror-css', 'codemirror-javascript' ), $cm_version );
-		wp_register_script( 'codemirror-php',          $cm_dir . 'mode/php/php.js',                   array( 'codemirror-htmlmixed', 'codemirror-clike' ), $cm_version );
-
-		wp_register_style(  'codemirror-default',    $cm_dir . 'lib/codemirror.css', array(), $cm_version );
-		foreach ( self::$cm_themes as $theme ) if ( 'default' !== $theme )
-			wp_register_style( "codemirror-$theme",  $cm_dir . "theme/$theme.css",   array( 'codemirror-default' ), $cm_version );
-
-		if ( 'default' == $cm_theme )
-			wp_register_style( 'codemirror-theme', $cm_dir . 'lib/codemirror.css',  array(), $cm_version );
-		else
-			wp_register_style( 'codemirror-theme', $cm_dir . "theme/$cm_theme.css", array( 'codemirror-default' ), $cm_version );
-
-		wp_register_style(  'sns-options', $css . 'options-styles.css', array_map( create_function('$a', 'return "codemirror-" . $a;'), self::$cm_themes ), self::VERSION );
-		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror-less', 'codemirror-coffeescript', 'codemirror-css', 'codemirror-javascript', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
-		wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror-css', 'codemirror-less', 'less.js', ), self::VERSION, true );
-		wp_register_script( 'sns-hoops-page', $js . 'hoops-page.js', array( 'jquery', 'codemirror-htmlmixed' ), self::VERSION, true );
-		wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'codemirror-php' ), self::VERSION, true );
-		wp_register_style(  'sns-meta-box', $css . 'meta-box.css', array( 'codemirror-theme' ), self::VERSION );
-		wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'codemirror-less', 'codemirror-htmlmixed', 'chosen' ), self::VERSION, true );
-		wp_register_style(  'sns-code-editor', $css . 'code-editor.css', array( 'codemirror-theme' ), self::VERSION );
-		wp_register_script( 'sns-code-editor',  $js . 'code-editor.js',  array( 'editor', 'jquery-ui-tabs', 'codemirror-less', 'codemirror-coffeescript', 'codemirror-htmlmixed', 'codemirror-php', 'codemirror-markdown' ), self::VERSION, true );
+		wp_register_style(  'sns-options', $css . 'options-styles.css', array( 'codemirror' ), self::VERSION );
+		wp_register_style(  'sns-meta-box', $css . 'meta-box.css', array( 'codemirror' ), self::VERSION );
+		wp_register_style(  'sns-code-editor', $css . 'code-editor.css', array( 'codemirror' ), self::VERSION );
 	}
 
 	/**
