@@ -3,8 +3,8 @@ _notes/
 _notes/dwsync.xml
 *.LCK
 .DS_Store
-vendor/mustache.php*
-vendor/mustache.js*
-vendor/codemirror/addon/*
-vendor/codemirror/keymap/*
-theme/*
+/vendor/mustache.php*
+/vendor/mustache.js*
+/vendor/codemirror/addon/*
+/vendor/codemirror/keymap/*
+/theme/*
