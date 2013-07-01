@@ -194,35 +194,37 @@ class Scripts_n_Styles
 			'utils', 'common', 'sack', 'quicktags', 'colorpicker', 'editor', 'wp-fullscreen', 'wp-ajax-response', 'wp-pointer', 'autosave', 
 			'heartbeat', 'wp-auth-check', 'wp-lists', 'prototype', 'scriptaculous-root', 'scriptaculous-builder', 'scriptaculous-dragdrop', 
 			'scriptaculous-effects', 'scriptaculous-slider', 'scriptaculous-sound', 'scriptaculous-controls', 'scriptaculous', 'cropper', 
-			'jquery', 'jquery-core', 'jquery-migrate', 'jquery-ui-core', 'jquery-effects-core', 'jquery-effects-blind', 
-			'jquery-effects-bounce', 'jquery-effects-clip', 'jquery-effects-drop', 'jquery-effects-explode', 'jquery-effects-fade', 
-			'jquery-effects-fold', 'jquery-effects-highlight', 'jquery-effects-pulsate', 'jquery-effects-scale', 'jquery-effects-shake', 
-			'jquery-effects-slide', 'jquery-effects-transfer', 'jquery-ui-accordion', 'jquery-ui-autocomplete', 'jquery-ui-button', 
-			'jquery-ui-datepicker', 'jquery-ui-dialog', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-menu', 'jquery-ui-mouse', 
-			'jquery-ui-position', 'jquery-ui-progressbar', 'jquery-ui-resizable', 'jquery-ui-selectable', 'jquery-ui-slider', 
-			'jquery-ui-sortable', 'jquery-ui-spinner', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'jquery-ui-widget', 'jquery-form', 
-			'jquery-color', 'suggest', 'schedule', 'jquery-query', 'jquery-serialize-object', 'jquery-hotkeys', 'jquery-table-hotkeys', 
-			'jquery-touch-punch', 'jquery-masonry', 'thickbox', 'jcrop', 'swfobject', 'plupload', 'plupload-html5', 'plupload-flash', 
-			'plupload-silverlight', 'plupload-html4', 'plupload-all', 'plupload-handlers', 'wp-plupload', 'swfupload', 'swfupload-swfobject', 
-			'swfupload-queue', 'swfupload-speed', 'swfupload-all', 'swfupload-handlers', 'comment-reply', 'json2', 'underscore', 'backbone', 
-			'wp-util', 'wp-backbone', 'revisions', 'imgareaselect', 'mediaelement', 'wp-mediaelement', 'password-strength-meter', 
-			'user-profile', 'user-suggest', 'admin-bar', 'wplink', 'wpdialogs', 'wpdialogs-popup', 'word-count', 'media-upload', 
-			'hoverIntent', 'customize-base', 'customize-loader', 'customize-preview', 'customize-controls', 'accordion', 'shortcode', 
-			'media-models', 'media-views', 'media-editor', 'mce-view', 'less.js', 'coffeescript', 'chosen', 'google-diff-match-patch', 
-			'codemirror'
+			'jquery', 'jquery-core', 'jquery-migrate', 'jquery-ui-core', 'jquery-effects-core', 'jquery-effects-blind', 'jquery-effects-bounce', 
+			'jquery-effects-clip', 'jquery-effects-drop', 'jquery-effects-explode', 'jquery-effects-fade', 'jquery-effects-fold', 
+			'jquery-effects-highlight', 'jquery-effects-pulsate', 'jquery-effects-scale', 'jquery-effects-shake', 'jquery-effects-slide', 
+			'jquery-effects-transfer', 'jquery-ui-accordion', 'jquery-ui-autocomplete', 'jquery-ui-button', 'jquery-ui-datepicker', 
+			'jquery-ui-dialog', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-menu', 'jquery-ui-mouse', 'jquery-ui-position', 
+			'jquery-ui-progressbar', 'jquery-ui-resizable', 'jquery-ui-selectable', 'jquery-ui-slider', 'jquery-ui-sortable', 
+			'jquery-ui-spinner', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'jquery-ui-widget', 'jquery-form', 'jquery-color', 'suggest', 
+			'schedule', 'jquery-query', 'jquery-serialize-object', 'jquery-hotkeys', 'jquery-table-hotkeys', 'jquery-touch-punch', 
+			'jquery-masonry', 'thickbox', 'jcrop', 'swfobject', 'plupload', 'plupload-html5', 'plupload-flash', 'plupload-silverlight', 
+			'plupload-html4', 'plupload-all', 'plupload-handlers', 'wp-plupload', 'swfupload', 'swfupload-swfobject', 'swfupload-queue', 
+			'swfupload-speed', 'swfupload-all', 'swfupload-handlers', 'comment-reply', 'json2', 'underscore', 'backbone', 'wp-util', 
+			'wp-backbone', 'revisions', 'imgareaselect', 'mediaelement', 'wp-mediaelement', 'password-strength-meter', 'user-profile', 
+			'user-suggest', 'admin-bar', 'wplink', 'wpdialogs', 'wpdialogs-popup', 'word-count', 'media-upload', 'hoverIntent', 'customize-base',
+			'customize-loader', 'customize-preview', 'customize-controls', 'accordion', 'shortcode', 'media-models', 'media-views', 
+			'media-editor', 'mce-view', 'less.js', 'coffeescript', 'chosen', 'coffeelint', 'mustache', 'google-diff-match-patch', 'codemirror'
 		);
 	}
 	static function register() {
 		$dir = plugins_url( '/', __FILE__);
 
-		wp_register_script( 'less.js', $dir . 'vendor/less.js', array(), '1.4.0-min' );
-		wp_register_script( 'coffeescript', $dir . 'vendor/coffee-script.js', array(), '1.6.3-min' );
-		wp_register_script( 'chosen', $dir . 'vendor/chosen/chosen.jquery.min.js', array( 'jquery' ), '0.10.0', true );
-		wp_register_style(  'chosen', $dir . 'vendor/chosen/chosen.min.css', array(), '0.10.0' );
+		$vendor = $dir . 'vendor/';
+		wp_register_script( 'less.js', $vendor . 'less.js', array(), '1.4.0-min' );
+		wp_register_script( 'coffeescript', $vendor . 'coffee-script.js', array(), '1.6.3-min' );
+		wp_register_script( 'chosen', $vendor . 'chosen/chosen.jquery.min.js', array( 'jquery' ), '0.10.0', true );
+		wp_register_style(  'chosen', $vendor . 'chosen/chosen.min.css', array(), '0.10.0' );
+		wp_register_script( 'coffeelint', $vendor . 'coffeelint.js', array(), '0.5.6' );
+		wp_register_script( 'mustache', $vendor . 'chosen/jquery.mustache.min.js', array( 'jquery' ), '0.7.2', true );
 
-		wp_register_script( 'google-diff-match-patch', $dir . 'vendor/codemirror/diff_match_patch.js', array() );
-		wp_register_script( 'codemirror', $dir . 'vendor/codemirror/codemirror-compressed.js', array( 'google-diff-match-patch' ), '3.14' );
-		wp_register_style(  'codemirror', $dir . 'vendor/codemirror/codemirror-compressed.css', array(), '3.14' );
+		wp_register_script( 'google-diff-match-patch', $vendor . 'codemirror/diff_match_patch.js', array() );
+		wp_register_script( 'codemirror', $vendor . 'codemirror/codemirror-compressed.js', array( 'google-diff-match-patch' ), '3.14' );
+		wp_register_style(  'codemirror', $vendor . 'codemirror/codemirror-compressed.css', array(), '3.14' );
 
 		$js = $dir . 'js/';
 		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
