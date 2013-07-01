@@ -63,8 +63,6 @@ Text Domain: scripts-n-styles
  * @todo Clean up tiny_mce_before_init in SnS_Admin_Meta_Box.
  */
 
-register_theme_directory( dirname( __FILE__ ) . '/theme/' );
-
 class Scripts_n_Styles
 {
 	/**#@+
@@ -93,6 +91,7 @@ class Scripts_n_Styles
 			include_once( 'includes/class-sns-admin.php' );
 			SnS_Admin::init();
 		}
+		register_theme_directory( dirname( __FILE__ ) . '/theme/' );
 		add_action( 'plugins_loaded', array( __CLASS__, 'upgrade_check' ) );
 
 		add_filter( 'body_class', array( __CLASS__, 'body_classes' ) );
