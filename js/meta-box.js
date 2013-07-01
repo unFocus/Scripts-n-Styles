@@ -13,7 +13,7 @@ jQuery( document ).ready( function( $ ) {
 
 	var mceBodyClass = getMCEBodyClasses();
 
-	$("#SnS_enqueue_scripts").data( 'placeholder', 'Enqueue Registered Scripts...' ).width(350).chosen();
+	$("#SnS_enqueue_scripts").data( 'placeholder', 'Enqueue Registered Scripts...' ).chosen({ width: "356px" });
 	$(".chzn-container-multi .chzn-choices .search-field input").height('26px');
 	$(".chzn-container .chzn-results").css( 'max-height', '176px');
 
