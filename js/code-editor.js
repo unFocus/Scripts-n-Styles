@@ -8,6 +8,7 @@ jQuery( document ).ready( function( $ ) {
 		$wpbody = $( '#wpbody-content' ),
 		$documentation = $( '#documentation' ),
 		$submit = $( 'p.submit' ).first(),
+		$warning = $( '#documentation + p:not(.submit)' ).first(),
 		$templateside = $( '#templateside' ),
 		templateOffset, bottomPadding, docHeight, submitHeight, resizeTimer, fileType, cmheight;
 
@@ -20,6 +21,12 @@ jQuery( document ).ready( function( $ ) {
 			+ parseInt( $documentation.css('padding-bottom') )
 			+ parseInt( $documentation.css('margin-top') )
 			+ parseInt( $documentation.css('margin-bottom') )
+			: 0;
+	warningHeight = ( $warning.length ) ? parseInt( $warning.height() )
+			+ parseInt( $warning.css('padding-top') )
+			+ parseInt( $warning.css('padding-bottom') )
+			+ parseInt( $warning.css('margin-top') )
+			+ parseInt( $warning.css('margin-bottom') )
 			: 0;
 	submitHeight = parseInt( $submit.height() )
 			+ parseInt( $submit.css('padding-top') )
@@ -68,11 +75,11 @@ jQuery( document ).ready( function( $ ) {
     	resizeTimer = setTimeout( cmresizer, 100 );
 	});
 	function cmresizer() {
-		cmheight = Math.max( 300, $(window).height() - ( templateOffset + bottomPadding + docHeight + submitHeight + 40 ) );
+		cmheight = Math.max( 300, $(window).height() - ( templateOffset + bottomPadding + docHeight + warningHeight + submitHeight + 40 ) );
 		if ( cmheight > templateside )
 			cmeditor.setSize( null, cmheight );
 		else
-			cmeditor.setSize( null, $(window).height() - ( templateOffset + docHeight + submitHeight ) );
+			cmeditor.setSize( null, $(window).height() - ( templateOffset + docHeight + warningHeight + submitHeight ) );
 	}
 	cmresizer();
 
