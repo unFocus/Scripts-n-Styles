@@ -1,16 +1,18 @@
-.CodeMirror{border:1px solid #DFDFDF;background-color:white;margin:8px 0;background-clip:padding-box;overflow:hidden;font-family:"Courier New",Courier,monospace;}.style>.CodeMirror:before,.script>.CodeMirror:before,.less>.CodeMirror:before,.coffee>.CodeMirror:before,.style>.CodeMirror:after,.script>.CodeMirror:after,.less>.CodeMirror:after,.coffee>.CodeMirror:after{display:block;padding:.5em;background-color:#f5f5f5;}
-.style>.CodeMirror:before,.script>.CodeMirror:before,.less>.CodeMirror:before,.coffee>.CodeMirror:before{border-bottom:1px solid #dfdfdf;}
-.style>.CodeMirror:after,.script>.CodeMirror:after,.less>.CodeMirror:after,.coffee>.CodeMirror:after{border-top:1px solid #dfdfdf;}
-.style>.CodeMirror:before{content:'<style type="text/css">';}
-.style>.CodeMirror:after{content:'</style>';}
-.script>.CodeMirror:before{content:'<script type="text/javascript">';}
-.script>.CodeMirror:after{content:'</script>';}
-.less>.CodeMirror:before{content:'<style type="text/less">';}
-.less>.CodeMirror:after{content:'</style>';}
-.coffee>.CodeMirror:before,.coffee>.CodeMirror:before{content:'<script type="text/coffeescript">';}
-.coffee>.CodeMirror:after{content:'</script>';}
 #editorcontainer #content{font-family:"Courier New",Courier,monospace;}
-.CodeMirror-scroll{height:auto;min-height:50px;max-height:300px;overflow:auto;}
+.CodeMirror{height:200px;border:1px solid #DFDFDF;}
+.autoheight .CodeMirror{height:auto;}
+.autoheight .CodeMirror-scroll{overflow-x:auto;overflow-y:hidden;}
+.style,.script,.less,.coffee{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;background-color:white;margin:8px 0;background-clip:padding-box;font-family:"Courier New",Courier,monospace;}.style:before,.script:before,.less:before,.coffee:before,.style:after,.script:after,.less:after,.coffee:after{border:1px solid #dfdfdf;position:relative;z-index:3;display:block;padding:.5em;background-color:#f5f5f5;color:#333;font-family:"Courier New",Courier,monospace;line-height:1em;text-shadow:none;}
+.style:before,.script:before,.less:before,.coffee:before{border-bottom:0 none;border-radius:5px 5px 0px 0px;}
+.style:after,.script:after,.less:after,.coffee:after{border-top:0 none;border-radius:0px 0px 5px 5px;}
+.style:before{content:'<style type="text/css">';}
+.style:after{content:'</style>';}
+.script:before{content:'<script type="text/javascript">';}
+.script:after{content:'</script>';}
+.less:before{content:'<style type="text/less">';}
+.less:after{content:'</style>';}
+.coffee:before{content:'<script type="text/coffeescript">';}
+.coffee:after{content:'</script>';}
 .sns-shortcode p{margin:0;}
 .sns-collapsed-shortcode{overflow:hidden;}.sns-collapsed-shortcode .sns-collapsed-shortcode-btn{background-position:1px -107px;}
 .sns-collapsed-shortcode .CodeMirror,.sns-collapsed-shortcode .sns-ajax-wrap{visibility:hidden;position:absolute;}
