@@ -27,6 +27,10 @@ class SnS_Admin_Code_Editor
 		wp_enqueue_style(   'sns-code-editor' );
 		wp_enqueue_script(  'sns-code-editor' );
 		wp_localize_script( 'sns-code-editor', 'codemirror_options', array( 'theme' => $cm_theme ) );
+		wp_localize_script( 'sns-code-editor', 'sns_plugin_editor_options', array(
+			'action' => 'sns_plugin_editor',
+			'nonce' => wp_create_nonce( 'sns_plugin_editor')
+		) );
 	}
 }
 ?>

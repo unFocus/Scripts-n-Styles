@@ -14,7 +14,78 @@ class SnS_AJAX
 		add_action( 'wp_ajax_sns_dropdown', array( __CLASS__, 'dropdown' ) );
 		add_action( 'wp_ajax_sns_delete_class', array( __CLASS__, 'delete_class' ) );
 		add_action( 'wp_ajax_sns_shortcodes', array( __CLASS__, 'shortcodes' ) );
-		add_action( 'wp_ajax_sns_open_theme_panels', array( __CLASS__, 'open_theme_panels' ) );
+		add_action( 'wp_ajax_sns_plugin_editor', array( __CLASS__, 'plugin_editor' ) );
+	}
+
+	static function plugin_editor() {
+		check_ajax_referer( 'sns_plugin_editor' );
+		if ( ! current_user_can( 'edit_plugins' ) ) exit( 'Insufficient Privileges.' );
+
+		$active = false;
+		$plugin = '';
+		$debug = array();
+		$need_update = false;
+		$plugins = array_keys( get_plugins() );
+		$file = $_REQUEST[ 'file' ];
+		$short = substr( $file, 0, strpos( $file, '/' ) );
+
+		if ( ! in_array( $file, $plugins ) ) {
+			$need_update = true;
+
+			if ( in_array( $_REQUEST[ 'plugin' ], $plugins ) ) {
+				$plugin = $_REQUEST[ 'plugin' ];
+			} else {
+				foreach ( $plugins as $maybe ) {
+					if ( false !== strpos( $maybe, $short ) ) {
+						$plugin = $maybe;
+						break;
+					}
+				}
+			}
+		} else {
+			$plugin = $file;
+			while ( 1 < substr_count( $plugin, "/" ) ) {
+				$plugin = dirname( $plugin );
+			}
+		}
+
+		$active = is_plugin_active( $plugin ) || is_plugin_active_for_network( $plugin );
+
+		$files = get_plugin_files( $plugin );
+
+		add_filter( 'editable_extensions', array( 'SnS_Admin_Code_Editor', 'extend' ) );
+		$editable_extensions = array('php', 'txt', 'text', 'js', 'css', 'html', 'htm', 'xml', 'inc', 'include');
+		$editable_extensions = (array) apply_filters('editable_extensions', $editable_extensions);
+		$ul = '';
+		foreach ( $files as $plugin_file ) {
+			// Get the extension of the file
+			if ( preg_match( '/\.([^.]+)$/', $plugin_file, $matches ) ) {
+				$ext = strtolower( $matches[1] );
+				// If extension is not in the acceptable list, skip it
+				if ( ! in_array( $ext, $editable_extensions ) )
+					continue;
+			} else {
+				// No extension found
+				continue;
+			}
+			$ul .= '<li';
+			$ul .= $file == $plugin_file ? ' class="highlight">' : '>';
+			$ul .= '<a href="plugin-editor.php?file=' . urlencode( $plugin_file ) . '&amp;plugin=' . urlencode( $plugin ) . '">';
+			$ul .=  str_replace( $short . '/', '', $plugin_file );
+			$ul .= '</a>';
+			$ul .= '</li>';
+		}
+
+		header('Content-Type: application/json; charset=UTF-8');
+		echo json_encode( array(
+			"plugin" => $plugin,
+			"active" => $active,
+			"files" => $files,
+			"need_update" => $need_update,
+			"ul" => $ul,
+		) );
+
+		exit();
 	}
 	static function open_theme_panels() {
 		check_ajax_referer( SnS_Admin::OPTION_GROUP . "-options" );
