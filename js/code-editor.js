@@ -42,6 +42,9 @@ jQuery( document ).ready( function( $ ) {
 	};
 
 	switch ( fileType ) {
+		case "md":
+			config.mode = "gfm";
+		break;
 		case "js":
 			config.mode = "javascript";
 		break;

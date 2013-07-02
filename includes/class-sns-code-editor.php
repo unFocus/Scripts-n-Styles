@@ -17,6 +17,7 @@ class SnS_Admin_Code_Editor
 	static function extend( $editable_extensions ) {
 		$editable_extensions[] = 'less';
 		$editable_extensions[] = 'coffee';
+		$editable_extensions[] = 'md';
 		return $editable_extensions;
 	}
 
