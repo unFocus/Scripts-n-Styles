@@ -7,4 +7,3 @@ _notes/dwsync.xml
 /vendor/mustache.js*
 /vendor/codemirror/addon/*
 /vendor/codemirror/keymap/*
-/theme/*

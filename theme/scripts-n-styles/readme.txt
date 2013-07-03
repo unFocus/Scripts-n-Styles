@@ -1,0 +1,1 @@
+This theme is part of the Scripts n Styles plugin for WordPress.
