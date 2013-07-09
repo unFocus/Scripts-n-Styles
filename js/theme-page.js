@@ -169,7 +169,7 @@ jQuery( document ).ready( function( $ ) { "use strict"
 			totalLines += this.lines;
 			this.endLine = totalLines;
 		});
-		var parser = new( less.Parser );
+		var parser = new( less.Parser )({});
 		parser.parse( lessValue, function ( err, tree ) {
 			if ( err ){
 				doError( err );
