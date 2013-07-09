@@ -1,15 +1,15 @@
 <?php
-
+SnS_Theme::init();
 class SnS_Theme
 {
-	function __construct() {
+	static function init() {
 		if ( ! isset( $content_width ) )
 			$content_width = 625;
 		add_action( 'after_setup_theme', array( __CLASS__, 'after_setup_theme' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'wp_enqueue_scripts' ) );
 		add_action( 'widgets_init', array( __CLASS__, 'widgets_init' ) );
 	}
-	function wp_enqueue_scripts() {
+	static function wp_enqueue_scripts() {
 		global $wp_styles;
 		if ( is_singular() && comments_open() && get_option( 'thread_comments' ) )
 			wp_enqueue_script( 'comment-reply' );
@@ -17,7 +17,7 @@ class SnS_Theme
 		wp_enqueue_style( 'html5shiv-printshiv' );
 		$wp_styles->add_data( 'html5shiv-printshiv', 'conditional', 'lt IE 9' );
 	}
-	function widgets_init() {
+	static function widgets_init() {
 		register_sidebar( array(
 			'name'          => __( 'Main Widget Area', 'scripts-n-styles' ),
 			'id'            => 'sidebar-1',
@@ -27,7 +27,7 @@ class SnS_Theme
 			'after_title'   => '</h3>',
 		) );
 	}
-	function after_setup_theme() {
+	static function after_setup_theme() {
 		load_theme_textdomain( 'scripts-n-styles', get_template_directory() . '/languages' );
 		add_theme_support(
 			'scripts-n-styles',

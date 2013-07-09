@@ -91,7 +91,7 @@ class Scripts_n_Styles
 			include_once( 'includes/class-sns-admin.php' );
 			SnS_Admin::init();
 		}
-		register_theme_directory( dirname( __FILE__ ) . '/theme/' );
+		register_theme_directory( WP_PLUGIN_DIR . "/" . basename( __DIR__ ) . '/theme/' );
 		add_action( 'plugins_loaded', array( __CLASS__, 'upgrade_check' ) );
 
 		add_filter( 'body_class', array( __CLASS__, 'body_classes' ) );
