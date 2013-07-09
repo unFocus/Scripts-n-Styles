@@ -13,7 +13,7 @@ class SnS_Theme
 		global $wp_styles;
 		if ( is_singular() && comments_open() && get_option( 'thread_comments' ) )
 			wp_enqueue_script( 'comment-reply' );
-		wp_enqueue_style( 'theme-style', get_stylesheet_uri() );
+		wp_enqueue_style( 'theme_style', get_stylesheet_uri() );
 		wp_enqueue_style( 'html5shiv-printshiv' );
 		$wp_styles->add_data( 'html5shiv-printshiv', 'conditional', 'lt IE 9' );
 	}
