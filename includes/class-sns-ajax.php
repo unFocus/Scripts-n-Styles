@@ -14,6 +14,7 @@ class SnS_AJAX
 		add_action( 'wp_ajax_sns_dropdown', array( __CLASS__, 'dropdown' ) );
 		add_action( 'wp_ajax_sns_delete_class', array( __CLASS__, 'delete_class' ) );
 		add_action( 'wp_ajax_sns_shortcodes', array( __CLASS__, 'shortcodes' ) );
+		add_action( 'wp_ajax_sns_open_theme_panels', array( __CLASS__, 'open_theme_panels' ) );
 		add_action( 'wp_ajax_sns_plugin_editor', array( __CLASS__, 'plugin_editor' ) );
 	}
 
