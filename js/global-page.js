@@ -106,7 +106,7 @@ jQuery( document ).ready( function( $ ) {
 		}
 		clearCompileError();
 
-		errorLine = lessMirror.setGutterMarker( err.line - 1, 'note-gutter', document.createTextNode("*"), "cm-error");
+		errorLine = lessMirror.setGutterMarker( err.line - 1, 'note-gutter', document.createTextNode("*") );
 		//lessMirror.setLineClass( errorLine, "cm-error");
 
 		var pos = lessMirror.posFromIndex( err.index + 1 );
