@@ -91,7 +91,7 @@ class Scripts_n_Styles
 			include_once( 'includes/class-sns-admin.php' );
 			SnS_Admin::init();
 		}
-		register_theme_directory( WP_PLUGIN_DIR . "/" . basename( __DIR__ ) . '/theme/' );
+		register_theme_directory( WP_PLUGIN_DIR . "/" . basename( dirname( __FILE__ ) ) . '/theme/' );
 		add_action( 'plugins_loaded', array( __CLASS__, 'upgrade_check' ) );
 
 		add_filter( 'body_class', array( __CLASS__, 'body_classes' ) );
@@ -216,7 +216,7 @@ class Scripts_n_Styles
 		$dir = plugins_url( '/', __FILE__);
 
 		$vendor = $dir . 'vendor/';
-		wp_register_script( 'less.js', $vendor . 'less.js', array(), '1.4.0-min' );
+		wp_register_script( 'less.js', $vendor . 'less.js', array(), '1.4.2-min' );
 		wp_register_script( 'coffeescript', $vendor . 'coffee-script.js', array(), '1.6.3-min' );
 		wp_register_script( 'chosen', $vendor . 'chosen/chosen.jquery.min.js', array( 'jquery' ), '0.10.0', true );
 		wp_register_style(  'chosen', $vendor . 'chosen/chosen.min.css', array(), '0.10.0' );
