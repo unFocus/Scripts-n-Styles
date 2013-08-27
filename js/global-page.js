@@ -11,8 +11,8 @@ jQuery( document ).ready( function( $ ) {
 
 	var parser = new( less.Parser )({});
 	$("#enqueue_scripts").data( 'placeholder', 'Enqueue Registered Scripts...' ).width(350).chosen();
-	$(".chzn-container-multi .chzn-choices .search-field input").height('26px');
-	$(".chzn-container .chzn-results").css( 'max-height', '176px');
+	$(".chosen-container-multi .chosen-choices .search-field input").height('26px');
+	$(".chosen-container .chosen-results").css( 'max-height', '176px');
 
 	//CodeMirror.commands.save = saveLessMirror;
 
