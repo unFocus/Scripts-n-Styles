@@ -70,11 +70,12 @@ class Scripts_n_Styles
 	 */
 	const VERSION = '3.3-a';
 	static $file = __FILE__;
-	static $cm_themes = array( 'default', 'ambiance',
+	static $cm_themes = array( 'default', '3024-day', '3024-night', 'ambiance',
+		'base16-dark', 'base16-light',
 		'blackboard', 'cobalt', 'eclipse',
 		'elegant', 'erlang-dark', 'lesser-dark', 'midnight', 'monokai',
-		'neat', 'night', 'rubyblue',
-		'solarized', 'twilight', 'vibrant-ink',
+		'neat', 'night', 'paraiso-dark', 'paraiso-light', 'rubyblue',
+		'solarized', 'the-matrix', 'tomorrow-night-eighties', 'twilight', 'vibrant-ink',
 		'xq-dark', 'xq-light' );
 	/**#@-*/
 
@@ -226,8 +227,8 @@ class Scripts_n_Styles
 		wp_register_script( 'html5shiv-printshiv', $vendor . 'html5shiv-printshiv.js', array(), '3.6.2' );
 
 		wp_register_script( 'google-diff-match-patch', $vendor . 'codemirror/diff_match_patch.js', array() );
-		wp_register_script( 'codemirror', $vendor . 'codemirror/codemirror-compressed.js', array( 'google-diff-match-patch' ), '3.14' );
-		wp_register_style(  'codemirror', $vendor . 'codemirror/codemirror-compressed.css', array(), '3.14' );
+		wp_register_script( 'codemirror', $vendor . 'codemirror/codemirror-compressed.js', array( 'google-diff-match-patch' ), '3.16' );
+		wp_register_style(  'codemirror', $vendor . 'codemirror/codemirror-compressed.css', array(), '3.16' );
 
 		$js = $dir . 'js/';
 		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
