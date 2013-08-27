@@ -58,6 +58,9 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 
 ## Changelog 
 
+### 3.3 
+* See the github repo commits
+
 ### 3.2.1 
 * metabox add shortcode bugfix
 
@@ -129,6 +132,9 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 * Initial Release.
 
 ## Upgrade Notice 
+
+### 3.3 
+Bug fixes and lib upgrades
 
 ### 3.2.1 
 Bug fix (add shortcode)
