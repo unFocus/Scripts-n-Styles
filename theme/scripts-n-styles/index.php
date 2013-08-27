@@ -16,7 +16,7 @@
 		<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 			<article <?php post_class(); ?>>
 				<header>
-					<?php 
+					<?php
 					the_title();
 					echo get_the_tag_list();
 					echo get_the_category_list();
@@ -29,7 +29,7 @@
 				?>
 				<?php if ( is_singular() ) comments_template(); ?>
 			</article>
-		<?php endwhile; endif; ?> 
+		<?php endwhile; endif; ?>
 		<nav><?php if ( get_next_posts_link() ) next_posts_link(); if ( get_previous_posts_link() ) previous_posts_link(); ?></nav>
 	</main>
 	<aside><?php if ( is_active_sidebar( 'sidebar-1' ) ) dynamic_sidebar( 'sidebar-1' ); ?></aside>
