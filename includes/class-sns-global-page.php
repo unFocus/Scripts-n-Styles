@@ -134,6 +134,12 @@ class SnS_Global_Page
 				'multiple' => true,
 				'show_current' => __( 'Currently Enqueued Scripts: ', 'scripts-n-styles' )
 			) );
+		add_filter( 'sns_options_pre_update_option', array( __CLASS__, 'enqueue_scripts'), 10, 5 );
+	}
+	static function enqueue_scripts( $value, $page, $action, $new, $old ) {
+		if ( empty( $new['enqueue_scripts'] ) && ! empty( $old['enqueue_scripts'] ) )
+			unset( $value['enqueue_scripts'] );
+		return $value;
 	}
 
 	static function less_fields() {

@@ -125,16 +125,16 @@ class SnS_Form
 		foreach ( (array) $options as $option ) {
 			$old = get_option( $option );
 			$option = trim( $option );
-			$value = null;
+			$new = null;
 			if ( isset($_POST[ $option ]) )
-				$value = $_POST[ $option ];
-			if ( !is_array( $value ) )
-				$value = trim( $value );
-
-			$value = array_merge( $old, stripslashes_deep( $value ) );
+				$new = $_POST[ $option ];
+			if ( !is_array( $new ) )
+				$new = trim( $new );
+			$new = stripslashes_deep( $new );
+			$value = array_merge( $old, $new );
 
 			// Allow modification of $value
-			$value = apply_filters( 'sns_options_pre_update_option', $value, $page, $action );
+			$value = apply_filters( 'sns_options_pre_update_option', $value, $page, $action, $new, $old );
 
 			update_option( $option, $value );
 		}
