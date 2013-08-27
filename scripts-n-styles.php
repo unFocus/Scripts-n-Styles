@@ -216,10 +216,10 @@ class Scripts_n_Styles
 		$dir = plugins_url( '/', __FILE__);
 
 		$vendor = $dir . 'vendor/';
-		wp_register_script( 'less.js', $vendor . 'less.js', array(), '1.4.2-min' );
+		wp_register_script( 'less.js', $vendor . 'less.min.js', array(), '1.4.2-min' );
 		wp_register_script( 'coffeescript', $vendor . 'coffee-script.js', array(), '1.6.3-min' );
-		wp_register_script( 'chosen', $vendor . 'chosen/chosen.jquery.min.js', array( 'jquery' ), '0.10.0', true );
-		wp_register_style(  'chosen', $vendor . 'chosen/chosen.min.css', array(), '0.10.0' );
+		wp_register_script( 'chosen', $vendor . 'chosen/chosen.jquery.min.js', array( 'jquery' ), '1.0.0', true );
+		wp_register_style(  'chosen', $vendor . 'chosen/chosen.min.css', array(), '1.0.0' );
 		wp_register_script( 'coffeelint', $vendor . 'coffeelint.js', array(), '0.5.6' );
 		wp_register_script( 'mustache', $vendor . 'chosen/jquery.mustache.min.js', array( 'jquery' ), '0.7.2', true );
 		wp_register_script( 'html5shiv', $vendor . 'html5shiv.js', array(), '3.6.2' );
