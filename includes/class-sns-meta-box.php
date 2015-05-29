@@ -409,6 +409,7 @@ class SnS_Admin_Meta_Box
 	 * Filters $o and Checks if the sent data $i is empty (intended to clear). If not, updates.
 	 */
 	static function maybe_set( $o, $i, $p = 'SnS_' ) {
+		if ( ! is_array( $o ) ) return array();
 		if ( empty( $_REQUEST[ $p . $i ] ) ) {
 			if ( isset( $o[ $i ] ) ) unset( $o[ $i ] );
 		} else {

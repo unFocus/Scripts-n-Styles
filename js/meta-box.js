@@ -483,15 +483,15 @@ jQuery( document ).ready( function( $ ) {
 				}
 				initData.style_formats = style_formats;
 
-				if ( initData.theme_advanced_buttons2.indexOf( "styleselect" ) == -1 ) {
+				if ( initData.toolbar2.indexOf( "styleselect" ) == -1 ) {
 					var tempString = "styleselect,";
-					initData.theme_advanced_buttons2 = tempString.concat(initData.theme_advanced_buttons2);
+					initData.toolbar2 = tempString.concat(initData.toolbar2);
 				}
 
 				$( '#delete-mce-dropdown-names', context ).show();
 			} else {
 				delete initData.style_formats;
-				initData.theme_advanced_buttons2 = initData.theme_advanced_buttons2.replace("styleselect,", "");
+				initData.toolbar2 = initData.toolbar2.replace("styleselect,", "");
 
 				$( '#delete-mce-dropdown-names', context ).hide();
 			}
@@ -580,7 +580,7 @@ jQuery( document ).ready( function( $ ) {
 		ed.remove();
 		if ( initDatas[ed.id] && initDatas[ed.id].wpautop )
 			$('#'+ed.id).val( switchEditors.wpautop( $('#'+ed.id).val() ) );
-		ed = new tinymce.Editor( ed.id, initDatas[ed.id] );
+		ed = new tinymce.Editor( ed.id, initDatas[ed.id], tinymce.EditorManager );
 		ed.render();
 		ed.hide();
 	}

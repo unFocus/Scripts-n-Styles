@@ -398,6 +398,7 @@ class SnS_AJAX
 
 	// Differs from SnS_Admin_Meta_Box::maybe_set() in that this needs no prefix.
 	static function maybe_set( $o, $i ) {
+		if ( ! is_array( $o ) ) return array();
 		if ( empty( $_REQUEST[ $i ] ) ) {
 			if ( isset( $o[ $i ] ) ) unset( $o[ $i ] );
 		} else $o[ $i ] = $_REQUEST[ $i ];
