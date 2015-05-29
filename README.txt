@@ -1,9 +1,9 @@
 === Scripts n Styles ===
 Contributors: WraithKenny, CaptainN
 Tags: admin, CSS, javascript, code, custom, Style
-Requires at least: 3.6
-Tested up to: 3.6
-Stable tag: 3.3
+Requires at least: 4.2.2
+Tested up to: 4.2.2
+Stable tag: 3.3.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
