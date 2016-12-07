@@ -5,7 +5,7 @@ Plugin URI: http://www.unfocus.com/projects/scripts-n-styles/
 Description: Allows WordPress admin users the ability to add custom CSS and JavaScript directly to individual Post, Pages or custom post types.
 Author: unFocus Projects
 Author URI: http://www.unfocus.com/
-Version: 3.3
+Version: 3.3.1
 License: GPLv3 or later
 Text Domain: scripts-n-styles
 */
@@ -50,7 +50,7 @@ Text Domain: scripts-n-styles
  * @link http://www.unfocus.com/projects/scripts-n-styles/ Plugin URI
  * @author unFocus Projects
  * @link http://www.unfocus.com/ Author URI
- * @version 3.3
+ * @version 3.3.1
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2010 - 2013, Kenneth Newman
  * @copyright Copyright (c) 2012, Kevin Newman
