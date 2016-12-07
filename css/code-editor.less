@@ -13,3 +13,33 @@
 		margin-right: 0;
 	}
 }
+#templateside {
+	.main-file > a {
+		font-weight: bold;
+	}
+	.sns-folders-list {
+		.tog-folder:before {
+			content: '+';
+			display: inline-block;
+			border: 1px solid;
+			margin-left: -12px;
+			width: 14px;
+			text-align: center;
+			margin-right: 6px;
+		}
+		ul {
+			border-left: 1px dashed;
+			padding-left: 5px;
+			margin-left: 5px;
+			display: none;
+		}
+		.open {
+			> .tog-folder:before {
+			content: '-';
+			}
+			> ul{
+				display: block;
+			}
+		}
+	}
+}

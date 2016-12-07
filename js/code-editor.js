@@ -12,8 +12,9 @@ jQuery( function( $ ) {
 					plugin: $('input[name="plugin"]').val()
 				},
 				success: function( data ) {
-					$('#templateside > ul').html( data.ul );
+					$('#templateside > ul').addClass('sns-file-list').html( data.ul );
 					console.dir( data );
+					nestPluginFolders()
 					if ( ! data.need_update ) return;
 
 					// var warning = "<p><strong>Warning:</strong> Making changes to active plugins is not recommended. If your changes cause a fatal error, the plugin will be automatically deactivated.</p>";
@@ -25,8 +26,50 @@ jQuery( function( $ ) {
 				}
 			});
 		} else if ( 'theme-editor' == pagenow ) {
-			console.log('asdfasdf');
+			console.log('theme-editor');
 		}
+	function nestPluginFolders() {
+
+		var $list = $('.sns-file-list');
+		$list.before('<ul class="sns-folders-list">');
+		var $folders = $('.sns-folders-list');
+		$('.sns-file-list > li:first-child').addClass('main-file');
+
+		$('.sns-file-list > li').each(function(i,e){
+			var link = $(e).find("a");
+			var folderArray = link.text().split("/");
+			if ( folderArray.length === 1 ) return true;
+
+			var filename = folderArray.pop();
+			link.text(filename);
+			var depth = folderArray.length;
+			var targetUL = $folders; // start at root.
+
+			for (var i = 0; i < folderArray.length; i++) {
+				var folder = folderArray[i];
+				var $folder = targetUL.children('li.folder-'+folder);
+				if ( ! $folder.length ) {
+					if ( targetUL.children('.folder').length ) {
+						targetUL.children('.folder').last().after('<li class="folder folder-'+folder+'"></li>');
+					} else {
+						targetUL.prepend('<li class="folder folder-'+folder+'"></li>');
+					}
+					targetUL.children('.folder-'+folder)
+						.append('<a href="#" class="tog-folder">'+folder+'</a>')
+						.append('<ul>');
+				}
+				targetUL = targetUL.children('.folder-'+folder).children('ul');
+				$(this).appendTo(targetUL);
+			}
+		});
+
+		$('#templateside .highlight').parents('.folder').addClass('open');
+
+		$folders.on('click', '.tog-folder', function(e){
+			e.preventDefault();
+			$(this).parent().toggleClass('open');
+		})
+	}
 });
 jQuery( function( $ ) {
 	var theme = codemirror_options.theme ? codemirror_options.theme: 'default',
