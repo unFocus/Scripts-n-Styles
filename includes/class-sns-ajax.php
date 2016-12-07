@@ -24,6 +24,57 @@ class SnS_AJAX
 		if ( ! current_user_can( 'edit_themes' ) ) exit( 'Insufficient Privileges.' );
 	}
 
+	static function _get_plugin_files( $plugin ) {
+		// Retreived from https://core.trac.wordpress.org/browser/tags/4.7/src/wp-admin/includes/plugin.php#L193
+		// https://core.trac.wordpress.org/attachment/ticket/6531/6531.4.diff
+		$plugin_file = WP_PLUGIN_DIR . '/' . $plugin;
+		$dir = dirname($plugin_file);
+		$plugin_files = array($plugin);
+
+		if ( is_dir($dir) && $dir != WP_PLUGIN_DIR ) {
+			$plugins_dir = @ opendir( $dir );
+			if ( $plugins_dir ) {
+				$plugin_basedir = plugin_basename( $dir );
+				while (($file = readdir( $plugins_dir ) ) !== false ) {
+					if ( substr($file, 0, 1) == '.' || $file == 'node_modules' || $file == 'bower_components' ) // Skip npm/bower folders
+						continue;
+					if ( is_dir( "$dir/$file" ) ) {
+						$subfiles = SnS_AJAX::_get_plugin_sub_files( $dir . '/' . $file );
+						$plugin_files = array_merge( $plugin_files, $subfiles );
+					} else {
+
+						if ( plugin_basename("$dir/$file") != $plugin )
+							$plugin_files[] = plugin_basename("$dir/$file");
+
+					}
+				}
+				@closedir( $plugins_dir );
+			}
+		}
+
+		return $plugin_files;
+	}
+	static function _get_plugin_sub_files( $subdir ) {
+		// https://core.trac.wordpress.org/attachment/ticket/6531/6531.4.diff
+		$plugins_subdir = @opendir( $subdir );
+		if ( $plugins_subdir ) {
+			$plugin_basedir = plugin_basename( $subdir );
+			$plugin_files = array();
+			while ( ( $subfile = readdir( $plugins_subdir ) ) !== false ) {
+				if ( substr( $subfile, 0, 1 ) == '.' || $file == 'node_modules' || $file == 'bower_components' ) {
+					continue;
+				}
+				if ( is_dir( $subdir  . '/' . $subfile ) ) {
+					$subfiles = SnS_AJAX::_get_plugin_sub_files( $subdir . '/' . $subfile );
+					$plugin_files = array_merge( $plugin_files, $subfiles );
+				} else {
+					$plugin_files[] = "$plugin_basedir/$subfile";
+				}
+			}
+			@closedir( $plugins_subdir );
+		}
+		return $plugin_files;
+	}
 	static function plugin_editor() {
 		check_ajax_referer( 'sns_plugin_editor' );
 		if ( ! current_user_can( 'edit_plugins' ) ) exit( 'Insufficient Privileges.' );
@@ -59,6 +110,7 @@ class SnS_AJAX
 		$active = is_plugin_active( $plugin ) || is_plugin_active_for_network( $plugin );
 
 		$files = get_plugin_files( $plugin );
+		// $files = SnS_AJAX::_get_plugin_files( $plugin );
 
 		add_filter( 'editable_extensions', array( 'SnS_Admin_Code_Editor', 'extend' ) );
 		$editable_extensions = array('php', 'txt', 'text', 'js', 'css', 'html', 'htm', 'xml', 'inc', 'include');
