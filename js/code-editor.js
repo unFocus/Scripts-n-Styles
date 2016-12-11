@@ -1,7 +1,8 @@
 // Options JavaScript
 
 jQuery( function( $ ) {
-	if ( 'plugin-editor' == pagenow ) {
+	console.log(pagenow);
+	if ( 'plugin-editor' == pagenow || 'plugins_page_sns_plugin_editor' == pagenow ) {
 			$.ajax({
 				type: "POST",
 				url: ajaxurl,

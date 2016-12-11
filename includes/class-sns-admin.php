@@ -9,6 +9,8 @@
 
 require_once( 'class-sns-meta-box.php' );
 require_once( 'class-sns-code-editor.php' );
+require_once( 'class-sns-plugin-editor-page.php' );
+require_once( 'class-sns-theme-editor-page.php' );
 require_once( 'class-sns-settings-page.php' );
 require_once( 'class-sns-usage-page.php' );
 require_once( 'class-sns-global-page.php' );
@@ -75,6 +77,8 @@ class SnS_Admin
 				add_utility_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
 				break;
 		}
+		SnS_Plugin_Editor_Page::init();
+		SnS_Theme_Editor_Page::init();
 		SnS_Global_Page::init();
 		SnS_Hoops_Page::init();
 		if ( current_theme_supports( 'scripts-n-styles' ) )
