@@ -219,7 +219,7 @@ class Scripts_n_Styles
 		$vendor = $dir . 'vendor/';
 		wp_register_script( 'clean-css', $vendor . 'cleancss-browser.js', array(), '3.4.21-min' );
 		wp_register_script( 'less.js', $vendor . 'less.min.js', array(), '2.7.1-min' );
-		wp_register_script( 'coffeescript', $vendor . 'coffee-script.js', array(), '1.6.3-min' );
+		wp_register_script( 'coffeescript', $vendor . 'coffee-script.js', array(), '1.12.1-min' );
 		wp_register_script( 'chosen', $vendor . 'chosen/chosen.jquery.min.js', array( 'jquery' ), '1.0.0', true );
 		wp_register_style(  'chosen', $vendor . 'chosen/chosen.min.css', array(), '1.0.0' );
 		//wp_register_script( 'coffeelint', $vendor . 'coffeelint.js', array(), '0.5.6' );
