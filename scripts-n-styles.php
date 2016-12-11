@@ -224,8 +224,8 @@ class Scripts_n_Styles
 		wp_register_style(  'chosen', $vendor . 'chosen/chosen.min.css', array(), '1.0.0' );
 		//wp_register_script( 'coffeelint', $vendor . 'coffeelint.js', array(), '0.5.6' );
 		//wp_register_script( 'mustache', $vendor . 'chosen/jquery.mustache.min.js', array( 'jquery' ), '0.7.2', true );
-		//wp_register_script( 'html5shiv', $vendor . 'html5shiv.js', array(), '3.6.2' );
-		//wp_register_script( 'html5shiv-printshiv', $vendor . 'html5shiv-printshiv.js', array(), '3.6.2' );
+		wp_register_script( 'html5shiv', $vendor . 'html5shiv.js', array(), '3.7.3' );
+		wp_register_script( 'html5shiv-printshiv', $vendor . 'html5shiv-printshiv.js', array(), '3.7.3' );
 
 		//wp_register_script( 'google-diff-match-patch', $vendor . 'codemirror/diff_match_patch.js', array() );
 		wp_register_script( 'codemirror', $vendor . 'codemirror/codemirror-compressed.js', array( /*'google-diff-match-patch'*/ ), '3.16' );
