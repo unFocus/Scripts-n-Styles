@@ -19,7 +19,9 @@ class SnS_Theme_Editor_Page
 	 * @static
 	 */
 	static function init() {
-		// remove_submenu_page( 'themes.php', 'themes.php?page=sns_theme_editor' );
+		add_action( 'admin_menu', function(){
+			remove_submenu_page( 'themes.php', 'theme-editor.php' );
+		}, 102 );
 		$hook_suffix = add_theme_page(
 			__( 'Scripts n Styles', 'scripts-n-styles' ),
 			__( 'Editor', 'scripts-n-styles' ),
@@ -366,8 +368,14 @@ class SnS_Theme_Editor_Page
 										}
 									endif;
 									break;
+								case '.less':
+									echo "\t<h2>" . _x( 'LESS', 'Theme stylesheets in theme editor' ) . "</h2>\n";
+									break;
 								case '.css':
 									echo "\t<h2>" . _x( 'Styles', 'Theme stylesheets in theme editor' ) . "</h2>\n";
+									break;
+								case '.js':
+									echo "\t<h2>" . _x( 'Scripts', 'Theme JavaScript in theme editor', 'scripts-n-styles' ) . "</h2>\n";
 									break;
 								default:
 									/* translators: %s: file extension */
