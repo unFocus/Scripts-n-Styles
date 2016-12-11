@@ -11,7 +11,8 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	  , $error, $status, $form, $css
 	  , onChange
 	  , errorMarker, errorText, errorMirror
-	  , config;
+	  , config
+	  , cleanCSS = new CleanCSS;
 
 	// Prevent keystoke compile buildup
 	onChange = function onChange( cm ){
@@ -181,27 +182,26 @@ jQuery( document ).ready( function( $ ) { "use strict"
 			this.endChars = totalChars;
 		});
 
-		var parser = new( less.Parser )({});
-		parser.parse( lessValue, function ( err, tree ) {
-			if ( err ){
-				doError( err );
+		less.render(lessValue, {}, function(error, output) {
+			if ( error ){
+				doError( error );
 			} else {
 				try {
 					$error.hide();
 					if ( preview ) {
 						$( compiled.getWrapperElement() ).show();
-						compiledValue = tree.toCSS();
+						compiledValue = output.css;
 						compiled.setValue( compiledValue );
 						compiled.save();
 						compiled.refresh();
 					} else {
-						compiledValue = tree.toCSS({ compress: true });
+						compiledValue = cleanCSS.minify(output.css).styles;
 						$css.val( compiledValue );
 					}
 					clearCompileError();
 				}
-				catch ( err ) {
-					doError( err );
+				catch ( error ) {
+					doError( error );
 				}
 			}
 		});

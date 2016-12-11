@@ -1,6 +1,6 @@
 // Options JavaScript
 
-jQuery( document ).ready( function( $ ) {
+jQuery( function( $ ) {
 	var compiled, source;
 	var theme = _SnS_options.theme ? _SnS_options.theme: 'default';
 	var lessMirror, lessOutput, errorLine, errorText, errors, loaded,
@@ -9,7 +9,6 @@ jQuery( document ).ready( function( $ ) {
 			lineNumbers: true, mode: "text/x-less", theme: theme, indentWithTabs: true },
 		coffeeMirrorConfig = { lineNumbers: true, mode: "text/x-coffeescript", theme: theme };
 
-	var parser = new( less.Parser )({});
 	$("#enqueue_scripts").data( 'placeholder', 'Enqueue Registered Scripts...' ).width(350).chosen();
 	$(".chosen-container-multi .chosen-choices .search-field input").height('26px');
 	$(".chosen-container .chosen-results").css( 'max-height', '176px');
@@ -50,20 +49,21 @@ jQuery( document ).ready( function( $ ) {
 
 	function compile() {
 		lessMirror.save();
-		parser.parse( lessMirror.getValue(), function ( err, tree ) {
-			if ( err  ){
-				doError( err );
+
+		less.render(lessMirror.getValue(), {}, function(error, output) {
+			if ( error  ){
+				doError( error );
 			} else {
 				try {
 					$( '#compiled_error' ).hide();
-					lessOutput.setValue( tree.toCSS() );
+					lessOutput.setValue( output.css );
 					lessOutput.save();
 					$( '#compiled' ).next( '.CodeMirror' ).show();
 					lessOutput.refresh();
 					clearCompileError();
 				}
-				catch ( err ) {
-					doError( err );
+				catch ( error ) {
+					doError( error );
 				}
 			}
 		});

@@ -217,7 +217,8 @@ class Scripts_n_Styles
 		$dir = plugins_url( '/', __FILE__);
 
 		$vendor = $dir . 'vendor/';
-		wp_register_script( 'less.js', $vendor . 'less.min.js', array(), '1.4.2-min' );
+		wp_register_script( 'clean-css', $vendor . 'cleancss-browser.js', array(), '3.4.21-min' );
+		wp_register_script( 'less.js', $vendor . 'less.min.js', array(), '2.7.1-min' );
 		wp_register_script( 'coffeescript', $vendor . 'coffee-script.js', array(), '1.6.3-min' );
 		wp_register_script( 'chosen', $vendor . 'chosen/chosen.jquery.min.js', array( 'jquery' ), '1.0.0', true );
 		wp_register_style(  'chosen', $vendor . 'chosen/chosen.min.css', array(), '1.0.0' );
@@ -232,7 +233,7 @@ class Scripts_n_Styles
 
 		$js = $dir . 'js/';
 		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
-		wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror', 'less.js', ), self::VERSION, true );
+		wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror', 'less.js', 'clean-css' ), self::VERSION, true );
 		wp_register_script( 'sns-hoops-page', $js . 'hoops-page.js', array( 'jquery', 'codemirror' ), self::VERSION, true );
 		wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'codemirror' ), self::VERSION, true );
 		wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'codemirror', 'chosen' ), self::VERSION, true );
