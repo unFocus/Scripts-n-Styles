@@ -228,8 +228,8 @@ class Scripts_n_Styles
 		wp_register_script( 'html5shiv-printshiv', $vendor . 'html5shiv-printshiv.js', array(), '3.7.3' );
 
 		//wp_register_script( 'google-diff-match-patch', $vendor . 'codemirror/diff_match_patch.js', array() );
-		wp_register_script( 'codemirror', $vendor . 'codemirror/codemirror-compressed.js', array( /*'google-diff-match-patch'*/ ), '3.16' );
-		wp_register_style(  'codemirror', $vendor . 'codemirror/codemirror-compressed.css', array(), '3.16' );
+		wp_register_script( 'codemirror', $vendor . 'codemirror/codemirror.min.js', array( /*'google-diff-match-patch'*/ ), '5.21.0' );
+		wp_register_style(  'codemirror', $vendor . 'codemirror/codemirror.min.css', array(), '5.21.0' );
 
 		$js = $dir . 'js/';
 		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
