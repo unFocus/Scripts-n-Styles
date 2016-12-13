@@ -10,3 +10,6 @@ _notes/dwsync.xml
 /vendor/codemirror/src/*
 /vendor/codemirror/node_modules/*
 /vendor/codemirror/theme/*
+codemirror.min.css
+codemirror.min.js
+diff_match_patch.js
