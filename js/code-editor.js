@@ -97,7 +97,7 @@ jQuery( function( $ ) {
 			config.mode = "css";
 		break;
 		case "less":
-			config.mode = "less";
+			config.mode = "text/x-less";
 		break;
 		case "coffee":
 			config.mode = "coffeescript";
@@ -110,7 +110,7 @@ jQuery( function( $ ) {
 			config.mode = "php";
 		break;
 		default:
-			config.mode = "markdown";
+			config.mode = "text/x-markdown";
 		break;
 	}
 
