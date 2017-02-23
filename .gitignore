@@ -13,3 +13,4 @@ _notes/dwsync.xml
 codemirror.min.css
 codemirror.min.js
 diff_match_patch.js
+/node_modules/
