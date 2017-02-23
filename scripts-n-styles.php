@@ -9,7 +9,7 @@ Version: 4.0.0-alpha
 License: GPLv3 or later
 Text Domain: scripts-n-styles
 */
-
+if ( version_compare( PHP_VERSION, '5.6', '>' ) ) :
 /*  The Scripts n Styles WordPress Plugin
 	Copyright (c) 2010-2013  Kenneth Newman  <http://www.unfocus.com/>
 	Copyright (c) 2012  Kevin Newman  <http://www.unfocus.com/>
@@ -481,4 +481,11 @@ class SnS_Widget extends WP_Widget
 		<?php
 	}
 }
-?>
+else :
+	function SnS_Disable_message() {
+		?><div class="notice notice-success is-dismissible">
+		<p>Sorry, Scripts n Styles doesn't work with <strong>outdated and insecure PHP versions.</strong> Please contact your host.</p>
+		</div><?php
+	}
+	add_action( 'admin_notices', 'SnS_Disable_message' );
+endif;
