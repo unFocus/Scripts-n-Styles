@@ -29,14 +29,14 @@ class Hoops_Page
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
 
 		// Make the page into a tab.
-		if ( Admin::MENU_SLUG != Admin::$parent_slug ) {
+		if ( ADMIN_MENU_SLUG != Admin::$parent_slug ) {
 			remove_submenu_page( Admin::$parent_slug, self::MENU_SLUG );
 			add_filter( 'parent_file', array( __CLASS__, 'parent_file') );
 		}
 	}
 	static function parent_file( $parent_file ) {
 		global $plugin_page, $submenu_file;
-		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = Admin::MENU_SLUG;
+		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = ADMIN_MENU_SLUG;
 		return $parent_file;
 	}
 
@@ -66,7 +66,7 @@ class Hoops_Page
 			'hoops_section',
 			__( 'The Hoops Shortcodes', 'scripts-n-styles' ),
 			array( __CLASS__, 'hoops_section' ),
-			Admin::MENU_SLUG );
+			ADMIN_MENU_SLUG );
 	}
 	static function new_hoops( $options ) {
 		// Get Hoops. (Shouldn't be empty.)

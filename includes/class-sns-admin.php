@@ -44,14 +44,14 @@ class Admin
 		add_action( 'admin_init', array( '\unFocus\SnS\AJAX', 'init' ) );
 		add_action( 'admin_init', array( __CLASS__, 'load_plugin_textdomain' ) );
 
-		$plugin_file = plugin_basename( Scripts_n_Styles::$file );
+		$plugin_file = plugin_basename( __DIR__ );
 		add_filter( "plugin_action_links_$plugin_file", array( __CLASS__, 'plugin_action_links') );
 
-		register_activation_hook( Scripts_n_Styles::$file, array( __CLASS__, 'upgrade' ) );
+		register_activation_hook( __DIR__, array( __CLASS__, 'upgrade' ) );
 	}
 
 	static function load_plugin_textdomain() {
-		load_plugin_textdomain( 'scripts-n-styles', false, dirname( plugin_basename( Scripts_n_Styles::$file ) ) . '/languages/' );
+		load_plugin_textdomain( 'scripts-n-styles', false, dirname( plugin_basename( __DIR__ ) ) . '/languages/' );
 	}
 	static function menu() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
@@ -61,7 +61,7 @@ class Admin
 		$top_spots = array( 'menu', 'object', 'utility' );
 		$sub_spots = array( 'tools.php', 'options-general.php', 'themes.php' );
 
-		if ( in_array( $menu_spot, $top_spots ) ) $parent_slug = Admin::MENU_SLUG;
+		if ( in_array( $menu_spot, $top_spots ) ) $parent_slug = ADMIN_MENU_SLUG;
 		else if ( in_array( $menu_spot, $sub_spots ) ) $parent_slug = $menu_spot;
 		else $parent_slug = 'tools.php';
 
@@ -69,13 +69,13 @@ class Admin
 
 		switch( $menu_spot ) {
 			case 'menu':
-				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ), 200 );
+				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', __DIR__ ), 200 );
 				break;
 			case 'object':
-				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ), 50 );
+				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', __DIR__ ), 50 );
 				break;
 			case 'utility':
-				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ), 98 );
+				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', __DIR__ ), 98 );
 				break;
 		}
 		Plugin_Editor_Page::init();
@@ -100,13 +100,13 @@ class Admin
 		<?php if ( ! isset( $options[ 'menu_position' ] ) || 'options-general.php' != $options[ 'menu_position' ] ) settings_errors(); ?>
 		<?php screen_icon( 'none' ); ?>
 		<h3 class="nav-tab-wrapper">
-			<a class="nav-tab<?php echo ( self::MENU_SLUG == $page )               ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG );               ?>"><?php _e( 'Global',   'scripts-n-styles' ); ?></a>
-			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_hoops' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_hoops' );    ?>"><?php _e( 'Hoops',   'scripts-n-styles' ); ?></a>
+			<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG == $page )               ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG );               ?>"><?php _e( 'Global',   'scripts-n-styles' ); ?></a>
+			<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_hoops' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_hoops' );    ?>"><?php _e( 'Hoops',   'scripts-n-styles' ); ?></a>
 			<?php if ( current_theme_supports( 'scripts-n-styles' ) ) { ?>
-			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_theme' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_theme' );    ?>"><?php _e( 'Theme',    'scripts-n-styles' ); ?></a>
+			<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_theme' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_theme' );    ?>"><?php _e( 'Theme',    'scripts-n-styles' ); ?></a>
 			<?php } ?>
-			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_settings' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_settings' ); ?>"><?php _e( 'Settings', 'scripts-n-styles' ); ?></a>
-			<a class="nav-tab<?php echo ( self::MENU_SLUG . '_usage' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( self::MENU_SLUG . '_usage' );    ?>"><?php _e( 'Usage',    'scripts-n-styles' ); ?></a>
+			<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_settings' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_settings' ); ?>"><?php _e( 'Settings', 'scripts-n-styles' ); ?></a>
+			<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_usage' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_usage' );    ?>"><?php _e( 'Usage',    'scripts-n-styles' ); ?></a>
 		</h3>
 		<?php
 	}

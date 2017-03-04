@@ -178,7 +178,7 @@ class Form
 			<?php Admin::nav(); ?>
 			<form action="" method="post" autocomplete="off">
 			<?php settings_fields( OPTION_GROUP ); ?>
-			<?php do_settings_sections( Admin::MENU_SLUG ); ?>
+			<?php do_settings_sections( ADMIN_MENU_SLUG ); ?>
 			<?php if ( apply_filters( 'sns_show_submit_button', true ) ) submit_button(); ?>
 			</form>
 		</div>

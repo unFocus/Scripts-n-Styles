@@ -119,14 +119,14 @@ class Admin_Meta_Box
 	 * @param unknown_type WordPress Post object.
 	 */
 	static function admin_meta_box( $post ) {
-		$registered_handles = Scripts_n_Styles::get_wp_registered();
+		$registered_handles = REGISTERED;
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
 		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 
 		$position = get_user_option( "current_sns_tab" );
 		if ( ! in_array( $position, array( 's0', 's1', 's2', 's3', 's4', 's5' ) ) ) $position = 's0';
-		wp_nonce_field( Scripts_n_Styles::$file, self::NONCE_NAME );
+		wp_nonce_field( __DIR__, self::NONCE_NAME );
 		?>
 			<ul class="wp-tab-bar">
 				<li<?php echo ( 's0' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_scripts-tab"><?php _e( 'Scripts', 'scripts-n-styles' ) ?></a></li>
@@ -320,7 +320,7 @@ class Admin_Meta_Box
 	 * @param int $post_id ID value of the WordPress post.
 	 */
 	static function save_post( $post_id ) {
-		if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], Scripts_n_Styles::$file )
+		if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], __DIR__ )
 			|| ! current_user_can( 'unfiltered_html' )
 			|| wp_is_post_revision( $post_id ) // is needed for get_post_meta compatibility.
 			|| ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )

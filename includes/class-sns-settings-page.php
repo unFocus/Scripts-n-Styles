@@ -29,14 +29,14 @@ class Settings_Page
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
 
 		// Make the page into a tab.
-		if ( Admin::MENU_SLUG != Admin::$parent_slug ) {
+		if ( ADMIN_MENU_SLUG != Admin::$parent_slug ) {
 			remove_submenu_page( Admin::$parent_slug, self::MENU_SLUG );
 			add_filter( 'parent_file', array( __CLASS__, 'parent_file') );
 		}
 	}
 	static function parent_file( $parent_file ) {
 		global $plugin_page, $submenu_file;
-		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = Admin::MENU_SLUG;
+		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = ADMIN_MENU_SLUG;
 		return $parent_file;
 	}
 
@@ -65,13 +65,13 @@ class Settings_Page
 			'settings',
 			__( 'Scripts n Styles Settings', 'scripts-n-styles' ),
 			array( __CLASS__, 'settings_section' ),
-			Admin::MENU_SLUG );
+			ADMIN_MENU_SLUG );
 
 		add_settings_field(
 			'metabox',
 			__( '<strong>Hide Metabox by default</strong>: ', 'scripts-n-styles' ),
 			array( '\unFocus\SnS\Form', 'radio' ),
-			Admin::MENU_SLUG,
+			ADMIN_MENU_SLUG,
 			'settings',
 			array(
 				'label_for' => 'metabox',
@@ -87,7 +87,7 @@ class Settings_Page
 			'menu_position',
 			__( '<strong>Menu Position</strong>: ', 'scripts-n-styles' ),
 			array( '\unFocus\SnS\Form', 'radio' ),
-			Admin::MENU_SLUG,
+			ADMIN_MENU_SLUG,
 			'settings',
 			array(
 				'label_for' => 'menu_position',
@@ -103,18 +103,18 @@ class Settings_Page
 			'demo',
 			__( 'Code Mirror Demo', 'scripts-n-styles' ),
 			array( __CLASS__, 'demo_section' ),
-			Admin::MENU_SLUG );
+			ADMIN_MENU_SLUG );
 
 		add_settings_field(
 			'cm_theme',
 			__( '<strong>Theme</strong>: ', 'scripts-n-styles' ),
 			array( '\unFocus\SnS\Form', 'radio' ),
-			Admin::MENU_SLUG,
+			ADMIN_MENU_SLUG,
 			'demo',
 			array(
 				'label_for' => 'cm_theme',
 				'setting' => 'SnS_options',
-				'choices' => Scripts_n_Styles::$cm_themes,
+				'choices' => CM_THEMES,
 				'default' => 'default',
 				'legend' => __( 'Theme', 'scripts-n-styles' ),
 				'layout' => 'horizontal',
@@ -124,7 +124,7 @@ class Settings_Page
 			'hoops_widget',
 			__( '<strong>Hoops Widgets</strong>: ', 'scripts-n-styles' ),
 			array( '\unFocus\SnS\Form', 'radio' ),
-			Admin::MENU_SLUG,
+			ADMIN_MENU_SLUG,
 			'settings',
 			array(
 				'label_for' => 'hoops_widget',

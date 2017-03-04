@@ -46,7 +46,7 @@ class AJAX
 		exit();
 	}
 	static function update_tab() {
-		check_ajax_referer( Scripts_n_Styles::$file );
+		check_ajax_referer( __DIR__ );
 
 		$active_tab = isset( $_POST[ 'active_tab' ] ) ? 's'.$_POST[ 'active_tab' ] : 's0';
 
@@ -76,7 +76,7 @@ class AJAX
 
 	// AJAX handlers
 	static function classes() {
-		check_ajax_referer( Scripts_n_Styles::$file );
+		check_ajax_referer( __DIR__ );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 
 		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
@@ -106,7 +106,7 @@ class AJAX
 		exit();
 	}
 	static function scripts() {
-		check_ajax_referer( Scripts_n_Styles::$file );
+		check_ajax_referer( __DIR__ );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 
 		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
@@ -136,7 +136,7 @@ class AJAX
 		exit();
 	}
 	static function styles() {
-		check_ajax_referer( Scripts_n_Styles::$file );
+		check_ajax_referer( __DIR__ );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 
 		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
@@ -164,7 +164,7 @@ class AJAX
 		exit();
 	}
 	static function dropdown() {
-		check_ajax_referer( Scripts_n_Styles::$file );
+		check_ajax_referer( __DIR__ );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 
 		if ( empty( $_REQUEST[ 'format' ] ) ) exit( 'Missing Format.' );
@@ -198,7 +198,7 @@ class AJAX
 		exit();
 	}
 	static function delete_class() {
-		check_ajax_referer( Scripts_n_Styles::$file );
+		check_ajax_referer( __DIR__ );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 
 		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
@@ -231,7 +231,7 @@ class AJAX
 		exit();
 	}
 	static function shortcodes() {
-		check_ajax_referer( Scripts_n_Styles::$file );
+		check_ajax_referer( __DIR__ );
 		if ( ! current_user_can( 'unfiltered_html' ) || ! current_user_can( 'edit_posts' ) ) exit( 'Insufficient Privileges.' );
 
 		if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );

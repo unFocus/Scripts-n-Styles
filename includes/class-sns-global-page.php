@@ -16,10 +16,10 @@ class Global_Page
 	 * @static
 	 */
 	static function init() {
-		if ( Admin::$parent_slug == Admin::MENU_SLUG ) $menu_title = __( 'Global', 'scripts-n-styles' );
+		if ( Admin::$parent_slug == ADMIN_MENU_SLUG ) $menu_title = __( 'Global', 'scripts-n-styles' );
 		else $menu_title = __( 'Scripts n Styles', 'scripts-n-styles' );
 
-		$hook_suffix = add_submenu_page( Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), $menu_title, 'unfiltered_html', Admin::MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
+		$hook_suffix = add_submenu_page( Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), $menu_title, 'unfiltered_html', ADMIN_MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
 
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", array( '\unFocus\SnS\Admin', 'help' ) );
@@ -51,33 +51,33 @@ class Global_Page
 			'global_styles',
 			__( 'Blog Wide CSS Styles', 'scripts-n-styles' ),
 			array( __CLASS__, 'global_styles_section' ),
-			Admin::MENU_SLUG );
+			ADMIN_MENU_SLUG );
 
 		add_settings_section(
 			'global_scripts',
 			__( 'Blog Wide JavaScript', 'scripts-n-styles' ),
 			array( __CLASS__, 'global_scripts_section' ),
-			Admin::MENU_SLUG );
+			ADMIN_MENU_SLUG );
 
 		add_settings_field(
 			'less',
 			__( '<strong>LESS:</strong> ', 'scripts-n-styles' ),
 			array( __CLASS__, 'less_fields' ),
-			Admin::MENU_SLUG,
+			ADMIN_MENU_SLUG,
 			'global_styles',
 			array( 'label_for' => 'less' ) );
 		add_settings_field(
 			'coffee',
 			__( '<strong>CoffeeScript:</strong> ', 'scripts-n-styles' ),
 			array( __CLASS__, 'coffee_fields' ),
-			Admin::MENU_SLUG,
+			ADMIN_MENU_SLUG,
 			'global_scripts',
 			array( 'label_for' => 'coffee' ) );
 		add_settings_field(
 			'styles',
 			__( '<strong>CSS Styles:</strong> ', 'scripts-n-styles' ),
 			array( '\unFocus\SnS\Form', 'textarea' ),
-			Admin::MENU_SLUG,
+			ADMIN_MENU_SLUG,
 			'global_styles',
 			array(
 				'label_for' => 'styles',
@@ -93,7 +93,7 @@ class Global_Page
 			'scripts_in_head',
 			__( '<strong>Scripts</strong><br />(for the <code>head</code> element): ', 'scripts-n-styles' ),
 			array( '\unFocus\SnS\Form', 'textarea' ),
-			Admin::MENU_SLUG,
+			ADMIN_MENU_SLUG,
 			'global_scripts',
 			array(
 				'label_for' => 'scripts_in_head',
@@ -109,7 +109,7 @@ class Global_Page
 			'scripts',
 			__( '<strong>Scripts</strong><br />(end of the <code>body</code> tag):', 'scripts-n-styles' ),
 			array( '\unFocus\SnS\Form', 'textarea' ),
-			Admin::MENU_SLUG,
+			ADMIN_MENU_SLUG,
 			'global_scripts',
 			array(
 				'label_for' => 'scripts',
@@ -125,12 +125,12 @@ class Global_Page
 			'enqueue_scripts',
 			__( '<strong>Enqueue Scripts</strong>: ', 'scripts-n-styles' ),
 			array( '\unFocus\SnS\Form', 'select' ),
-			Admin::MENU_SLUG,
+			ADMIN_MENU_SLUG,
 			'global_scripts',
 			array(
 				'label_for' => 'enqueue_scripts',
 				'setting' => 'SnS_options',
-				'choices' => Scripts_n_Styles::get_wp_registered(),
+				'choices' => REGISTERED,
 				'size' => 5,
 				'style' => 'height: auto;',
 				'multiple' => true,
