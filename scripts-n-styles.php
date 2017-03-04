@@ -63,7 +63,7 @@ Text Domain: scripts-n-styles
  * @todo Clean up tiny_mce_before_init in SnS_Admin_Meta_Box.
  */
 
-if ( version_compare( PHP_VERSION, '5.3', '>' ) ) :
+if ( version_compare( PHP_VERSION, '5.3', '>=' ) ) :
 
 	require_once( "includes/bootstrap.php" );
 
