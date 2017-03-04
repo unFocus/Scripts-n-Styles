@@ -13,15 +13,6 @@ add_action( 'wp_before_admin_bar_render', function() {
 
 register_theme_directory( dirname( __DIR__ ) . '/theme' );
 
-if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERED_HTML ) ) {
-	/*	NOTE: Setting the DISALLOW_UNFILTERED_HTML constant to
-		true in the wp-config.php would effectively disable this
-		plugin's admin because no user would have the capability.
-	*/
-	include_once( 'class-sns-admin.php' );
-	Admin::init();
-}
-
 add_action( 'wp_print_styles', function() {
 	if ( current_theme_supports( 'scripts-n-styles' ) ) {
 		$options = get_option( 'SnS_options' );
