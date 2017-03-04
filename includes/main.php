@@ -42,8 +42,8 @@ add_action( 'widgets_init', function() {
 		register_widget( '\unFocus\SnS\Widget' );
 } );
 add_action( 'plugins_loaded', function() {
-	add_shortcode( 'sns_shortcode', array( __CLASS__, '\unFocus\SnS\hoops_shortcode' ) );
-	add_shortcode( 'hoops', array( __CLASS__, '\unFocus\SnS\hoops_shortcode' ) );
+	add_shortcode( 'sns_shortcode', '\unFocus\SnS\hoops_shortcode' );
+	add_shortcode( 'hoops', '\unFocus\SnS\hoops_shortcode' );
 } );
 function hoops_shortcode( $atts, $content = null, $tag ) {
 	global $post;

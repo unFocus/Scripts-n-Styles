@@ -54,6 +54,6 @@ add_action( 'wp_before_admin_bar_render', function() {
 	] );
 }, 11 );
 
-require_once( "class-scripts-n-styles.php" );
+require_once( "main.php" );
 
 require_once( "class-sns-widget.php" );
