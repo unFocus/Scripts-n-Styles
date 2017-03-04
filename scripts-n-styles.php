@@ -9,7 +9,7 @@ Version: 4.0.0-alpha
 License: GPLv3 or later
 Text Domain: scripts-n-styles
 */
-if ( version_compare( PHP_VERSION, '5.6', '>' ) ) :
+if ( version_compare( PHP_VERSION, '5.3', '>' ) ) :
 /*  The Scripts n Styles WordPress Plugin
 	Copyright (c) 2010-2013  Kenneth Newman  <http://www.unfocus.com/>
 	Copyright (c) 2012  Kevin Newman  <http://www.unfocus.com/>
