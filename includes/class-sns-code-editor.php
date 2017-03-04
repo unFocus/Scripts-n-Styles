@@ -1,9 +1,11 @@
 <?php
+namespace unFocus\SnS;
+
 /**
  * SnS_Admin_Code_Editor
  */
 
-class SnS_Admin_Code_Editor
+class Admin_Code_Editor
 {
 	/**
 	 * Initializing method.

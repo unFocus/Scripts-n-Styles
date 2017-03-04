@@ -1,4 +1,6 @@
 <?php
+namespace unFocus\SnS;
+
 /**
  * Scripts n Styles Admin Class
  *
@@ -19,12 +21,11 @@ require_once( 'class-sns-theme-page.php' );
 require_once( 'class-sns-ajax.php' );
 require_once( 'class-sns-form.php' );
 
-class SnS_Admin
+class Admin
 {
 	/**#@+
 	 * Constants
 	 */
-	const OPTION_GROUP = 'scripts_n_styles';
 	const MENU_SLUG = 'sns';
 	static $parent_slug = '';
 	/**#@-*/
@@ -34,13 +35,13 @@ class SnS_Admin
 	 * @static
 	 */
 	static function init() {
-		add_action( 'admin_menu', array( 'SnS_Admin_Meta_Box', 'init' ) );
-		add_action( 'admin_menu', array( 'SnS_Admin_Code_Editor', 'init' ) );
-		add_action( 'network_admin_menu', array( 'SnS_Admin_Code_Editor', 'init' ) );
+		add_action( 'admin_menu', array( '\unFocus\SnS\Admin_Meta_Box', 'init' ) );
+		add_action( 'admin_menu', array( '\unFocus\SnS\Admin_Code_Editor', 'init' ) );
+		add_action( 'network_admin_menu', array( '\unFocus\SnS\Admin_Code_Editor', 'init' ) );
 
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 
-		add_action( 'admin_init', array( 'SnS_AJAX', 'init' ) );
+		add_action( 'admin_init', array( '\unFocus\SnS\AJAX', 'init' ) );
 		add_action( 'admin_init', array( __CLASS__, 'load_plugin_textdomain' ) );
 
 		$plugin_file = plugin_basename( Scripts_n_Styles::$file );
@@ -60,7 +61,7 @@ class SnS_Admin
 		$top_spots = array( 'menu', 'object', 'utility' );
 		$sub_spots = array( 'tools.php', 'options-general.php', 'themes.php' );
 
-		if ( in_array( $menu_spot, $top_spots ) ) $parent_slug = SnS_Admin::MENU_SLUG;
+		if ( in_array( $menu_spot, $top_spots ) ) $parent_slug = Admin::MENU_SLUG;
 		else if ( in_array( $menu_spot, $sub_spots ) ) $parent_slug = $menu_spot;
 		else $parent_slug = 'tools.php';
 
@@ -68,23 +69,23 @@ class SnS_Admin
 
 		switch( $menu_spot ) {
 			case 'menu':
-				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ), 200 );
 				break;
 			case 'object':
-				add_object_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ), 50 );
 				break;
 			case 'utility':
-				add_utility_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( 'SnS_Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ) );
+				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', Scripts_n_Styles::$file ), 98 );
 				break;
 		}
-		SnS_Plugin_Editor_Page::init();
-		SnS_Theme_Editor_Page::init();
-		SnS_Global_Page::init();
-		SnS_Hoops_Page::init();
+		Plugin_Editor_Page::init();
+		Theme_Editor_Page::init();
+		Global_Page::init();
+		Hoops_Page::init();
 		if ( current_theme_supports( 'scripts-n-styles' ) )
-			SnS_Theme_Page::init();
-		SnS_Settings_Page::init();
-		SnS_Usage_Page::init();
+			Theme_Page::init();
+		Settings_Page::init();
+		Usage_Page::init();
 	}
 
 	/**
@@ -147,7 +148,7 @@ class SnS_Admin
 	static function upgrade() {
 		$options = get_option( 'SnS_options' );
 		if ( ! $options ) $options = array();
-		$options[ 'version' ] = Scripts_n_Styles::VERSION;
+		$options[ 'version' ] = VERSION;
 		update_option( 'SnS_options', $options );
 
 		/*

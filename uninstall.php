@@ -1,4 +1,6 @@
 <?php
+namespace unFocus\SnS;
+
 if( ! defined( 'ABSPATH' ) && ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit();
 $posts = get_posts( array(
 	'numberposts' => -1,

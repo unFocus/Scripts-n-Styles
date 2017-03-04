@@ -1,4 +1,6 @@
 <?php
+namespace unFocus\SnS;
+
 /**
  * SnS_Hoops_Page
  *
@@ -7,7 +9,7 @@
  * post types.
  */
 
-class SnS_Hoops_Page
+class Hoops_Page
 {
 	/**
 	 * Constants
@@ -19,22 +21,22 @@ class SnS_Hoops_Page
 	 * @static
 	 */
 	static function init() {
-		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Hoops' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
+		$hook_suffix = add_submenu_page( Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Hoops' ), 'unfiltered_html', self::MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
 
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
-		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
-		add_action( "load-$hook_suffix", array( 'SnS_Form', 'take_action' ), 49 );
+		add_action( "load-$hook_suffix", array( '\unFocus\SnS\Admin', 'help' ) );
+		add_action( "load-$hook_suffix", array( '\unFocus\SnS\Form', 'take_action' ), 49 );
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
 
 		// Make the page into a tab.
-		if ( SnS_Admin::MENU_SLUG != SnS_Admin::$parent_slug ) {
-			remove_submenu_page( SnS_Admin::$parent_slug, self::MENU_SLUG );
+		if ( Admin::MENU_SLUG != Admin::$parent_slug ) {
+			remove_submenu_page( Admin::$parent_slug, self::MENU_SLUG );
 			add_filter( 'parent_file', array( __CLASS__, 'parent_file') );
 		}
 	}
 	static function parent_file( $parent_file ) {
 		global $plugin_page, $submenu_file;
-		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = SnS_Admin::MENU_SLUG;
+		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = Admin::MENU_SLUG;
 		return $parent_file;
 	}
 
@@ -57,14 +59,14 @@ class SnS_Hoops_Page
 		add_filter( 'sns_options_pre_update_option', array( __CLASS__, 'new_hoops') );
 
 		register_setting(
-			SnS_Admin::OPTION_GROUP,
+			OPTION_GROUP,
 			'SnS_options' );
 
 		add_settings_section(
 			'hoops_section',
 			__( 'The Hoops Shortcodes', 'scripts-n-styles' ),
 			array( __CLASS__, 'hoops_section' ),
-			SnS_Admin::MENU_SLUG );
+			Admin::MENU_SLUG );
 	}
 	static function new_hoops( $options ) {
 		// Get Hoops. (Shouldn't be empty.)

@@ -1,11 +1,11 @@
-<?
+<?php
+namespace unFocus\SnS;
 
 class Scripts_n_Styles
 {
 	/**#@+
 	 * @static
 	 */
-	const VERSION = '4.0.0-alpha';
 	static $file = null;
 	static $cm_themes = array( 'default',
 		'3024-day', '3024-night', 'abcdef', 'ambiance',
@@ -32,16 +32,16 @@ class Scripts_n_Styles
 	 * @static
 	 */
 	static function init() {
-		self::$file = dirname(__FILE__);
+		self::$file = __DIR__;
 		if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERED_HTML ) ) {
 			/*	NOTE: Setting the DISALLOW_UNFILTERED_HTML constant to
 				true in the wp-config.php would effectively disable this
 				plugin's admin because no user would have the capability.
 			*/
 			include_once( 'class-sns-admin.php' );
-			SnS_Admin::init();
+			Admin::init();
 		}
-		register_theme_directory( dirname( self::$file ) . '/theme' );
+		register_theme_directory( dirname( __DIR__ ) . '/theme' );
 		add_action( 'plugins_loaded', array( __CLASS__, 'upgrade_check' ) );
 
 		add_filter( 'body_class', array( __CLASS__, 'body_classes' ) );
@@ -86,7 +86,7 @@ class Scripts_n_Styles
 	static function add_widget() {
 		$options = get_option( 'SnS_options' );
 		if ( isset( $options[ 'hoops_widget' ] ) && 'yes' == $options[ 'hoops_widget' ] )
-			register_widget( 'SnS_Widget' );
+			register_widget( '\unFocus\SnS\Widget' );
 	}
 	static function add_shortcodes() {
 		add_shortcode( 'sns_shortcode', array( __CLASS__, 'shortcode' ) );
@@ -163,7 +163,7 @@ class Scripts_n_Styles
 		);
 	}
 	static function register() {
-		$dir = plugins_url( '/', dirname(__FILE__) );
+		$dir = plugins_url( '/', __DIR__ );
 
 		$vendor = $dir . 'vendor/';
 		wp_register_script( 'clean-css', $vendor . 'cleancss-browser.js', array(), '3.4.21-min' );
@@ -181,17 +181,17 @@ class Scripts_n_Styles
 		wp_register_style(  'codemirror', $vendor . 'codemirror/codemirror.min.css', array(), '5.21.0' );
 
 		$js = $dir . 'js/';
-		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror', 'less.js', 'coffeescript', 'chosen' ), self::VERSION, true );
-		wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror', 'less.js', 'clean-css' ), self::VERSION, true );
-		wp_register_script( 'sns-hoops-page', $js . 'hoops-page.js', array( 'jquery', 'codemirror' ), self::VERSION, true );
-		wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'codemirror' ), self::VERSION, true );
-		wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'codemirror', 'chosen' ), self::VERSION, true );
-		wp_register_script( 'sns-code-editor',  $js . 'code-editor.js',  array( 'editor', 'jquery-ui-tabs', 'codemirror' ), self::VERSION, true );
+		wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror', 'less.js', 'coffeescript', 'chosen' ), VERSION, true );
+		wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror', 'less.js', 'clean-css' ), VERSION, true );
+		wp_register_script( 'sns-hoops-page', $js . 'hoops-page.js', array( 'jquery', 'codemirror' ), VERSION, true );
+		wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'codemirror' ), VERSION, true );
+		wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'codemirror', 'chosen' ), VERSION, true );
+		wp_register_script( 'sns-code-editor',  $js . 'code-editor.js',  array( 'editor', 'jquery-ui-tabs', 'codemirror' ), VERSION, true );
 
 		$css = $dir . 'css/';
-		wp_register_style(  'sns-options', $css . 'options-styles.css', array( 'codemirror' ), self::VERSION );
-		wp_register_style(  'sns-meta-box', $css . 'meta-box.css', array( 'codemirror' ), self::VERSION );
-		wp_register_style(  'sns-code-editor', $css . 'code-editor.css', array( 'codemirror' ), self::VERSION );
+		wp_register_style(  'sns-options', $css . 'options-styles.css', array( 'codemirror' ), VERSION );
+		wp_register_style(  'sns-meta-box', $css . 'meta-box.css', array( 'codemirror' ), VERSION );
+		wp_register_style(  'sns-code-editor', $css . 'code-editor.css', array( 'codemirror' ), VERSION );
 	}
 
 	/**
@@ -349,9 +349,9 @@ class Scripts_n_Styles
 	 */
 	static function upgrade_check() {
 		$options = get_option( 'SnS_options' );
-		if ( ! isset( $options[ 'version' ] ) || version_compare( self::VERSION, $options[ 'version' ], '>' ) ) {
+		if ( ! isset( $options[ 'version' ] ) || version_compare( VERSION, $options[ 'version' ], '>' ) ) {
 			include_once( 'includes/class-sns-admin.php' );
-			SnS_Admin::upgrade();
+			Admin::upgrade();
 		}
 	}
 }

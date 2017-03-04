@@ -1,7 +1,9 @@
 <?php
+namespace unFocus\SnS;
+
 if ( ! class_exists( 'WP_List_Table' ) ) require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 
-class SnS_List_Usage extends WP_List_Table {
+class List_Usage extends \WP_List_Table {
 
 	function ajax_user_can() {
 		return current_user_can( 'unfiltered_html' ) && current_user_can( 'manage_options' );

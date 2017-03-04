@@ -1,5 +1,7 @@
 <?php
-class SnS_AJAX
+namespace unFocus\SnS;
+
+class AJAX
 {
 	static function init() {
 		// Keep track of current tab.
@@ -25,7 +27,7 @@ class SnS_AJAX
 	}
 
 	static function open_theme_panels() {
-		check_ajax_referer( SnS_Admin::OPTION_GROUP . "-options" );
+		check_ajax_referer( OPTION_GROUP . "-options" );
 
 		$name = isset( $_POST[ 'file-name' ] ) ? $_POST[ 'file-name' ] : '';
 		if ( empty( $name ) ) exit( 'empty name');

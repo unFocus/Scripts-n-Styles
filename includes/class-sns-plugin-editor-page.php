@@ -1,4 +1,6 @@
 <?php
+namespace unFocus\SnS;
+
 /**
  * SnS_Settings_Page
  *
@@ -7,7 +9,7 @@
  * post types.
  */
 
-class SnS_Plugin_Editor_Page
+class Plugin_Editor_Page
 {
 	/**
 	 * Constants
@@ -132,7 +134,7 @@ class SnS_Plugin_Editor_Page
 		$files = get_plugin_files( $plugin );
 		// $files = SnS_AJAX::_get_plugin_files( $plugin );
 
-		add_filter( 'editable_extensions', array( 'SnS_Admin_Code_Editor', 'extend' ) );
+		add_filter( 'editable_extensions', array( '\unFocus\SnS\Admin_Code_Editor', 'extend' ) );
 		$editable_extensions = array('php', 'txt', 'text', 'js', 'css', 'html', 'htm', 'xml', 'inc', 'include');
 		$editable_extensions = (array) apply_filters('editable_extensions', $editable_extensions);
 		$ul = '';

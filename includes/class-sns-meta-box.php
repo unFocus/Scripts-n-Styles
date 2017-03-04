@@ -1,4 +1,6 @@
 <?php
+namespace unFocus\SnS;
+
 /**
  * SnS_Admin_Meta_Box
  *
@@ -7,7 +9,7 @@
  * post types.
  */
 
-class SnS_Admin_Meta_Box
+class Admin_Meta_Box
 {
 	/*
 	 * Constants
@@ -94,7 +96,7 @@ class SnS_Admin_Meta_Box
 				add_filter( 'default_hidden_meta_boxes', array( __CLASS__,  'default_hidden_meta_boxes' )  );
 				add_action( "admin_print_styles", array( __CLASS__, 'meta_box_styles'));
 				add_action( "admin_print_scripts", array( __CLASS__, 'meta_box_scripts'));
-				add_filter( 'contextual_help', array( 'SnS_Admin', 'help' ) );
+				add_filter( 'contextual_help', array( '\unFocus\SnS\Admin', 'help' ) );
 				add_filter( 'mce_buttons_2', array( __CLASS__, 'mce_buttons_2' ) );
 				add_filter( 'tiny_mce_before_init', array( __CLASS__, 'tiny_mce_before_init' ) );
 				add_filter( 'mce_css', array( __CLASS__, 'mce_css' ) );

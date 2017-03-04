@@ -1,4 +1,9 @@
-<?
+<?php
+namespace unFocus\SnS;
+
+const VERSION = '4.0.0-alpha';
+const OPTION_GROUP = 'scripts_n_styles';
+
 add_action( 'wp_before_admin_bar_render', function() {
 	global $wp_admin_bar;
 	$wp_admin_bar->add_node( [

@@ -1,4 +1,6 @@
 <?php
+namespace unFocus\SnS;
+
 /**
  * SnS_Settings_Page
  *
@@ -7,7 +9,7 @@
  * post types.
  */
 
-class SnS_Settings_Page
+class Settings_Page
 {
 	/**
 	 * Constants
@@ -19,22 +21,22 @@ class SnS_Settings_Page
 	 * @static
 	 */
 	static function init() {
-		$hook_suffix = add_submenu_page( SnS_Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Settings' ), 'unfiltered_html', self::MENU_SLUG, array( 'SnS_Form', 'page' ) );
+		$hook_suffix = add_submenu_page( Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Settings' ), 'unfiltered_html', self::MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
 
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
-		add_action( "load-$hook_suffix", array( 'SnS_Admin', 'help' ) );
-		add_action( "load-$hook_suffix", array( 'SnS_Form', 'take_action' ), 49 );
+		add_action( "load-$hook_suffix", array( '\unFocus\SnS\Admin', 'help' ) );
+		add_action( "load-$hook_suffix", array( '\unFocus\SnS\Form', 'take_action' ), 49 );
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
 
 		// Make the page into a tab.
-		if ( SnS_Admin::MENU_SLUG != SnS_Admin::$parent_slug ) {
-			remove_submenu_page( SnS_Admin::$parent_slug, self::MENU_SLUG );
+		if ( Admin::MENU_SLUG != Admin::$parent_slug ) {
+			remove_submenu_page( Admin::$parent_slug, self::MENU_SLUG );
 			add_filter( 'parent_file', array( __CLASS__, 'parent_file') );
 		}
 	}
 	static function parent_file( $parent_file ) {
 		global $plugin_page, $submenu_file;
-		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = SnS_Admin::MENU_SLUG;
+		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = Admin::MENU_SLUG;
 		return $parent_file;
 	}
 
@@ -56,20 +58,20 @@ class SnS_Settings_Page
 		wp_enqueue_style( 'sns-options' );
 
 		register_setting(
-			SnS_Admin::OPTION_GROUP,
+			OPTION_GROUP,
 			'SnS_options' );
 
 		add_settings_section(
 			'settings',
 			__( 'Scripts n Styles Settings', 'scripts-n-styles' ),
 			array( __CLASS__, 'settings_section' ),
-			SnS_Admin::MENU_SLUG );
+			Admin::MENU_SLUG );
 
 		add_settings_field(
 			'metabox',
 			__( '<strong>Hide Metabox by default</strong>: ', 'scripts-n-styles' ),
-			array( 'SnS_Form', 'radio' ),
-			SnS_Admin::MENU_SLUG,
+			array( '\unFocus\SnS\Form', 'radio' ),
+			Admin::MENU_SLUG,
 			'settings',
 			array(
 				'label_for' => 'metabox',
@@ -84,8 +86,8 @@ class SnS_Settings_Page
 		add_settings_field(
 			'menu_position',
 			__( '<strong>Menu Position</strong>: ', 'scripts-n-styles' ),
-			array( 'SnS_Form', 'radio' ),
-			SnS_Admin::MENU_SLUG,
+			array( '\unFocus\SnS\Form', 'radio' ),
+			Admin::MENU_SLUG,
 			'settings',
 			array(
 				'label_for' => 'menu_position',
@@ -101,13 +103,13 @@ class SnS_Settings_Page
 			'demo',
 			__( 'Code Mirror Demo', 'scripts-n-styles' ),
 			array( __CLASS__, 'demo_section' ),
-			SnS_Admin::MENU_SLUG );
+			Admin::MENU_SLUG );
 
 		add_settings_field(
 			'cm_theme',
 			__( '<strong>Theme</strong>: ', 'scripts-n-styles' ),
-			array( 'SnS_Form', 'radio' ),
-			SnS_Admin::MENU_SLUG,
+			array( '\unFocus\SnS\Form', 'radio' ),
+			Admin::MENU_SLUG,
 			'demo',
 			array(
 				'label_for' => 'cm_theme',
@@ -121,8 +123,8 @@ class SnS_Settings_Page
 		add_settings_field(
 			'hoops_widget',
 			__( '<strong>Hoops Widgets</strong>: ', 'scripts-n-styles' ),
-			array( 'SnS_Form', 'radio' ),
-			SnS_Admin::MENU_SLUG,
+			array( '\unFocus\SnS\Form', 'radio' ),
+			Admin::MENU_SLUG,
 			'settings',
 			array(
 				'label_for' => 'hoops_widget',

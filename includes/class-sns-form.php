@@ -1,4 +1,6 @@
 <?php
+namespace unFocus\SnS;
+
 /**
  * SnS_Global_Page
  *
@@ -7,7 +9,7 @@
  * post types.
  */
 
-class SnS_Form
+class Form
 {
 	/**
 	 * Settings Page
@@ -151,7 +153,7 @@ class SnS_Form
 		}
 
 		// Redirect to new page if changed.
-		if ( isset( $_POST[ $option ][ 'menu_position' ] ) && ( $value[ 'menu_position' ] != SnS_Admin::$parent_slug ) ) {
+		if ( isset( $_POST[ $option ][ 'menu_position' ] ) && ( $value[ 'menu_position' ] != Admin::$parent_slug ) ) {
 			switch( $value[ 'menu_position' ] ) {
 				case 'menu':
 				case 'object':
@@ -173,10 +175,10 @@ class SnS_Form
 	static function page() {
 		?>
 		<div class="wrap">
-			<?php SnS_Admin::nav(); ?>
+			<?php Admin::nav(); ?>
 			<form action="" method="post" autocomplete="off">
-			<?php settings_fields( SnS_Admin::OPTION_GROUP ); ?>
-			<?php do_settings_sections( SnS_Admin::MENU_SLUG ); ?>
+			<?php settings_fields( OPTION_GROUP ); ?>
+			<?php do_settings_sections( Admin::MENU_SLUG ); ?>
 			<?php if ( apply_filters( 'sns_show_submit_button', true ) ) submit_button(); ?>
 			</form>
 		</div>

@@ -1,4 +1,6 @@
 <?php
+namespace unFocus\SnS;
+
 /**
  * SnS_Settings_Page
  *
@@ -7,7 +9,7 @@
  * post types.
  */
 
-class SnS_Theme_Editor_Page
+class Theme_Editor_Page
 {
 	/**
 	 * Constants

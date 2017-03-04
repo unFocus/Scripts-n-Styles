@@ -1,6 +1,7 @@
-<?
+<?php
+namespace unFocus\SnS;
 
-class SnS_Widget extends WP_Widget
+class Widget extends \WP_Widget
 {
 	function __construct() {
 		$widget_ops = array( 'classname' => 'sns_widget_text', 'description' => __( 'Arbitrary text or HTML (including "hoops" shortcodes)', 'scripts-n-styles' ) );
@@ -24,8 +25,8 @@ class SnS_Widget extends WP_Widget
 		$backup = $shortcode_tags;
 		remove_all_shortcodes();
 
-		add_shortcode( 'sns_shortcode', array( 'Scripts_n_Styles', 'hoops_widget' ) );
-		add_shortcode( 'hoops', array( 'Scripts_n_Styles', 'hoops_widget' ) );
+		add_shortcode( 'sns_shortcode', array( '\unFocus\SnS\Scripts_n_Styles', 'hoops_widget' ) );
+		add_shortcode( 'hoops', array( '\unFocus\SnS\Scripts_n_Styles', 'hoops_widget' ) );
 
 		$content = do_shortcode( $content );
 
