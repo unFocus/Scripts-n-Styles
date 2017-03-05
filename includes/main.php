@@ -1,6 +1,10 @@
 <?php
 namespace unFocus\SnS;
 
+/**
+ * Theme support of Scripts n Styles
+ * If a theme registers support, replace css with a generated version.
+ */
 add_action( 'wp_print_styles', function() {
 	if ( current_theme_supports( 'scripts-n-styles' ) ) {
 		$options = get_option( 'SnS_options' );
@@ -13,6 +17,9 @@ add_action( 'wp_print_styles', function() {
 	}
 } );
 
+/**
+ * Gets the generated theme css
+ */
 add_action( 'wp_ajax_sns_theme_css', '\unFocus\SnS\theme_css' );
 add_action( 'wp_ajax_nopriv_sns_theme_css', '\unFocus\SnS\theme_css' );
 function theme_css() {
@@ -25,6 +32,10 @@ function theme_css() {
 	echo $compiled;
 	die();
 }
+
+/**
+ * The Hoops shortcode
+ */
 add_action( 'plugins_loaded', function() {
 	add_shortcode( 'sns_shortcode', '\unFocus\SnS\hoops_shortcode' );
 	add_shortcode( 'hoops', '\unFocus\SnS\hoops_shortcode' );
@@ -54,6 +65,9 @@ function hoops_shortcode( $atts, $content = null, $tag ) {
 	return $output;
 }
 
+/**
+ * Register bundled scripts
+ */
 add_action( 'wp_enqueue_scripts', '\unFocus\SnS\register_scripts' );
 add_action( 'admin_enqueue_scripts', '\unFocus\SnS\register_scripts' );
 function register_scripts() {
