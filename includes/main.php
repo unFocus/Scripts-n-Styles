@@ -1,18 +1,6 @@
 <?php
 namespace unFocus\SnS;
 
-add_action( 'wp_before_admin_bar_render', function() {
-	global $wp_admin_bar;
-	$wp_admin_bar->add_node( [
-		'id'    => 'Scripts_n_Styles',
-		'title' => 'Scripts n Styles',
-		'href'  => '#',
-		'meta'  => array( 'class' => 'Scripts_n_Styles' )
-	] );
-}, 11 );
-
-register_theme_directory( dirname( __DIR__ ) . '/theme' );
-
 add_action( 'wp_print_styles', function() {
 	if ( current_theme_supports( 'scripts-n-styles' ) ) {
 		$options = get_option( 'SnS_options' );
@@ -253,14 +241,3 @@ add_action( 'wp_enqueue_scripts', function() {
 			wp_enqueue_script( $handle );
 	}
 }, 11 );
-
-/**
- * Utility Method: Compares VERSION to stored 'version' value.
- */
-add_action( 'plugins_loaded', function() {
-	$options = get_option( 'SnS_options' );
-	if ( ! isset( $options[ 'version' ] ) || version_compare( VERSION, $options[ 'version' ], '>' ) ) {
-		include_once( 'includes/class-sns-admin.php' );
-		Admin::upgrade();
-	}
-} );
