@@ -126,7 +126,7 @@ class Admin_Meta_Box
 
 		$position = get_user_option( "current_sns_tab" );
 		if ( ! in_array( $position, array( 's0', 's1', 's2', 's3', 's4', 's5' ) ) ) $position = 's0';
-		wp_nonce_field( __DIR__, self::NONCE_NAME );
+		wp_nonce_field( BASENAME, self::NONCE_NAME );
 		?>
 			<ul class="wp-tab-bar">
 				<li<?php echo ( 's0' == $position ) ? ' class="wp-tab-active"': ''; ?>><a href="#SnS_scripts-tab"><?php _e( 'Scripts', 'scripts-n-styles' ) ?></a></li>
@@ -320,7 +320,7 @@ class Admin_Meta_Box
 	 * @param int $post_id ID value of the WordPress post.
 	 */
 	static function save_post( $post_id ) {
-		if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], __DIR__ )
+		if ( ! isset( $_POST[ self::NONCE_NAME ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], BASENAME )
 			|| ! current_user_can( 'unfiltered_html' )
 			|| wp_is_post_revision( $post_id ) // is needed for get_post_meta compatibility.
 			|| ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )

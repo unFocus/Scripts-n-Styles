@@ -1,5 +1,5 @@
 <?php
-
+const BASENAME = 'scripts-n-styles/scripts-n-styles.php';
 const VERSION = '4.0.0-alpha';
 const OPTION_GROUP = 'scripts_n_styles';
 const ADMIN_MENU_SLUG = 'sns';

@@ -71,7 +71,7 @@ function hoops_shortcode( $atts, $content = null, $tag ) {
 add_action( 'wp_enqueue_scripts', '\unFocus\SnS\register_scripts' );
 add_action( 'admin_enqueue_scripts', '\unFocus\SnS\register_scripts' );
 function register_scripts() {
-	$dir = plugins_url( '/', __DIR__ );
+	$dir = plugins_url( '/', BASENAME );
 
 	$vendor = $dir . 'vendor/';
 	wp_register_script( 'clean-css', $vendor . 'cleancss-browser.js', array(), '3.4.21-min' );

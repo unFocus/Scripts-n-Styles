@@ -42,13 +42,12 @@ class Admin
 		add_action( 'admin_init', array( '\unFocus\SnS\AJAX', 'init' ) );
 		add_action( 'admin_init', array( __CLASS__, 'load_plugin_textdomain' ) );
 
-		$plugin_file = plugin_basename( __DIR__ );
-		add_filter( "plugin_action_links_$plugin_file", array( __CLASS__, 'plugin_action_links') );
+		add_filter( 'plugin_action_links_'.BASENAME, array( __CLASS__, 'plugin_action_links') );
 
 	}
 
 	static function load_plugin_textdomain() {
-		load_plugin_textdomain( 'scripts-n-styles', false, dirname( plugin_basename( __DIR__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'scripts-n-styles', false, dirname( BASENAME ) . '/languages/' );
 	}
 	static function menu() {
 		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
@@ -66,13 +65,13 @@ class Admin
 
 		switch( $menu_spot ) {
 			case 'menu':
-				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', __DIR__ ), 200 );
+				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', BASENAME ), 200 );
 				break;
 			case 'object':
-				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', __DIR__ ), 50 );
+				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', BASENAME ), 50 );
 				break;
 			case 'utility':
-				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', __DIR__ ), 98 );
+				add_menu_page( __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Scripts n Styles', 'scripts-n-styles' ), 'unfiltered_html', $parent_slug, array( '\unFocus\SnS\Form', 'page' ), plugins_url( 'images/menu.png', BASENAME ), 98 );
 				break;
 		}
 		Plugin_Editor_Page::init();
