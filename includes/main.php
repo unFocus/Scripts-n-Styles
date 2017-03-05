@@ -37,11 +37,6 @@ function theme_css() {
 	echo $compiled;
 	die();
 }
-add_action( 'widgets_init', function() {
-	$options = get_option( 'SnS_options' );
-	if ( isset( $options[ 'hoops_widget' ] ) && 'yes' == $options[ 'hoops_widget' ] )
-		register_widget( '\unFocus\SnS\Widget' );
-} );
 add_action( 'plugins_loaded', function() {
 	add_shortcode( 'sns_shortcode', '\unFocus\SnS\hoops_shortcode' );
 	add_shortcode( 'hoops', '\unFocus\SnS\hoops_shortcode' );

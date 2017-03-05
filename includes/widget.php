@@ -1,6 +1,12 @@
 <?php
 namespace unFocus\SnS;
 
+add_action( 'widgets_init', function() {
+	$options = get_option( 'SnS_options' );
+	if ( isset( $options[ 'hoops_widget' ] ) && 'yes' == $options[ 'hoops_widget' ] )
+		register_widget( '\unFocus\SnS\Widget' );
+} );
+
 function widget_shortcode( $atts, $content = null, $tag ) {
 	$options = get_option( 'SnS_options' );
 	$hoops = $options['hoops']['shortcodes'];
