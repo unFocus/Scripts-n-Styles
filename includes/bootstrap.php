@@ -1,9 +1,10 @@
 <?php
 namespace unFocus\SnS;
 
-require_once( "constants.php" );
-require_once( "main.php" );
-require_once( "class-sns-widget.php" );
+require_once( 'constants.php' );
+require_once( 'main.php' );
+require_once( 'utility.php' );
+require_once( 'widget.php' );
 
 
 if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERED_HTML ) ) {

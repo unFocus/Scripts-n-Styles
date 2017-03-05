@@ -45,7 +45,6 @@ class Admin
 		$plugin_file = plugin_basename( __DIR__ );
 		add_filter( "plugin_action_links_$plugin_file", array( __CLASS__, 'plugin_action_links') );
 
-		register_activation_hook( __DIR__, array( __CLASS__, 'upgrade' ) );
 	}
 
 	static function load_plugin_textdomain() {
@@ -138,60 +137,6 @@ class Admin
 		} else {
 			add_contextual_help( $screen, $help . $sidebar );
 		}
-	}
-
-	/**
-	 * Utility Method: Sets defaults if not previously set. Sets stored 'version' to VERSION.
-	 */
-	static function upgrade() {
-		$options = get_option( 'SnS_options' );
-		if ( ! $options ) $options = array();
-		$options[ 'version' ] = VERSION;
-		update_option( 'SnS_options', $options );
-
-		/*
-		 * upgrade proceedure
-		 */
-		$posts = get_posts(
-			array(
-				'numberposts' => -1,
-				'post_type' => 'any',
-				'post_status' => 'any',
-				'meta_query' => array(
-					'relation' => 'OR',
-					array( 'key' => '_SnS_scripts' ),
-					array( 'key' => '_SnS_styles' ),
-					array( 'key' => 'uFp_scripts' ),
-					array( 'key' => 'uFp_styles' )
-				)
-			)
-		);
-
-		foreach( $posts as $post) {
-			$styles = get_post_meta( $post->ID, '_SnS_styles', true );
-			if ( empty( $styles ) )
-				$styles = get_post_meta( $post->ID, 'uFp_styles', true );
-
-			$scripts = get_post_meta( $post->ID, '_SnS_scripts', true );
-			if ( empty( $scripts ) )
-				$scripts = get_post_meta( $post->ID, 'uFp_scripts', true );
-
-			$SnS = array();
-			if ( ! empty( $styles ) )
-				$SnS[ 'styles' ] = $styles;
-
-			if ( ! empty( $scripts ) )
-				$SnS[ 'scripts' ] = $scripts;
-
-			if ( ! empty( $SnS ) )
-				update_post_meta( $post->ID, '_SnS', $SnS );
-
-			delete_post_meta( $post->ID, 'uFp_styles' );
-			delete_post_meta( $post->ID, 'uFp_scripts' );
-			delete_post_meta( $post->ID, '_SnS_styles' );
-			delete_post_meta( $post->ID, '_SnS_scripts' );
-		}
-
 	}
 
 	/**
