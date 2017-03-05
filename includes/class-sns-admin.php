@@ -145,7 +145,7 @@ class Admin
 	 * @return array
 	 */
 	static function plugin_action_links( $actions ) {
-		$actions[ 'settings' ] = '<a href="' . menu_page_url( SnS_Settings_Page::MENU_SLUG, false ) . '"/>' . __( 'Settings' ) . '</a>';
+		$actions[ 'settings' ] = '<a href="' . menu_page_url( Settings_Page::MENU_SLUG, false ) . '"/>' . __( 'Settings' ) . '</a>';
 		return $actions;
 	}
 

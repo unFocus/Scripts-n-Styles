@@ -2,7 +2,7 @@
 namespace unFocus\SnS;
 
 /**
- * SnS_Settings_Page
+ * Settings_Page
  *
  * Allows WordPress admin users the ability to add custom CSS
  * and JavaScript directly to individual Post, Pages or custom
@@ -132,7 +132,7 @@ class Plugin_Editor_Page
 		$active = is_plugin_active( $plugin ) || is_plugin_active_for_network( $plugin );
 
 		$files = get_plugin_files( $plugin );
-		// $files = SnS_AJAX::_get_plugin_files( $plugin );
+		// $files = AJAX::_get_plugin_files( $plugin );
 
 		add_filter( 'editable_extensions', array( '\unFocus\SnS\Admin_Code_Editor', 'extend' ) );
 		$editable_extensions = array('php', 'txt', 'text', 'js', 'css', 'html', 'htm', 'xml', 'inc', 'include');

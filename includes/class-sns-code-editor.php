@@ -2,7 +2,7 @@
 namespace unFocus\SnS;
 
 /**
- * SnS_Admin_Code_Editor
+ * Admin_Code_Editor
  */
 
 class Admin_Code_Editor

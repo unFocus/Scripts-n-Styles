@@ -2,7 +2,7 @@
 namespace unFocus\SnS;
 
 /**
- * SnS_Theme_Page
+ * Theme_Page
  *
  * Allows WordPress admin users the ability to edit theme CSS
  * and LESS directly in the admin via CodeMirror.

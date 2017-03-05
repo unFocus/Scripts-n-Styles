@@ -2,7 +2,7 @@
 namespace unFocus\SnS;
 
 /**
- * SnS_Settings_Page
+ * Settings_Page
  *
  * Allows WordPress admin users the ability to add custom CSS
  * and JavaScript directly to individual Post, Pages or custom

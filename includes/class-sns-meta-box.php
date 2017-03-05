@@ -2,7 +2,7 @@
 namespace unFocus\SnS;
 
 /**
- * SnS_Admin_Meta_Box
+ * Admin_Meta_Box
  *
  * Allows WordPress admin users the ability to add custom CSS
  * and JavaScript directly to individual Post, Pages or custom
