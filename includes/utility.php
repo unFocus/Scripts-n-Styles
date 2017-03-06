@@ -104,3 +104,35 @@ function get_registered_scripts() {
 	'media-editor', 'mce-view', 'less.js', 'coffeescript', 'chosen', 'coffeelint', 'mustache', 'html5shiv', 'html5shiv-printshiv',
 	'google-diff-match-patch', 'codemirror' ];
 }
+
+
+/**
+ * Settings Page help
+ */
+function help() {
+	$help    = '<p>' . __( 'In default (non MultiSite) WordPress installs, both <em>Administrators</em> and <em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either <em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically "unfiltered_html"), other users can be granted access.', 'scripts-n-styles' ) . '</p>';
+	$help   .= '<p><strong>' . __( 'Reference: jQuery Wrappers', 'scripts-n-styles' ) . '</strong></p>' .
+			   '<pre><code>jQuery(document).ready(function($) {
+// $() will work as an alias for jQuery() inside of this function
+});</code></pre>';
+	$help   .= '<pre><code>(function($) {
+// $() will work as an alias for jQuery() inside of this function
+})(jQuery);</code></pre>';
+	$sidebar = '<p><strong>' . __( 'For more information:', 'scripts-n-styles' ) . '</strong></p>' .
+				'<p>' . __( '<a href="http://wordpress.org/extend/plugins/scripts-n-styles/faq/" target="_blank">Frequently Asked Questions</a>', 'scripts-n-styles' ) . '</p>' .
+				'<p>' . __( '<a href="https://github.com/unFocus/Scripts-n-Styles" target="_blank">Source on github</a>', 'scripts-n-styles' ) . '</p>' .
+				'<p>' . __( '<a href="http://wordpress.org/tags/scripts-n-styles" target="_blank">Support Forums</a>', 'scripts-n-styles' ) . '</p>';
+	$screen = get_current_screen();
+	if ( method_exists( $screen, 'add_help_tab' ) ) {
+		$screen->add_help_tab( array(
+			'title' => __( 'Scripts n Styles', 'scripts-n-styles' ),
+			'id' => 'scripts-n-styles',
+			'content' => $help
+			)
+		);
+		if ( 'post' != $screen->id )
+			$screen->set_help_sidebar( $sidebar );
+	} else {
+		add_contextual_help( $screen, $help . $sidebar );
+	}
+}

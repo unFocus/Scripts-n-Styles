@@ -152,19 +152,6 @@ class Form
 			exit( $output );
 		}
 
-		// Redirect to new page if changed.
-		if ( isset( $_POST[ $option ][ 'menu_position' ] ) && ( $value[ 'menu_position' ] != Admin::$parent_slug ) ) {
-			switch( $value[ 'menu_position' ] ) {
-				case 'menu':
-				case 'object':
-				case 'utility':
-					wp_redirect( add_query_arg( array( 'message' => 1, 'page' => 'sns_settings' ), admin_url( 'admin.php' ) ) );
-					break;
-				default:
-					wp_redirect( add_query_arg( array( 'message' => 1, 'page' => 'sns_settings' ), admin_url( $value[ 'menu_position' ] ) ) );
-					break;
-			}
-		}
 		return;
 	}
 
@@ -175,7 +162,7 @@ class Form
 	static function page() {
 		?>
 		<div class="wrap">
-			<?php Admin::nav(); ?>
+			<?php nav(); ?>
 			<form action="" method="post" autocomplete="off">
 			<?php settings_fields( OPTION_GROUP ); ?>
 			<?php do_settings_sections( ADMIN_MENU_SLUG ); ?>
@@ -184,5 +171,27 @@ class Form
 		</div>
 		<?php
 	}
+}
+/**
+ * Nav Tabs
+ */
+function nav() {
+	$options = get_option( 'SnS_options' );
+	$page = $_REQUEST[ 'page' ];
+	?>
+	<?php screen_icon(); ?>
+	<h2>Scripts n Styles</h2>
+	<?php settings_errors(); ?>
+	<?php screen_icon( 'none' ); ?>
+	<h3 class="nav-tab-wrapper">
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG == $page )               ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG );               ?>"><?php _e( 'Global',   'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_hoops' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_hoops' );    ?>"><?php _e( 'Hoops',   'scripts-n-styles' ); ?></a>
+		<?php if ( current_theme_supports( 'scripts-n-styles' ) ) { ?>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_theme' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_theme' );    ?>"><?php _e( 'Theme',    'scripts-n-styles' ); ?></a>
+		<?php } ?>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_settings' == $page ) ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_settings' ); ?>"><?php _e( 'Settings', 'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_usage' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_usage' );    ?>"><?php _e( 'Usage',    'scripts-n-styles' ); ?></a>
+	</h3>
+	<?php
 }
 ?>

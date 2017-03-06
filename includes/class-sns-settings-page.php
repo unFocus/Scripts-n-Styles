@@ -21,23 +21,12 @@ class Settings_Page
 	 * @static
 	 */
 	static function init() {
-		$hook_suffix = add_submenu_page( Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Settings' ), 'unfiltered_html', self::MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
+		$hook_suffix = add_submenu_page( ADMIN_MENU_SLUG, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Settings' ), 'unfiltered_html', self::MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
 
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
-		add_action( "load-$hook_suffix", array( '\unFocus\SnS\Admin', 'help' ) );
+		add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
 		add_action( "load-$hook_suffix", array( '\unFocus\SnS\Form', 'take_action' ), 49 );
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
-
-		// Make the page into a tab.
-		if ( ADMIN_MENU_SLUG != Admin::$parent_slug ) {
-			remove_submenu_page( Admin::$parent_slug, self::MENU_SLUG );
-			add_filter( 'parent_file', array( __CLASS__, 'parent_file') );
-		}
-	}
-	static function parent_file( $parent_file ) {
-		global $plugin_page, $submenu_file;
-		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = ADMIN_MENU_SLUG;
-		return $parent_file;
 	}
 
 	static function admin_enqueue_scripts() {
@@ -81,22 +70,6 @@ class Settings_Page
 				'default' => 'yes',
 				'legend' => __( 'Hide Metabox by default', 'scripts-n-styles' ),
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">This is overridable via Screen Options on each edit screen.</span>', 'scripts-n-styles' )
-			) );
-
-		add_settings_field(
-			'menu_position',
-			__( '<strong>Menu Position</strong>: ', 'scripts-n-styles' ),
-			array( '\unFocus\SnS\Form', 'radio' ),
-			ADMIN_MENU_SLUG,
-			'settings',
-			array(
-				'label_for' => 'menu_position',
-				'setting' => 'SnS_options',
-				'choices' => array( 'menu', 'object', 'utility', 'tools.php', 'options-general.php', 'themes.php' ),
-				'default' => 'tools.php',
-				'legend' => __( 'Theme', 'scripts-n-styles' ),
-				'layout' => 'vertical',
-				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">Some people are fussy about where the menu goes, so I made an option.</span>', 'scripts-n-styles' ),
 			) );
 
 		add_settings_section(

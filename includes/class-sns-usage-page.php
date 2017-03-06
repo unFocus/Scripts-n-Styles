@@ -21,22 +21,11 @@ class Usage_Page
 	 * @static
 	 */
 	static function init() {
-		$hook_suffix = add_submenu_page( Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Usage', 'scripts-n-styles' ), 'unfiltered_html', self::MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
+		$hook_suffix = add_submenu_page( ADMIN_MENU_SLUG, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Usage', 'scripts-n-styles' ), 'unfiltered_html', self::MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
 
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
-		add_action( "load-$hook_suffix", array( '\unFocus\SnS\Admin', 'help' ) );
+		add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
-
-		// Make the page into a tab.
-		if ( ADMIN_MENU_SLUG != Admin::$parent_slug ) {
-			remove_submenu_page( Admin::$parent_slug, ADMIN_MENU_SLUG );
-			add_filter( 'parent_file', array( __CLASS__, 'parent_file') );
-		}
-	}
-	static function parent_file( $parent_file ) {
-		global $plugin_page, $submenu_file;
-		if ( self::MENU_SLUG == $plugin_page ) $submenu_file = ADMIN_MENU_SLUG;
-		return $parent_file;
 	}
 
 	static function admin_enqueue_scripts() {

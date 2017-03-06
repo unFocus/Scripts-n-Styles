@@ -17,8 +17,6 @@ if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERE
 		plugin's admin because no user would have the capability.
 	*/
 	require_once( 'class-sns-admin.php' );
-	Admin::init();
-
 	require_once( 'class-sns-meta-box.php' );
 	require_once( 'class-sns-plugin-editor-page.php' );
 	require_once( 'class-sns-theme-editor-page.php' );

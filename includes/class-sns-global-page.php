@@ -16,13 +16,12 @@ class Global_Page
 	 * @static
 	 */
 	static function init() {
-		if ( Admin::$parent_slug == ADMIN_MENU_SLUG ) $menu_title = __( 'Global', 'scripts-n-styles' );
-		else $menu_title = __( 'Scripts n Styles', 'scripts-n-styles' );
+		$menu_title = __( 'Global', 'scripts-n-styles' );
 
-		$hook_suffix = add_submenu_page( Admin::$parent_slug, __( 'Scripts n Styles', 'scripts-n-styles' ), $menu_title, 'unfiltered_html', ADMIN_MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
+		$hook_suffix = add_submenu_page( ADMIN_MENU_SLUG, __( 'Scripts n Styles', 'scripts-n-styles' ), $menu_title, 'unfiltered_html', ADMIN_MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
 
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
-		add_action( "load-$hook_suffix", array( '\unFocus\SnS\Admin', 'help' ) );
+		add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
 		add_action( "load-$hook_suffix", array( '\unFocus\SnS\Form', 'take_action' ), 49 );
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
 	}
