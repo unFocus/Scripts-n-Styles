@@ -19,7 +19,7 @@ if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERE
 	*/
 
 	require_once( __DIR__.'/admin.php' );
-	require_once( __DIR__.'/class-sns-meta-box.php' );
+	require_once( __DIR__.'/meta-box.php' );
 	require_once( __DIR__.'/class-sns-plugin-editor-page.php' );
 	require_once( __DIR__.'/class-sns-theme-editor-page.php' );
 	require_once( __DIR__.'/class-sns-settings-page.php' );
