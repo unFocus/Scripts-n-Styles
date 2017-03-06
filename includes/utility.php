@@ -122,14 +122,14 @@ function get_registered_scripts() {
  * Settings Page help
  */
 function help() {
-	$help    = '<p>' . __( 'In default (non MultiSite) WordPress installs, both <em>Administrators</em> and <em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either <em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically "unfiltered_html"), other users can be granted access.', 'scripts-n-styles' ) . '</p>';
-	$help   .= '<p><strong>' . __( 'Reference: jQuery Wrappers', 'scripts-n-styles' ) . '</strong></p>' .
-			   '<pre><code>jQuery(document).ready(function($) {
-// $() will work as an alias for jQuery() inside of this function
-});</code></pre>';
-	$help   .= '<pre><code>(function($) {
-// $() will work as an alias for jQuery() inside of this function
-})(jQuery);</code></pre>';
+	$help  = '<p>' . __( 'In default (non MultiSite) WordPress installs, both <em>Administrators</em> and <em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either <em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically "unfiltered_html"), other users can be granted access.', 'scripts-n-styles' ) . '</p>';
+	$help .= '<p><strong>' . __( 'Reference: jQuery Wrappers', 'scripts-n-styles' ) . '</strong></p>'
+		  . '<pre><code>jQuery(document).ready(function($) {'
+		  . '// $() will work as an alias for jQuery() inside of this function'
+		  . '});</code></pre>';
+	$help .= '<pre><code>(function($) {'
+		  . '// $() will work as an alias for jQuery() inside of this function'
+		  . '})(jQuery);</code></pre>';
 	$sidebar = '<p><strong>' . __( 'For more information:', 'scripts-n-styles' ) . '</strong></p>' .
 				'<p>' . __( '<a href="http://wordpress.org/extend/plugins/scripts-n-styles/faq/" target="_blank">Frequently Asked Questions</a>', 'scripts-n-styles' ) . '</p>' .
 				'<p>' . __( '<a href="https://github.com/unFocus/Scripts-n-Styles" target="_blank">Source on github</a>', 'scripts-n-styles' ) . '</p>' .
