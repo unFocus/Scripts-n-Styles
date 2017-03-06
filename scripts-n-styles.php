@@ -76,10 +76,10 @@ if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) :
 	require_once( "includes/bootstrap.php" );
 
 else :
-	function SnS_Disable_message() {
+	function SnS_disable_message() {
 		?><div class="notice notice-success is-dismissible">
 		<p>Sorry, Scripts n Styles doesn't work with <strong>outdated and insecure PHP versions.</strong> Please contact your host.</p>
 		</div><?php
 	}
-	add_action( 'admin_notices', 'SnS_Disable_message' );
+	add_action( 'admin_notices', 'SnS_disable_message' );
 endif;
