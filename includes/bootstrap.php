@@ -28,6 +28,6 @@ if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERE
 	require_once( 'class-sns-global-page.php' );
 	require_once( 'class-sns-hoops-page.php' );
 	require_once( 'class-sns-theme-page.php' );
-	require_once( 'class-sns-ajax.php' );
+	require_once( 'ajax.php' );
 	require_once( 'class-sns-form.php' );
 }

@@ -39,7 +39,6 @@ class Admin
 
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 
-		add_action( 'admin_init', array( '\unFocus\SnS\AJAX', 'init' ) );
 		add_action( 'admin_init', array( __CLASS__, 'load_plugin_textdomain' ) );
 
 		add_filter( 'plugin_action_links_'.BASENAME, array( __CLASS__, 'plugin_action_links') );
