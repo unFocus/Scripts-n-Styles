@@ -16,7 +16,7 @@ if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERE
 		true in the wp-config.php would effectively disable this
 		plugin's admin because no user would have the capability.
 	*/
-	require_once( 'class-sns-admin.php' );
+	require_once( 'admin.php' );
 	require_once( 'class-sns-meta-box.php' );
 	require_once( 'class-sns-plugin-editor-page.php' );
 	require_once( 'class-sns-theme-editor-page.php' );
