@@ -119,7 +119,6 @@ class Admin_Meta_Box
 	 * @param unknown_type WordPress Post object.
 	 */
 	static function admin_meta_box( $post ) {
-		$registered_handles = REGISTERED;
 		$SnS = get_post_meta( $post->ID, '_SnS', true );
 		$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 		$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
@@ -226,11 +225,11 @@ class Admin_Meta_Box
 				<select name="SnS_enqueue_scripts[]" id="SnS_enqueue_scripts" size="5" multiple="multiple" style="height: auto; float: left; margin: 6px 10px 8px 0;">
 					<?php
 					if ( ! empty( $scripts[ 'enqueue_scripts' ] ) && is_array( $scripts[ 'enqueue_scripts' ] ) ) {
-						foreach ( $registered_handles as $value ) { ?>
+						foreach ( get_registered_scripts() as $value ) { ?>
 							<option value="<?php echo esc_attr( $value ) ?>"<?php foreach ( $scripts[ 'enqueue_scripts' ] as $handle ) selected( $handle, $value ); ?>><?php echo esc_html( $value ) ?></option>
 						<?php }
 					} else {
-						foreach ( $registered_handles as $value ) { ?>
+						foreach ( get_registered_scripts() as $value ) { ?>
 							<option value="<?php echo esc_attr( $value ) ?>"><?php echo esc_html( $value ) ?></option>
 						<?php }
 					} ?>

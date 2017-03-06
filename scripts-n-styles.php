@@ -63,7 +63,15 @@ Text Domain: scripts-n-styles
  * @todo Clean up tiny_mce_before_init in SnS_Admin_Meta_Box.
  */
 
-if ( version_compare( PHP_VERSION, '5.6', '>=' ) ) :
+if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) :
+
+	/**
+	 * This utility function is location specific.
+	 * Use in places where __FILE__ would otherwise be used.
+	 */
+	function _FILE_() {
+		return __FILE__;
+	}
 
 	require_once( "includes/bootstrap.php" );
 

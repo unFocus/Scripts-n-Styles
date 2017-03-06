@@ -130,7 +130,7 @@ class Global_Page
 			array(
 				'label_for' => 'enqueue_scripts',
 				'setting' => 'SnS_options',
-				'choices' => REGISTERED,
+				'choices' => get_registered_scripts(),
 				'size' => 5,
 				'style' => 'height: auto;',
 				'multiple' => true,

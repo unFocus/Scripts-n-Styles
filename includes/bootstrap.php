@@ -1,7 +1,11 @@
 <?php
 namespace unFocus\SnS;
 
-require_once( 'constants.php' );
+const BASENAME = 'scripts-n-styles/scripts-n-styles.php';
+const VERSION = '4.0.0-alpha';
+const OPTION_GROUP = 'scripts_n_styles';
+const ADMIN_MENU_SLUG = 'sns';
+
 require_once( 'main.php' );
 require_once( 'utility.php' );
 require_once( 'widget.php' );
