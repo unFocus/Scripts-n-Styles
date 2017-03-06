@@ -65,8 +65,8 @@ add_action( 'wp_ajax_sns_classes', function () {
 	$SnS = get_post_meta( $post_id, '_SnS', true );
 	$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 
-	$styles = self::maybe_set( $styles, 'classes_body' );
-	$styles = self::maybe_set( $styles, 'classes_post' );
+	$styles = maybe_set( $styles, 'classes_body' );
+	$styles = maybe_set( $styles, 'classes_post' );
 
 	if ( empty( $styles ) ) {
 		if ( isset( $SnS['styles'] ) )
@@ -74,7 +74,7 @@ add_action( 'wp_ajax_sns_classes', function () {
 	} else {
 		$SnS[ 'styles' ] = $styles;
 	}
-	self::maybe_update( $post_id, '_SnS', $SnS );
+	maybe_update( $post_id, '_SnS', $SnS );
 
 	header('Content-Type: application/json; charset=UTF-8');
 	echo json_encode( array(
@@ -96,8 +96,8 @@ add_action( 'wp_ajax_sns_scripts', function () {
 	$SnS = get_post_meta( $post_id, '_SnS', true );
 	$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 
-	$scripts = self::maybe_set( $scripts, 'scripts_in_head' );
-	$scripts = self::maybe_set( $scripts, 'scripts' );
+	$scripts = maybe_set( $scripts, 'scripts_in_head' );
+	$scripts = maybe_set( $scripts, 'scripts' );
 
 	if ( empty( $scripts ) ) {
 		if ( isset( $SnS['scripts'] ) )
@@ -105,7 +105,7 @@ add_action( 'wp_ajax_sns_scripts', function () {
 	} else {
 		$SnS[ 'scripts' ] = $scripts;
 	}
-	self::maybe_update( $post_id, '_SnS', $SnS );
+	maybe_update( $post_id, '_SnS', $SnS );
 
 	header('Content-Type: application/json; charset=UTF-8');
 	echo json_encode( array(
@@ -127,7 +127,7 @@ add_action( 'wp_ajax_sns_styles', function () {
 	$SnS = get_post_meta( $post_id, '_SnS', true );
 	$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 
-	$styles = self::maybe_set( $styles, 'styles' );
+	$styles = maybe_set( $styles, 'styles' );
 
 	if ( empty( $styles ) ) {
 		if ( isset( $SnS['styles'] ) )
@@ -135,7 +135,7 @@ add_action( 'wp_ajax_sns_styles', function () {
 	} else {
 		$SnS[ 'styles' ] = $styles;
 	}
-	self::maybe_update( $post_id, '_SnS', $SnS );
+	maybe_update( $post_id, '_SnS', $SnS );
 
 	header('Content-Type: application/json; charset=UTF-8');
 	echo json_encode( array(
@@ -202,7 +202,7 @@ add_action( 'wp_ajax_sns_delete_class', function () {
 	} else {
 		$SnS[ 'styles' ] = $styles;
 	}
-	self::maybe_update( $post_id, '_SnS', $SnS );
+	maybe_update( $post_id, '_SnS', $SnS );
 
 	if ( ! isset( $styles[ 'classes_mce' ] ) ) $styles[ 'classes_mce' ] = array( 'Empty' );
 
@@ -296,7 +296,7 @@ add_action( 'wp_ajax_sns_shortcodes', function () {
 	} else {
 		$SnS[ 'shortcodes' ] = $shortcodes;
 	}
-	self::maybe_update( $post_id, '_SnS', $SnS );
+	maybe_update( $post_id, '_SnS', $SnS );
 
 	if ( 1 < $code ) {
 		header('Content-Type: application/json; charset=UTF-8');
