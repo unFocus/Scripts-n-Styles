@@ -56,6 +56,8 @@ Text Domain: scripts-n-styles
  * @copyright Copyright (c) 2012, Kevin Newman
  * @copyright Copyright (c) 2012 - 2013, adcSTUDIO LLC
  *
+ * @todo Option to disable uninstall.
+ * @todo Space to add arbitrary html to wp_head and wp_footer.
  * @todo Create ability to add and register scripts and styles for enqueueing (via Options page).
  * @todo Create selection on Option page of which to pick registered scripts to make available on edit screens.
  * @todo Create shortcode registration on Options page to make those snippets available on edit screens.
