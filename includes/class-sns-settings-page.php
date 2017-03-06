@@ -161,4 +161,3 @@ function hello($who) {
 		<?php
 	}
 }
-?>

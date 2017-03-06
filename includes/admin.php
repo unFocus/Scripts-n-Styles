@@ -47,6 +47,3 @@ add_filter( 'plugin_action_links_'.BASENAME, function( $actions ) {
 	$actions[ 'settings' ] = '<a href="' . menu_page_url( Settings_Page::MENU_SLUG, false ) . '"/>' . __( 'Settings' ) . '</a>';
 	return $actions;
 } );
-
-
-?>

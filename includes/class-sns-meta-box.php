@@ -419,4 +419,3 @@ class Admin_Meta_Box
 		return $o;
 	}
 }
-?>

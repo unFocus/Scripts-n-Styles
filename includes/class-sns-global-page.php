@@ -200,4 +200,3 @@ class Global_Page
 		<?php
 	}
 }
-?>

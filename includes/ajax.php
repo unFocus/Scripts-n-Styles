@@ -334,5 +334,3 @@ function maybe_update( $id, $name, $meta ) {
 		update_post_meta( $id, $name, $meta );
 	}
 }
-
-?>

@@ -182,4 +182,3 @@ class Hoops_Page
 		<?php
 	}
 }
-?>

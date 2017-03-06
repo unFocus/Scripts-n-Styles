@@ -78,4 +78,3 @@ class Usage_Page
 		$usageTable->display();
 	}
 }
-?>

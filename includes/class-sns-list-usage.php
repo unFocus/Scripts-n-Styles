@@ -175,4 +175,3 @@ class List_Usage extends \WP_List_Table {
 		return $posts;
 	}
 }
-?>

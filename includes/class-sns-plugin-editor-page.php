@@ -480,4 +480,4 @@ class Plugin_Editor_Page
 	<?php
 
 	}
-} ?>
+}

@@ -194,4 +194,3 @@ function nav() {
 	</h3>
 	<?php
 }
-?>

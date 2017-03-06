@@ -159,4 +159,3 @@ class Theme_Page
 		<?php
 	}
 }
-?>

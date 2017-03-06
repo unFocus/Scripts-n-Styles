@@ -451,4 +451,4 @@ class Theme_Editor_Page
 		</script>
 		<?php
 	}
-} ?>
+}
