@@ -20,7 +20,6 @@ if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERE
 	Admin::init();
 
 	require_once( 'class-sns-meta-box.php' );
-	require_once( 'class-sns-code-editor.php' );
 	require_once( 'class-sns-plugin-editor-page.php' );
 	require_once( 'class-sns-theme-editor-page.php' );
 	require_once( 'class-sns-settings-page.php' );
