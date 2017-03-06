@@ -17,13 +17,6 @@ class AJAX
 		add_action( 'wp_ajax_sns_delete_class', array( __CLASS__, 'delete_class' ) );
 		add_action( 'wp_ajax_sns_shortcodes', array( __CLASS__, 'shortcodes' ) );
 		add_action( 'wp_ajax_sns_open_theme_panels', array( __CLASS__, 'open_theme_panels' ) );
-
-		add_action( 'wp_ajax_sns_theme_editor', array( __CLASS__, 'theme_editor' ) );
-	}
-
-	static function theme_editor() {
-		check_ajax_referer( 'sns_theme_editor' );
-		if ( ! current_user_can( 'edit_themes' ) ) exit( 'Insufficient Privileges.' );
 	}
 
 	static function open_theme_panels() {
