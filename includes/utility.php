@@ -1,6 +1,18 @@
 <?php
 namespace unFocus\SnS;
 
+// Add menu to admin bar
+add_action( 'wp_before_admin_bar_render', function() {
+	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
+	global $wp_admin_bar;
+	$wp_admin_bar->add_node( [
+		'id'    => 'Scripts_n_Styles',
+		'title' => 'Scripts n Styles',
+		'href'  => admin_url( 'admin.php?page='.ADMIN_MENU_SLUG ),
+		'meta'  => array( 'class' => 'Scripts_n_Styles' )
+	] );
+}, 11 );
+
 // For things that don't belong in main or admin
 add_action( 'plugins_loaded', function() {
 
