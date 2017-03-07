@@ -9,34 +9,21 @@ namespace unFocus\SnS;
  * post types.
  */
 
-class Settings_Page
-{
-	/**
-	 * Constants
-	 */
-	const MENU_SLUG = 'sns_settings';
 
-	/**
-	 * Initializing method.
-	 * @static
-	 */
-	static function init() {
-		$hook_suffix = add_submenu_page(
-			ADMIN_MENU_SLUG,
-			__( 'Scripts n Styles', 'scripts-n-styles' ),
-			__( 'Settings' ),
-			'unfiltered_html',
-			self::MENU_SLUG,
-			'\unFocus\SnS\page'
-		);
+add_action( 'admin_menu', function() {
+	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 
-		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
-		add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
-		add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
-		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
-	}
+	$hook_suffix = add_submenu_page(
+		ADMIN_MENU_SLUG,
+		__( 'Scripts n Styles', 'scripts-n-styles' ),
+		__( 'Settings' ),
+		'unfiltered_html',
+		ADMIN_MENU_SLUG.'_settings',
+		'\unFocus\SnS\page' );
 
-	static function admin_enqueue_scripts() {
+	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
+	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
+	add_action( "admin_print_styles-$hook_suffix", function() {
 		$options = get_option( 'SnS_options' );
 		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : '';
 
@@ -44,15 +31,13 @@ class Settings_Page
 
 		wp_enqueue_script(  'sns-settings-page' );
 		wp_localize_script( 'sns-settings-page', 'codemirror_options', array( 'theme' => $cm_theme ) );
-	}
+	} );
 
 	/**
 	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
 	 */
-	static function admin_load() {
-		wp_enqueue_style( 'sns-options' );
-
+	add_action( "load-$hook_suffix", function() {
 		register_setting(
 			OPTION_GROUP,
 			'SnS_options' );
@@ -60,7 +45,17 @@ class Settings_Page
 		add_settings_section(
 			'settings',
 			__( 'Scripts n Styles Settings', 'scripts-n-styles' ),
-			array( __CLASS__, 'settings_section' ),
+			/**
+			 * Settings Page
+			 * Outputs Description text for the Global Section.
+			 */
+			function() {
+				?>
+				<div style="max-width: 55em;">
+					<p><?php _e( 'Control how and where Scripts n Styles menus and metaboxes appear. These options are here because sometimes users really care about this stuff. Feel free to adjust to your liking. :-)', 'scripts-n-styles' ) ?></p>
+				</div>
+				<?php
+			},
 			ADMIN_MENU_SLUG );
 
 		add_settings_field(
@@ -82,7 +77,27 @@ class Settings_Page
 		add_settings_section(
 			'demo',
 			__( 'Code Mirror Demo', 'scripts-n-styles' ),
-			array( __CLASS__, 'demo_section' ),
+			/**
+			 * Settings Page
+			 * Outputs Description text for the Global Section.
+			 */
+			function() {
+				?>
+				<div style="max-width: 55em;">
+					<textarea id="codemirror_demo" name="code" style="min-width: 500px; width:97%;" rows="5" cols="40"><?php
+					echo esc_textarea( '<?php' . PHP_EOL
+					.'function hello($who) {' . PHP_EOL
+					.'	return "Hello " . $who;' . PHP_EOL
+					.'}' . PHP_EOL
+					.'?>' . PHP_EOL
+					.'<p>The program says <?= hello("World") ?>.</p>' . PHP_EOL
+					.'<script>' . PHP_EOL
+					.'	alert("And here is some JS code"); // also colored' . PHP_EOL
+					.'</script>' );
+					?></textarea>
+				</div>
+				<?php
+			},
 			ADMIN_MENU_SLUG );
 
 		add_settings_field(
@@ -132,39 +147,6 @@ class Settings_Page
 				'legend' => __( 'Shortcode Widgets', 'scripts-n-styles' ),
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">This enables Hoops shortcodes to be used via a "Hoops" Text Widget.</span>', 'scripts-n-styles' )
 			) );
-	}
+	} );
 
-	/**
-	 * Settings Page
-	 * Outputs Description text for the Global Section.
-	 */
-	static function settings_section() {
-		?>
-		<div style="max-width: 55em;">
-			<p><?php _e( 'Control how and where Scripts n Styles menus and metaboxes appear. These options are here because sometimes users really care about this stuff. Feel free to adjust to your liking. :-)', 'scripts-n-styles' ) ?></p>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Settings Page
-	 * Outputs Description text for the Global Section.
-	 */
-	static function demo_section() {
-		?>
-		<div style="max-width: 55em;">
-			<textarea id="codemirror_demo" name="code" style="min-width: 500px; width:97%;" rows="5" cols="40"><?php
-			echo esc_textarea( '<?php' . PHP_EOL
-			.'function hello($who) {' . PHP_EOL
-			.'	return "Hello " . $who;' . PHP_EOL
-			.'}' . PHP_EOL
-			.'?>' . PHP_EOL
-			.'<p>The program says <?= hello("World") ?>.</p>' . PHP_EOL
-			.'<script>' . PHP_EOL
-			.'	alert("And here is some JS code"); // also colored' . PHP_EOL
-			.'</script>' );
-			?></textarea>
-		</div>
-		<?php
-	}
-}
+} );

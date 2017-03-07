@@ -14,12 +14,7 @@ add_action( 'admin_menu', function() {
 
 	Plugin_Editor_Page::init();
 	Theme_Editor_Page::init();
-	Global_Page::init();
-	Hoops_Page::init();
-	if ( current_theme_supports( 'scripts-n-styles' ) )
-		Theme_Page::init();
-	Settings_Page::init();
-	Usage_Page::init();
+
 });
 
 add_action( 'admin_init', function() {
