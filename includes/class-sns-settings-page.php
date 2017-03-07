@@ -21,11 +21,18 @@ class Settings_Page
 	 * @static
 	 */
 	static function init() {
-		$hook_suffix = add_submenu_page( ADMIN_MENU_SLUG, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Settings' ), 'unfiltered_html', self::MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
+		$hook_suffix = add_submenu_page(
+			ADMIN_MENU_SLUG,
+			__( 'Scripts n Styles', 'scripts-n-styles' ),
+			__( 'Settings' ),
+			'unfiltered_html',
+			self::MENU_SLUG,
+			'\unFocus\SnS\page'
+		);
 
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
-		add_action( "load-$hook_suffix", array( '\unFocus\SnS\Form', 'take_action' ), 49 );
+		add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
 		add_action( "admin_print_styles-$hook_suffix", array( __CLASS__, 'admin_enqueue_scripts' ) );
 	}
 
@@ -59,7 +66,7 @@ class Settings_Page
 		add_settings_field(
 			'metabox',
 			__( '<strong>Hide Metabox by default</strong>: ', 'scripts-n-styles' ),
-			array( '\unFocus\SnS\Form', 'radio' ),
+			'\unFocus\SnS\radio',
 			ADMIN_MENU_SLUG,
 			'settings',
 			array(
@@ -81,7 +88,7 @@ class Settings_Page
 		add_settings_field(
 			'cm_theme',
 			__( '<strong>Theme</strong>: ', 'scripts-n-styles' ),
-			array( '\unFocus\SnS\Form', 'radio' ),
+			'\unFocus\SnS\radio',
 			ADMIN_MENU_SLUG,
 			'demo',
 			array(
@@ -113,7 +120,7 @@ class Settings_Page
 		add_settings_field(
 			'hoops_widget',
 			__( '<strong>Hoops Widgets</strong>: ', 'scripts-n-styles' ),
-			array( '\unFocus\SnS\Form', 'radio' ),
+			'\unFocus\SnS\radio',
 			ADMIN_MENU_SLUG,
 			'settings',
 			array(
@@ -146,17 +153,17 @@ class Settings_Page
 	static function demo_section() {
 		?>
 		<div style="max-width: 55em;">
-<textarea id="codemirror_demo" name="code" style="min-width: 500px; width:97%;" rows="5" cols="40">
-<?php echo esc_textarea( '<?php
-function hello($who) {
-	return "Hello " . $who;
-}
-?>
-<p>The program says <?= hello("World") ?>.</p>
-<script>
-	alert("And here is some JS code"); // also colored
-</script>' ); ?>
-</textarea>
+			<textarea id="codemirror_demo" name="code" style="min-width: 500px; width:97%;" rows="5" cols="40"><?php
+			echo esc_textarea( '<?php' . PHP_EOL
+			.'function hello($who) {' . PHP_EOL
+			.'	return "Hello " . $who;' . PHP_EOL
+			.'}' . PHP_EOL
+			.'?>' . PHP_EOL
+			.'<p>The program says <?= hello("World") ?>.</p>' . PHP_EOL
+			.'<script>' . PHP_EOL
+			.'	alert("And here is some JS code"); // also colored' . PHP_EOL
+			.'</script>' );
+			?></textarea>
 		</div>
 		<?php
 	}

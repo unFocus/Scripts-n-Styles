@@ -124,11 +124,11 @@ function get_registered_scripts() {
 function help() {
 	$help  = '<p>' . __( 'In default (non MultiSite) WordPress installs, both <em>Administrators</em> and <em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either <em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically "unfiltered_html"), other users can be granted access.', 'scripts-n-styles' ) . '</p>';
 	$help .= '<p><strong>' . __( 'Reference: jQuery Wrappers', 'scripts-n-styles' ) . '</strong></p>'
-		  . '<pre><code>jQuery(document).ready(function($) {'
-		  . '// $() will work as an alias for jQuery() inside of this function'
+		  . '<pre><code>jQuery(document).ready(function($) {' . PHP_EOL
+		  . '	// $() will work as an alias for jQuery() inside of this function' . PHP_EOL
 		  . '});</code></pre>';
-	$help .= '<pre><code>(function($) {'
-		  . '// $() will work as an alias for jQuery() inside of this function'
+	$help .= '<pre><code>(function($) {' . PHP_EOL
+		  . '	// $() will work as an alias for jQuery() inside of this function' . PHP_EOL
 		  . '})(jQuery);</code></pre>';
 	$sidebar = '<p><strong>' . __( 'For more information:', 'scripts-n-styles' ) . '</strong></p>' .
 				'<p>' . __( '<a href="http://wordpress.org/extend/plugins/scripts-n-styles/faq/" target="_blank">Frequently Asked Questions</a>', 'scripts-n-styles' ) . '</p>' .

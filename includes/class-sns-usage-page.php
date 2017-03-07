@@ -21,7 +21,14 @@ class Usage_Page
 	 * @static
 	 */
 	static function init() {
-		$hook_suffix = add_submenu_page( ADMIN_MENU_SLUG, __( 'Scripts n Styles', 'scripts-n-styles' ), __( 'Usage', 'scripts-n-styles' ), 'unfiltered_html', self::MENU_SLUG, array( '\unFocus\SnS\Form', 'page' ) );
+		$hook_suffix = add_submenu_page(
+			ADMIN_MENU_SLUG,
+			__( 'Scripts n Styles', 'scripts-n-styles' ),
+			__( 'Usage', 'scripts-n-styles' ),
+			'unfiltered_html',
+			self::MENU_SLUG,
+			'\unFocus\SnS\page'
+		);
 
 		add_action( "load-$hook_suffix", array( __CLASS__, 'admin_load' ) );
 		add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
