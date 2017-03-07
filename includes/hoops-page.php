@@ -24,13 +24,12 @@ add_action( 'admin_menu', function() {
 	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
 		$options = get_option( 'SnS_options' );
-		unset( $options[ 'cm_theme' ] );
-		// $cm_theme = @$options[ 'cm_theme' ] ?: 'default';
+		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : 'default';
 
 		wp_enqueue_style( 'sns-options' );
 
 		wp_enqueue_script(  'sns-hoops-page' );
-		wp_localize_script( 'sns-hoops-page', '_SnS_options', array( 'theme' => @$options[ 'cm_theme' ] ) );
+		wp_localize_script( 'sns-hoops-page', '_SnS_options', array( 'theme' => $cm_theme ) );
 	} );
 
 	/**

@@ -22,11 +22,11 @@ if ( is_admin() && ! ( defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERE
 	require_once( __DIR__.'/meta-box.php' );
 	require_once( __DIR__.'/class-sns-plugin-editor-page.php' );
 	require_once( __DIR__.'/class-sns-theme-editor-page.php' );
-	require_once( __DIR__.'/class-sns-settings-page.php' );
-	require_once( __DIR__.'/class-sns-usage-page.php' );
-	require_once( __DIR__.'/class-sns-global-page.php' );
-	require_once( __DIR__.'/class-sns-hoops-page.php' );
-	require_once( __DIR__.'/class-sns-theme-page.php' );
+	require_once( __DIR__.'/settings-page.php' );
+	require_once( __DIR__.'/usage-page.php' );
+	require_once( __DIR__.'/global-page.php' );
+	require_once( __DIR__.'/hoops-page.php' );
+	require_once( __DIR__.'/theme-page.php' );
 	require_once( __DIR__.'/ajax.php' );
-	require_once( __DIR__.'/class-sns-form.php' );
+	require_once( __DIR__.'/form.php' );
 }

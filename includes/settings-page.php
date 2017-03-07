@@ -9,7 +9,6 @@ namespace unFocus\SnS;
  * post types.
  */
 
-
 add_action( 'admin_menu', function() {
 	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 
