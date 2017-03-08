@@ -1,6 +1,6 @@
 # Scripts n Styles
 Contributors: WraithKenny, CaptainN
-Tags: admin, CSS, javascript, code, custom, Style
+Tags: admin, CSS, javascript, code, custom, Style, syntax, highlighter, editor, TinyMCE, widget, theme, shortcode, html5
 Requires at least: 4.2.2
 Tested up to: 4.7
 Stable tag: 3.3.1
