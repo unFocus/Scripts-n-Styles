@@ -1,7 +1,13 @@
 <?php
 namespace unFocus\SnS;
 
-if( ! defined( 'ABSPATH' ) && ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit();
+if( ! defined( 'ABSPATH' ) || ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit();
+
+$options = get_option( 'SnS_options' );
+if ( empty($options['delete_data_uninstall']) || 'yes' !== $options['delete_data_uninstall'] ) {
+	return;
+}
+
 $posts = get_posts( array(
 	'numberposts' => -1,
 	'post_type' => 'any',
