@@ -9,14 +9,6 @@ namespace unFocus\SnS;
  * post types.
  */
 
-add_action( 'admin_menu', function() {
-	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
-
-	Plugin_Editor_Page::init();
-	Theme_Editor_Page::init();
-
-});
-
 add_action( 'admin_init', function() {
 	load_plugin_textdomain( 'scripts-n-styles', false, dirname( BASENAME ) . '/languages/' );
 } );
@@ -27,6 +19,6 @@ add_action( 'admin_init', function() {
  * @return array
  */
 add_filter( 'plugin_action_links_'.BASENAME, function( $actions ) {
-	$actions[ 'settings' ] = '<a href="' . menu_page_url( Settings_Page::MENU_SLUG, false ) . '"/>' . __( 'Settings' ) . '</a>';
+	$actions[ 'settings' ] = '<a href="' . menu_page_url( ADMIN_MENU_SLUG.'_settings', false ) . '"/>' . __( 'Settings' ) . '</a>';
 	return $actions;
 } );
