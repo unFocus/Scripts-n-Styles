@@ -5,7 +5,7 @@
 	border: 1px solid #DFDFDF;
 	background-color: white;
 	margin: 8px 0;
-	height: auto;
+	height: calc(~"100vh - 340px");
 }
 #template .CodeMirror {
 	margin-right: 30px;
@@ -14,6 +14,10 @@
 	}
 }
 #templateside {
+	@media (min-width:783px) {
+		height: calc(~"100vh - 220px");
+	}
+    overflow: auto;
 	.main-file > a {
 		font-weight: bold;
 	}

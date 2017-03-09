@@ -338,8 +338,6 @@ add_action( 'admin_menu', function(){
 		}
 	}, 49 );
 
-	// add_action( 'wp_ajax_sns_plugin_editor', [ __CLASS__, 'plugin_editor' ] );
-
 	add_filter( 'wp_theme_editor_filetypes', function( $default_types ) {
 		return array_merge( $default_types, [
 			'less', 'scss', 'sass', 'styl', 'react.js',
@@ -349,58 +347,3 @@ add_action( 'admin_menu', function(){
 	}, 10);
 
 }, 102 );
-
-function _get_theme_files( $plugin ) {
-	// Retreived from https://core.trac.wordpress.org/browser/tags/4.7/src/wp-admin/includes/plugin.php#L193
-	// https://core.trac.wordpress.org/attachment/ticket/6531/6531.4.diff
-	$plugin_file = WP_PLUGIN_DIR . '/' . $plugin;
-	$dir = dirname($plugin_file);
-	$plugin_files = array($plugin);
-
-	if ( is_dir($dir) && $dir != WP_PLUGIN_DIR ) {
-		$plugins_dir = @ opendir( $dir );
-		if ( $plugins_dir ) {
-			$plugin_basedir = plugin_basename( $dir );
-			while (($file = readdir( $plugins_dir ) ) !== false ) {
-				if ( substr($file, 0, 1) == '.' || $file == 'node_modules' || $file == 'bower_components' ) // Skip npm/bower folders
-					continue;
-				if ( is_dir( "$dir/$file" ) ) {
-					$subfiles = _get_theme_sub_files( "$dir/$file" );
-					$plugin_files = array_merge( $plugin_files, $subfiles );
-				} else {
-
-					if ( plugin_basename("$dir/$file") != $plugin )
-						$plugin_files[] = plugin_basename("$dir/$file");
-
-				}
-			}
-			@closedir( $plugins_dir );
-		}
-	}
-
-	return $plugin_files;
-}
-
-function _get_theme_sub_files( $subdir ) {
-	// https://core.trac.wordpress.org/attachment/ticket/6531/6531.4.diff
-	$plugins_subdir = @opendir( $subdir );
-	if ( $plugins_subdir ) {
-		$plugin_basedir = plugin_basename( $subdir );
-		$plugin_files = array();
-		while ( ( $subfile = readdir( $plugins_subdir ) ) !== false ) {
-			if ( substr( $subfile, 0, 1 ) == '.' || $subfile == 'node_modules' || $subfile == 'bower_components' ) {
-				continue;
-			}
-			if ( is_dir( $subdir  . '/' . $subfile ) ) {
-				$subfiles = _get_theme_sub_files( $subdir . '/' . $subfile );
-				$plugin_files = array_merge( $plugin_files, $subfiles );
-			} else {
-				$plugin_files[] = "$plugin_basedir/$subfile";
-			}
-		}
-		@closedir( $plugins_subdir );
-	}
-	return $plugin_files;
-}
-
-

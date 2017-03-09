@@ -1,34 +1,15 @@
 // Options JavaScript
 
 jQuery( function( $ ) {
-	console.log(pagenow);
 	if ( 'plugin-editor' == pagenow || 'plugins_page_sns_plugin_editor' == pagenow ) {
-			$.ajax({
-				type: "POST",
-				url: ajaxurl,
-				data: {
-					_ajax_nonce: sns_plugin_editor_options.nonce,
-					action: sns_plugin_editor_options.action,
-					file: $('input[name="file"]').val(),
-					plugin: $('input[name="plugin"]').val()
-				},
-				success: function( data ) {
-					$('#templateside > ul').addClass('sns-file-list').html( data.ul );
-					console.dir( data );
-					nestPluginFolders()
-					if ( ! data.need_update ) return;
 
-					// var warning = "<p><strong>Warning:</strong> Making changes to active plugins is not recommended. If your changes cause a fatal error, the plugin will be automatically deactivated.</p>";
-					// if ( data.active ) {
-					// 	$('p.submit').before(warning);
-					// 	$('.fileedit-sub .alignleft big').html( 'Editing <strong>' + $('.fileedit-sub .alignleft big strong').html() + '</strong> (active)' );
-					// }
-					$('#plugin').val( data.plugin );
-				}
-			});
-		} else if ( 'theme-editor' == pagenow ) {
-			console.log('theme-editor');
-		}
+		$('#templateside > ul').addClass('sns-file-list');
+		nestPluginFolders();
+
+	} else if ( 'theme-editor' == pagenow ) {
+		console.log('theme-editor');
+	}
+
 	function nestPluginFolders() {
 
 		var $list = $('.sns-file-list');
@@ -72,6 +53,7 @@ jQuery( function( $ ) {
 		})
 	}
 });
+
 jQuery( function( $ ) {
 	var theme = codemirror_options.theme ? codemirror_options.theme: 'default',
 		file = $( 'input[name="file"]' ).val(),
@@ -80,41 +62,39 @@ jQuery( function( $ ) {
 
 	fileType = file.slice( file.lastIndexOf(".")+1 );
 
+	var modes = {
+		"js"     : "javascript",
+		"jsx"    : "text/jsx",
+		"ts"     : "text/typescript",
+		"tsx"    : "text/typescript-jsx",
+		"coffee" : "coffeescript",
+
+		"css"    : "css",
+		"less"   : "text/x-less",
+		"scss"   : "text/x-scss",
+		"sass"   : "text/x-sass",
+		"styl"   : "text/x-styl",
+
+		"html"   : "htmlmixed",
+		"htm"    : "htmlmixed",
+		"include": "php",
+		"inc"    : "php",
+		"php"    : "php",
+
+		"xml"    : "xml",
+		"json"   : "application/ld+json",
+		"md"     : "gfm",
+		"txt"    : "text/plain",
+		"text"   : "text/x-markdown",
+	};
 	var config = {
 		lineNumbers: true,
 		theme: theme,
-		viewportMargin: Infinity
+		// viewportMargin: Infinity,
+		mode: modes[fileType]
 	};
 
-	switch ( fileType ) {
-		case "md":
-			config.mode = "gfm";
-		break;
-		case "js":
-			config.mode = "javascript";
-		break;
-		case "css":
-			config.mode = "css";
-		break;
-		case "less":
-			config.mode = "text/x-less";
-		break;
-		case "coffee":
-			config.mode = "coffeescript";
-		break;
-		case "html":
-		case "htm":
-			config.mode = "html";
-		break;
-		case "php":
-			config.mode = "php";
-		break;
-		default:
-			config.mode = "text/x-markdown";
-		break;
-	}
-
-	CodeMirror.commands.save = function (){ jQuery('#submit').click(); };
+	CodeMirror.commands.save = function (){ $('#submit').click(); };
 
 	var cmeditor = CodeMirror.fromTextArea( $new.get(0), config );
 });

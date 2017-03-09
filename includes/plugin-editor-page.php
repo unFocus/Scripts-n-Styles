@@ -19,10 +19,9 @@ add_action( 'admin_menu', function() {
 		'edit_plugins',
 		ADMIN_MENU_SLUG.'_plugin_editor',
 		function() {
+		global $plugins, $file, $plugin, $plugin_files, $real_file, $scrollto;
 
 			$title = __("Edit Plugins");
-
-			$plugins = get_plugins();
 
 			if ( empty( $plugins ) ) {
 				?>
@@ -33,36 +32,6 @@ add_action( 'admin_menu', function() {
 				<?php
 				exit;
 			}
-
-			$file = '';
-			$plugin = '';
-			if ( isset( $_REQUEST['file'] ) ) {
-				$file = sanitize_text_field( $_REQUEST['file'] );
-			}
-
-			if ( isset( $_REQUEST['plugin'] ) ) {
-				$plugin = sanitize_text_field( $_REQUEST['plugin'] );
-			}
-
-			if ( empty( $plugin ) ) {
-				if ( $file ) {
-					$plugin = $file;
-				} else {
-					$plugin = array_keys( $plugins );
-					$plugin = $plugin[0];
-				}
-			}
-
-			$plugin_files = _get_plugin_files($plugin);
-
-			if ( empty($file) )
-				$file = $plugin_files[0];
-
-			$file = validate_file_to_edit($file, $plugin_files);
-			$real_file = WP_PLUGIN_DIR . '/' . $file;
-			$scrollto = isset($_REQUEST['scrollto']) ? (int) $_REQUEST['scrollto'] : 0;
-
-			//
 
 			// List of allowable extensions
 			$editable_extensions = array('php', 'txt', 'text', 'js', 'css', 'html', 'htm', 'xml', 'inc', 'include');
@@ -87,6 +56,25 @@ add_action( 'admin_menu', function() {
 						wp_die(sprintf('<p>%s</p>', __('Files of this type are not editable.')));
 				}
 			}
+
+			get_current_screen()->add_help_tab( array(
+			'id'		=> 'overview',
+			'title'		=> __('Overview'),
+			'content'	=>
+				'<p>' . __('You can use the editor to make changes to any of your plugins&#8217; individual PHP files. Be aware that if you make changes, plugins updates will overwrite your customizations.') . '</p>' .
+				'<p>' . __('Choose a plugin to edit from the dropdown menu and click the Select button. Click once on any file name to load it in the editor, and make your changes. Don&#8217;t forget to save your changes (Update File) when you&#8217;re finished.') . '</p>' .
+				'<p>' . __('The Documentation menu below the editor lists the PHP functions recognized in the plugin file. Clicking Look Up takes you to a web page about that particular function.') . '</p>' .
+				'<p id="newcontent-description">' . __( 'In the editing area the Tab key enters a tab character. To move below this area by pressing Tab, press the Esc key followed by the Tab key. In some cases the Esc key will need to be pressed twice before the Tab key will allow you to continue.' ) . '</p>' .
+				'<p>' . __('If you want to make changes but don&#8217;t want them to be overwritten when the plugin is updated, you may be ready to think about writing your own plugin. For information on how to edit plugins, write your own from scratch, or just better understand their anatomy, check out the links below.') . '</p>' .
+				( is_network_admin() ? '<p>' . __('Any edits to files from this screen will be reflected on all sites in the network.') . '</p>' : '' )
+			) );
+
+			get_current_screen()->set_help_sidebar(
+				'<p><strong>' . __('For more information:') . '</strong></p>' .
+				'<p>' . __('<a href="https://codex.wordpress.org/Plugins_Editor_Screen">Documentation on Editing Plugins</a>') . '</p>' .
+				'<p>' . __('<a href="https://codex.wordpress.org/Writing_a_Plugin">Documentation on Writing Plugins</a>') . '</p>' .
+				'<p>' . __('<a href="https://wordpress.org/support/">Support Forums</a>') . '</p>'
+			);
 
 			update_recently_edited(WP_PLUGIN_DIR . '/' . $file);
 
@@ -251,43 +239,41 @@ add_action( 'admin_menu', function() {
 	} );
 
 	add_action( "load-$hook_suffix", function() {
+		global $plugins, $file, $plugin, $plugin_files, $real_file, $scrollto;
+
+		$plugins = get_plugins();
+
+		if ( empty( $plugins ) ) { return; }
+
+		$file = '';
+		$plugin = '';
+		if ( isset( $_REQUEST['file'] ) ) {
+			$file = sanitize_text_field( $_REQUEST['file'] );
+		}
+
+		if ( isset( $_REQUEST['plugin'] ) ) {
+			$plugin = sanitize_text_field( $_REQUEST['plugin'] );
+		}
+
+		if ( empty( $plugin ) ) {
+			if ( $file ) {
+				$plugin = $file;
+			} else {
+				$plugin = array_keys( $plugins );
+				$plugin = $plugin[0];
+			}
+		}
+
+		$plugin_files = _get_plugin_files($plugin);
+
+		if ( empty($file) )
+			$file = $plugin_files[0];
+
+		$file = validate_file_to_edit($file, $plugin_files);
+		$real_file = WP_PLUGIN_DIR . '/' . $file;
+		$scrollto = isset($_REQUEST['scrollto']) ? (int) $_REQUEST['scrollto'] : 0;
 
 		if ( isset( $_REQUEST['action'] ) && 'update' === $_REQUEST['action'] ) {
-			if ( !current_user_can('edit_plugins') ) {
-				wp_die( __('Sorry, you are not allowed to edit plugins for this site.') );
-			}
-			$plugins = get_plugins();
-
-			if ( empty( $plugins ) ) { return; }
-
-			$file = '';
-			$plugin = '';
-			if ( isset( $_REQUEST['file'] ) ) {
-				$file = sanitize_text_field( $_REQUEST['file'] );
-			}
-
-			if ( isset( $_REQUEST['plugin'] ) ) {
-				$plugin = sanitize_text_field( $_REQUEST['plugin'] );
-			}
-
-			if ( empty( $plugin ) ) {
-				if ( $file ) {
-					$plugin = $file;
-				} else {
-					$plugin = array_keys( $plugins );
-					$plugin = $plugin[0];
-				}
-			}
-
-			$plugin_files = _get_plugin_files($plugin);
-
-			if ( empty($file) )
-				$file = $plugin_files[0];
-
-			$file = validate_file_to_edit($file, $plugin_files);
-			$real_file = WP_PLUGIN_DIR . '/' . $file;
-
-			//
 
 			check_admin_referer('edit-plugin_' . $file);
 
