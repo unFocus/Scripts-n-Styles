@@ -17,84 +17,13 @@ add_action( 'admin_menu', function(){
 	$hook_suffix = add_theme_page(
 		__( 'Scripts n Styles', 'scripts-n-styles' ),
 		__( 'Editor', 'scripts-n-styles' ),
-		'unfiltered_html',
+		'edit_themes',
 		ADMIN_MENU_SLUG.'_theme_editor',
 		function() {
-			global $action, $error, $file, $theme;
-			if ( is_multisite() && ! is_network_admin() ) {
-				wp_redirect( network_admin_url( 'themes.php?page=sns_theme_editor' ) );
-				exit();
-			}
-
-			if ( !current_user_can('edit_themes') )
-				wp_die('<p>'.__('Sorry, you are not allowed to edit templates for this site.').'</p>');
+			global $action, $error, $file, $theme,
+				   $stylesheet, $relative_file, $allowed_files, $has_templates, $scrollto;
 
 			$title = __("Edit Themes");
-			$parent_file = 'themes.php';
-
-			wp_reset_vars( array( 'action', 'error', 'file', 'theme' ) );
-
-			// print_r($GLOBALS); exit;
-			if ( !empty($theme) ) {
-				$stylesheet = $theme;
-			} else {
-				$stylesheet = get_stylesheet();
-			}
-
-			$theme = wp_get_theme( $stylesheet );
-
-			if ( ! $theme->exists() ) {
-				wp_die( __( 'The requested theme does not exist.' ) );
-			}
-
-			if ( $theme->errors() && 'theme_no_stylesheet' == $theme->errors()->get_error_code() ) {
-				wp_die( __( 'The requested theme does not exist.' ) . ' ' . $theme->errors()->get_error_message() );
-			}
-
-			$allowed_files = $style_files = array();
-			$has_templates = false;
-			$default_types = array( 'php', 'css' );
-
-			/**
-			 * Filters the list of file types allowed for editing in the Theme editor.
-			 *
-			 * @since 4.4.0
-			 *
-			 * @param array    $default_types List of file types. Default types include 'php' and 'css'.
-			 * @param WP_Theme $theme         The current Theme object.
-			 */
-			$file_types = apply_filters( 'wp_theme_editor_filetypes', $default_types, $theme );
-
-			// Ensure that default types are still there.
-			$file_types = array_unique( array_merge( $file_types, $default_types ) );
-
-			foreach ( $file_types as $type ) {
-				switch ( $type ) {
-					case 'php':
-						$allowed_files += $theme->get_files( 'php', 10 );
-						$has_templates = ! empty( $allowed_files );
-						break;
-					case 'css':
-						$style_files = $theme->get_files( 'css', 10 );
-						$allowed_files['style.css'] = $style_files['style.css'];
-						$allowed_files += $style_files;
-						break;
-					default:
-						$allowed_files += $theme->get_files( $type, 10 );
-						break;
-				}
-			}
-
-			if ( empty( $file ) ) {
-				$relative_file = 'style.css';
-				$file = $allowed_files['style.css'];
-			} else {
-				$relative_file = $file;
-				$file = $theme->get_stylesheet_directory() . '/' . $relative_file;
-			}
-
-			validate_file_to_edit( $file, $allowed_files );
-			$scrollto = isset( $_REQUEST['scrollto'] ) ? (int) $_REQUEST['scrollto'] : 0;
 
 			update_recently_edited( $file );
 
@@ -168,10 +97,23 @@ add_action( 'admin_menu', function(){
 							$file_type = substr( $filename, strrpos( $filename, '.' ) );
 
 							if ( $file_type !== $previous_file_type ) {
-								if ( '' !== $previous_file_type ) {
+								$skip = false;
+								if (
+									in_array($file_type,['.js','.jsx','.ts', '.tsx','.coffee']) &&
+									in_array($previous_file_type,['.js','.jsx','.ts', '.tsx','.coffee']) ) {
+									$skip = true;
+								}
+								if (
+									in_array($file_type,['.css','.less','.sass','.scss','.styl']) &&
+									in_array($previous_file_type,['.css','.less','.sass','.scss','.styl']) ) {
+									$skip = true;
+								}
+
+								if ( '' !== $previous_file_type && !$skip ) {
 									echo "\t</ul>\n";
 								}
 
+								if (!$skip)
 								switch ( $file_type ) {
 									case '.php':
 										if ( $has_templates || $theme->parent() ) :
@@ -186,21 +128,21 @@ add_action( 'admin_menu', function(){
 											}
 										endif;
 										break;
-									case '.less':
-										echo "\t<h2>" . _x( 'LESS', 'Theme stylesheets in theme editor' ) . "</h2>\n";
-										break;
 									case '.css':
 										echo "\t<h2>" . _x( 'Styles', 'Theme stylesheets in theme editor' ) . "</h2>\n";
 										break;
+
 									case '.js':
 										echo "\t<h2>" . _x( 'Scripts', 'Theme JavaScript in theme editor', 'scripts-n-styles' ) . "</h2>\n";
 										break;
+
 									default:
 										/* translators: %s: file extension */
 										echo "\t<h2>" . sprintf( __( '%s files' ), $file_type ) . "</h2>\n";
 										break;
 								}
 
+								if (!$skip)
 								echo "\t<ul>\n";
 							}
 
@@ -281,17 +223,36 @@ add_action( 'admin_menu', function(){
 	} );
 
 	add_action( "load-$hook_suffix", function() {
-		global $action, $error, $file, $theme;
+		global $action, $error, $file, $theme,
+			   $stylesheet, $relative_file, $allowed_files, $has_templates, $scrollto;
+
 		if ( is_multisite() && ! is_network_admin() ) {
 			wp_redirect( network_admin_url( 'themes.php?page=sns_theme_editor' ) );
 			exit();
 		}
 
-		if ( !current_user_can('edit_themes') )
-			wp_die('<p>'.__('Sorry, you are not allowed to edit templates for this site.').'</p>');
+		get_current_screen()->add_help_tab( array(
+			'id'		=> 'overview',
+			'title'		=> __('Overview'),
+			'content'	=>
+				'<p>' . __('You can use the Theme Editor to edit the individual CSS and PHP files which make up your theme.') . '</p>
+				<p>' . __( 'Begin by choosing a theme to edit from the dropdown menu and clicking the Select button. A list then appears of the theme&#8217;s template files. Clicking once on any file name causes the file to appear in the large Editor box.' ) . '</p>
+				<p>' . __('For PHP files, you can use the Documentation dropdown to select from functions recognized in that file. Look Up takes you to a web page with reference material about that particular function.') . '</p>
+				<p id="newcontent-description">' . __( 'In the editing area the Tab key enters a tab character. To move below this area by pressing Tab, press the Esc key followed by the Tab key. In some cases the Esc key will need to be pressed twice before the Tab key will allow you to continue.' ) . '</p>
+				<p>' . __('After typing in your edits, click Update File.') . '</p>
+				<p>' . __('<strong>Advice:</strong> think very carefully about your site crashing if you are live-editing the theme currently in use.') . '</p>
+				<p>' . sprintf( __('Upgrading to a newer version of the same theme will override changes made here. To avoid this, consider creating a <a href="%s">child theme</a> instead.'), __('https://codex.wordpress.org/Child_Themes') ) . '</p>' .
+				( is_network_admin() ? '<p>' . __('Any edits to files from this screen will be reflected on all sites in the network.') . '</p>' : '' )
+		) );
 
-		$title = __("Edit Themes");
-		$parent_file = 'themes.php';
+		get_current_screen()->set_help_sidebar(
+			'<p><strong>' . __('For more information:') . '</strong></p>' .
+			'<p>' . __('<a href="https://codex.wordpress.org/Theme_Development">Documentation on Theme Development</a>') . '</p>' .
+			'<p>' . __('<a href="https://codex.wordpress.org/Using_Themes">Documentation on Using Themes</a>') . '</p>' .
+			'<p>' . __('<a href="https://codex.wordpress.org/Editing_Files">Documentation on Editing Files</a>') . '</p>' .
+			'<p>' . __('<a href="https://codex.wordpress.org/Template_Tags">Documentation on Template Tags</a>') . '</p>' .
+			'<p>' . __('<a href="https://wordpress.org/support/">Support Forums</a>') . '</p>'
+		);
 
 		wp_reset_vars( array( 'action', 'error', 'file', 'theme' ) );
 
@@ -379,9 +340,13 @@ add_action( 'admin_menu', function(){
 
 	// add_action( 'wp_ajax_sns_plugin_editor', [ __CLASS__, 'plugin_editor' ] );
 
-	add_filter( 'wp_theme_editor_filetypes', function( $default_types, $theme ) {
-		return array_merge($default_types, ['txt','less','js']);
-	}, 10, 2);
+	add_filter( 'wp_theme_editor_filetypes', function( $default_types ) {
+		return array_merge( $default_types, [
+			'less', 'scss', 'sass', 'styl', 'react.js',
+			'jsx', 'js', 'coffee', 'ts', 'tsx', 'json', 'txt', 'md',
+			'xml', 'inc', 'include', 'text'
+			] );
+	}, 10);
 
 }, 102 );
 
