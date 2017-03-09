@@ -293,16 +293,16 @@ add_action( 'admin_menu', function(){
 		foreach ( $file_types as $type ) {
 			switch ( $type ) {
 				case 'php':
-					$allowed_files += $theme->get_files( 'php', 10 );
+					$allowed_files += $theme->get_files( 'php', apply_filters('wp_theme_scandir_depth', 1, $type, $stylesheet ) );
 					$has_templates = ! empty( $allowed_files );
 					break;
 				case 'css':
-					$style_files = $theme->get_files( 'css', 10 );
+					$style_files = $theme->get_files( 'css', apply_filters('wp_theme_scandir_depth', 0, $type, $stylesheet ) );
 					$allowed_files['style.css'] = $style_files['style.css'];
 					$allowed_files += $style_files;
 					break;
 				default:
-					$allowed_files += $theme->get_files( $type, 10 );
+					$allowed_files += $theme->get_files( $type, apply_filters('wp_theme_scandir_depth', 0, $type, $stylesheet ) );
 					break;
 			}
 		}
@@ -337,6 +337,10 @@ add_action( 'admin_menu', function(){
 			break;
 		}
 	}, 49 );
+
+	add_filter( 'wp_theme_scandir_depth', function( $depth, $type, $theme ) {
+		return 10;
+	},10,3 );
 
 	add_filter( 'wp_theme_editor_filetypes', function( $default_types ) {
 		return array_merge( $default_types, [

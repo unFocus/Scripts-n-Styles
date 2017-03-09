@@ -19,7 +19,7 @@ add_action( 'admin_menu', function() {
 		'edit_plugins',
 		ADMIN_MENU_SLUG.'_plugin_editor',
 		function() {
-		global $plugins, $file, $plugin, $plugin_files, $real_file, $scrollto;
+			global $plugins, $file, $plugin, $plugin_files, $real_file, $scrollto;
 
 			$title = __("Edit Plugins");
 
