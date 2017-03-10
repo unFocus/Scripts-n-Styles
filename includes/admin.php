@@ -9,10 +9,6 @@ namespace unFocus\SnS;
  * post types.
  */
 
-add_action( 'admin_init', function() {
-	load_plugin_textdomain( 'scripts-n-styles', false, dirname( BASENAME ) . '/languages/' );
-} );
-
 /**
  * Adds link to the Settings Page in the WordPress "Plugin Action Links" array.
  * @param array $actions
