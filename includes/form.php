@@ -179,7 +179,7 @@ function nav() {
 	$page = $_REQUEST[ 'page' ];
 	?>
 	<?php screen_icon(); ?>
-	<h2>Scripts n Styles</h2>
+	<h2><?php _e('Scripts n Styles', 'scripts-n-styles') ?></h2>
 	<?php settings_errors(); ?>
 	<?php screen_icon( 'none' ); ?>
 	<h3 class="nav-tab-wrapper">

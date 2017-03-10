@@ -56,7 +56,6 @@ Text Domain: scripts-n-styles
  * @copyright Copyright (c) 2012, Kevin Newman
  * @copyright Copyright (c) 2012 - 2013, adcSTUDIO LLC
  *
- * @todo Option to disable uninstall.
  * @todo Space to add arbitrary html to wp_head and wp_footer.
  * @todo Create ability to add and register scripts and styles for enqueueing (via Options page).
  * @todo Create selection on Option page of which to pick registered scripts to make available on edit screens.
@@ -79,9 +78,9 @@ if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) :
 
 else :
 	function SnS_disable_message() {
-		?><div class="notice notice-success is-dismissible">
-		<p>Sorry, Scripts n Styles doesn't work with <strong>outdated and insecure PHP versions.</strong> Please contact your host.</p>
-		</div><?php
+		?><div class="notice notice-success is-dismissible"><p><?php
+		_e('Sorry, Scripts n Styles doesn\'t work with PHP versions below 5.4. Please contact your host.', 'scripts-n-styles');
+		?></p></div><?php
 	}
 	add_action( 'admin_notices', 'SnS_disable_message' );
 endif;

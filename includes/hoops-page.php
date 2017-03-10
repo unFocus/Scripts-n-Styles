@@ -15,7 +15,7 @@ add_action( 'admin_menu', function() {
 	$hook_suffix = add_submenu_page(
 		ADMIN_MENU_SLUG,
 		__( 'Scripts n Styles', 'scripts-n-styles' ),
-		__( 'Hoops' ),
+		__( 'Hoops', 'scripts-n-styles' ),
 		'unfiltered_html',
 		ADMIN_MENU_SLUG.'_hoops',
 		'\unFocus\SnS\page' );
@@ -41,13 +41,6 @@ add_action( 'admin_menu', function() {
 		add_filter( 'sns_options_pre_update_option', function( $options ) {
 			// Get Hoops. (Shouldn't be empty.)
 			$hoops = $options[ 'hoops' ];
-
-			/*
-			add_settings_error( 'sns_hoops', 'settings_updated', '<pre>'
-				. '$hoops '
-				. print_r(
-				$hoops, true ) . '</pre>', 'updated' );
-			*/
 
 			// take out new. (Also shouldn't be empty.)
 			$new = $hoops[ 'new' ];
@@ -115,11 +108,11 @@ add_action( 'admin_menu', function() {
 			 */
 			function() {
 				echo '<div style="max-width: 55em;">';
-				_e( '<p>"Hoops" are shortcodes invented to get around some limitations of vanilla WordPress.</p>'
-					. '<p> Normally, certain HTML is very problematic to use in the Post Editor, because it either gets '
+					_e( '<p>"Hoops" are shortcodes invented to get around some limitations of vanilla WordPress.</p>', 'scripts-n-styles' )
+					. _e( '<p> Normally, certain HTML is very problematic to use in the Post Editor, because it either gets '
 					. 'jumbled during Switching between HTML and Visual Tabs, stripped out by WPAutoP (rare) or stripped '
-					. 'out because the User doesn&#8217;t have the proper Permissions.</p>'
-					. '<p>With Hoops, an Admin user (who has `unfiltered_html` and `manage_options` capablilities) can '
+					. 'out because the User doesn&#8217;t have the proper Permissions.</p>', 'scripts-n-styles' )
+					. _e( '<p>With Hoops, an Admin user (who has `unfiltered_html` and `manage_options` capablilities) can '
 					. 'write and approve snippets of HTML for other users to use via Shortcodes.</p>', 'scripts-n-styles' );
 				echo '</div>';
 
@@ -130,10 +123,10 @@ add_action( 'admin_menu', function() {
 				$shortcodes = isset( $hoops[ 'shortcodes' ] ) ? $hoops[ 'shortcodes' ] : array();
 				?>
 				<div id="sns-shortcodes">
-					<h4>Add New: </h4>
+					<h4><?php _e( 'Add New:', 'scripts-n-styles' ) ?></h4>
 					<div class="sns-less-ide" style="overflow: hidden">
 						<div class="widget sns-shortcodes"><div class="inside">
-							<label style="display:inline" for="<?php echo $meta_name; ?>">Name: </label>
+							<label style="display:inline" for="<?php echo $meta_name; ?>"><?php _e( 'Name:', 'scripts-n-styles' ) ?> </label>
 							<input id="<?php echo $meta_name; ?>" name="<?php echo $meta_name . '[new][name]'; ?>" type="text" />
 								<?php /** / ?>
 							<a class="button" href="#" id="sns-ajax-add-shortcode">Add New</a>
@@ -143,7 +136,7 @@ add_action( 'admin_menu', function() {
 					</div>
 
 					<?php if ( ! empty( $shortcodes ) ) { ?>
-					<h4>Existing Codes: </h4>
+					<h4><?php _e( 'Existing Codes:', 'scripts-n-styles' ) ?> </h4>
 					<div id="sns-shortcodes-wrap">
 						<?php if ( ! empty( $shortcodes ) ) { ?>
 						<?php foreach ( $shortcodes as $key => $value ) { ?>
