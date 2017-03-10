@@ -1,9 +1,9 @@
 === Scripts n Styles ===
 Contributors: WraithKenny, CaptainN
 Tags: admin, CSS, javascript, code, custom, Style
-Requires at least: 4.2.2
-Tested up to: 4.7
-Stable tag: 3.3.1
+Requires at least: 4.7.2
+Tested up to: 4.7.3
+Stable tag: 3.4.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -57,6 +57,12 @@ Sure, if you are an Admin, just go to the plugin editor and wipe out the uninsta
 6. Your styles are reflected in the Editor.
 
 == Changelog ==
+
+= 3.4 =
+* Add option to not delete data on uninstall
+* Version 4.0 will drop php support under 5.4
+* This version disables updates for installs with php < 5.4
+* 4.0 will launch when most have updated to 3.4 :) (and when it's done.)
 
 = 3.3 =
 * See the github repo commits
