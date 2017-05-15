@@ -29,9 +29,19 @@ function widget_shortcode( $atts, $content = null, $tag ) {
 class Widget extends \WP_Widget
 {
 	function __construct() {
-		$widget_ops = array( 'classname' => 'sns_widget_text', 'description' => __( 'Arbitrary text or HTML (including "hoops" shortcodes)', 'scripts-n-styles' ) );
-		$control_ops = array( 'width' => 400, 'height' => 350 );
-		parent::__construct( 'sns_hoops', __( 'Hoops', 'scripts-n-styles' ), $widget_ops, $control_ops );
+		parent::__construct(
+			'sns_hoops',
+			__( 'Hoops', 'scripts-n-styles' ),
+			[
+				'classname' => 'sns_widget_text',
+				'description' => __( 'Arbitrary text or HTML (including "hoops" shortcodes)', 'scripts-n-styles' ),
+				'customize_selective_refresh' => true,
+			],
+			[
+				'width' => 400,
+				'height' => 350
+			]
+		);
 	}
 
 	function widget( $args, $instance ) {
