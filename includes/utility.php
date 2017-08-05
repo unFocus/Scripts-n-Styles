@@ -5,9 +5,10 @@ namespace unFocus\SnS;
 add_action( 'wp_before_admin_bar_render', function() {
 	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) return;
 	global $wp_admin_bar;
+	$title = WP_DEBUG ? 'Scripts n Styles (PHP: '.PHP_VERSION.')': 'Scripts n Styles';
 	$wp_admin_bar->add_node( [
 		'id'    => 'Scripts_n_Styles',
-		'title' => __('Scripts n Styles','scripts-n-styles'),
+		'title' => __($title,'scripts-n-styles'),
 		'href'  => admin_url( 'admin.php?page='.ADMIN_MENU_SLUG ),
 		'meta'  => array( 'class' => 'Scripts_n_Styles' )
 	] );
