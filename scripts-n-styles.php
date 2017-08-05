@@ -11,7 +11,7 @@ Text Domain: scripts-n-styles
 */
 
 /*  The Scripts n Styles WordPress Plugin
-	Copyright (c) 2010-2013  Kenneth Newman  <http://www.unfocus.com/>
+	Copyright (c) 2010-2017  Kenneth Newman  <http://www.unfocus.com/>
 	Copyright (c) 2012  Kevin Newman  <http://www.unfocus.com/>
 	Copyright (c) 2012-2013  adcSTUDIO LLC <http://www.adcstudio.com/>
 
@@ -52,7 +52,7 @@ Text Domain: scripts-n-styles
  * @link http://www.unfocus.com/ Author URI
  * @version 4.0.0-alpha
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @copyright Copyright (c) 2010 - 2013, Kenneth Newman
+ * @copyright Copyright (c) 2010 - 2017, Kenneth Newman
  * @copyright Copyright (c) 2012, Kevin Newman
  * @copyright Copyright (c) 2012 - 2013, adcSTUDIO LLC
  *
