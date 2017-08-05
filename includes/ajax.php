@@ -63,6 +63,7 @@ add_action( 'wp_ajax_sns_classes', function () {
 
 	$post_id = absint( $_REQUEST[ 'post_id' ] );
 	$SnS = get_post_meta( $post_id, '_SnS', true );
+	$SnS = is_array( $SnS ) ? $SnS: array(); // Something changed in PHP 7/WP 4.8
 	$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 
 	$styles = maybe_set( $styles, 'classes_body' );
@@ -94,6 +95,7 @@ add_action( 'wp_ajax_sns_scripts', function () {
 
 	$post_id = absint( $_REQUEST[ 'post_id' ] );
 	$SnS = get_post_meta( $post_id, '_SnS', true );
+	$SnS = is_array( $SnS ) ? $SnS: array(); // Something changed in PHP 7/WP 4.8
 	$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 
 	$scripts = maybe_set( $scripts, 'scripts_in_head' );
@@ -125,6 +127,7 @@ add_action( 'wp_ajax_sns_styles', function () {
 
 	$post_id = absint( $_REQUEST[ 'post_id' ] );
 	$SnS = get_post_meta( $post_id, '_SnS', true );
+	$SnS = is_array( $SnS ) ? $SnS: array(); // Something changed in PHP 7/WP 4.8
 	$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 
 	$styles = maybe_set( $styles, 'styles' );
@@ -162,6 +165,7 @@ add_action( 'wp_ajax_sns_dropdown', function () {
 	$post_id = absint( $_REQUEST[ 'post_id' ] );
 
 	$SnS = get_post_meta( $post_id, '_SnS', true );
+	$SnS = is_array( $SnS ) ? $SnS: array(); // Something changed in PHP 7/WP 4.8
 	$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 
 	if ( ! isset( $styles[ 'classes_mce' ] ) ) $styles[ 'classes_mce' ] = array();
@@ -187,6 +191,7 @@ add_action( 'wp_ajax_sns_delete_class', function () {
 	if ( empty( $_REQUEST[ 'post_id' ] ) ) exit( 'Bad post ID.' );
 	$post_id = absint( $_REQUEST[ 'post_id' ] );
 	$SnS = get_post_meta( $post_id, '_SnS', true );
+	$SnS = is_array( $SnS ) ? $SnS: array(); // Something changed in PHP 7/WP 4.8
 	$styles = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 
 	$title = $_REQUEST[ 'delete' ];
@@ -228,6 +233,7 @@ add_action( 'wp_ajax_sns_shortcodes', function () {
 
 	$post_id = absint( $_REQUEST[ 'post_id' ] );
 	$SnS = get_post_meta( $post_id, '_SnS', true );
+	$SnS = is_array( $SnS ) ? $SnS: array(); // Something changed in PHP 7/WP 4.8
 	$shortcodes = isset( $SnS[ 'shortcodes' ] ) ? $SnS[ 'shortcodes' ]: array();
 	$message = '';
 	$code = 0;

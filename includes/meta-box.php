@@ -14,6 +14,7 @@ namespace unFocus\SnS;
  * Admin Action: 'add_meta_boxes'
  * Main Meta Box function. Checks restriction options and display options, calls add_meta_box() and adds actions for adding admin CSS and JavaScript.
  */
+
 add_action( 'add_meta_boxes', function() {
 	if ( ! current_user_can( 'unfiltered_html' ) ) return;
 	if ( ! in_array( get_current_screen()->post_type, get_post_types( [ 'show_ui' => true, 'public' => true ] ) ) ) return;
@@ -305,6 +306,7 @@ add_action( 'save_post', function( $post_id ) {
 	*/
 
 	$SnS = get_post_meta( $post_id, '_SnS', true );
+	$SnS = is_array( $SnS ) ? $SnS: array(); // Something changed in PHP 7/WP 4.8
 	$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 	$styles  = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 
