@@ -24,7 +24,7 @@ services:
       WORDPRESS_DB_HOST: mysql:3306
       WORDPRESS_DB_PASSWORD: wp
     volumes:
-      - ../:/var/www/html/wp-content/plugins/scripts-n-styles/
+      - ../dist:/var/www/html/wp-content/plugins/scripts-n-styles/
       - ./wp-config.php:/var/www/html/wp-config.php
       - ./debug.log:/var/www/html/wp-content/debug.log
     networks:
