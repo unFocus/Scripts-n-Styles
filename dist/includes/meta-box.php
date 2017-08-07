@@ -306,7 +306,7 @@ add_action( 'save_post', function( $post_id ) {
 	*/
 
 	$SnS = get_post_meta( $post_id, '_SnS', true );
-	$SnS = is_array( $SnS ) ? $SnS: array(); // Something changed in PHP 7/WP 4.8
+	$SnS = is_array( $SnS ) ? $SnS: array(); // http://php.net/manual/en/migration71.incompatible.php#migration71.incompatible.empty-string-index-operator
 	$scripts = isset( $SnS['scripts'] ) ? $SnS[ 'scripts' ]: array();
 	$styles  = isset( $SnS['styles'] ) ? $SnS[ 'styles' ]: array();
 
