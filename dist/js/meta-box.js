@@ -427,7 +427,7 @@ jQuery( document ).ready( function( $ ) {
 						deleteBtn.element =  formats[i].selector;
 						deleteBtn.wrapper = '';
 					} else {
-						alert( 'ERROR!' );
+						console.warn( 'ERROR!' );
 					}
 					deleteBtn.title = formats[i].title;
 					deleteBtn.classes = formats[i].classes;
@@ -457,7 +457,7 @@ jQuery( document ).ready( function( $ ) {
 			// error check
 			//console.log(data.classes_mce);
 			if ( typeof data.classes_mce === 'undefined' ) {
-				alert( data );
+				console.warn( data );
 				/*$( '.sns-ajax-loading' ).hide();
 				return;*/ // Don't block
 			} else if ( data.classes_mce.length && data.classes_mce != 'Empty' ) {
@@ -476,7 +476,7 @@ jQuery( document ).ready( function( $ ) {
 					} else if ( data.classes_mce[i].selector )
 						format.selector = data.classes_mce[i].selector;
 					else
-						alert('dropdown format has bad type.');
+						console.warn('dropdown format has bad type.');
 
 					format.classes = data.classes_mce[i].classes;
 					style_formats.push( format );
@@ -544,7 +544,7 @@ jQuery( document ).ready( function( $ ) {
 			} else if ( 0 == data.indexOf( "Use delete instead." ) ) {
 				console.log('Use delete instead');
 			} else {
-				alert( 'Scripts n Styles: ' + '\n\n' + 'Sorry, there was an AJAX error: (' + data + ')' + '\n\n' + 'Please use the post update button instead.' );
+				console.warn( 'Scripts n Styles: ' + '\n\n' + 'Sorry, there was an AJAX error: (' + data + ')' + '\n\n' + 'Please use the post update button instead.' );
 			}
 		}
 		$( '.sns-ajax-loading' ).hide();
