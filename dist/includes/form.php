@@ -178,10 +178,8 @@ function nav() {
 	$options = get_option( 'SnS_options' );
 	$page = $_REQUEST[ 'page' ];
 	?>
-	<?php screen_icon(); ?>
 	<h2><?php _e('Scripts n Styles', 'scripts-n-styles') ?></h2>
 	<?php settings_errors(); ?>
-	<?php screen_icon( 'none' ); ?>
 	<h3 class="nav-tab-wrapper">
 		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG == $page )               ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG );               ?>"><?php _e( 'Global',   'scripts-n-styles' ); ?></a>
 		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_hoops' == $page )    ? ' nav-tab-active': ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_hoops' );    ?>"><?php _e( 'Hoops',   'scripts-n-styles' ); ?></a>
