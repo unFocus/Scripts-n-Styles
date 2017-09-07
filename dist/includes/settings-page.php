@@ -57,22 +57,6 @@ add_action( 'admin_menu', function() {
 			},
 			ADMIN_MENU_SLUG );
 
-		add_settings_field(
-			'metabox',
-			__( '<strong>Hide Metabox by default</strong>: ', 'scripts-n-styles' ),
-			'\unFocus\SnS\radio',
-			ADMIN_MENU_SLUG,
-			'settings',
-			array(
-				'label_for' => 'metabox',
-				'setting' => 'SnS_options',
-				'choices' => array( 'yes', 'no' ),
-				'layout' => 'horizontal',
-				'default' => 'yes',
-				'legend' => __( 'Hide Metabox by default', 'scripts-n-styles' ),
-				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">This is overridable via Screen Options on each edit screen.</span>', 'scripts-n-styles' )
-			) );
-
 		add_settings_section(
 			'demo',
 			__( 'Code Mirror Demo', 'scripts-n-styles' ),

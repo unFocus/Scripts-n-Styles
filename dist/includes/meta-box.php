@@ -185,16 +185,6 @@ add_action( 'add_meta_boxes', function() {
 		'high'
 	);
 
-	// Candidate for removal
-	add_filter( 'default_hidden_meta_boxes', function( $hidden ) {
-		$options = get_option( 'SnS_options' );
-		if ( ! ( isset( $options[ 'metabox' ] ) && 'yes' == $options[ 'metabox' ] ) ) {
-			$hidden[] = 'SnS_meta_box';
-			$hidden[] = 'SnS_shortcode';
-		}
-		return $hidden;
-	} );
-
 	/**
 	 * Admin Action: 'admin_print_styles' Action added during 'add_meta_boxes' (which restricts output to Edit Screens).
 	 * Enqueues the CSS for admin styling of the Meta Box.
