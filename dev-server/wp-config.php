@@ -81,6 +81,7 @@ define('WP_DEBUG', true);
 if (WP_DEBUG) {
 	define( 'SAVEQUERIES', true );
 	define( 'WP_DEBUG_LOG', true );
+	define( 'SCRIPT_DEBUG', true );
 }
 
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {

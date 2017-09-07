@@ -103,4 +103,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 	done
 fi
 
+sudo -u www-data -s -- wp plugin delete hello akismet
+sudo -u www-data -s -- wp plugin activate --all
+
 exec "$@"

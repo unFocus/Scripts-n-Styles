@@ -8,15 +8,16 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "cd dev-server && docker-compose up -d",
-    "server:up": "cd dev-server && docker-compose up",
-    "server:down": "cd dev-server && docker-compose down",
-    "server:clean": "cd dev-server && docker-compose down -v --remove-orphans",
-    "server:backup": "cd dev-server && docker exec sns-db sh -c 'exec mysqldump --all-databases -uroot -p\"$MYSQL_ROOT_PASSWORD\"' > ./dbinit/data.sql",
-    "server:bash": "cd dev-server && docker-compose run wordpress /bin/bash",
-    "server:php5.6": "cd dev-server && export PHPV=5.6 && docker-compose up --build",
-    "server:php7.0": "cd dev-server && export PHPV=7.0 && docker-compose up --build",
-    "server:php7.1": "cd dev-server && export PHPV=7.1 && docker-compose up --build",
-    "server:wp": "cd dev-server && docker-compose exec --user www-data wordpress wp --url=localhost"
+    "up": "cd dev-server && docker-compose up",
+    "down": "cd dev-server && docker-compose down",
+    "clean": "cd dev-server && docker-compose down -v --remove-orphans",
+    "backup": "cd dev-server && docker exec sns-db sh -c 'exec mysqldump --all-databases -uroot -p\"$MYSQL_ROOT_PASSWORD\"' > ./dbinit/data.sql",
+    "bash": "cd dev-server && docker-compose run wordpress /bin/bash",
+    "switch:php5.6": "cd dev-server && export PHPV=5.6 && docker-compose down && docker-compose up --build",
+    "switch:php7.0": "cd dev-server && export PHPV=7.0 && docker-compose down && docker-compose up --build",
+    "switch:php7.1": "cd dev-server && export PHPV=7.1 && docker-compose down && docker-compose up --build",
+    "switch:php7.1-latest": "cd dev-server && export PHPV=7.1-latest && docker-compose down && docker-compose up --build",
+    "wp": "cd dev-server && docker-compose exec --user www-data wordpress wp --url=localhost"
   },
   "repository": {
     "type": "git",

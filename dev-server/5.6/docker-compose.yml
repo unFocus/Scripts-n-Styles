@@ -6,14 +6,14 @@ services:
     restart: always
     volumes:
       - db_data:/var/lib/mysql
-      - ./${USEDB}:/docker-entrypoint-initdb.d
+      - ./dbinit:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: wp
     networks:
       - sns_network
   wordpress:
-    container_name: sns-wp-php${PHPV}
-    build: ./${PHPV}/
+    container_name: sns-wp-php5.6
+    build: ./
     depends_on:
       - mysql
     restart: always

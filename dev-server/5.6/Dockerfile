@@ -7,6 +7,7 @@ RUN set -ex; \
     apt-get install -y \
         libjpeg-dev \
         libpng-dev \
+        sudo \
     ; \
     rm -rf /var/lib/apt/lists/*; \
     \
@@ -35,7 +36,7 @@ ENV WORDPRESS_SHA1 5376cf41403ae26d51ca55c32666ef68b10e35a4
 RUN set -ex; \
     curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
     echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \
-# upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
+    # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
     tar -xzf wordpress.tar.gz -C /usr/src/; \
     rm wordpress.tar.gz; \
     chown -R www-data:www-data /usr/src/wordpress
