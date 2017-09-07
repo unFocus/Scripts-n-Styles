@@ -7,25 +7,6 @@ add_action( 'widgets_init', function() {
 		register_widget( '\unFocus\SnS\Widget' );
 } );
 
-function widget_shortcode( $atts, $content = null, $tag ) {
-	$options = get_option( 'SnS_options' );
-	$hoops = $options['hoops']['shortcodes'];
-
-	extract( shortcode_atts( array( 'name' => 0, ), $atts ) );
-	$output = '';
-
-	$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS[ 'shortcodes' ]: array();
-
-	if ( isset( $hoops[ $name ] ) )
-		$output .= $hoops[ $name ];
-
-	if ( ! empty( $content ) && empty( $output ) )
-		$output = $content;
-	$output = do_shortcode( $output );
-
-	return $output;
-}
-
 class Widget extends \WP_Widget
 {
 	function __construct() {
@@ -60,8 +41,8 @@ class Widget extends \WP_Widget
 		$backup = $shortcode_tags;
 		remove_all_shortcodes();
 
-		add_shortcode( 'sns_shortcode', '\unFocus\SnS\widget_shortcode' );
-		add_shortcode( 'hoops', '\unFocus\SnS\widget_shortcode' );
+		add_shortcode( 'sns_shortcode', '\unFocus\SnS\hoops_shortcode' );
+		add_shortcode( 'hoops', '\unFocus\SnS\hoops_shortcode' );
 
 		$content = do_shortcode( $content );
 
