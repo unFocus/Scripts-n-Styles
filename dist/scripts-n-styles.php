@@ -77,10 +77,21 @@ if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) :
 	require_once( "includes/bootstrap.php" );
 
 else :
+
+	// No point in updating, until PHP is upgraded.
+	function sns_disable_update( $value ) {
+		if( isset( $value->response[plugin_basename( __FILE__ )] ) ) {
+			unset( $value->response[plugin_basename( __FILE__ )] );
+		}
+		return $value;
+	}
+	add_filter( 'site_transient_update_plugins', 'sns_disable_update' );
+
 	function SnS_disable_message() {
 		?><div class="notice notice-success is-dismissible"><p><?php
 		_e('Sorry, Scripts n Styles doesn\'t work with PHP versions below 5.4. Please contact your host.', 'scripts-n-styles');
 		?></p></div><?php
 	}
 	add_action( 'admin_notices', 'SnS_disable_message' );
+
 endif;
