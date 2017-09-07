@@ -85,21 +85,21 @@ function register_scripts() {
 	wp_register_script( 'html5shiv-printshiv', $vendor . 'html5shiv-printshiv.js', array(), '3.7.3' );
 
 	//wp_register_script( 'google-diff-match-patch', $vendor . 'codemirror/diff_match_patch.js', array() );
-	wp_register_script( 'codemirror', $vendor . 'codemirror/codemirror.min.js', array( /*'google-diff-match-patch'*/ ), '5.21.0' );
-	wp_register_style(  'codemirror', $vendor . 'codemirror/codemirror.min.css', array(), '5.21.0' );
+	wp_register_script( 'sns-codemirror', $vendor . 'codemirror/codemirror.min.js', array( /*'google-diff-match-patch'*/ ), '5.21.0' );
+	wp_register_style(  'sns-codemirror', $vendor . 'codemirror/codemirror.min.css', array(), '5.21.0' );
 
 	$js = $dir . 'js/';
-	wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'codemirror', 'less.js', 'coffeescript', 'chosen' ), VERSION, true );
-	wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'codemirror', 'less.js', 'clean-css' ), VERSION, true );
-	wp_register_script( 'sns-hoops-page', $js . 'hoops-page.js', array( 'jquery', 'codemirror' ), VERSION, true );
-	wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'codemirror' ), VERSION, true );
-	wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'codemirror', 'chosen' ), VERSION, true );
-	wp_register_script( 'sns-code-editor',  $js . 'code-editor.js',  array( 'editor', 'jquery-ui-tabs', 'codemirror' ), VERSION, true );
+	wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'sns-codemirror', 'less.js', 'coffeescript', 'chosen' ), VERSION, true );
+	wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'sns-codemirror', 'less.js', 'clean-css' ), VERSION, true );
+	wp_register_script( 'sns-hoops-page', $js . 'hoops-page.js', array( 'jquery', 'sns-codemirror' ), VERSION, true );
+	wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'sns-codemirror' ), VERSION, true );
+	wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'sns-codemirror', 'chosen' ), VERSION, true );
+	wp_register_script( 'sns-code-editor',  $js . 'code-editor.js',  array( 'editor', 'jquery-ui-tabs', 'sns-codemirror' ), VERSION, true );
 
 	$css = $dir . 'css/';
-	wp_register_style(  'sns-options', $css . 'options-styles.css', array( 'codemirror' ), VERSION );
-	wp_register_style(  'sns-meta-box', $css . 'meta-box.css', array( 'codemirror' ), VERSION );
-	wp_register_style(  'sns-code-editor', $css . 'code-editor.css', array( 'codemirror' ), VERSION );
+	wp_register_style(  'sns-options', $css . 'options-styles.css', array( 'sns-codemirror' ), VERSION );
+	wp_register_style(  'sns-meta-box', $css . 'meta-box.css', array( 'sns-codemirror' ), VERSION );
+	wp_register_style(  'sns-code-editor', $css . 'code-editor.css', array( 'sns-codemirror' ), VERSION );
 }
 
 /**
