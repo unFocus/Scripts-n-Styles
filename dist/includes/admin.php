@@ -9,6 +9,26 @@ namespace unFocus\SnS;
  * post types.
  */
 
+
+/**
+ * Adds CodeMirror Theme to WordPress's instances.
+ */	
+add_action( 'admin_enqueue_scripts', function() { 
+	$options = get_option( 'SnS_options' );
+	
+	if ( ! empty( $options[ 'cm_theme' ] ) )
+		wp_enqueue_style('sns-codemirror'); 
+} );
+add_filter( 'wp_code_editor_settings', function( $settings, $args ) {
+	$options = get_option( 'SnS_options' );
+	
+	if ( ! empty( $options[ 'cm_theme' ] ) ) 
+		$settings['codemirror']['theme'] = $options[ 'cm_theme' ];
+	
+	return $settings;
+}, 10, 2 );
+
+
 /**
  * Adds link to the Settings Page in the WordPress "Plugin Action Links" array.
  * @param array $actions
@@ -18,7 +38,6 @@ add_filter( 'plugin_action_links_'.BASENAME, function( $actions ) {
 	$actions[ 'settings' ] = '<a href="' . menu_page_url( ADMIN_MENU_SLUG.'_settings', false ) . '"/>' . __( 'Settings' ) . '</a>';
 	return $actions;
 } );
-
 
 
 // Add menu to admin bar
