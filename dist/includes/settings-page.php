@@ -23,13 +23,8 @@ add_action( 'admin_menu', function() {
 	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
 	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
-		$options = get_option( 'SnS_options' );
-		$cm_theme = isset( $options[ 'cm_theme' ] ) ? $options[ 'cm_theme' ] : '';
-
-		wp_enqueue_style( 'sns-options' );
-
-		wp_enqueue_script(  'sns-settings-page' );
-		wp_localize_script( 'sns-settings-page', 'codemirror_options', array( 'theme' => $cm_theme ) );
+		wp_enqueue_code_editor([ 'type' => 'php' ]);
+		wp_add_inline_script( 'code-editor', "jQuery(function( $ ) { wp.codeEditor.initialize( $( '#codemirror_demo' ), wp.codeEditor.defaultSettings ); });" );
 	} );
 
 	/**

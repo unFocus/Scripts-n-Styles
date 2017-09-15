@@ -92,7 +92,6 @@ function register_scripts() {
 	wp_register_script( 'sns-global-page', $js . 'global-page.js', array( 'jquery', 'sns-codemirror', 'less.js', 'coffeescript', 'chosen' ), VERSION, true );
 	wp_register_script( 'sns-theme-page', $js . 'theme-page.js', array( 'jquery', 'sns-codemirror', 'less.js', 'clean-css' ), VERSION, true );
 	wp_register_script( 'sns-hoops-page', $js . 'hoops-page.js', array( 'jquery', 'sns-codemirror' ), VERSION, true );
-	wp_register_script( 'sns-settings-page', $js . 'settings-page.js', array( 'jquery', 'sns-codemirror' ), VERSION, true );
 	wp_register_script( 'sns-meta-box', $js . 'meta-box.js', array( 'editor', 'jquery-ui-tabs', 'sns-codemirror', 'chosen' ), VERSION, true );
 
 	$css = $dir . 'css/';
