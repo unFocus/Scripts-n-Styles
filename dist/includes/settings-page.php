@@ -111,21 +111,6 @@ add_action( 'admin_menu', function() {
 				'description' => '',
 			) );
 		add_settings_field(
-			'hoops_widget',
-			__( '<strong>Hoops Widgets</strong>: ', 'scripts-n-styles' ),
-			'\unFocus\SnS\radio',
-			ADMIN_MENU_SLUG,
-			'settings',
-			array(
-				'label_for' => 'hoops_widget',
-				'setting' => 'SnS_options',
-				'choices' => array( 'yes', 'no' ),
-				'layout' => 'horizontal',
-				'default' => 'no',
-				'legend' => __( 'Shortcode Widgets', 'scripts-n-styles' ),
-				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">This enables Hoops shortcodes to be used via a "Hoops" Text Widget.</span>', 'scripts-n-styles' )
-			) );
-		add_settings_field(
 			'delete_data_uninstall',
 			__( '<strong>Delete Data When Uninstalling</strong>: ', 'scripts-n-styles' ),
 			'\unFocus\SnS\radio',
