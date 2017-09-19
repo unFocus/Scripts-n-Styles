@@ -25,4 +25,3 @@ foreach( $users as $user ) delete_user_option( $user->ID, 'current_sns_tab', tru
 
 $users = get_users( 'meta_key=scripts_n_styles_page_sns_usage_per_page' );
 foreach( $users as $user ) delete_user_option( $user->ID, 'scripts_n_styles_page_sns_usage_per_page', true );
-?>
