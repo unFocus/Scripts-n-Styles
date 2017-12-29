@@ -1,0 +1,10 @@
+{
+	"name": "unFocus/Scripts-n-Styles",
+	"description": "Scripts n Styles development environment.",
+	"type": "project",
+	"require-dev": {
+		"wp-coding-standards/wpcs": "*",
+		"dealerdirect/phpcodesniffer-composer-installer": "*",
+		"wimg/php-compatibility": "*"
+	}
+}
