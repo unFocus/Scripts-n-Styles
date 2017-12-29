@@ -1,0 +1,50 @@
+version: '3'
+services:
+  wordpress:
+    container_name: wordpress
+    image: wordpress:php7.1
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - database
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_PASSWORD: wp
+      WORDPRESS_DEBUG: 1
+    volumes:
+      - ./html/:/var/www/html/
+      - ./dist/:/var/www/html/wp-content/plugins/scripts-n-styles/
+    networks:
+      - network
+  database:
+    container_name: database
+    image: mariadb
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+      - data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: wp
+    networks:
+      - network
+  phpmyadmin:
+    container_name: phpmyadmin
+    depends_on:
+      - database
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: wp
+    networks:
+      - network
+networks:
+  network:
+volumes:
+  data:
