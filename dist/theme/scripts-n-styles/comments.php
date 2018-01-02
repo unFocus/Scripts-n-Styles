@@ -7,4 +7,4 @@ if ( have_comments() ) {
 	}
 }
 comment_form();
-?>
+
