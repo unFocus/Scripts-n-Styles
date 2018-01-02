@@ -1,7 +1,17 @@
 <?php
+/**
+ * Functions file.
+ *
+ * @package Scripts-N-Styles
+ * @subpackage Theme
+ */
+
 namespace unFocus\SnS\Theme;
 
 if ( version_compare( $GLOBALS['wp_version'], '4.7-alpha', '<' ) ) {
+
+	// translators: Adsf.
+	$message = sprintf( __( 'Scripts n Styles Theme requires at least WordPress version 4.7. You are running version %s. Please upgrade and try again.', 'scripts-n-styles' ), $GLOBALS['wp_version'] );
 
 	add_action(
 		'after_switch_theme', function() {
@@ -9,8 +19,7 @@ if ( version_compare( $GLOBALS['wp_version'], '4.7-alpha', '<' ) ) {
 			unset( $_GET['activated'] );
 			add_action(
 				'admin_notices', function() {
-					$message = sprintf( __( 'Scripts n Styles Theme requires at least WordPress version 4.7. You are running version %s. Please upgrade and try again.', 'scripts-n-styles' ), $GLOBALS['wp_version'] );
-					printf( '<div class="error"><p>%s</p></div>', $message );
+					printf( '<div class="error"><p>%s</p></div>', esc_html( $message ) );
 				}
 			);
 		}
@@ -19,7 +28,9 @@ if ( version_compare( $GLOBALS['wp_version'], '4.7-alpha', '<' ) ) {
 	add_action(
 		'load-customize.php', function() {
 			wp_die(
-				sprintf( __( 'Scripts n Styles Theme requires at least WordPress version 4.7. You are running version %s. Please upgrade and try again.', 'scripts-n-styles' ), $GLOBALS['wp_version'] ), '', array(
+				esc_html( $message ),
+				'',
+				array(
 					'back_link' => true,
 				)
 			);
@@ -30,7 +41,7 @@ if ( version_compare( $GLOBALS['wp_version'], '4.7-alpha', '<' ) ) {
 	add_action(
 		'template_redirect', function() {
 			if ( isset( $_GET['preview'] ) ) {
-				wp_die( sprintf( __( 'Scripts n Styles Theme requires at least WordPress version 4.7. You are running version %s. Please upgrade and try again.', 'scripts-n-styles' ), $GLOBALS['wp_version'] ) );
+				wp_die( esc_html( $message ) );
 			}
 		}
 	);
@@ -43,25 +54,27 @@ add_action(
 		add_theme_support(
 			'admin-bar', [
 				'callback' => function() {
+					// @codingStandardsIgnoreStart
 					?><style id="admin-bar-style">
-				#wpadminbar {
-					opacity: 0.25;
-					-webkit-transform: translateY(-50%);
-				-ms-transform: translateY(-50%);
-					transform: translateY(-50%);
-					-webkit-transition: opacity .3s, -webkit-transform .3s;
-					transition: opacity .3s, -webkit-transform .3s;
-					transition: opacity .3s, transform .3s;
-					transition: opacity .3s, transform .3s, -webkit-transform .3s;
-				}
-				#wpadminbar:hover {
-				opacity: 1;
-				-webkit-transform: translateY(0%);
-					-ms-transform: translateY(0%);
-				transform: translateY(0%);
-				}
-				</style>
-				<?php
+					#wpadminbar {
+						opacity: 0.25;
+						-webkit-transform: translateY(-50%);
+						    -ms-transform: translateY(-50%);
+						        transform: translateY(-50%);
+						-webkit-transition: opacity .3s, -webkit-transform .3s;
+						        transition: opacity .3s, -webkit-transform .3s;
+						        transition: opacity .3s, transform .3s;
+						        transition: opacity .3s, transform .3s, -webkit-transform .3s;
+					}
+					#wpadminbar:hover {
+						opacity: 1;
+						-webkit-transform: translateY(0%);
+						    -ms-transform: translateY(0%);
+						transform: translateY(0%);
+					}
+					</style>
+					<?php
+					// @codingStandardsIgnoreEnd
 				},
 			]
 		);
@@ -75,7 +88,7 @@ add_action(
 				'/less/content.less',
 			]
 		);
-		add_theme_support( // add_editor_style();
+		add_theme_support( // Creates a dynamic add_editor_style(); call.
 			'sns-editor-style',
 			[
 				'/less/variables.less',
@@ -87,8 +100,7 @@ add_action(
 		add_theme_support( 'automatic-feed-links' );
 		add_theme_support( 'title-tag' );
 		add_theme_support( 'post-thumbnails' );
-		// add_image_size( 'scripts-n-styles-featured-image', 2000, 1200, true );
-		// add_image_size( 'scripts-n-styles-thumbnail-avatar', 100, 100, true );
+
 		$GLOBALS['content_width'] = 1024;
 		register_nav_menu( 'primary', __( 'Navigation Menu', 'scripts-n-styles' ) );
 		add_theme_support( 'custom-header' );

@@ -1,4 +1,12 @@
-<!DOCTYPE html>
+<?php
+/**
+ * Index page
+ *
+ * @package Scripts-N-Styles
+ * @subpackage Theme
+ */
+
+?><!DOCTYPE html>
 <html class="no-js" <?php language_attributes(); ?>>
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>" />
@@ -18,8 +26,8 @@
 					<header>
 						<?php
 						the_title();
-						echo get_the_tag_list();
-						echo get_the_category_list();
+						echo the_tags();
+						the_category();
 						?>
 								</header>
 								<?php
