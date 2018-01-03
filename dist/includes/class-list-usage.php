@@ -119,42 +119,34 @@ class List_Usage extends \WP_List_Table {
 	 */
 	public function prepare_items() {
 		$screen_id = get_current_screen()->id;
-		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$screen_id}_per_page" ) );
+		$per_page = $this->get_items_per_page( "{$screen_id}_per_page", 20 );
+
+		/**
+		 * Get Relavent Posts.
+		 */
+		$query = new \WP_Query( [
+			'posts_per_page' => $per_page,
+			'paged' => $this->get_pagenum(),
+			'post_type' => 'any',
+			'post_status' => 'any',
+			'orderby' => 'ID',
+			'order' => 'ASC',
+			'meta_key' => '_SnS',
+		] );
+
+		$this->items = $this->_add_meta_data( $query->posts );
+
+		$this->set_pagination_args( [
+			'total_items' => $query->found_posts,
+			'per_page' => $per_page,
+			'total_pages' => $query->max_num_pages,
+		] );
 
 		$this->_column_headers = array(
 			$this->get_columns(),
 			array(),
 			$this->get_sortable_columns(),
 		);
-
-		/**
-		 * Get Relavent Posts.
-		 */
-		$posts = get_posts(
-			array(
-				'numberposts' => -1,
-				'post_type' => 'any',
-				'post_status' => 'any',
-				'orderby' => 'ID',
-				'order' => 'ASC',
-				'meta_key' => '_SnS',
-			)
-		);
-
-		$items = $this->_add_meta_data( $posts );
-
-		$total_items = count( $items );
-
-		/**
-		 * Reduce items to current page's posts.
-		 */
-		$this->items = array_slice(
-			$items,
-			( ( $this->get_pagenum() - 1 ) * $per_page ),
-			$per_page
-		);
-
-		$this->set_pagination_args( compact( 'total_items', 'per_page' ) );
 	}
 
 	/**

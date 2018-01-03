@@ -43,13 +43,13 @@ add_action( 'admin_menu', function() {
 
 		add_filter( 'set-screen-option', function( $false, $option, $value ) {
 			$screen_id = get_current_screen()->id;
-			$this_option = str_replace( '-', '_', "{$screen_id}_per_page" );
+			$this_option = "{$screen_id}_per_page";
 			if ( $this_option != $option ) {
 				return false;
 			}
 
 			$value = (int) $value;
-			if ( $value < 1 || $value > 999 ) {
+			if ( $value < 1 || $value > 100 ) {
 				return false;
 			}
 
