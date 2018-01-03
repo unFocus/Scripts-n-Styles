@@ -26,6 +26,59 @@ class List_Usage extends \WP_List_Table {
 	/**
 	 * Build columns.
 	 *
+	 * @param object $post A WordPress $post object.
+	 */
+	public function column_script_data( $post ) {
+		$return = '';
+		if ( isset( $post->sns_scripts['scripts_in_head'] ) ) {
+			$return .= '<div>' . __( 'Scripts (head)', 'scripts-n-styles' ) . '</div>';
+		}
+		if ( isset( $post->sns_scripts['scripts'] ) ) {
+			$return .= '<div>' . __( 'Scripts', 'scripts-n-styles' ) . '</div>';
+		}
+		if ( isset( $post->sns_scripts['enqueue_scripts'] ) ) {
+			$return .= '<div>' . __( 'Enqueued Scripts', 'scripts-n-styles' ) . '</div>';
+		}
+		return $return;
+	}
+	/**
+	 * Build columns.
+	 *
+	 * @param object $post A WordPress $post object.
+	 */
+	public function column_style_data( $post ) {
+		$return = '';
+		if ( isset( $post->sns_styles['classes_mce'] ) ) {
+			$return .= '<div>' . __( 'TinyMCE Formats', 'scripts-n-styles' ) . '</div>';
+		}
+		if ( isset( $post->sns_styles['styles'] ) ) {
+			$return .= '<div>' . __( 'Styles', 'scripts-n-styles' ) . '</div>';
+		}
+		if ( isset( $post->sns_styles['classes_post'] ) ) {
+			$return .= '<div>' . __( 'Post Classes', 'scripts-n-styles' ) . '</div>';
+		}
+		if ( isset( $post->sns_styles['classes_body'] ) ) {
+			$return .= '<div>' . __( 'Body Classes', 'scripts-n-styles' ) . '</div>';
+		}
+		return $return;
+	}
+	/**
+	 * Build columns.
+	 *
+	 * @param object $post A WordPress $post object.
+	 */
+	public function column_hoops_data( $post ) {
+		$hoops = [];
+		if ( isset( $post->sns_hoops ) ) {
+			foreach ( $post->sns_hoops as $hoop => $shortcode ) {
+				$hoops[] = '[hoops name="' . $hoop . '"]';
+			}
+		}
+		return implode( '<br>', $hoops );
+	}
+	/**
+	 * Build columns.
+	 *
 	 * @param object $post        A WordPress $post object.
 	 * @param object $column_name A column name.
 	 */
@@ -37,31 +90,6 @@ class List_Usage extends \WP_List_Table {
 			case 'ID':
 			case 'post_type':
 				return $post->$column_name;
-			case 'script_data':
-				if ( isset( $post->sns_scripts['scripts_in_head'] ) ) {
-					$return .= '<div>' . __( 'Scripts (head)', 'scripts-n-styles' ) . '</div>';
-				}
-				if ( isset( $post->sns_scripts['scripts'] ) ) {
-					$return .= '<div>' . __( 'Scripts', 'scripts-n-styles' ) . '</div>';
-				}
-				if ( isset( $post->sns_scripts['enqueue_scripts'] ) ) {
-					$return .= '<div>' . __( 'Enqueued Scripts', 'scripts-n-styles' ) . '</div>';
-				}
-				return $return;
-			case 'style_data':
-				if ( isset( $post->sns_styles['classes_mce'] ) ) {
-					$return .= '<div>' . __( 'TinyMCE Formats', 'scripts-n-styles' ) . '</div>';
-				}
-				if ( isset( $post->sns_styles['styles'] ) ) {
-					$return .= '<div>' . __( 'Styles', 'scripts-n-styles' ) . '</div>';
-				}
-				if ( isset( $post->sns_styles['classes_post'] ) ) {
-					$return .= '<div>' . __( 'Post Classes', 'scripts-n-styles' ) . '</div>';
-				}
-				if ( isset( $post->sns_styles['classes_body'] ) ) {
-					$return .= '<div>' . __( 'Body Classes', 'scripts-n-styles' ) . '</div>';
-				}
-				return $return;
 			default:
 				return print_r( $post, true );
 		}
@@ -109,6 +137,7 @@ class List_Usage extends \WP_List_Table {
 			'post_type'     => __( 'Post Type', 'scripts-n-styles' ),
 			'script_data'   => __( 'Script Data', 'scripts-n-styles' ),
 			'style_data'    => __( 'Style Data', 'scripts-n-styles' ),
+			'hoops_data'    => __( 'Hoops Data', 'scripts-n-styles' ),
 		);
 
 		return $columns;
@@ -208,13 +237,17 @@ class List_Usage extends \WP_List_Table {
 	public function _add_meta_data( $posts ) {
 		foreach ( $posts as $post ) {
 			$sns = get_post_meta( $post->ID, '_SnS', true );
-			$styles = isset( $sns['styles'] ) ? $sns['styles'] : array();
+			$styles  = isset( $sns['styles'] ) ? $sns['styles'] : array();
 			$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : array();
+			$hoops   = isset( $sns['shortcodes'] ) ? $sns['shortcodes'] : array();
 			if ( ! empty( $styles ) ) {
 				$post->sns_styles = $styles;
 			}
 			if ( ! empty( $scripts ) ) {
 				$post->sns_scripts = $scripts;
+			}
+			if ( ! empty( $hoops ) ) {
+				$post->sns_hoops = $hoops;
 			}
 		}
 		return $posts;
