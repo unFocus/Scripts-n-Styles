@@ -41,7 +41,7 @@ add_action(
 	'wp_ajax_sns_update_tab', function () {
 		check_ajax_referer( BASENAME );
 
-		$active_tab = isset( $_POST['active_tab'] ) ? 's' . $_POST['active_tab'] : 's0';
+		$active_tab = isset( $_POST['active_tab'] ) ? 's' . (int) $_POST['active_tab'] : 's0';
 
 		$user = wp_get_current_user();
 		if ( ! $user ) {
@@ -70,11 +70,11 @@ add_action(
 		header( 'Content-Type: text/css; charset=UTF-8' );
 
 		if ( ! empty( $options['styles'] ) ) {
-			echo $options['styles'];
+			echo $options['styles']; // WPCS: XSS OK.
 		}
 
 		if ( ! empty( $styles['styles'] ) ) {
-			echo $styles['styles'];
+			echo $styles['styles']; // WPCS: XSS OK.
 		}
 
 		exit();
@@ -98,7 +98,7 @@ add_action(
 
 		$post_id = absint( $_REQUEST['post_id'] );
 		$sns = get_post_meta( $post_id, '_SnS', true );
-		$sns = is_array( $sns ) ? $sns : array(); // Something changed in PHP 7/WP 4.8
+		$sns = is_array( $sns ) ? $sns : array(); // Something changed in PHP 7/WP 4.8.
 		$styles = isset( $sns['styles'] ) ? $sns['styles'] : array();
 
 		$styles = maybe_set( $styles, 'classes_body' );
@@ -141,7 +141,7 @@ add_action(
 
 		$post_id = absint( $_REQUEST['post_id'] );
 		$sns = get_post_meta( $post_id, '_SnS', true );
-		$sns = is_array( $sns ) ? $sns : array(); // Something changed in PHP 7/WP 4.8
+		$sns = is_array( $sns ) ? $sns : array(); // Something changed in PHP 7/WP 4.8.
 		$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : array();
 
 		$scripts = maybe_set( $scripts, 'scripts_in_head' );
@@ -184,7 +184,7 @@ add_action(
 
 		$post_id = absint( $_REQUEST['post_id'] );
 		$sns = get_post_meta( $post_id, '_SnS', true );
-		$sns = is_array( $sns ) ? $sns : array(); // Something changed in PHP 7/WP 4.8
+		$sns = is_array( $sns ) ? $sns : array(); // Something changed in PHP 7/WP 4.8.
 		$styles = isset( $sns['styles'] ) ? $sns['styles'] : array();
 
 		$styles = maybe_set( $styles, 'styles' );
@@ -239,7 +239,7 @@ add_action(
 		$post_id = absint( $_REQUEST['post_id'] );
 
 		$sns = get_post_meta( $post_id, '_SnS', true );
-		$sns = is_array( $sns ) ? $sns : array(); // Something changed in PHP 7/WP 4.8
+		$sns = is_array( $sns ) ? $sns : array(); // Something changed in PHP 7/WP 4.8 .
 		$styles = isset( $sns['styles'] ) ? $sns['styles'] : array();
 
 		if ( ! isset( $styles['classes_mce'] ) ) {
@@ -336,7 +336,7 @@ add_action(
 
 		$post_id = absint( $_REQUEST['post_id'] );
 		$sns = get_post_meta( $post_id, '_SnS', true );
-		$sns = is_array( $sns ) ? $sns : array(); // Something changed in PHP 7/WP 4.8
+		$sns = is_array( $sns ) ? $sns : array(); // Something changed in PHP 7/WP 4.8.
 		$shortcodes = isset( $sns['shortcodes'] ) ? $sns['shortcodes'] : array();
 		$message = '';
 		$code = 0;
@@ -444,7 +444,7 @@ add_action(
  * Differs from Admin_Meta_Box::maybe_set() in that this needs no prefix.
  *
  * @param array $o The object.
- * @param any   $i The value.
+ * @param mixed $i The value.
  */
 function maybe_set( $o, $i ) {
 	if ( ! is_array( $o ) ) {
@@ -463,9 +463,9 @@ function maybe_set( $o, $i ) {
 /**
  * Update if a value, delete if not.
  *
- * @param int $id The object.
- * @param str $name The value.
- * @param any $meta The value.
+ * @param int    $id The object.
+ * @param string $name The value.
+ * @param mixed  $meta The value.
  */
 function maybe_update( $id, $name, $meta ) {
 	if ( empty( $meta ) ) {

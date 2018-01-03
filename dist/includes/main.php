@@ -37,7 +37,7 @@ function theme_css() {
 	header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + 864000 ) . ' GMT' );
 	header( 'Cache-Control: public, max-age=864000' );
 	header( 'Content-Type: text/css; charset=UTF-8' );
-	echo $compiled;
+	echo $compiled; // WPCS: XSS OK.
 	die();
 }
 add_action( 'wp_ajax_sns_theme_css', '\unFocus\SnS\theme_css' );
@@ -46,27 +46,27 @@ add_action( 'wp_ajax_nopriv_sns_theme_css', '\unFocus\SnS\theme_css' );
 /**
  * The Hoops shortcode
  *
- * @param str $atts Stuff.
- * @param str $content Stuff.
- * @param str $tag Stuff.
+ * @param string $atts Stuff.
+ * @param string $content Stuff.
+ * @param string $tag Stuff.
  */
 function hoops_shortcode( $atts, $content = null, $tag ) {
 	global $post;
-	extract( shortcode_atts( array( 'name' => 0 ), $atts ) );
+	$atts = shortcode_atts( array( 'name' => 0 ), $atts );
 	$output = '';
 
 	$options = get_option( 'SnS_options' );
 	$hoops = isset( $options['hoops']['shortcodes'] ) ? $options['hoops']['shortcodes'] : array();
 
 	if ( isset( $post->ID ) ) {
-		$SnS = get_post_meta( $post->ID, '_SnS', true );
-		$shortcodes = isset( $SnS['shortcodes'] ) ? $SnS['shortcodes'] : array();
+		$sns = get_post_meta( $post->ID, '_SnS', true );
+		$shortcodes = isset( $sns['shortcodes'] ) ? $sns['shortcodes'] : array();
 	}
 
-	if ( isset( $shortcodes[ $name ] ) ) {
-		$output .= $shortcodes[ $name ];
-	} else if ( isset( $hoops[ $name ] ) ) {
-		$output .= $hoops[ $name ];
+	if ( isset( $shortcodes[ $atts['name'] ] ) ) {
+		$output .= $shortcodes[ $atts['name'] ];
+	} else if ( isset( $hoops[ $atts['name'] ] ) ) {
+		$output .= $hoops[ $atts['name'] ];
 	}
 
 	if ( ! empty( $content ) && empty( $output ) ) {
@@ -127,12 +127,12 @@ add_action(
 		$options = get_option( 'SnS_options' );
 		if ( ! empty( $options ) && ! empty( $options['styles'] ) ) {
 			echo '<style type="text/css" id="sns_global_styles">';
-			echo $options['styles'];
+			echo $options['styles']; // WPCS: XSS OK.
 			echo '</style>';
 		}
 		if ( ! empty( $options ) && ! empty( $options['compiled'] ) ) {
 			echo '<style type="text/css" id="sns_global_less_compiled">';
-			echo $options['compiled'];
+			echo $options['compiled']; // WPCS: XSS OK.
 			echo '</style>';
 		}
 
@@ -141,11 +141,11 @@ add_action(
 		}
 		// Individual.
 		global $post;
-		$SnS = get_post_meta( $post->ID, '_SnS', true );
-		$styles = isset( $SnS['styles'] ) ? $SnS['styles'] : array();
+		$sns = get_post_meta( $post->ID, '_SnS', true );
+		$styles = isset( $sns['styles'] ) ? $sns['styles'] : array();
 		if ( ! empty( $styles ) && ! empty( $styles['styles'] ) ) {
 			echo '<style type="text/css" id="sns_styles">';
-			echo $styles['styles'];
+			echo $styles['styles']; // WPCS: XSS OK.
 			echo '</style>';
 		}
 	}, 11
@@ -158,13 +158,13 @@ add_action(
  */
 add_action(
 	'wp_footer', function() {
-		// Global
+		// Global.
 		$options = get_option( 'SnS_options' );
 		if ( ! empty( $options ) && ! empty( $options['scripts'] ) ) {
 			?>
 			<script type="text/javascript" id="sns_global_scripts">
 			<?php
-			echo $options['scripts'];
+			echo $options['scripts']; // WPCS: XSS OK.
 			?>
 			</script>
 			<?php
@@ -173,7 +173,7 @@ add_action(
 			?>
 			<script type="text/javascript" id="sns_global_coffee_compiled">
 			<?php
-			echo $options['coffee_compiled'];
+			echo $options['coffee_compiled']; // WPCS: XSS OK.
 			?>
 			</script>
 			<?php
@@ -182,15 +182,15 @@ add_action(
 		if ( ! is_singular() ) {
 			return;
 		}
-		// Individual
+		// Individual.
 		global $post;
-		$SnS = get_post_meta( $post->ID, '_SnS', true );
-		$scripts = isset( $SnS['scripts'] ) ? $SnS['scripts'] : array();
+		$sns = get_post_meta( $post->ID, '_SnS', true );
+		$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : array();
 		if ( ! empty( $scripts ) && ! empty( $scripts['scripts'] ) ) {
 			?>
 			<script type="text/javascript" id="sns_scripts">
 			<?php
-			echo $scripts['scripts'];
+			echo $scripts['scripts']; // WPCS: XSS OK.
 			?>
 			</script>
 			<?php
@@ -205,13 +205,13 @@ add_action(
  */
 add_action(
 	'wp_head', function() {
-		// Global
+		// Global.
 		$options = get_option( 'SnS_options' );
 		if ( ! empty( $options ) && ! empty( $options['scripts_in_head'] ) ) {
 			?>
 			<script type="text/javascript" id="sns_global_scripts_in_head">
 			<?php
-			echo $options['scripts_in_head'];
+			echo $options['scripts_in_head']; // WPCS: XSS OK.
 			?>
 			</script>
 			<?php
@@ -220,15 +220,15 @@ add_action(
 		if ( ! is_singular() ) {
 			return;
 		}
-		// Individual
+		// Individual.
 		global $post;
-		$SnS = get_post_meta( $post->ID, '_SnS', true );
-		$scripts = isset( $SnS['scripts'] ) ? $SnS['scripts'] : array();
+		$sns = get_post_meta( $post->ID, '_SnS', true );
+		$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : array();
 		if ( ! empty( $scripts ) && ! empty( $scripts['scripts_in_head'] ) ) {
 			?>
 			<script type="text/javascript" id="sns_scripts_in_head">
 			<?php
-			echo $scripts['scripts_in_head'];
+			echo $scripts['scripts_in_head']; // WPCS: XSS OK.
 			?>
 			</script>
 			<?php
@@ -248,8 +248,8 @@ add_filter(
 		}
 
 		global $post;
-		$SnS = get_post_meta( $post->ID, '_SnS', true );
-		$styles = isset( $SnS['styles'] ) ? $SnS['styles'] : array();
+		$sns = get_post_meta( $post->ID, '_SnS', true );
+		$styles = isset( $sns['styles'] ) ? $sns['styles'] : array();
 		if ( ! empty( $styles ) && ! empty( $styles['classes_body'] ) ) {
 			$classes = array_merge( $classes, explode( ' ', $styles['classes_body'] ) );
 		}
@@ -270,8 +270,8 @@ add_filter(
 		}
 
 		global $post;
-		$SnS = get_post_meta( $post->ID, '_SnS', true );
-		$styles = isset( $SnS['styles'] ) ? $SnS['styles'] : array();
+		$sns = get_post_meta( $post->ID, '_SnS', true );
+		$styles = isset( $sns['styles'] ) ? $sns['styles'] : array();
 
 		if ( ! empty( $styles ) && ! empty( $styles['classes_post'] ) ) {
 			$classes = array_merge( $classes, explode( ' ', $styles['classes_post'] ) );
@@ -287,7 +287,7 @@ add_filter(
  */
 add_action(
 	'wp_enqueue_scripts', function() {
-		// Global
+		// Global.
 		$options = get_option( 'SnS_options' );
 		if ( ! isset( $options['enqueue_scripts'] ) ) {
 			$enqueue_scripts = array();
@@ -304,8 +304,8 @@ add_action(
 		}
 		// Individual.
 		global $post;
-		$SnS = get_post_meta( $post->ID, '_SnS', true );
-		$scripts = isset( $SnS['scripts'] ) ? $SnS['scripts'] : array();
+		$sns = get_post_meta( $post->ID, '_SnS', true );
+		$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : array();
 
 		if ( ! empty( $scripts['enqueue_scripts'] ) && is_array( $scripts['enqueue_scripts'] ) ) {
 			foreach ( $scripts['enqueue_scripts'] as $handle ) {

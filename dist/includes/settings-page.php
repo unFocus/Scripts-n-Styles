@@ -20,7 +20,7 @@ add_action(
 		$hook_suffix = add_submenu_page(
 			ADMIN_MENU_SLUG,
 			__( 'Scripts n Styles', 'scripts-n-styles' ),
-			__( 'Settings' ),
+			__( 'Settings', 'scripts-n-styles' ),
 			'unfiltered_html',
 			ADMIN_MENU_SLUG . '_settings',
 			'\unFocus\SnS\page'
@@ -56,7 +56,7 @@ add_action(
 					function() {
 					?>
 				<div style="max-width: 55em;">
-					<p><?php _e( 'Control how and where Scripts n Styles menus and metaboxes appear. These options are here because sometimes users really care about this stuff. Feel free to adjust to your liking. :-)', 'scripts-n-styles' ); ?></p>
+					<p><?php esc_html_e( 'Control how and where Scripts n Styles menus and metaboxes appear. These options are here because sometimes users really care about this stuff. Feel free to adjust to your liking. :-)', 'scripts-n-styles' ); ?></p>
 				</div>
 				<?php
 					},

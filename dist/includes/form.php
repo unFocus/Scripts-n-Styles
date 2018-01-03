@@ -1,10 +1,8 @@
 <?php
 /**
- * Settings_Page
+ * Form Helpers
  *
- * Allows WordPress admin users the ability to add custom CSS
- * and JavaScript directly to individual Post, Pages or custom
- * post types.
+ * Various functions for building settings pages.
  *
  * @package Scripts-N-Styles
  */
@@ -12,8 +10,9 @@
 namespace unFocus\SnS;
 
 /**
- * Settings Page
  * Outputs a textarea for setting 'scripts_in_head'.
+ *
+ * @param array $args A set of args.
  */
 function textarea( $args ) {
 	extract( $args );
@@ -37,9 +36,14 @@ function textarea( $args ) {
 	if ( $description ) {
 		$output .= $description;
 	}
-	echo $output;
+	echo $output; // WPCS: XSS OK.
 }
 
+/**
+ * Outputs a radio for setting.
+ *
+ * @param array $args A set of args.
+ */
 function radio( $args ) {
 	extract( $args );
 	$options = get_option( $setting );
@@ -64,12 +68,13 @@ function radio( $args ) {
 	if ( $description ) {
 		$output .= $description;
 	}
-	echo $output;
+	echo $output; // WPCS: XSS OK.
 }
 
 /**
- * Settings Page
  * Outputs a select element for selecting options to set scripts for including.
+ *
+ * @param array $args A set of args.
  */
 function select( $args ) {
 	extract( $args );
@@ -106,23 +111,22 @@ function select( $args ) {
 		}
 		$output .= '</p>';
 	}
-	echo $output;
+	echo $output; // WPCS: XSS OK.
 }
 
 /**
- * Settings Page
  * Outputs the Admin Page and calls the Settings registered with the Settings API.
  */
 function take_action() {
 	global $action, $option_page, $page, $new_whitelist_options;
 
 	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) || ( is_multisite() && ! is_super_admin() ) ) {
-		wp_die( __( 'Cheatin&#8217; uh?' ) );
+		wp_die( esc_html__( 'Cheatin&#8217; uh?', 'scripts-n-styles' ) );
 	}
 
 	// Handle menu-redirected update message.
-	if ( isset( $_REQUEST['message'] ) && $_REQUEST['message'] ) {
-		add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
+	if ( ! empty( $_REQUEST['message'] ) ) {
+		add_settings_error( $page, 'settings_updated', esc_html__( 'Settings saved.', 'scripts-n-styles' ), 'updated' );
 	}
 
 	if ( ! isset( $_REQUEST['action'], $_REQUEST['option_page'], $_REQUEST['page'] ) ) {
@@ -151,14 +155,14 @@ function take_action() {
 		$new = stripslashes_deep( $new );
 		$value = array_merge( $old, $new );
 
-		// Allow modification of $value
+		// Allow modification of $value.
 		$value = apply_filters( 'sns_options_pre_update_option', $value, $page, $action, $new, $old );
 
 		update_option( $option, $value );
 	}
 
 	if ( ! count( get_settings_errors() ) ) {
-		add_settings_error( $page, 'settings_updated', __( 'Settings saved.' ), 'updated' );
+		add_settings_error( $page, 'settings_updated', __( 'Settings saved.', 'scripts-n-styles' ), 'updated' );
 	}
 
 	if ( isset( $_REQUEST['ajaxsubmit'] ) && $_REQUEST['ajaxsubmit'] ) {
@@ -166,14 +170,13 @@ function take_action() {
 		settings_errors( $page );
 		$output = ob_get_contents();
 		ob_end_clean();
-		exit( $output );
+		exit( $output ); // WPCS: XSS OK.
 	}
 
 	return;
 }
 
 /**
- * Settings Page
  * Outputs the Admin Page and calls the Settings registered with the Settings API in init_options_page().
  */
 function page() {
@@ -197,18 +200,18 @@ function page() {
  */
 function nav() {
 	$options = get_option( 'SnS_options' );
-	$page = $_REQUEST['page'];
+	$page = sanitize_textarea_field( $_REQUEST['page'] );
 	?>
-	<h2><?php _e( 'Scripts n Styles', 'scripts-n-styles' ); ?></h2>
+	<h2><?php esc_html_e( 'Scripts n Styles', 'scripts-n-styles' ); ?></h2>
 	<?php settings_errors(); ?>
 	<h3 class="nav-tab-wrapper">
-		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG ); ?>"><?php _e( 'Global', 'scripts-n-styles' ); ?></a>
-		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_hoops' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_hoops' ); ?>"><?php _e( 'Hoops', 'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG ); ?>"><?php esc_html_e( 'Global', 'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_hoops' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_hoops' ); ?>"><?php esc_html_e( 'Hoops', 'scripts-n-styles' ); ?></a>
 		<?php if ( current_theme_supports( 'scripts-n-styles' ) ) { ?>
-		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_theme' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_theme' ); ?>"><?php _e( 'Theme', 'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_theme' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_theme' ); ?>"><?php esc_html_e( 'Theme', 'scripts-n-styles' ); ?></a>
 		<?php } ?>
-		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_settings' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_settings' ); ?>"><?php _e( 'Settings', 'scripts-n-styles' ); ?></a>
-		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_usage' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_usage' ); ?>"><?php _e( 'Usage', 'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_settings' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_settings' ); ?>"><?php esc_html_e( 'Settings', 'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_usage' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_usage' ); ?>"><?php esc_html_e( 'Usage', 'scripts-n-styles' ); ?></a>
 	</h3>
 	<?php
 }
