@@ -9,17 +9,15 @@
 
 namespace unFocus\SnS;
 
-add_action(
-	'plugins_loaded', function() {
+add_action( 'plugins_loaded', function() {
 
-		register_theme_directory( plugin_dir_path( SNS_FILE ) . 'theme' );
+	register_theme_directory( plugin_dir_path( SNS_FILE ) . 'theme' );
 
-		$options = get_option( 'SnS_options' );
-		if ( ! isset( $options['version'] ) || version_compare( VERSION, $options['version'], '>' ) ) {
-			upgrade();
-		}
+	$options = get_option( 'SnS_options' );
+	if ( ! isset( $options['version'] ) || version_compare( VERSION, $options['version'], '>' ) ) {
+		upgrade();
 	}
-);
+} );
 
 /**
  * Sets defaults if not previously set. Sets stored 'version' to VERSION.

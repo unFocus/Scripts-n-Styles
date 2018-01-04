@@ -10,7 +10,7 @@
  * to add your style.css instead of inline.
  *
  * On the `after_setup_theme` action, use
- * `add_theme_support( 'scripts-n-styles', array( '/less/variables.less', '/less/mixins.less' ) );`
+ * `add_theme_support( 'scripts-n-styles', [ '/less/variables.less', '/less/mixins.less' ] );`
  * but use the appropriate file locations.
  *
  * @package Scripts-N-Styles
@@ -18,82 +18,78 @@
 
 namespace unFocus\SnS;
 
-add_action(
-	'admin_menu', function() {
-		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) {
-			return;
-		}
-		if ( ! current_theme_supports( 'scripts-n-styles' ) ) {
-			return;
-		}
+add_action( 'admin_menu', function() {
+	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) {
+		return;
+	}
+	if ( ! current_theme_supports( 'scripts-n-styles' ) ) {
+		return;
+	}
 
-		$hook_suffix = add_submenu_page(
-			ADMIN_MENU_SLUG,
-			__( 'Scripts n Styles', 'scripts-n-styles' ),
-			__( 'Theme', 'scripts-n-styles' ),
-			'unfiltered_html',
-			ADMIN_MENU_SLUG . '_theme',
-			'\unFocus\SnS\page'
-		);
+	$hook_suffix = add_submenu_page(
+		ADMIN_MENU_SLUG,
+		__( 'Scripts n Styles', 'scripts-n-styles' ),
+		__( 'Theme', 'scripts-n-styles' ),
+		'unfiltered_html',
+		ADMIN_MENU_SLUG . '_theme',
+		'\unFocus\SnS\page'
+	);
 
-		add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
-		add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
-		add_action(
-			"admin_print_styles-$hook_suffix", function() {
-				$options = get_option( 'SnS_options' );
-				$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
+	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
+	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
+	add_action( "admin_print_styles-$hook_suffix", function() {
+			$options = get_option( 'SnS_options' );
+			$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
 
-				wp_enqueue_style( 'sns-options' );
+			wp_enqueue_style( 'sns-options' );
 
-				wp_enqueue_script( 'sns-theme-page' );
-				wp_localize_script( 'sns-theme-page', '_SnS_options', array( 'theme' => $cm_theme ) );
-			}
-		);
+			wp_enqueue_script( 'sns-theme-page' );
+			wp_localize_script( 'sns-theme-page', '_SnS_options', [ 'theme' => $cm_theme ] );
+	} );
 
-		/**
+	/**
 	 * Settings Page
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
 	 */
-		add_action(
-			"load-$hook_suffix", function() {
-				// added here to not effect other pages. Theme page requires JavaScript (less.js) or it doesn't make sense to save.
-				add_filter( 'sns_show_submit_button', '__return_false' );
+	add_action( "load-$hook_suffix", function() {
+		// added here to not effect other pages. Theme page requires JavaScript (less.js) or it doesn't make sense to save.
+		add_filter( 'sns_show_submit_button', '__return_false' );
 
-				register_setting(
-					OPTION_GROUP,
-					'SnS_options'
-				);
+		register_setting(
+			OPTION_GROUP,
+			'SnS_options'
+		);
 
-				add_settings_section(
-					'theme',
-					__( 'Scripts n Styles Theme Files', 'scripts-n-styles' ),
-					function() {
-						$files = array();
-						$support_files = get_theme_support( 'scripts-n-styles' );
+		add_settings_section(
+			'theme',
+			__( 'Scripts n Styles Theme Files', 'scripts-n-styles' ),
+			function() {
+				$files = [];
+				$support_files = get_theme_support( 'scripts-n-styles' );
 
-						if ( is_child_theme() ) {
-							$root = get_stylesheet_directory();
-						} else {
-							$root = get_template_directory();
-						}
+				if ( is_child_theme() ) {
+					$root = get_stylesheet_directory();
+				} else {
+					$root = get_template_directory();
+				}
 
-						foreach ( $support_files[0] as $file ) {
-							if ( is_file( $root . $file ) ) {
-								$files[] = $root . $file;
-							}
-						}
+				foreach ( $support_files[0] as $file ) {
+					if ( is_file( $root . $file ) ) {
+						$files[] = $root . $file;
+					}
+				}
 
-						$slug = get_stylesheet();
-						$options = get_option( 'SnS_options' );
-						// Stores data on a theme by theme basis.
-						$theme = isset( $options['themes'][ $slug ] ) ? $options['themes'][ $slug ] : array();
-						$stored = isset( $theme['less'] ) ? $theme['less'] : array(); // is an array of stored imported less file data.
-						$compiled = isset( $theme['compiled'] ) ? $theme['compiled'] : ''; // the complete compiled down css.
-						$slug = esc_attr( $slug );
+				$slug = get_stylesheet();
+				$options = get_option( 'SnS_options' );
+				// Stores data on a theme by theme basis.
+				$theme = isset( $options['themes'][ $slug ] ) ? $options['themes'][ $slug ] : [];
+				$stored = isset( $theme['less'] ) ? $theme['less'] : []; // is an array of stored imported less file data.
+				$compiled = isset( $theme['compiled'] ) ? $theme['compiled'] : ''; // the complete compiled down css.
+				$slug = esc_attr( $slug );
 
-						$open_theme_panels = json_decode( get_user_option( 'sns_open_theme_panels', get_current_user_id() ), true );
+				$open_theme_panels = json_decode( get_user_option( 'sns_open_theme_panels', get_current_user_id() ), true );
 
-					?>
+				?>
 				<div style="overflow: hidden">
 				<div id="less_area" style="width: 49%; float: left; overflow: hidden; margin-right: 2%;">
 					<?php
@@ -152,10 +148,8 @@ add_action(
 					<div id="compiled_error" class="error settings-error below-h2"></div>
 				</div>
 				<?php
-					},
-					ADMIN_MENU_SLUG
-				);
-			}
+			},
+			ADMIN_MENU_SLUG
 		);
-	}
-);
+	} );
+} );

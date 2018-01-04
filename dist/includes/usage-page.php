@@ -33,6 +33,7 @@ add_action( 'admin_menu', function() {
 	 * Adds Admin Menu Item via WordPress' "Administration Menus" API. Also hook actions to register options via WordPress' Settings API.
 	 */
 	add_action( "load-$hook_suffix", function() {
+		add_filter( 'sns_show_submit_button', '__return_false' );
 
 		add_screen_option(
 			'per_page', [
@@ -62,7 +63,8 @@ add_action( 'admin_menu', function() {
 		add_settings_section(
 			'usage',
 			__( 'Scripts n Styles Usage', 'scripts-n-styles' ),
-			function() { ?>
+			function() {
+				?>
 				<div style="max-width: 55em;">
 					<p><?php esc_html_e( 'The following table shows content that utilizes Scripts n Styles.', 'scripts-n-styles' ); ?></p>
 				</div>

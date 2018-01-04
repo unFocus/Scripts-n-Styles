@@ -79,7 +79,7 @@ function radio( $args ) {
 function select( $args ) {
 	extract( $args );
 	$options = get_option( $setting );
-	$selected = isset( $options[ $label_for ] ) ? $options[ $label_for ] : array();
+	$selected = isset( $options[ $label_for ] ) ? $options[ $label_for ] : [];
 
 	$output = '<select';
 	$output .= ' id="' . $label_for . '"';
@@ -133,7 +133,7 @@ function take_action() {
 		return;
 	}
 
-	wp_reset_vars( array( 'action', 'option_page', 'page' ) );
+	wp_reset_vars( [ 'action', 'option_page', 'page' ] );
 
 	check_admin_referer( $option_page . '-options' );
 
@@ -188,8 +188,9 @@ function page() {
 		<?php do_settings_sections( ADMIN_MENU_SLUG ); ?>
 		<?php
 		if ( apply_filters( 'sns_show_submit_button', true ) ) {
-			submit_button();}
-?>
+			submit_button();
+		}
+		?>
 		</form>
 	</div>
 	<?php

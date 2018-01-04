@@ -53,14 +53,12 @@ add_action(
 		}
 		global $wp_admin_bar;
 		$title = WP_DEBUG ? __( 'Scripts n Styles', 'scripts-n-styles' ) . ' (PHP: ' . PHP_VERSION . ')' : __( 'Scripts n Styles', 'scripts-n-styles' );
-		$wp_admin_bar->add_node(
-			[
-				'id'    => 'Scripts_n_Styles',
-				'title' => $title,
-				'href'  => admin_url( 'admin.php?page=' . ADMIN_MENU_SLUG ),
-				'meta'  => array( 'class' => 'Scripts_n_Styles' ),
-			]
-		);
+		$wp_admin_bar->add_node( [
+			'id'    => 'Scripts_n_Styles',
+			'title' => $title,
+			'href'  => admin_url( 'admin.php?page=' . ADMIN_MENU_SLUG ),
+			'meta'  => [ 'class' => 'Scripts_n_Styles' ],
+		] );
 	}, 11
 );
 
@@ -216,13 +214,11 @@ function help() {
 				'<p>' . __( '<a href="https://github.com/unFocus/Scripts-n-Styles" target="_blank">Source on github</a>', 'scripts-n-styles' ) . '</p>' .
 				'<p>' . __( '<a href="http://wordpress.org/tags/scripts-n-styles" target="_blank">Support Forums</a>', 'scripts-n-styles' ) . '</p>';
 	$screen = get_current_screen();
-	$screen->add_help_tab(
-		array(
-			'title' => __( 'Scripts n Styles', 'scripts-n-styles' ),
-			'id' => 'scripts-n-styles',
-			'content' => $help,
-		)
-	);
+	$screen->add_help_tab( [
+		'title' => __( 'Scripts n Styles', 'scripts-n-styles' ),
+		'id' => 'scripts-n-styles',
+		'content' => $help,
+	] );
 	if ( 'post' != $screen->id ) {
 		$screen->set_help_sidebar( $sidebar );
 	}

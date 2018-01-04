@@ -16,15 +16,13 @@ if ( empty( $options['delete_data_uninstall'] ) || 'yes' !== $options['delete_da
 	return;
 }
 
-$posts = get_posts(
-	array(
-		'numberposts' => -1,
-		'post_type' => 'any',
-		'post_status' => 'any',
-		'orderby' => 'ID',
-		'meta_key' => '_SnS',
-	)
-);
+$posts = get_posts( [
+	'numberposts' => -1,
+	'post_type' => 'any',
+	'post_status' => 'any',
+	'orderby' => 'ID',
+	'meta_key' => '_SnS',
+] );
 
 foreach ( $posts as $post ) {
 	delete_post_meta( $post->ID, '_SnS' );

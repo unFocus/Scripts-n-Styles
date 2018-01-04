@@ -105,10 +105,6 @@ class List_Usage extends \WP_List_Table {
 		// Translators: Link to edit the post.
 		$edit_title = esc_attr( sprintf( __( 'Edit &#8220;%s&#8221;', 'scripts-n-styles' ), $post->post_title ) );
 
-		$actions = array(
-			'edit' => sprintf( '<a title="%s" href="%s">%s</a>', $edit_title, $edit_link, __( 'Edit', 'scripts-n-styles' ) ),
-		);
-
 		$return = '<strong>';
 		if ( $this->ajax_user_can() && 'trash' != $post->post_status ) {
 			$return .= '<a class="row-title"';
@@ -121,7 +117,9 @@ class List_Usage extends \WP_List_Table {
 		}
 		$this->_post_states( $post );
 		$return .= '</strong>';
-		$return .= $this->row_actions( $actions );
+		$return .= $this->row_actions( [
+			'edit' => sprintf( '<a title="%s" href="%s">%s</a>', $edit_title, $edit_link, __( 'Edit', 'scripts-n-styles' ) ),
+		] );
 
 		return $return;
 	}
@@ -130,7 +128,7 @@ class List_Usage extends \WP_List_Table {
 	 * Define columns.
 	 */
 	public function get_columns() {
-		$columns = array(
+		return [
 			'title'         => __( 'Title', 'scripts-n-styles' ),
 			'ID'            => __( 'ID', 'scripts-n-styles' ),
 			'status'        => __( 'Status', 'scripts-n-styles' ),
@@ -138,9 +136,7 @@ class List_Usage extends \WP_List_Table {
 			'script_data'   => __( 'Script Data', 'scripts-n-styles' ),
 			'style_data'    => __( 'Style Data', 'scripts-n-styles' ),
 			'hoops_data'    => __( 'Hoops Data', 'scripts-n-styles' ),
-		);
-
-		return $columns;
+		];
 	}
 
 	/**
@@ -171,11 +167,11 @@ class List_Usage extends \WP_List_Table {
 			'total_pages' => $query->max_num_pages,
 		] );
 
-		$this->_column_headers = array(
+		$this->_column_headers = [
 			$this->get_columns(),
-			array(),
+			[],
 			$this->get_sortable_columns(),
-		);
+		];
 	}
 
 	/**
@@ -184,7 +180,7 @@ class List_Usage extends \WP_List_Table {
 	 * @param object $post A WordPress $post object.
 	 */
 	public function _post_states( $post ) {
-		$post_states = array();
+		$post_states = [];
 		$return = '';
 		if ( isset( $_GET['post_status'] ) ) {
 			$post_status = sanitize_text_field( wp_unslash( $_GET['post_status'] ) );
@@ -237,9 +233,9 @@ class List_Usage extends \WP_List_Table {
 	public function _add_meta_data( $posts ) {
 		foreach ( $posts as $post ) {
 			$sns = get_post_meta( $post->ID, '_SnS', true );
-			$styles  = isset( $sns['styles'] ) ? $sns['styles'] : array();
-			$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : array();
-			$hoops   = isset( $sns['shortcodes'] ) ? $sns['shortcodes'] : array();
+			$styles  = isset( $sns['styles'] ) ? $sns['styles'] : [];
+			$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : [];
+			$hoops   = isset( $sns['shortcodes'] ) ? $sns['shortcodes'] : [];
 			if ( ! empty( $styles ) ) {
 				$post->sns_styles = $styles;
 			}
