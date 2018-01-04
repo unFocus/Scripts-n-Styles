@@ -31,13 +31,13 @@ class List_Usage extends \WP_List_Table {
 	public function column_script_data( $post ) {
 		$return = '';
 		if ( isset( $post->sns_scripts['scripts_in_head'] ) ) {
-			$return .= '<div>' . __( 'Scripts (head)', 'scripts-n-styles' ) . '</div>';
+			$return .= '<div>' . esc_html__( 'Scripts (head)', 'scripts-n-styles' ) . '</div>';
 		}
 		if ( isset( $post->sns_scripts['scripts'] ) ) {
-			$return .= '<div>' . __( 'Scripts', 'scripts-n-styles' ) . '</div>';
+			$return .= '<div>' . esc_html__( 'Scripts', 'scripts-n-styles' ) . '</div>';
 		}
 		if ( isset( $post->sns_scripts['enqueue_scripts'] ) ) {
-			$return .= '<div>' . __( 'Enqueued Scripts', 'scripts-n-styles' ) . '</div>';
+			$return .= '<div>' . esc_html__( 'Enqueued Scripts', 'scripts-n-styles' ) . '</div>';
 		}
 		return $return;
 	}
@@ -49,16 +49,16 @@ class List_Usage extends \WP_List_Table {
 	public function column_style_data( $post ) {
 		$return = '';
 		if ( isset( $post->sns_styles['classes_mce'] ) ) {
-			$return .= '<div>' . __( 'TinyMCE Formats', 'scripts-n-styles' ) . '</div>';
+			$return .= '<div>' . esc_html__( 'TinyMCE Formats', 'scripts-n-styles' ) . '</div>';
 		}
 		if ( isset( $post->sns_styles['styles'] ) ) {
-			$return .= '<div>' . __( 'Styles', 'scripts-n-styles' ) . '</div>';
+			$return .= '<div>' . esc_html__( 'Styles', 'scripts-n-styles' ) . '</div>';
 		}
 		if ( isset( $post->sns_styles['classes_post'] ) ) {
-			$return .= '<div>' . __( 'Post Classes', 'scripts-n-styles' ) . '</div>';
+			$return .= '<div>' . esc_html__( 'Post Classes', 'scripts-n-styles' ) . '</div>';
 		}
 		if ( isset( $post->sns_styles['classes_body'] ) ) {
-			$return .= '<div>' . __( 'Body Classes', 'scripts-n-styles' ) . '</div>';
+			$return .= '<div>' . esc_html__( 'Body Classes', 'scripts-n-styles' ) . '</div>';
 		}
 		return $return;
 	}
@@ -76,24 +76,6 @@ class List_Usage extends \WP_List_Table {
 		}
 		return implode( '<br>', $hoops );
 	}
-	/**
-	 * Build columns.
-	 *
-	 * @param object $post        A WordPress $post object.
-	 * @param object $column_name A column name.
-	 */
-	public function column_default( $post, $column_name ) {
-		$return = '';
-		switch ( $column_name ) {
-			case 'status':
-				return $post->post_status;
-			case 'ID':
-			case 'post_type':
-				return $post->$column_name;
-			default:
-				return print_r( $post, true );
-		}
-	}
 
 	/**
 	 * Build title column.
@@ -105,23 +87,23 @@ class List_Usage extends \WP_List_Table {
 		// Translators: Link to edit the post.
 		$edit_title = esc_attr( sprintf( __( 'Edit &#8220;%s&#8221;', 'scripts-n-styles' ), $post->post_title ) );
 
-		$return = '<strong>';
+		?>
+		<strong>
+		<?php
 		if ( $this->ajax_user_can() && 'trash' != $post->post_status ) {
-			$return .= '<a class="row-title"';
-			$return .= ' href="' . $edit_link . '"';
-			$return .= ' title="' . $edit_title . '">';
-			$return .= $post->post_title;
-			$return .= '</a>';
+			?>
+			<a class="row-title" href="<?php echo esc_attr( $edit_link ); ?>" title="<?php echo esc_attr( $edit_title ); ?>">
+			<?php echo esc_html( $post->post_title ); ?>
+			</a>
+			<?php
 		} else {
-			$return .= $post->post_title;
+			echo esc_html( $post->post_title );
 		}
-		$this->_post_states( $post );
-		$return .= '</strong>';
-		$return .= $this->row_actions( [
-			'edit' => sprintf( '<a title="%s" href="%s">%s</a>', $edit_title, $edit_link, __( 'Edit', 'scripts-n-styles' ) ),
-		] );
-
-		return $return;
+		_post_states( $post );
+		?>
+		</strong>
+		(type: <?php echo esc_html( $post->post_type ); ?>)
+		<?php
 	}
 
 	/**
@@ -129,13 +111,10 @@ class List_Usage extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return [
-			'title'         => __( 'Title', 'scripts-n-styles' ),
-			'ID'            => __( 'ID', 'scripts-n-styles' ),
-			'status'        => __( 'Status', 'scripts-n-styles' ),
-			'post_type'     => __( 'Post Type', 'scripts-n-styles' ),
-			'script_data'   => __( 'Script Data', 'scripts-n-styles' ),
-			'style_data'    => __( 'Style Data', 'scripts-n-styles' ),
-			'hoops_data'    => __( 'Hoops Data', 'scripts-n-styles' ),
+			'title'         => esc_html__( 'Title', 'scripts-n-styles' ),
+			'script_data'   => esc_html__( 'Script Data', 'scripts-n-styles' ),
+			'style_data'    => esc_html__( 'Style Data', 'scripts-n-styles' ),
+			'hoops_data'    => esc_html__( 'Hoops Data', 'scripts-n-styles' ),
 		];
 	}
 
@@ -151,19 +130,19 @@ class List_Usage extends \WP_List_Table {
 		 */
 		$query = new \WP_Query( [
 			'posts_per_page' => $per_page,
-			'paged' => $this->get_pagenum(),
-			'post_type' => 'any',
-			'post_status' => 'any',
-			'orderby' => 'ID',
-			'order' => 'ASC',
-			'meta_key' => '_SnS',
+			'paged'          => $this->get_pagenum(),
+			'post_type'      => 'any',
+			'post_status'    => 'any',
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+			'meta_key'       => '_SnS',
 		] );
 
 		$this->items = $this->_add_meta_data( $query->posts );
 
 		$this->set_pagination_args( [
 			'total_items' => $query->found_posts,
-			'per_page' => $per_page,
+			'per_page'    => $per_page,
 			'total_pages' => $query->max_num_pages,
 		] );
 
@@ -175,64 +154,13 @@ class List_Usage extends \WP_List_Table {
 	}
 
 	/**
-	 * Checks the current user's permissions
-	 *
-	 * @param object $post A WordPress $post object.
-	 */
-	public function _post_states( $post ) {
-		$post_states = [];
-		$return = '';
-		if ( isset( $_GET['post_status'] ) ) {
-			$post_status = sanitize_text_field( wp_unslash( $_GET['post_status'] ) );
-		} else {
-			$post_status = '';
-		}
-
-		if ( ! empty( $post->post_password ) ) {
-			$post_states['protected'] = __( 'Password protected', 'scripts-n-styles' );
-		}
-		if ( 'private' == $post->post_status && 'private' != $post_status ) {
-			$post_states['private'] = __( 'Private', 'scripts-n-styles' );
-		}
-		if ( 'draft' == $post->post_status && 'draft' != $post_status ) {
-			$post_states['draft'] = __( 'Draft', 'scripts-n-styles' );
-		}
-		if ( 'pending' == $post->post_status && 'pending' != $post_status ) {
-			/* translators: post state */
-			$post_states['pending'] = _x( 'Pending', 'post state', 'scripts-n-styles' );
-		}
-		if ( is_sticky( $post->ID ) ) {
-			$post_states['sticky'] = __( 'Sticky', 'scripts-n-styles' );
-		}
-
-		$post_states = apply_filters( 'display_post_states', $post_states );
-
-		if ( ! empty( $post_states ) ) {
-			$state_count = count( $post_states );
-			$i = 0;
-			$return .= ' - ';
-			foreach ( $post_states as $state ) {
-				++$i;
-				( $i == $state_count ) ? $sep = '' : $sep = ', ';
-				$return .= "<span class='post-state'>$state$sep</span>";
-			}
-		}
-
-		if ( get_post_format( $post->ID ) ) {
-			$return .= ' - <span class="post-state-format">' . get_post_format_string( get_post_format( $post->ID ) ) . '</span>';
-		}
-
-		return $return;
-	}
-
-	/**
 	 * Build metadata onto post objects.
 	 *
 	 * @param array $posts An array of $post objects.
 	 */
 	public function _add_meta_data( $posts ) {
 		foreach ( $posts as $post ) {
-			$sns = get_post_meta( $post->ID, '_SnS', true );
+			$sns     = get_post_meta( $post->ID, '_SnS', true );
 			$styles  = isset( $sns['styles'] ) ? $sns['styles'] : [];
 			$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : [];
 			$hoops   = isset( $sns['shortcodes'] ) ? $sns['shortcodes'] : [];
