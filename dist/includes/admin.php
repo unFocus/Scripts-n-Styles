@@ -12,55 +12,48 @@ namespace unFocus\SnS;
 /**
  * Adds CodeMirror Theme to WordPress's instances.
  */
-add_action(
-	'admin_enqueue_scripts', function() {
-		$options = get_option( 'SnS_options' );
+add_action( 'admin_enqueue_scripts', function() {
+	$options = get_option( 'SnS_options' );
 
-		if ( ! empty( $options['cm_theme'] ) ) {
-			wp_enqueue_style( 'sns-codemirror' );
-		}
+	if ( ! empty( $options['cm_theme'] ) ) {
+		wp_enqueue_style( 'sns-codemirror' );
 	}
-);
-add_filter(
-	'wp_code_editor_settings', function( $settings, $args ) {
-		$options = get_option( 'SnS_options' );
+} );
+add_filter( 'wp_code_editor_settings', function( $settings, $args ) {
+	$options = get_option( 'SnS_options' );
 
-		if ( ! empty( $options['cm_theme'] ) ) {
-			$settings['codemirror']['theme'] = $options['cm_theme'];
-		}
+	if ( ! empty( $options['cm_theme'] ) ) {
+		$settings['codemirror']['theme'] = $options['cm_theme'];
+	}
 
-		return $settings;
-	}, 10, 2
-);
+	return $settings;
+}, 10, 2 );
 
 
 /**
  * Adds link to the Settings Page in the WordPress "Plugin Action Links" array.
  */
-add_filter(
-	'plugin_action_links_' . BASENAME, function( $actions ) {
-		$actions['settings'] = '<a href="' . menu_page_url( ADMIN_MENU_SLUG . '_settings', false ) . '"/>' . __( 'Settings', 'scripts-n-styles' ) . '</a>';
-		return $actions;
-	}
-);
+add_filter( 'plugin_action_links_' . BASENAME, function( $actions ) {
+	$actions['settings'] = '<a href="' . menu_page_url( ADMIN_MENU_SLUG . '_settings', false ) . '"/>' . esc_html__( 'Settings', 'scripts-n-styles' ) . '</a>';
+	return $actions;
+} );
 
 
 // Add menu to admin bar.
-add_action(
-	'wp_before_admin_bar_render', function() {
-		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) {
-			return;
-		}
-		global $wp_admin_bar;
-		$title = WP_DEBUG ? __( 'Scripts n Styles', 'scripts-n-styles' ) . ' (PHP: ' . PHP_VERSION . ')' : __( 'Scripts n Styles', 'scripts-n-styles' );
-		$wp_admin_bar->add_node( [
-			'id'    => 'Scripts_n_Styles',
-			'title' => $title,
-			'href'  => admin_url( 'admin.php?page=' . ADMIN_MENU_SLUG ),
-			'meta'  => [ 'class' => 'Scripts_n_Styles' ],
-		] );
-	}, 11
-);
+add_action( 'wp_before_admin_bar_render', function() {
+	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) {
+		return;
+	}
+	global $wp_admin_bar;
+	$title = esc_html__( 'Scripts n Styles', 'scripts-n-styles' );
+	$title .= WP_DEBUG ? ' (PHP: ' . PHP_VERSION . ')' : '';
+	$wp_admin_bar->add_node( [
+		'id'    => 'Scripts_n_Styles',
+		'title' => $title,
+		'href'  => admin_url( 'admin.php?page=' . ADMIN_MENU_SLUG ),
+		'meta'  => [ 'class' => 'Scripts_n_Styles' ],
+	] );
+}, 11 );
 
 /**
  * A Function for listing core scripts.
@@ -201,21 +194,22 @@ function get_registered_scripts() {
  * Settings Page help
  */
 function help() {
-	$help  = '<p>' . __( 'In default (non MultiSite) WordPress installs, both <em>Administrators</em> and <em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either <em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically "unfiltered_html"), other users can be granted access.', 'scripts-n-styles' ) . '</p>';
-	$help .= '<p><strong>' . __( 'Reference: jQuery Wrappers', 'scripts-n-styles' ) . '</strong></p>'
-		  . '<pre><code>jQuery(document).ready(function($) {' . PHP_EOL
+	$help  = '<p>' . wp_kses_post( __( 'In default (non MultiSite) WordPress installs, both <em>Administrators</em> and <em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. Only <em>Administrators</em> can access this Options Page. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either <em>Scripts-n-Styles</em> on individual edit screens or this Options Page. If other plugins change capabilities (specifically "unfiltered_html"), other users can be granted access.', 'scripts-n-styles' ) ) . '</p>';
+	$help .= '<p><strong>' . esc_html__( 'Reference: jQuery Wrappers', 'scripts-n-styles' ) . '</strong></p>'
+		  . '<pre><code>jQuery(function($) {' . PHP_EOL
 		  . '	// $() will work as an alias for jQuery() inside of this function' . PHP_EOL
 		  . '});</code></pre>';
 	$help .= '<pre><code>(function($) {' . PHP_EOL
 		  . '	// $() will work as an alias for jQuery() inside of this function' . PHP_EOL
 		  . '})(jQuery);</code></pre>';
-	$sidebar = '<p><strong>' . __( 'For more information:', 'scripts-n-styles' ) . '</strong></p>' .
-				'<p>' . __( '<a href="http://wordpress.org/extend/plugins/scripts-n-styles/faq/" target="_blank">Frequently Asked Questions</a>', 'scripts-n-styles' ) . '</p>' .
-				'<p>' . __( '<a href="https://github.com/unFocus/Scripts-n-Styles" target="_blank">Source on github</a>', 'scripts-n-styles' ) . '</p>' .
-				'<p>' . __( '<a href="http://wordpress.org/tags/scripts-n-styles" target="_blank">Support Forums</a>', 'scripts-n-styles' ) . '</p>';
+	$sidebar = '<p><strong>' . esc_html__( 'For more information:', 'scripts-n-styles' ) . '</strong></p>'
+			 . '<p>' . wp_kses_post( __( '<a href="https://wordpress.org/extend/plugins/scripts-n-styles/faq/" target="_blank">Frequently Asked Questions</a>', 'scripts-n-styles' ) ) . '</p>'
+			 . '<p>' . wp_kses_post( __( '<a href="https://github.com/unFocus/Scripts-n-Styles" target="_blank">Source on github</a>', 'scripts-n-styles' ) ) . '</p>'
+			 . '<p>' . wp_kses_post( __( '<a href="https://wordpress.org/tags/scripts-n-styles" target="_blank">Support Forums</a>', 'scripts-n-styles' ) ) . '</p>'
+			 . '<p>' . wp_kses_post( __( '<a href="https://twitter.com/wraithkenny1" target="_blank">Ask me on Twitter</a>', 'scripts-n-styles' ) ) . '</p>';
 	$screen = get_current_screen();
 	$screen->add_help_tab( [
-		'title' => __( 'Scripts n Styles', 'scripts-n-styles' ),
+		'title' => esc_html__( 'Scripts n Styles', 'scripts-n-styles' ),
 		'id' => 'scripts-n-styles',
 		'content' => $help,
 	] );
