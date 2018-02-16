@@ -55,7 +55,7 @@ add_action( 'admin_menu', function() {
 			function() {
 				?>
 				<div style="max-width: 55em;">
-					<p><?php esc_html_e( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Styles that were registered individually.', 'scripts-n-styles' ); ?></p>
+					<p><?php echo wp_kses_post( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Styles that were registered individually.', 'scripts-n-styles' ); ?></p>
 				</div>
 				<?php
 			},
@@ -68,7 +68,7 @@ add_action( 'admin_menu', function() {
 			function() {
 				?>
 				<div style="max-width: 55em;">
-					<p><?php esc_html_e( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts that were registered individually.', 'scripts-n-styles' ); ?></p>
+					<p><?php echo wp_kses_post( 'Code entered here will be included in <em>every page (and post) of your site</em>, including the homepage and archives. The code will appear <strong>before</strong> Scripts that were registered individually.', 'scripts-n-styles' ); ?></p>
 				</div>
 				<?php
 			},
@@ -157,7 +157,7 @@ add_action( 'admin_menu', function() {
 		);
 		add_settings_field(
 			'scripts',
-			__( '<strong>Scripts</strong><br />(end of the <code>body</code> tag):', 'scripts-n-styles' ),
+			wp_kses_post( __( '<strong>Scripts</strong><br />(end of the <code>body</code> tag):', 'scripts-n-styles' ) ),
 			'\unFocus\SnS\textarea',
 			ADMIN_MENU_SLUG,
 			'global_scripts',
