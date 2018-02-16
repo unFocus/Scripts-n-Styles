@@ -43,10 +43,6 @@ add_action( 'admin_menu', function() {
 		add_settings_section(
 			'settings',
 			__( 'Scripts n Styles Settings', 'scripts-n-styles' ),
-			/**
-			* Settings Page
-			* Outputs Description text for the Global Section.
-			*/
 			function() {
 				?>
 				<div style="max-width: 55em;">
