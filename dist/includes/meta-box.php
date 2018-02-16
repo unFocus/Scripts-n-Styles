@@ -57,8 +57,8 @@ add_action( 'add_meta_boxes', function() {
 			</ul>
 
 			<div class="wp-tab-panel" id="SnS_scripts-tab">
-				<p><em><?php esc_html_e( "This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's)", 'scripts-n-styles' ); ?> ...</em></p>
-				<label for="SnS_scripts_in_head" class="title"><?php esc_html_e( '<strong>Scripts</strong> (for the <code>head</code> element):', 'scripts-n-styles' ); ?> </label>
+				<p><em><?php echo wp_kses_post( "This code will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the end of your page's (or post's)", 'scripts-n-styles' ); ?> ...</em></p>
+				<label for="SnS_scripts_in_head" class="title"><?php echo wp_kses_post( '<strong>Scripts</strong> (for the <code>head</code> element):', 'scripts-n-styles' ); ?> </label>
 				<div class="script">
 				<textarea class="codemirror js" name="SnS_scripts_in_head" id="SnS_scripts_in_head" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( isset( $scripts['scripts_in_head'] ) ? $scripts['scripts_in_head'] : '' ); ?></textarea>
 				</div>
@@ -71,18 +71,18 @@ add_action( 'add_meta_boxes', function() {
 			</div>
 
 			<div class="wp-tab-panel" id="SnS_styles-tab">
-				<label for="SnS_styles" class="title"><?php esc_html_e( '<strong>Styles</strong>:', 'scripts-n-styles' ); ?> </label>
+				<label for="SnS_styles" class="title"><?php echo wp_kses_post( '<strong>Styles</strong>:', 'scripts-n-styles' ); ?> </label>
 				<div class="style">
 				<textarea class="codemirror css" name="SnS_styles" id="SnS_styles" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( isset( $styles['styles'] ) ? $styles['styles'] : '' ); ?></textarea>
 				</div>
-				<p><em><?php esc_html_e( 'This code will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> tag of your page (or post).', 'scripts-n-styles' ); ?></em></p>
+				<p><em><?php echo wp_kses_post( 'This code will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> tag of your page (or post).', 'scripts-n-styles' ); ?></em></p>
 			</div>
 
 			<div class="wp-tab-panel" id="SnS_classes_body-tab">
 				<strong class="title"><?php esc_html_e( 'Classes', 'scripts-n-styles' ); ?></strong>
 				<div id="sns-classes">
 					<p>
-						<label for="SnS_classes_body"><?php esc_html_e( '<strong>Body Classes</strong>:', 'scripts-n-styles' ); ?> </label>
+						<label for="SnS_classes_body"><?php echo wp_kses_post( '<strong>Body Classes</strong>:', 'scripts-n-styles' ); ?> </label>
 						<input name="SnS_classes_body" id="SnS_classes_body" type="text" class="code" style="width: 99%;"
 							value="<?php echo esc_attr( isset( $styles['classes_body'] ) ? $styles['classes_body'] : '' ); ?>" />
 					</p>
@@ -91,7 +91,7 @@ add_action( 'add_meta_boxes', function() {
 						<input name="SnS_classes_post" id="SnS_classes_post" type="text" class="code" style="width: 99%;"
 							value="<?php echo esc_attr( isset( $styles['classes_post'] ) ? $styles['classes_post'] : '' ); ?>" />
 					</p>
-					<p><em><?php esc_html_e( 'These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).', 'scripts-n-styles' ); ?></em></p>
+					<p><em><?php echo wp_kses_post( 'These <strong>space separated</strong> class names will be added to the <code>body_class()</code> or <code>post_class()</code> function (provided your theme uses these functions).', 'scripts-n-styles' ); ?></em></p>
 				</div>
 			</div>
 			<?php // Note: Styles Dropdown section only makes sense when Javascript is enabled (Otherwise, no TinyMCE). ?>
