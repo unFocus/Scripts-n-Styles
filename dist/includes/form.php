@@ -15,28 +15,31 @@ namespace unFocus\SnS;
  * @param array $args A set of args.
  */
 function textarea( $args ) {
-	extract( $args );
-	$options = get_option( $setting );
-	$value = isset( $options[ $label_for ] ) ? $options[ $label_for ] : '';
-	$output = '';
-	if ( isset( $wrap_class ) ) {
-		$output .= '<div class="' . $wrap_class . '">';
+
+	$setting   = $args['setting'];
+	$label_for = $args['label_for'];
+	$options   = get_option( $setting );
+	$value     = isset( $options[ $label_for ] ) ? $options[ $label_for ] : '';
+
+	$description = isset( $args['description'] ) ? $args['description'] : '';
+	$wrap_class  = isset( $args['wrap_class'] ) ? $args['wrap_class'] : '';
+	$style       = isset( $args['style'] ) ? $args['style'] : '';
+	$class       = isset( $args['class'] ) ? $args['class'] : '';
+	$rows        = isset( $args['rows'] ) ? $args['rows'] : '';
+	$cols        = isset( $args['cols'] ) ? $args['cols'] : '';
+
+	$textarea = '<textarea name="' . $setting . '[' . $label_for . ']"'
+		. ' id="' . $label_for . '"'
+		. ' style="' . $style . '"'
+		. ' class="' . $class . '"'
+		. ' rows="' . $rows . '"'
+		. ' cols="' . $cols . '"'
+		. '>' . esc_textarea( $value ) . '</textarea>';
+	if ( $wrap_class ) {
+		$textarea .= '<div class="' . $wrap_class . '">' . $textarea . '</div>';
 	}
-	$output .= '<textarea';
-	$output .= ( $style ) ? ' style="' . $style . '"' : '';
-	$output .= ( $class ) ? ' class="' . $class . '"' : '';
-	$output .= ( $rows ) ? ' rows="' . $rows . '"' : '';
-	$output .= ( $cols ) ? ' cols="' . $cols . '"' : '';
-	$output .= ' name="' . $setting . '[' . $label_for . ']"';
-	$output .= ' id="' . $label_for . '">';
-	$output .= esc_textarea( $value ) . '</textarea>';
-	if ( isset( $wrap_class ) ) {
-		$output .= '</div>';
-	}
-	if ( $description ) {
-		$output .= $description;
-	}
-	echo $output; // WPCS: XSS OK.
+	$textarea .= $description;
+	echo wp_kses_post( $textarea );
 }
 
 /**
@@ -45,30 +48,34 @@ function textarea( $args ) {
  * @param array $args A set of args.
  */
 function radio( $args ) {
-	extract( $args );
-	$options = get_option( $setting );
-	$default = isset( $default ) ? $default : '';
-	$value = isset( $options[ $label_for ] ) ? $options[ $label_for ] : $default;
-	$output = '<fieldset>';
-	if ( $legend ) {
-		$output .= '<legend class="screen-reader-text"><span>';
-		$output .= $legend;
-		$output .= '</span></legend>';
-	}
-	$output .= '<p>';
-	foreach ( $choices as $choice ) {
-		$output .= '<label style="white-space: pre;">';
-		$output .= '<input type="radio"';
-		$output .= checked( $value, $choice, false );
-		$output .= ' value="' . $choice . '" name="' . $setting . '[' . $label_for . ']"> ' . $choice;
-		$output .= '</label>';
-		$output .= ( ! isset( $layout ) || 'horizontal' != $layout ) ? '<br>' : ' &nbsp; ';
-	}
-	$output .= '</p></fieldset>';
-	if ( $description ) {
-		$output .= $description;
-	}
-	echo $output; // WPCS: XSS OK.
+
+	$setting   = $args['setting'];
+	$label_for = $args['label_for'];
+	$options   = get_option( $setting );
+	$default   = isset( $args['default'] ) ? $args['default'] : '';
+	$value     = isset( $options[ $label_for ] ) ? $options[ $label_for ] : $default;
+
+	$legend      = isset( $args['legend'] ) ? $args['legend'] : '';
+	$description = isset( $args['description'] ) ? $args['description'] : '';
+	$layout      = isset( $args['layout'] ) && 'horizontal' === $args['layout'];
+	$choices     = isset( $args['choices'] ) ? $args['choices'] : [];
+	?>
+	<fieldset>
+	<?php if ( $legend ) { ?>
+		<legend class="screen-reader-text"><span><?php echo esc_html( $legend ); ?></span></legend>
+	<?php } ?>
+	<p>
+	<?php foreach ( $choices as $choice ) { ?>
+		<label style="white-space: pre;"><input type="radio"
+			<?php checked( $value, $choice ); ?>
+			value="<?php echo esc_attr( $choice ); ?>"
+			name="<?php echo esc_attr( $setting . '[' . $label_for . ']' ); ?>"
+			><?php echo esc_html( $choice ); ?></label>
+		<?php echo $layout ? ' &nbsp; ' : '<br>'; ?>
+	<?php } ?>
+	</p></fieldset>
+	<?php echo wp_kses_post( $description ); ?>
+	<?php
 }
 
 /**
@@ -77,41 +84,48 @@ function radio( $args ) {
  * @param array $args A set of args.
  */
 function select( $args ) {
-	extract( $args );
+
+	$setting   = $args['setting'];
+	$label_for = $args['label_for'];
 	$options = get_option( $setting );
 	$selected = isset( $options[ $label_for ] ) ? $options[ $label_for ] : [];
 
-	$output = '<select';
-	$output .= ' id="' . $label_for . '"';
-	$output .= ' name="' . $setting . '[' . $label_for . ']';
-	if ( isset( $multiple ) && $multiple ) {
-		$output .= '[]" multiple="multiple"';
-	} else {
-		$output .= '"';
-	}
-	$output .= ( $size ) ? ' size="' . $size . '"' : '';
-	$output .= ( $style ) ? ' style="' . $style . '"' : '';
-	$output .= '>';
-	foreach ( $choices as $choice ) {
-		$output .= '<option value="' . $choice . '"';
-		if ( isset( $multiple ) && $multiple ) {
+	$is_multiple  = ! empty( $args['multiple'] );
+	$size         = isset( $args['size'] ) ? $args['size'] : 3;
+	$style        = isset( $args['style'] ) ? $args['style'] : '';
+	$show_current = isset( $args['show_current'] ) ? $args['show_current'] : '';
+	$choices      = isset( $args['choices'] ) ? $args['choices'] : '';
+	$name         = $setting . '[' . $label_for . ']' . ( $is_multiple ? '[]' : '' );
+	?>
+	<select id="<?php echo esc_attr( $label_for ); ?>"
+		name="<?php echo esc_attr( $name ); ?>"
+		<?php echo $is_multiple ? 'multiple="multiple"' : ''; ?>
+		size="<?php echo (int) $size; ?>"
+		style="<?php echo esc_attr( $style ); ?>">
+	<?php foreach ( $choices as $choice ) { ?>
+		<option value="<?php echo esc_attr( $choice ); ?>"
+		<?php
+		if ( $is_multiple ) {
 			foreach ( $selected as $handle ) {
-				$output .= selected( $handle, $choice, false );
+				selected( $handle, $choice );
 			}
 		} else {
-			$output .= selected( $selected, $choice, false );
+			selected( $selected, $choice );
 		}
-		$output .= '>' . $choice . '</option> ';
+		?>
+		><?php echo esc_html( $choice ); ?></option>
+	<?php } ?>
+	</select>
+	<?php
+	if ( $show_current && ! empty( $selected ) ) {
+		?>
+		<p><?php echo wp_kses_post( $show_current ); ?>
+		<?php foreach ( $selected as $handle ) { ?>
+			<code><?php echo esc_html( $handle ); ?></code>
+		<?php } ?>
+		</p>
+		<?php
 	}
-	$output .= '</select>';
-	if ( ! empty( $show_current ) && ! empty( $selected ) ) {
-		$output .= '<p>' . $show_current;
-		foreach ( $selected as $handle ) {
-			$output .= '<code>' . $handle . '</code> ';
-		}
-		$output .= '</p>';
-	}
-	echo $output; // WPCS: XSS OK.
 }
 
 /**
@@ -121,7 +135,11 @@ function take_action() {
 	global $action, $option_page, $page, $new_whitelist_options;
 
 	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) || ( is_multisite() && ! is_super_admin() ) ) {
-		wp_die( esc_html__( 'Cheatin&#8217; uh?', 'scripts-n-styles' ) );
+		wp_die(
+			'<h1>' . esc_html__( 'Cheatin&#8217; uh?', 'scripts-n-styles' ) . '</h1>' .
+			'<p>' . esc_html__( 'Sorry, you are not allowed to manage these options.', 'scripts-n-styles' ) . '</p>',
+			403
+		);
 	}
 
 	// Handle menu-redirected update message.
@@ -147,7 +165,7 @@ function take_action() {
 		$option = trim( $option );
 		$new = null;
 		if ( isset( $_POST[ $option ] ) ) {
-			$new = $_POST[ $option ];
+			$new = wp_unslash( $_POST[ $option ] );
 		}
 		if ( ! is_array( $new ) ) {
 			$new = trim( $new );
@@ -165,12 +183,12 @@ function take_action() {
 		add_settings_error( $page, 'settings_updated', __( 'Settings saved.', 'scripts-n-styles' ), 'updated' );
 	}
 
-	if ( isset( $_REQUEST['ajaxsubmit'] ) && $_REQUEST['ajaxsubmit'] ) {
+	if ( ! empty( $_REQUEST['ajaxsubmit'] ) ) {
 		ob_start();
 		settings_errors( $page );
 		$output = ob_get_contents();
 		ob_end_clean();
-		exit( $output ); // WPCS: XSS OK.
+		exit( wp_kses_post( $output ) );
 	}
 
 	return;
@@ -201,7 +219,7 @@ function page() {
  */
 function nav() {
 	$options = get_option( 'SnS_options' );
-	$page = sanitize_textarea_field( $_REQUEST['page'] );
+	$page = ! empty( $_REQUEST['page'] ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['page'] ) ) : '';
 	?>
 	<h2><?php esc_html_e( 'Scripts n Styles', 'scripts-n-styles' ); ?></h2>
 	<?php settings_errors(); ?>
