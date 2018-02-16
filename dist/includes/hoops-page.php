@@ -163,4 +163,4 @@ add_action( 'admin_menu', function() {
 			ADMIN_MENU_SLUG
 		);
 	} );
-});
+} );
