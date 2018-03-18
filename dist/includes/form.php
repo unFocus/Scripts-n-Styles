@@ -36,7 +36,7 @@ function textarea( $args ) {
 		. ' cols="' . $cols . '"'
 		. '>' . esc_textarea( $value ) . '</textarea>';
 	if ( $wrap_class ) {
-		$textarea .= '<div class="' . $wrap_class . '">' . $textarea . '</div>';
+		$textarea = '<div class="' . $wrap_class . '">' . $textarea . '</div>';
 	}
 	$textarea .= $description;
 	echo wp_kses_post( $textarea );
