@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+      "ikappas.phpcs",
+      "eg2.tslint",
+      "dbaeumer.vscode-eslint",
+      "felixfbecker.php-intellisense",
+      "ikappas.composer",
+      "PeterJausovec.vscode-docker",
+      "persoderlind.vscode-phpcbf",
+  ]
+}
