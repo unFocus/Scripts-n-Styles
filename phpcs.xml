@@ -22,6 +22,10 @@
 	<!-- Check all files in theme directory and the directories below it. -->
 	<file>./source</file>
 	<file>./dist</file>
+	<exclude-pattern>./html/*</exclude-pattern>
+	<exclude-pattern>./vendor/*</exclude-pattern>
+	<exclude-pattern>./node_modules/*</exclude-pattern>
+	<exclude-pattern>./svn/*</exclude-pattern>
 
 	<!-- Include the WordPress ruleset, with exclusions. -->
 	<rule ref="WordPress">
@@ -48,9 +52,9 @@
 		</properties>
 	</rule>
 
-	<!-- Verify that no WP functions are used which are deprecated or have been removed.
-		 The minimum version set here should be in line with the minimum WP version
-		 as set in the "Requires at least" tag in the readme.txt file. -->
+	<!-- Verify that no WP functions are used which are deprecated or have been
+		removed. The minimum version set here should be in line with the minimum WP
+		version  as set in the "Requires at least" tag in the readme.txt file. -->
 	<rule ref="WordPress.WP.DeprecatedFunctions">
 		<properties>
 			<property name="minimum_supported_version" value="4.9" />
