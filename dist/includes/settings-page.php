@@ -27,7 +27,15 @@ add_action( 'admin_menu', function() {
 	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
 		wp_enqueue_code_editor( [ 'type' => 'php' ] );
-		wp_add_inline_script( 'code-editor', "jQuery(function( $ ) { wp.codeEditor.initialize( $( '#codemirror_demo' ), wp.codeEditor.defaultSettings ); });" );
+		wp_add_inline_script(
+			'code-editor',
+			"jQuery(function( $ ) {"
+				. "var sns = wp.codeEditor.initialize( $( '#codemirror_demo' ), wp.codeEditor.defaultSettings );"
+				. "$('input[name=\"SnS_options[cm_theme]\"]').change( function(){"
+					. "sns.codemirror.setOption(\"theme\", $(this).val());"
+				. "});"
+			."});"
+		);
 	} );
 
 	/**
