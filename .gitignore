@@ -7,3 +7,4 @@ _notes/dwsync.xml
 node_modules
 /html
 /dist/js/*.min.js
+/dist/css/*.css
