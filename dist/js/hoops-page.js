@@ -1,20 +1,21 @@
 // Options JavaScript
 
-jQuery( document ).ready( function( $ ) { "use strict"
-	var collection = []
-	  , context = "#sns-shortcodes"
-	  , theme = _SnS_options.theme ? _SnS_options.theme: 'default'
-	  , $form
-	  , config;
+jQuery( document ).ready( function( $ ) {
+ 'use strict';
+	var collection = [],
+		context = '#sns-shortcodes',
+		theme = _SnSOptions.theme ? _SnSOptions.theme : 'default',
+		$form,
+		config;
 
 	config = {
-		mode: "text/html",
+		mode: 'text/html',
 		theme: theme,
 		lineNumbers: true,
-		tabMode: "shift",
+		tabMode: 'shift',
 		indentUnit: 4,
 		indentWithTabs: true,
-		enterMode: "keep",
+		enterMode: 'keep',
 		matchBrackets: true
 	};
 
@@ -23,39 +24,42 @@ jQuery( document ).ready( function( $ ) { "use strict"
 	};
 
 	// Each "IDE"
-	$( ".sns-less-ide", context ).each( function() {
-		var $text = $('.code',this);
+	$( '.sns-less-ide', context ).each( function() {
+		var $text = $( '.code', this );
 		var ide = {
-			data : $text.val(),
-			name : $text.data('sns-shortcode-key'),
-			$text : $text,
-			cm : CodeMirror.fromTextArea( $text.get(0), config )
+			data: $text.val(),
+			name: $text.data( 'sns-shortcode-key' ),
+			$text: $text,
+			cm: CodeMirror.fromTextArea( $text.get( 0 ), config )
 		};
-		if ( $text.parent().hasClass( 'sns-collapsed' ) )
+		if ( $text.parent().hasClass( 'sns-collapsed' ) ) {
 			ide.cm.toTextArea();
+		}
 		collection.push( ide );
 	});
 
 	// Collapsable
-	$( context ).on( "click", '.sns-collapsed-btn, .sns-collapsed-btn + label', function( event ){
-		var $this = $( this )
-		  , collapsed
-		  , fileName
-		  , thisIDE;
+	$( context ).on( 'click', '.sns-collapsed-btn, .sns-collapsed-btn + label', function( event ) {
+		var $this = $( this ),
+			collapsed,
+			fileName,
+			thisIDE;
 		$this.parent().toggleClass( 'sns-collapsed' );
 		fileName = $this.siblings( '.code' ).data( 'sns-shortcode-key' );
 		collapsed = $this.parent().hasClass( 'sns-collapsed' );
-		$(collection).each(function(index, element) {
-			if ( element.name == fileName )
+		$( collection ).each( function( index, element ) {
+			if ( element.name == fileName ) {
 				thisIDE = element;
+			}
 		});
 		if ( collapsed ) {
 			thisIDE.cm.toTextArea();
 		} else {
-			thisIDE.cm = CodeMirror.fromTextArea( thisIDE.$text.get(0), config );
+			thisIDE.cm = CodeMirror.fromTextArea( thisIDE.$text.get( 0 ), config );
 		}
 	});
 	$( '.sns-ajax-loading' ).hide();
+
 	/*
 	$form = $( context ).closest( 'form' );
 	$form.submit( function( event ){

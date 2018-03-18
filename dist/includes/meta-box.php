@@ -226,7 +226,7 @@ add_action( 'add_meta_boxes', function() {
 		$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
 
 		wp_enqueue_script( 'sns-meta-box' );
-		wp_localize_script( 'sns-meta-box', 'codemirror_options', [ 'theme' => $cm_theme ] );
+		wp_localize_script( 'sns-meta-box', 'codemirrorOptions', [ 'theme' => $cm_theme ] );
 	} );
 
 	add_filter( 'contextual_help', '\unFocus\SnS\help' );

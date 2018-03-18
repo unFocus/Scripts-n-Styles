@@ -35,7 +35,7 @@ add_action( 'admin_menu', function() {
 		wp_enqueue_style( 'sns-options' );
 
 		wp_enqueue_script( 'sns-global-page' );
-		wp_localize_script( 'sns-global-page', '_SnS_options', [ 'theme' => $cm_theme ] );
+		wp_localize_script( 'sns-global-page', '_SnSOptions', [ 'theme' => $cm_theme ] );
 	} );
 
 	/**
