@@ -6,3 +6,4 @@ _notes/dwsync.xml
 /vendor
 node_modules
 /html
+/dist/js/*.min.js
