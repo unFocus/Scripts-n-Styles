@@ -18,6 +18,15 @@ gulpSass.compiler = nodeSass;
 // On 'webpack-hot-middleware/client', `?reload=true` tells client to reload if HMR fails.
 const devServer = [ 'webpack/hot/dev-server', 'webpack-hot-middleware/client?reload=true' ];
 
+let rules = [];
+rules.push({
+	test: /\.js$/,
+	exclude: /(node_modules|bower_components)/,
+	use: {
+		loader: 'babel-loader'
+	}
+});
+
 let config = {
 	entry: {
 		'js/global-page.min': [ './dist/js/global-page.js' ],
@@ -31,6 +40,7 @@ let config = {
 		publicPath: '/wp-content/plugins/scripts-n-styles'
 	},
 	context: path.resolve( __dirname ),
+	module: { rules: rules },
 	mode: 'production'
 };
 let devConfig = {
