@@ -69,6 +69,7 @@
     "node_modules/*",
     "bower_components/*",
     "vendor/*",
+    "dist/vendor/*",
     "html/*"
   ],
   "stylelint": {
