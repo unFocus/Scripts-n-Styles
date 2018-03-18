@@ -9,6 +9,24 @@
 
 namespace unFocus\SnS;
 
+
+// Add menu to admin bar.
+add_action( 'wp_before_admin_bar_render', function() {
+	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'unfiltered_html' ) ) {
+		return;
+	}
+	global $wp_admin_bar;
+	$title = esc_html__( 'Scripts n Styles', 'scripts-n-styles' );
+	$title .= WP_DEBUG ? ' (PHP: ' . PHP_VERSION . ')' : '';
+	$wp_admin_bar->add_node( [
+		'id'    => 'Scripts_n_Styles',
+		'title' => $title,
+		'href'  => admin_url( 'admin.php?page=' . ADMIN_MENU_SLUG ),
+		'meta'  => [ 'class' => 'Scripts_n_Styles' ],
+	] );
+}, 11 );
+
+
 /**
  * Theme support of Scripts n Styles
  * If a theme registers support, replace css with a generated version.
