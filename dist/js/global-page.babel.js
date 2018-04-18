@@ -5,7 +5,7 @@ import CoffeeScript from 'coffeescript';
 
 var CodeMirror = wp.CodeMirror;
 
-// CodeMirror.modeURL = _SnSOptions.root + 'js/vendor/codemirror-modes/%N.js';
+CodeMirror.modeURL = _SnSOptions.root + 'vendor/codemirror/mode/%N/%N.js';
 
 $( function() {
 	var compiled, source;
@@ -63,8 +63,7 @@ $( function() {
 			codemirror: $.extend({}, defaultSettings.codemirror, coffeeMirrorConfig )
 		}) ).codemirror;
 		coffeeMirror.on( 'change', coffeeCompile );
-		console.log( 'try' );
-		CodeMirror.autoLoadMode( coffeeMirror, 'coffeescript' );
+		let result = CodeMirror.autoLoadMode( coffeeMirror, 'coffeescript' );
 	});
 	$( '#coffee' ).parent().append( '<label><input type="checkbox" id="coffee_spacing"> Double Spaced</label>' );
 	$( '#coffee_spacing' ).change( coffeeCompile );

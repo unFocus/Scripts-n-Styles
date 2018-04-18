@@ -163,8 +163,6 @@ function copyCodeMirrorJS() {
 		dir + 'addon/mode/simple.js',
 		dir + 'addon/runmode/runmode.js',
 		dir + 'addon/runmode/colorize.js',
-
-		// dir + 'addon/runmode/runmode-standalone.js',
 		dir + 'addon/scroll/**/*.js',
 		dir + 'addon/search/search.js',
 		dir + 'addon/search/jump-to-line.js',
@@ -195,7 +193,7 @@ function copyCodeMirrorJS() {
 		.pipe( concat( 'codemirror.min.js' ) )
 		.pipe( header( top ) )
 		.pipe( footer( bottom ) )
-		// .pipe( uglify() )
+		.pipe( uglify() )
 		.pipe( gulp.dest( 'dist/vendor/codemirror' ) );
 }
 function copyCodeMirrorModes() {
