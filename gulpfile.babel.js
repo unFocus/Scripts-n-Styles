@@ -148,8 +148,6 @@ function copyCodeMirrorJS() {
 		dir + 'addon/lint/html-lint.js',
 		dir + 'addon/lint/javascript-lint.js',
 		dir + 'addon/lint/json-lint.js',
-		dir + 'addon/lint/coffeescript-lint.js',
-		dir + 'addon/lint/yaml-lint.js',
 		dir + 'addon/comment/**/*.js',
 		dir + 'addon/fold/xml-fold.js',
 		dir + 'addon/mode/overlay.js',
