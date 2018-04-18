@@ -43,6 +43,7 @@ $( function() {
 		}) );
 	});
 
+
 	lessOutput = wp.codeEditor.initialize( 'compiled', $.extend({}, defaultSettings, {
 		codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'css', readOnly: true })
 	}) ).codemirror;

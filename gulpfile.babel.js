@@ -39,10 +39,10 @@ rules.push({
 
 let config = {
 	entry: {
-		'js/global-page': [ './dist/js/global-page.babel.js' ],
-		'js/hoops-page': [ './dist/js/hoops-page.babel.js' ],
-		'js/meta-box': [ './dist/js/meta-box.babel.js' ],
-		'js/theme-page': [ './dist/js/theme-page.babel.js' ]
+		'js/global-page.min': [ './dist/js/global-page.babel.js' ],
+		'js/hoops-page.min': [ './dist/js/hoops-page.babel.js' ],
+		'js/meta-box.min': [ './dist/js/meta-box.babel.js' ],
+		'js/theme-page.min': [ './dist/js/theme-page.babel.js' ]
 	},
 	output: {
 		filename: '[name].js',
@@ -57,10 +57,10 @@ let config = {
 };
 let devConfig = {
 	entry: {
-		'js/global-page': [ ...devServer, './dist/js/global-page.babel.js' ],
-		'js/hoops-page': [ ...devServer, './dist/js/hoops-page.babel.js' ],
-		'js/meta-box': [ ...devServer, './dist/js/meta-box.babel.js' ],
-		'js/codemirror': [ ...devServer, './dist/js/codemirror.babel.js' ]
+		'js/global-page.min': [ ...devServer, './dist/js/global-page.babel.js' ],
+		'js/hoops-page.min': [ ...devServer, './dist/js/hoops-page.babel.js' ],
+		'js/meta-box.min': [ ...devServer, './dist/js/meta-box.babel.js' ],
+		'js/codemirror.min': [ ...devServer, './dist/js/codemirror.babel.js' ]
 	},
 	output: config.output,
 	context: config.context,

@@ -6,6 +6,5 @@ _notes/dwsync.xml
 vendor
 node_modules
 /html
-/dist/js/**/*.js
-!/dist/js/**/*.babel.js
+/dist/js/**/*.min.js
 /dist/css/*.css
