@@ -34,8 +34,16 @@ add_action( 'admin_menu', function() {
 		wp_enqueue_style( 'chosen' );
 		wp_enqueue_style( 'sns-options' );
 
+		wp_enqueue_script( 'csslint' );
+		wp_enqueue_script( 'jshint' );
+		wp_enqueue_script( 'jsonlint' );
+		wp_enqueue_code_editor( [ 'type' => 'php' ] );
+
 		wp_enqueue_script( 'sns-global-page' );
-		wp_localize_script( 'sns-global-page', '_SnSOptions', [ 'theme' => $cm_theme ] );
+		wp_localize_script( 'sns-global-page', '_SnSOptions', [
+			'theme' => $cm_theme,
+			'root'  => plugins_url( '/', BASENAME )
+		 ] );
 	} );
 
 	/**

@@ -3,8 +3,9 @@ _notes/
 _notes/dwsync.xml
 *.LCK
 .DS_Store
-/vendor
+vendor
 node_modules
 /html
-/dist/js/*.min.js
+/dist/js/**/*.js
+!/dist/js/**/*.babel.js
 /dist/css/*.css

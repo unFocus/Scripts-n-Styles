@@ -26,11 +26,12 @@ add_action( 'admin_menu', function() {
 	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
 	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
+		wp_enqueue_style( 'sns-options' );
 		wp_enqueue_code_editor( [ 'type' => 'php' ] );
 		wp_add_inline_script(
 			'code-editor',
 			"jQuery(function( $ ) {"
-				. "var sns = wp.codeEditor.initialize( $( '#codemirror_demo' ), wp.codeEditor.defaultSettings );"
+				. "var sns = wp.codeEditor.initialize( $( '#codemirror_demo' ) );"
 				. "$('input[name=\"SnS_options[cm_theme]\"]').change( function(){"
 					. "sns.codemirror.setOption(\"theme\", $(this).val());"
 				. "});"
@@ -116,6 +117,7 @@ add_action( 'admin_menu', function() {
 					'isotope',
 					'lesser-dark',
 					'liquibyte',
+					'lucario',
 					'material',
 					'mbo',
 					'mdn-like',
@@ -124,6 +126,7 @@ add_action( 'admin_menu', function() {
 					'neat',
 					'neo',
 					'night',
+					'oceanic-next',
 					'panda-syntax',
 					'paraiso-dark',
 					'paraiso-light',

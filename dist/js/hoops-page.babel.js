@@ -1,6 +1,9 @@
 // Options JavaScript
+import * as $ from 'jquery';
 
-jQuery( document ).ready( function( $ ) {
+let CodeMirror = wp.CodeMirror;
+
+$( function() {
  'use strict';
 	var collection = [],
 		context = '#sns-shortcodes',

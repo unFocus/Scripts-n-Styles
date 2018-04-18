@@ -31,8 +31,8 @@ textarea.code {
 	background-clip: padding-box;
 	font-family: "Courier New", Courier, monospace;
 
-	&:before,
-	&:after {
+	&::before,
+	&::after {
 		border: 1px solid #dfdfdf;
 		position: relative;
 		z-index: 3;
@@ -45,12 +45,12 @@ textarea.code {
 		text-shadow: none;
 	}
 
-	&:before {
+	&::before {
 		border-bottom: 0 none;
 		border-radius: 5px 5px 0 0;
 	}
 
-	&:after {
+	&::after {
 		border-top: 0 none;
 		border-radius: 0 0 5px 5px;
 	}
@@ -66,44 +66,44 @@ textarea.code {
 
 .style {
 
-	&:before {
+	&::before {
 		content: '<style type="text/css">';
 	}
 
-	&:after {
+	&::after {
 		content: "</style>";
 	}
 }
 
 .script {
 
-	&:before {
+	&::before {
 		content: '<script type="text/javascript">';
 	}
 
-	&:after {
+	&::after {
 		content: "</script>";
 	}
 }
 
 .less {
 
-	&:before {
+	&::before {
 		content: '<style type="text/less">';
 	}
 
-	&:after {
+	&::after {
 		content: "</style>";
 	}
 }
 
 .coffee {
 
-	&:before {
+	&::before {
 		content: '<script type="text/coffeescript">';
 	}
 
-	&:after {
+	&::after {
 		content: "</script>";
 	}
 } /* end Code Decorations */
@@ -149,6 +149,19 @@ textarea.code {
 	}
 }
 
+.sns-ajax-wrap {
+	height: 23px;
+
+	.single-status {
+		display: inline-block;
+		vertical-align: middle;
+
+		.settings-error {
+			margin: 0;
+		}
+	}
+}
+
 .sns-collapsed {
 	overflow: hidden;
 
@@ -171,19 +184,6 @@ textarea.code {
 
 	.spinner {
 		float: none;
-	}
-}
-
-.sns-ajax-wrap {
-	height: 23px;
-
-	.single-status {
-		display: inline-block;
-		vertical-align: middle;
-
-		.settings-error {
-			margin: 0;
-		}
 	}
 }
 

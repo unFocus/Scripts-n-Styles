@@ -1,38 +1,69 @@
 // Options JavaScript
+import less from 'less';
+import $ from 'jquery';
+import CoffeeScript from 'coffeescript';
 
-jQuery( function( $ ) {
+var CodeMirror = wp.CodeMirror;
+
+// CodeMirror.modeURL = _SnSOptions.root + 'js/vendor/codemirror-modes/%N.js';
+
+$( function() {
 	var compiled, source;
 	var theme = _SnSOptions.theme ? _SnSOptions.theme : 'default';
-	var lessMirror, lessOutput, errorLine, errorText, errors, loaded,
-		coffeeMirror, coffeeOutput, coffeeLoaded,
-		lessMirrorConfig = { gutters: [ 'note-gutter', 'CodeMirror-linenumbers' ],
-			lineNumbers: true, mode: 'text/x-less', theme: theme, indentWithTabs: true },
-		coffeeMirrorConfig = { lineNumbers: true, mode: 'text/x-coffeescript', theme: theme };
-
-	$( '#enqueue_scripts' ).data( 'placeholder', 'Enqueue Registered Scripts...' ).width( 350 ).chosen();
-	$( '.chosen-container-multi .chosen-choices .search-field input' ).height( '26px' );
-	$( '.chosen-container .chosen-results' ).css( 'max-height', '176px' );
+	var lessMirror,
+		lessOutput,
+		errorLine,
+		errorText,
+		errors,
+		loaded,
+		coffeeMirror,
+		coffeeOutput,
+		coffeeLoaded,
+		defaultSettings = $.extend({}, wp.codeEditor.defaultSettings ),
+		lessMirrorConfig = {
+			gutters: [ 'note-gutter', 'CodeMirror-linenumbers' ],
+			mode: 'text/x-less',
+			indentWithTabs: true
+		},
+		coffeeMirrorConfig = {
+			mode: 'text/coffeescript'
+		};
 
 	//CodeMirror.commands.save = saveLessMirror;
 
 	$( 'textarea.js' ).not( '#coffee_compiled' ).each( function() {
-		CodeMirror.fromTextArea( this, { lineNumbers: true, mode: 'javascript', theme: theme });
+		wp.codeEditor.initialize( this, $.extend({}, defaultSettings, {
+			codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'javascript' })
+		}) );
 	});
 
 	$( 'textarea.css' ).not( '#compiled' ).each( function() {
-		CodeMirror.fromTextArea( this, { lineNumbers: true, mode: 'css', theme: theme });
+		wp.codeEditor.initialize( this, $.extend({}, defaultSettings, {
+			codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'css' })
+		}) );
 	});
 
-	lessOutput = CodeMirror.fromTextArea( $( '#compiled' ).get( 0 ), { lineNumbers: true, mode: 'css', theme: theme, readOnly: true });
-	coffeeOutput = CodeMirror.fromTextArea( $( '#coffee_compiled' ).get( 0 ), { lineNumbers: true, mode: 'javascript', theme: theme, readOnly: true });
+	lessOutput = wp.codeEditor.initialize( 'compiled', $.extend({}, defaultSettings, {
+		codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'css', readOnly: true })
+	}) ).codemirror;
+
+	coffeeOutput = wp.codeEditor.initialize( 'coffee_compiled', $.extend({}, defaultSettings, {
+		codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'javascript', readOnly: true })
+	}) ).codemirror;
 
 	$( 'textarea.less' ).each( function() {
-		lessMirror = CodeMirror.fromTextArea( this, lessMirrorConfig );
+		lessMirror = wp.codeEditor.initialize( this, $.extend({}, defaultSettings, {
+			codemirror: $.extend({}, defaultSettings.codemirror, lessMirrorConfig )
+		}) ).codemirror;
 		lessMirror.on( 'change', compile );
 	});
 	$( 'textarea.coffee' ).each( function() {
-		coffeeMirror = CodeMirror.fromTextArea( this, coffeeMirrorConfig );
+		coffeeMirror = wp.codeEditor.initialize( this, $.extend({}, defaultSettings, {
+			codemirror: $.extend({}, defaultSettings.codemirror, coffeeMirrorConfig )
+		}) ).codemirror;
 		coffeeMirror.on( 'change', coffeeCompile );
+		console.log( 'try' );
+		CodeMirror.autoLoadMode( coffeeMirror, 'coffeescript' );
 	});
 	$( '#coffee' ).parent().append( '<label><input type="checkbox" id="coffee_spacing"> Double Spaced</label>' );
 	$( '#coffee_spacing' ).change( coffeeCompile );
@@ -76,7 +107,7 @@ jQuery( function( $ ) {
 				coffeeOutput.setValue( '' );
 			} else {
 				compiled = CoffeeScript.compile( source );
-				trimmed = $( '#coffee_spacing' ).is( ':checked' ) ? compiled : compiled.replace( /(\n\n)/gm, '\n' );
+				let trimmed = $( '#coffee_spacing' ).is( ':checked' ) ? compiled : compiled.replace( /(\n\n)/gm, '\n' );
 				coffeeOutput.setValue( trimmed );
 			}
 			coffeeOutput.save();

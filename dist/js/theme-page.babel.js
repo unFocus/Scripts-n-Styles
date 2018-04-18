@@ -1,6 +1,12 @@
 // Options JavaScript
+import less from 'less';
+import * as $ from 'jquery';
+import postcss from 'postcss';
+import autoprefixer from 'autoprefixer';
 
-jQuery( document ).ready( function( $ ) {
+let CodeMirror = wp.CodeMirror;
+console.log( 'hello' );
+$( function() {
  'use strict';
 	var collection = [],
 		context = '#less_area',
@@ -12,8 +18,7 @@ jQuery( document ).ready( function( $ ) {
 		$error, $status, $form, $css,
 		onChange,
 		errorMarker, errorText, errorMirror,
-		config,
-		cleanCSS = new CleanCSS;
+		config;
 
 	// Prevent keystoke compile buildup
 	onChange = function onChange( cm ) {
@@ -199,7 +204,9 @@ jQuery( document ).ready( function( $ ) {
 						compiled.save();
 						compiled.refresh();
 					} else {
-						compiledValue = cleanCSS.minify( output.css ).styles;
+
+						// compiledValue = cleanCSS.minify( output.css ).styles;
+						compiledValue = output.css;
 						$css.val( compiledValue );
 					}
 					clearCompileError();

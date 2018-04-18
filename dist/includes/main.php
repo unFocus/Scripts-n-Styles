@@ -100,33 +100,41 @@ add_action( 'plugins_loaded', function() {
 } );
 
 /**
- * Register bundled scripts
+ * Register legacy scripts
+ *
+ * These where registered and made available to users in the past.
  */
-function register_scripts() {
+function legacy_scripts() {
 	$dir = plugins_url( '/', BASENAME );
-
-	$vendor = $dir . 'vendor/';
+	$vendor = $dir . 'legacy/';
 	wp_register_script( 'clean-css', $vendor . 'cleancss-browser.js', [], '3.4.21-min' );
 	wp_register_script( 'less.js', $vendor . 'less.min.js', [], '2.7.1-min' );
 	wp_register_script( 'coffeescript', $vendor . 'coffee-script.js', [], '1.12.1-min' );
 	wp_register_script( 'chosen', $vendor . 'chosen/chosen.jquery.min.js', [ 'jquery' ], '1.0.0', true );
 	wp_register_style( 'chosen', $vendor . 'chosen/chosen.min.css', [], '1.0.0' );
-	// wp_register_script( 'coffeelint', $vendor . 'coffeelint.js', [], '0.5.6' );
-	/* wp_register_script( 'mustache', $vendor . 'chosen/jquery.mustache.min.js', [ 'jquery' ], '0.7.2', true ); */
 	wp_register_script( 'html5shiv', $vendor . 'html5shiv.js', [], '3.7.3' );
 	wp_register_script( 'html5shiv-printshiv', $vendor . 'html5shiv-printshiv.js', [], '3.7.3' );
+}
+add_action( 'wp_enqueue_scripts', '\unFocus\SnS\legacy_scripts' );
 
-	/* wp_register_script( 'google-diff-match-patch', $vendor . 'codemirror/diff_match_patch.js', [] ); */
-	wp_register_script( 'sns-codemirror', $vendor . 'codemirror/codemirror.min.js', [ /*'google-diff-match-patch'*/ ], '5.21.0' );
-	wp_register_style( 'sns-codemirror', $vendor . 'codemirror/codemirror.min.css', [], '5.21.0' );
+
+/**
+ * Register bundled scripts
+ */
+function register_scripts() {
+	$dir = plugins_url( '/', BASENAME );
 
 	$js = $dir . 'js/';
-	wp_register_script( 'sns-global-page', $js . 'global-page.min.js', [ 'jquery', 'sns-codemirror', 'less.js', 'coffeescript', 'chosen' ], VERSION, true );
-	wp_register_script( 'sns-theme-page', $js . 'theme-page.min.js', [ 'jquery', 'sns-codemirror', 'less.js', 'clean-css' ], VERSION, true );
-	wp_register_script( 'sns-hoops-page', $js . 'hoops-page.min.js', [ 'jquery', 'sns-codemirror' ], VERSION, true );
-	wp_register_script( 'sns-meta-box', $js . 'meta-box.min.js', [ 'editor', 'jquery-ui-tabs', 'sns-codemirror', 'chosen' ], VERSION, true );
+	wp_register_script( 'sns-global-page', $js . 'global-page.js', [ 'code-editor' ], VERSION, true );
+	wp_register_script( 'sns-theme-page', $js . 'theme-page.js', [ 'code-editor', 'clean-css' ], VERSION, true );
+	wp_register_script( 'sns-hoops-page', $js . 'hoops-page.js', [ 'code-editor' ], VERSION, true );
+	wp_register_script( 'sns-meta-box', $js . 'meta-box.js', [ 'editor', 'jquery-ui-tabs', 'chosen' ], VERSION, true );
+
+	wp_deregister_script( 'wp-codemirror' );
+	wp_register_script( 'wp-codemirror', $dir . 'vendor/codemirror/codemirror.min.js', [], '5.36.0', true );
 
 	$css = $dir . 'css/';
+	wp_register_style( 'sns-codemirror', $css . 'codemirror-themes.css', [], '5.36.0' );
 	wp_register_style( 'sns-options', $css . 'options-styles.css', [ 'sns-codemirror' ], VERSION );
 	wp_register_style( 'sns-meta-box', $css . 'meta-box.css', [ 'sns-codemirror' ], VERSION );
 }
