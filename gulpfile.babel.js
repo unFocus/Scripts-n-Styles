@@ -60,7 +60,7 @@ let devConfig = {
 		'js/global-page.min': [ ...devServer, './dist/js/global-page.babel.js' ],
 		'js/hoops-page.min': [ ...devServer, './dist/js/hoops-page.babel.js' ],
 		'js/meta-box.min': [ ...devServer, './dist/js/meta-box.babel.js' ],
-		'js/codemirror.min': [ ...devServer, './dist/js/codemirror.babel.js' ]
+		'js/theme-page.min': [ ...devServer, './dist/js/theme-page.babel.js' ]
 	},
 	output: config.output,
 	context: config.context,
