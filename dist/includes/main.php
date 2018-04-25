@@ -125,7 +125,7 @@ function register_scripts() {
 	$dir = plugins_url( '/', BASENAME );
 
 	$js = $dir . 'js/';
-	wp_register_script( 'sns-global-page', $js . 'global-page.min.js', [ 'code-editor' ], VERSION, true );
+	wp_register_script( 'sns-global-page', $js . 'global-page.min.js', [], VERSION, true );
 	wp_register_script( 'sns-theme-page', $js . 'theme-page.min.js', [ 'code-editor', 'clean-css' ], VERSION, true );
 	wp_register_script( 'sns-hoops-page', $js . 'hoops-page.min.js', [ 'code-editor' ], VERSION, true );
 	wp_register_script( 'sns-meta-box', $js . 'meta-box.min.js', [ 'editor', 'jquery-ui-tabs', 'chosen' ], VERSION, true );
