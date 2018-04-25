@@ -3,33 +3,33 @@
 /* stylelint-disable selector-id-pattern */
 /* stylelint-disable selector-class-pattern */
 
-textarea.code {
-	display: block;
-}
-
 .CodeMirror {
 	height: 200px;
 	border: 1px solid #dfdfdf;
 }
 
-.autoheight .CodeMirror {
-	height: auto;
-}
+.autoheight {
 
-.autoheight .CodeMirror-scroll {
-	overflow-x: auto;
-	overflow-y: hidden;
+	.CodeMirror {
+		height: auto;
+	}
+
+	.CodeMirror-scroll {
+		overflow-x: auto;
+		overflow-y: hidden;
+		min-height: 200px;
+		max-height: calc(100vh - 100px);
+	}
 }
 
 .style,
 .script,
 .less,
 .coffee {
-	box-sizing: border-box;
-	background-color: #fff;
-	margin: 8px 0 6px;
-	background-clip: padding-box;
-	font-family: "Courier New", Courier, monospace;
+
+	textarea {
+		width: 100%;
+	}
 
 	&::before,
 	&::after {
@@ -111,10 +111,6 @@ textarea.code {
 
 .scripts-n-styles_page_sns_theme .CodeMirror-scroll {
 	max-height: none;
-}
-
-#icon-sns {
-	background: no-repeat center url(../images/icon32.png);
 }
 
 .sns-less-ide {
