@@ -3,14 +3,21 @@ import less from 'less';
 import $ from 'jquery';
 import CoffeeScript from 'coffeescript';
 
-var CodeMirror = wp.CodeMirror;
+let CodeMirror = wp.CodeMirror;
 
-CodeMirror.modeURL = _SnSOptions.root + 'vendor/codemirror/mode/%N/%N.js';
+if ( CodeMirror ) {
+	CodeMirror.modeURL = _SnSOptions.root + 'vendor/codemirror/mode/%N/%N.js';
+}
 
 $( function() {
-	var compiled, source;
-	var theme = _SnSOptions.theme ? _SnSOptions.theme : 'default';
-	var lessMirror,
+	if ( ! CodeMirror ) {
+
+		// Temp bailout.
+		return;
+	}
+	let compiled, source,
+		theme = _SnSOptions.theme ? _SnSOptions.theme : 'default',
+		lessMirror,
 		lessOutput,
 		errorLine,
 		errorText,
