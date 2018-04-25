@@ -92,11 +92,11 @@ add_action( 'admin_menu', function() {
 				$compiled = isset( $options['compiled'] ) ? $options['compiled'] : '';
 				?>
 				<div style="overflow: hidden;">
-					<div style="width: 49%; float: left; overflow: hidden; margin-right: 2%;" class="less">
-						<textarea id="less" name="SnS_options[less]" style="min-width: 250px; width:47%; float: left" class="code less" rows="5" cols="40"><?php echo esc_textarea( $less ); ?></textarea>
+					<div style="width: 49%; float: left; overflow: hidden; margin-right: 2%;" class="less autoheight">
+						<textarea id="less" name="SnS_options[less]" class="code less" rows="10"><?php echo esc_textarea( $less ); ?></textarea>
 					</div>
-					<div style="width: 49%; float: left; overflow: hidden;" class="style">
-						<textarea id="compiled" name="SnS_options[compiled]" style="min-width: 250px; width:47%;" class="code css" rows="5" cols="40"><?php echo esc_textarea( $compiled ); ?></textarea>
+					<div style="width: 49%; float: left; overflow: hidden;" class="style autoheight">
+						<textarea id="compiled" name="SnS_options[compiled]" class="code css" rows="10"><?php echo esc_textarea( $compiled ); ?></textarea>
 						<div id="compiled_error" style="display: none" class="error settings-error below-h2"></div>
 					</div>
 				</div>
@@ -115,11 +115,11 @@ add_action( 'admin_menu', function() {
 				$compiled = isset( $options['coffee_compiled'] ) ? $options['coffee_compiled'] : '';
 				?>
 				<div style="overflow: hidden;">
-					<div style="width: 49%; float: left; overflow: hidden; margin-right: 2%;" class="coffee">
-						<textarea id="coffee" name="SnS_options[coffee]" style="min-width: 250px; width:47%; float: left" class="code coffee" rows="5" cols="40"><?php echo esc_textarea( $coffee ); ?></textarea>
+					<div style="width: 49%; float: left; overflow: hidden; margin-right: 2%;" class="coffee autoheight">
+						<textarea id="coffee" name="SnS_options[coffee]" class="code coffee" rows="10"><?php echo esc_textarea( $coffee ); ?></textarea>
 					</div>
-					<div style="width: 49%; float: left; overflow: hidden;" class="script">
-						<textarea id="coffee_compiled" name="SnS_options[coffee_compiled]" style="min-width: 250px; width:47%;" class="code js" rows="5" cols="40"><?php echo esc_textarea( $compiled ); ?></textarea>
+					<div style="width: 49%; float: left; overflow: hidden;" class="script autoheight">
+						<textarea id="coffee_compiled" name="SnS_options[coffee_compiled]" class="code js" rows="10" ><?php echo esc_textarea( $compiled ); ?></textarea>
 						<div id="coffee_compiled_error" style="display: none" class="error settings-error below-h2"></div>
 					</div>
 				</div>
@@ -138,11 +138,9 @@ add_action( 'admin_menu', function() {
 			[
 				'label_for' => 'styles',
 				'setting' => 'SnS_options',
-				'class' => 'code css',
+				'class' => 'code css autoheight',
 				'wrap_class' => 'style',
-				'rows' => 5,
-				'cols' => 40,
-				'style' => 'min-width: 500px; width:97%;',
+				'rows' => 10,
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span>', 'scripts-n-styles' ),
 			]
 		);
@@ -155,11 +153,9 @@ add_action( 'admin_menu', function() {
 			[
 				'label_for' => 'scripts_in_head',
 				'setting' => 'SnS_options',
-				'class' => 'code js',
+				'class' => 'code js autoheight',
 				'wrap_class' => 'script',
-				'rows' => 5,
-				'cols' => 40,
-				'style' => 'min-width: 500px; width:97%;',
+				'rows' => 10,
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>', 'scripts-n-styles' ),
 			]
 		);
@@ -172,11 +168,9 @@ add_action( 'admin_menu', function() {
 			[
 				'label_for' => 'scripts',
 				'setting' => 'SnS_options',
-				'class' => 'code js',
+				'class' => 'code js autoheight',
 				'wrap_class' => 'script',
-				'rows' => 5,
-				'cols' => 40,
-				'style' => 'min-width: 500px; width:97%;',
+				'rows' => 10,
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>', 'scripts-n-styles' ),
 			]
 		);
