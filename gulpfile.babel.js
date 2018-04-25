@@ -201,6 +201,13 @@ function copyCodeMirrorModes() {
 		.pipe( uglify() )
 		.pipe( gulp.dest( 'dist/vendor' ) );
 }
+function copyCodeMirrorStandalone() {
+	return gulp.src([
+		dir + 'addon/runmode/runmode-standalone.js'
+	])
+		.pipe( uglify() )
+		.pipe( gulp.dest( 'dist/vendor/codemirror' ) );
+}
 function copyCodeMirrorCSS() {
 	return gulp.src([
 		dir + 'lib/**/*.css',
@@ -213,9 +220,9 @@ function copyCodeMirrorCSS() {
 		.pipe( gulp.dest( 'dist/vendor/codemirror' ) );
 }
 
-const copyCodeMirror = gulp.series( copyCodeMirrorModes, copyCodeMirrorJS, copyCodeMirrorCSS );
+const copyCodeMirror = gulp.series( copyCodeMirrorModes, copyCodeMirrorJS, copyCodeMirrorCSS, copyCodeMirrorStandalone );
 const build = gulp.series( compile, less );
-const buildFull = gulp.series( copyCodeMirror, compile, less );
+const buildFull = gulp.series( copyCodeMirror, build );
 const dev = gulp.series( build, serve, watch );
 
 export {
@@ -224,6 +231,7 @@ export {
 	copyCodeMirrorModes,
 	copyCodeMirrorJS,
 	copyCodeMirrorCSS,
+	copyCodeMirrorStandalone,
 	less,
 	compile,
 	serve,
