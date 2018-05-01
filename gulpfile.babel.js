@@ -82,9 +82,7 @@ function reload( done ) {
 }
 
 function compile( done ) {
-	compiler.run( () => {
-		done();
-	});
+	compiler.run( done );
 }
 
 function serve( done ) {
@@ -101,8 +99,7 @@ function serve( done ) {
 			}),
 			webpackHotMiddleware( devCompiler )
 		]
-	});
-	done();
+	}, done );
 }
 
 function watch( done ) {
