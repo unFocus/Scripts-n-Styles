@@ -87,8 +87,8 @@ function select( $args ) {
 
 	$setting   = $args['setting'];
 	$label_for = $args['label_for'];
-	$options = get_option( $setting );
-	$selected = isset( $options[ $label_for ] ) ? $options[ $label_for ] : [];
+	$options   = get_option( $setting );
+	$selected  = isset( $options[ $label_for ] ) ? $options[ $label_for ] : [];
 
 	$is_multiple  = ! empty( $args['multiple'] );
 	$size         = isset( $args['size'] ) ? $args['size'] : 3;
@@ -161,16 +161,16 @@ function take_action() {
 
 	$options = $new_whitelist_options[ $option_page ];
 	foreach ( (array) $options as $option ) {
-		$old = get_option( $option );
+		$old    = get_option( $option );
 		$option = trim( $option );
-		$new = null;
+		$new    = null;
 		if ( isset( $_POST[ $option ] ) ) {
 			$new = wp_unslash( $_POST[ $option ] );
 		}
 		if ( ! is_array( $new ) ) {
 			$new = trim( $new );
 		}
-		$new = stripslashes_deep( $new );
+		$new   = stripslashes_deep( $new );
 		$value = array_merge( $old, $new );
 
 		// Allow modification of $value.
@@ -190,8 +190,6 @@ function take_action() {
 		ob_end_clean();
 		exit( wp_kses_post( $output ) );
 	}
-
-	return;
 }
 
 /**
@@ -219,18 +217,18 @@ function page() {
  */
 function nav() {
 	$options = get_option( 'SnS_options' );
-	$page = ! empty( $_REQUEST['page'] ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['page'] ) ) : '';
+	$page    = ! empty( $_REQUEST['page'] ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['page'] ) ) : '';
 	?>
 	<h2><?php esc_html_e( 'Scripts n Styles', 'scripts-n-styles' ); ?></h2>
 	<?php settings_errors(); ?>
 	<h3 class="nav-tab-wrapper">
-		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG ); ?>"><?php esc_html_e( 'Global', 'scripts-n-styles' ); ?></a>
-		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_hoops' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_hoops' ); ?>"><?php esc_html_e( 'Hoops', 'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG === $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG ); ?>"><?php esc_html_e( 'Global', 'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_hoops' === $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_hoops' ); ?>"><?php esc_html_e( 'Hoops', 'scripts-n-styles' ); ?></a>
 		<?php if ( current_theme_supports( 'scripts-n-styles' ) ) { ?>
-		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_theme' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_theme' ); ?>"><?php esc_html_e( 'Theme', 'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_theme' === $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_theme' ); ?>"><?php esc_html_e( 'Theme', 'scripts-n-styles' ); ?></a>
 		<?php } ?>
-		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_settings' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_settings' ); ?>"><?php esc_html_e( 'Settings', 'scripts-n-styles' ); ?></a>
-		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_usage' == $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_usage' ); ?>"><?php esc_html_e( 'Usage', 'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_settings' === $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_settings' ); ?>"><?php esc_html_e( 'Settings', 'scripts-n-styles' ); ?></a>
+		<a class="nav-tab<?php echo ( ADMIN_MENU_SLUG . '_usage' === $page ) ? ' nav-tab-active' : ''; ?>" href="<?php menu_page_url( ADMIN_MENU_SLUG . '_usage' ); ?>"><?php esc_html_e( 'Usage', 'scripts-n-styles' ); ?></a>
 	</h3>
 	<?php
 }
