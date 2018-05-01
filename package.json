@@ -19,7 +19,8 @@
     "build": "npm run gulp build",
     "dev": "npm start && npm run gulp dev",
     "preinstall": "npm start && docker-compose down && composer install",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "add-localhost": "sudo bash -c 'echo -e \"127.0.0.1\tscriptsnstyles.test\n\" >> /etc/hosts'"
   },
   "private": true,
   "repository": {
