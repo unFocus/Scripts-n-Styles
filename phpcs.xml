@@ -20,7 +20,6 @@
 	<arg name="extensions" value="php"/>
 
 	<!-- Check all files in theme directory and the directories below it. -->
-	<file>./source</file>
 	<file>./dist</file>
 	<exclude-pattern>./html/*</exclude-pattern>
 	<exclude-pattern>./vendor/*</exclude-pattern>
