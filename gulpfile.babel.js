@@ -53,6 +53,14 @@ let config = {
 	module: {
 		rules: rules
 	},
+	plugins: [
+		new webpack.ProvidePlugin({
+			$: 'jquery',
+			jQuery: 'jquery',
+			'window.jQuery': 'jquery',
+			'window.$': 'jquery'
+		})
+	],
 	mode: 'production'
 };
 let devConfig = {
@@ -68,6 +76,7 @@ let devConfig = {
 	mode: 'development',
 	devtool: 'cheap-module-eval-source-map',
 	plugins: [
+		...config.plugins,
 		new webpack.HotModuleReplacementPlugin()
 	]
 };
