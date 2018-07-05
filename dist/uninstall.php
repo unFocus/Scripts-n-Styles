@@ -18,10 +18,10 @@ if ( empty( $options['delete_data_uninstall'] ) || 'yes' !== $options['delete_da
 
 $posts = get_posts( [
 	'numberposts' => -1,
-	'post_type' => 'any',
+	'post_type'   => 'any',
 	'post_status' => 'any',
-	'orderby' => 'ID',
-	'meta_key' => '_SnS',
+	'orderby'     => 'ID',
+	'meta_key'    => '_SnS', // WPCS: slow query ok.
 ] );
 
 foreach ( $posts as $post ) {
@@ -29,12 +29,12 @@ foreach ( $posts as $post ) {
 }
 delete_option( 'SnS_options' );
 
-$users = get_users( 'meta_key=current_sns_tab' );
+$users = get_users( 'meta_key=current_sns_tab' ); // WPCS: slow query ok.
 foreach ( $users as $user ) {
 	delete_user_option( $user->ID, 'current_sns_tab', true );
 }
 
-$users = get_users( 'meta_key=scripts_n_styles_page_sns_usage_per_page' );
+$users = get_users( 'meta_key=scripts_n_styles_page_sns_usage_per_page' ); // WPCS: slow query ok.
 foreach ( $users as $user ) {
 	delete_user_option( $user->ID, 'scripts_n_styles_page_sns_usage_per_page', true );
 }

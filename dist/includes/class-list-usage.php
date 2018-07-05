@@ -90,7 +90,7 @@ class List_Usage extends \WP_List_Table {
 		?>
 		<strong>
 		<?php
-		if ( $this->ajax_user_can() && 'trash' != $post->post_status ) {
+		if ( $this->ajax_user_can() && 'trash' !== $post->post_status ) {
 			?>
 			<a class="row-title" href="<?php echo esc_attr( $edit_link ); ?>" title="<?php echo esc_attr( $edit_title ); ?>">
 			<?php echo esc_html( $post->post_title ); ?>
@@ -111,10 +111,10 @@ class List_Usage extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return [
-			'title'         => esc_html__( 'Title', 'scripts-n-styles' ),
-			'script_data'   => esc_html__( 'Script Data', 'scripts-n-styles' ),
-			'style_data'    => esc_html__( 'Style Data', 'scripts-n-styles' ),
-			'hoops_data'    => esc_html__( 'Hoops Data', 'scripts-n-styles' ),
+			'title'       => esc_html__( 'Title', 'scripts-n-styles' ),
+			'script_data' => esc_html__( 'Script Data', 'scripts-n-styles' ),
+			'style_data'  => esc_html__( 'Style Data', 'scripts-n-styles' ),
+			'hoops_data'  => esc_html__( 'Hoops Data', 'scripts-n-styles' ),
 		];
 	}
 
@@ -123,7 +123,7 @@ class List_Usage extends \WP_List_Table {
 	 */
 	public function prepare_items() {
 		$screen_id = get_current_screen()->id;
-		$per_page = $this->get_items_per_page( "{$screen_id}_per_page", 20 );
+		$per_page  = $this->get_items_per_page( "{$screen_id}_per_page", 20 );
 
 		/**
 		 * Get Relavent Posts.
@@ -135,7 +135,7 @@ class List_Usage extends \WP_List_Table {
 			'post_status'    => 'any',
 			'orderby'        => 'ID',
 			'order'          => 'ASC',
-			'meta_key'       => '_SnS',
+			'meta_key'       => '_SnS', // WPCS: slow query ok.
 		] );
 
 		$this->items = $this->_add_meta_data( $query->posts );

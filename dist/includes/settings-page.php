@@ -30,12 +30,12 @@ add_action( 'admin_menu', function() {
 		wp_enqueue_code_editor( [ 'type' => 'php' ] );
 		wp_add_inline_script(
 			'code-editor',
-			"jQuery(function( $ ) {"
+			'jQuery(function( $ ) {'
 				. "var sns = wp.codeEditor.initialize( $( '#codemirror_demo' ) );"
 				. "$('input[name=\"SnS_options[cm_theme]\"]').change( function(){"
-					. "sns.codemirror.setOption(\"theme\", $(this).val());"
-				. "});"
-			."});"
+					. 'sns.codemirror.setOption(\"theme\", $(this).val());'
+				. '});'
+			. '});'
 		);
 	} );
 
@@ -92,9 +92,9 @@ add_action( 'admin_menu', function() {
 			ADMIN_MENU_SLUG,
 			'demo',
 			[
-				'label_for' => 'cm_theme',
-				'setting' => 'SnS_options',
-				'choices' => [
+				'label_for'   => 'cm_theme',
+				'setting'     => 'SnS_options',
+				'choices'     => [
 					'default',
 					'3024-day',
 					'3024-night',
@@ -146,9 +146,9 @@ add_action( 'admin_menu', function() {
 					'yeti',
 					'zenburn',
 				],
-				'default' => 'default',
-				'legend' => __( 'Theme', 'scripts-n-styles' ),
-				'layout' => 'horizontal',
+				'default'     => 'default',
+				'legend'      => __( 'Theme', 'scripts-n-styles' ),
+				'layout'      => 'horizontal',
 				'description' => '',
 			]
 		);
@@ -159,12 +159,12 @@ add_action( 'admin_menu', function() {
 			ADMIN_MENU_SLUG,
 			'settings',
 			[
-				'label_for' => 'delete_data_uninstall',
-				'setting' => 'SnS_options',
-				'choices' => [ 'yes', 'no' ],
-				'layout' => 'horizontal',
-				'default' => 'no',
-				'legend' => __( 'Delete Data When Uninstalling', 'scripts-n-styles' ),
+				'label_for'   => 'delete_data_uninstall',
+				'setting'     => 'SnS_options',
+				'choices'     => [ 'yes', 'no' ],
+				'layout'      => 'horizontal',
+				'default'     => 'no',
+				'legend'      => __( 'Delete Data When Uninstalling', 'scripts-n-styles' ),
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">Should the plugin clean up after itself and delete all of its saved data.</span>', 'scripts-n-styles' ),
 			]
 		);

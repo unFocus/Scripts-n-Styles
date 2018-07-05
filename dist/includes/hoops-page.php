@@ -28,7 +28,7 @@ add_action( 'admin_menu', function() {
 	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
 	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
-		$options = get_option( 'SnS_options' );
+		$options  = get_option( 'SnS_options' );
 		$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
 
 		wp_enqueue_style( 'sns-options' );
@@ -65,13 +65,13 @@ add_action( 'admin_menu', function() {
 			if ( ! empty( $new['code'] ) ) {
 				$name = empty( $new['name'] ) ? '' : $new['name'];
 
-				if ( '' == $name ) {
+				if ( '' === $name ) {
 					// If blank, find next index..
 					$name = 0;
 					while ( isset( $shortcodes[ $name ] ) ) {
 						$name++;
 					}
-				} else if ( isset( $shortcodes[ $name ] ) ) {
+				} elseif ( isset( $shortcodes[ $name ] ) ) {
 					// To make sure not to overwrite.
 					$countr = 1;
 					while ( isset( $shortcodes[ $name . '_' . $countr ] ) ) {

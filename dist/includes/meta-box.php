@@ -26,8 +26,9 @@ add_action( 'add_meta_boxes', function() {
 		get_current_screen()->post_type,
 		get_post_types( [
 			'show_ui' => true,
-			'public' => true,
-		] )
+			'public'  => true,
+		] ),
+		true
 	) ) {
 		return;
 	}
@@ -38,11 +39,11 @@ add_action( 'add_meta_boxes', function() {
 		function ( $post ) {
 			$sns = get_post_meta( $post->ID, '_SnS', true );
 
-			$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
+			$styles  = isset( $sns['styles'] ) ? $sns['styles'] : [];
 			$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : [];
 
 			$position = get_user_option( 'current_sns_tab' );
-			if ( ! in_array( $position, [ 's0', 's1', 's2', 's3', 's4', 's5' ] ) ) {
+			if ( ! in_array( $position, [ 's0', 's1', 's2', 's3', 's4', 's5' ], true ) ) {
 				$position = 's0';
 			}
 			wp_nonce_field( BASENAME, NONCE_NAME );
@@ -179,8 +180,8 @@ add_action( 'add_meta_boxes', function() {
 				<strong class="title">Shortcodes</strong>
 				<div id="sns-add-shortcode">
 					<?php
-					$meta_name = 'SnS_shortcodes';
-					$sns = get_post_meta( $post->ID, '_SnS', true );
+					$meta_name  = 'SnS_shortcodes';
+					$sns        = get_post_meta( $post->ID, '_SnS', true );
 					$shortcodes = isset( $sns['shortcodes'] ) ? $sns['shortcodes'] : [];
 					?>
 					<label for="<?php echo esc_attr( $meta_name ); ?>">Name: </label>
@@ -222,7 +223,7 @@ add_action( 'add_meta_boxes', function() {
 	 * Enqueues the JavaScript for the admin Meta Box.
 	 */
 	add_action( 'admin_print_scripts', function() {
-		$options = get_option( 'SnS_options' );
+		$options  = get_option( 'SnS_options' );
 		$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
 
 		wp_enqueue_script( 'sns-meta-box' );
@@ -236,7 +237,7 @@ add_action( 'add_meta_boxes', function() {
 	 */
 	add_filter( 'mce_buttons_2', function( $buttons ) {
 		global $post;
-		$sns = get_post_meta( $post->ID, '_SnS', true );
+		$sns    = get_post_meta( $post->ID, '_SnS', true );
 		$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
 
 		if ( ! empty( $styles['classes_mce'] ) ) {
@@ -251,7 +252,7 @@ add_action( 'add_meta_boxes', function() {
 	 */
 	add_filter( 'tiny_mce_before_init', function( $init ) {
 		global $post;
-		$sns = get_post_meta( $post->ID, '_SnS', true );
+		$sns    = get_post_meta( $post->ID, '_SnS', true );
 		$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
 
 		// Add div as a format option, should probably use a string replace thing here.
@@ -283,7 +284,7 @@ add_action( 'add_meta_boxes', function() {
 		}
 
 		if ( ! empty( $style_formats ) ) {
-			$init['style_formats'] = json_encode( $style_formats );
+			$init['style_formats'] = wp_json_encode( $style_formats );
 		}
 
 		return $init;
@@ -299,6 +300,7 @@ add_action( 'add_meta_boxes', function() {
 		$url = wp_nonce_url( $url, 'sns_tinymce_styles' );
 		$url = add_query_arg( 'post_id', $post->ID, $url );
 		$url = add_query_arg( 'action', 'sns_tinymce_styles', $url );
+
 		$mce_css .= ',' . $url;
 		return $mce_css;
 	} );
@@ -331,6 +333,7 @@ add_action( 'save_post', function( $post_id ) {
 	$sns = get_post_meta( $post_id, '_SnS', true );
 	// http://php.net/manual/en/migration71.incompatible.php#migration71.incompatible.empty-string-index-operator for explaination.
 	$sns = is_array( $sns ) ? $sns : [];
+
 	$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : [];
 	$styles  = isset( $sns['styles'] ) ? $sns['styles'] : [];
 
@@ -342,6 +345,7 @@ add_action( 'save_post', function( $post_id ) {
 	$styles  = maybe_set_metabox( $styles, 'classes_post' );
 
 	$shortcodes = [];
+
 	$sns_shortcodes = isset( $_REQUEST['SnS_shortcodes'] ) ? $_REQUEST['SnS_shortcodes'] : [];
 
 	$existing_shortcodes = isset( $sns_shortcodes['existing'] ) ? $sns_shortcodes['existing'] : [];
@@ -356,7 +360,7 @@ add_action( 'save_post', function( $post_id ) {
 
 		$key = ( isset( $new_shortcode['name'] ) ) ? $new_shortcode['name'] : '';
 
-		if ( '' == $key ) {
+		if ( '' === $key ) {
 			$key = count( $shortcodes );
 			while ( isset( $shortcodes[ $key ] ) ) {
 				$key++;

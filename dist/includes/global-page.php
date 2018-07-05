@@ -28,7 +28,7 @@ add_action( 'admin_menu', function() {
 	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
 	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
-		$options = get_option( 'SnS_options' );
+		$options  = get_option( 'SnS_options' );
 		$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
 
 		wp_enqueue_style( 'chosen' );
@@ -42,8 +42,8 @@ add_action( 'admin_menu', function() {
 		wp_enqueue_script( 'sns-global-page' );
 		wp_localize_script( 'sns-global-page', '_SnSOptions', [
 			'theme' => $cm_theme,
-			'root'  => plugins_url( '/', BASENAME )
-		 ] );
+			'root'  => plugins_url( '/', BASENAME ),
+		] );
 	} );
 
 	/**
@@ -87,8 +87,8 @@ add_action( 'admin_menu', function() {
 			'less',
 			__( '<strong>LESS:</strong> ', 'scripts-n-styles' ),
 			function() {
-				$options = get_option( 'SnS_options' );
-				$less = isset( $options['less'] ) ? $options['less'] : '';
+				$options  = get_option( 'SnS_options' );
+				$less     = isset( $options['less'] ) ? $options['less'] : '';
 				$compiled = isset( $options['compiled'] ) ? $options['compiled'] : '';
 				?>
 				<div style="overflow: hidden;">
@@ -110,8 +110,8 @@ add_action( 'admin_menu', function() {
 			'coffee',
 			__( '<strong>CoffeeScript:</strong> ', 'scripts-n-styles' ),
 			function() {
-				$options = get_option( 'SnS_options' );
-				$coffee = isset( $options['coffee'] ) ? $options['coffee'] : '';
+				$options  = get_option( 'SnS_options' );
+				$coffee   = isset( $options['coffee'] ) ? $options['coffee'] : '';
 				$compiled = isset( $options['coffee_compiled'] ) ? $options['coffee_compiled'] : '';
 				?>
 				<div style="overflow: hidden;">
@@ -136,11 +136,11 @@ add_action( 'admin_menu', function() {
 			ADMIN_MENU_SLUG,
 			'global_styles',
 			[
-				'label_for' => 'styles',
-				'setting' => 'SnS_options',
-				'class' => 'code css autoheight',
-				'wrap_class' => 'style',
-				'rows' => 10,
+				'label_for'   => 'styles',
+				'setting'     => 'SnS_options',
+				'class'       => 'code css autoheight',
+				'wrap_class'  => 'style',
+				'rows'        => 10,
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">The "Styles" will be included <strong>verbatim</strong> in <code>&lt;style></code> tags in the <code>&lt;head></code> element of your html.</span>', 'scripts-n-styles' ),
 			]
 		);
@@ -151,11 +151,11 @@ add_action( 'admin_menu', function() {
 			ADMIN_MENU_SLUG,
 			'global_scripts',
 			[
-				'label_for' => 'scripts_in_head',
-				'setting' => 'SnS_options',
-				'class' => 'code js autoheight',
-				'wrap_class' => 'script',
-				'rows' => 10,
+				'label_for'   => 'scripts_in_head',
+				'setting'     => 'SnS_options',
+				'class'       => 'code js autoheight',
+				'wrap_class'  => 'script',
+				'rows'        => 10,
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts (in head)" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags in the <code>&lt;head></code> element of your html.</span>', 'scripts-n-styles' ),
 			]
 		);
@@ -166,11 +166,11 @@ add_action( 'admin_menu', function() {
 			ADMIN_MENU_SLUG,
 			'global_scripts',
 			[
-				'label_for' => 'scripts',
-				'setting' => 'SnS_options',
-				'class' => 'code js autoheight',
-				'wrap_class' => 'script',
-				'rows' => 10,
+				'label_for'   => 'scripts',
+				'setting'     => 'SnS_options',
+				'class'       => 'code js autoheight',
+				'wrap_class'  => 'script',
+				'rows'        => 10,
 				'description' => __( '<span class="description" style="max-width: 500px; display: inline-block;">The "Scripts" will be included <strong>verbatim</strong> in <code>&lt;script></code> tags at the bottom of the <code>&lt;body></code> element of your html.</span>', 'scripts-n-styles' ),
 			]
 		);
@@ -181,12 +181,12 @@ add_action( 'admin_menu', function() {
 			ADMIN_MENU_SLUG,
 			'global_scripts',
 			[
-				'label_for' => 'enqueue_scripts',
-				'setting' => 'SnS_options',
-				'choices' => get_registered_scripts(),
-				'size' => 5,
-				'style' => 'height: auto;',
-				'multiple' => true,
+				'label_for'    => 'enqueue_scripts',
+				'setting'      => 'SnS_options',
+				'choices'      => get_registered_scripts(),
+				'size'         => 5,
+				'style'        => 'height: auto;',
+				'multiple'     => true,
 				'show_current' => __( 'Currently Enqueued Scripts: ', 'scripts-n-styles' ),
 			]
 		);

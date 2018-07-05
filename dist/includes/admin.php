@@ -180,24 +180,26 @@ function get_registered_scripts() {
 function help() {
 	$help  = '<p>' . wp_kses_post( __( 'In default (non MultiSite) WordPress installs, both <em>Administrators</em> and <em>Editors</em> can access <em>Scripts-n-Styles</em> on individual edit screens. Only <em>Administrators</em> can access the Options Pages. In MultiSite WordPress installs, only <em>"Super Admin"</em> users can access either <em>Scripts-n-Styles</em> on individual edit screens or the Options Pages. If other plugins change capabilities (specifically "unfiltered_html"), other users can be granted access.', 'scripts-n-styles' ) ) . '</p>';
 	$help .= '<p><strong>' . esc_html__( 'Reference: jQuery Wrappers', 'scripts-n-styles' ) . '</strong></p>'
-		  . '<pre>jQuery(function($) {' . PHP_EOL
-		  . '	// $() will work as an alias for jQuery() inside of this function' . PHP_EOL
-		  . '});</pre>';
+		. '<pre>jQuery(function($) {' . PHP_EOL
+		. '	// $() will work as an alias for jQuery() inside of this function' . PHP_EOL
+		. '});</pre>';
 	$help .= '<pre>(function($) {' . PHP_EOL
-		  . '	// $() will work as an alias for jQuery() inside of this function' . PHP_EOL
-		  . '})(jQuery);</pre>';
+		. '	// $() will work as an alias for jQuery() inside of this function' . PHP_EOL
+		. '})(jQuery);</pre>';
+
 	$sidebar = '<p><strong>' . esc_html__( 'For more information:', 'scripts-n-styles' ) . '</strong></p>'
-			 . '<p>' . wp_kses_post( __( '<a href="https://wordpress.org/extend/plugins/scripts-n-styles/faq/" target="_blank">Frequently Asked Questions</a>', 'scripts-n-styles' ) ) . '</p>'
-			 . '<p>' . wp_kses_post( __( '<a href="https://github.com/unFocus/Scripts-n-Styles" target="_blank">Source on github</a>', 'scripts-n-styles' ) ) . '</p>'
-			 . '<p>' . wp_kses_post( __( '<a href="https://wordpress.org/tags/scripts-n-styles" target="_blank">Support Forums</a>', 'scripts-n-styles' ) ) . '</p>'
-			 . '<p>' . wp_kses_post( __( '<a href="https://twitter.com/wraithkenny1" target="_blank">Ask me on Twitter</a>', 'scripts-n-styles' ) ) . '</p>';
+			. '<p>' . wp_kses_post( __( '<a href="https://wordpress.org/extend/plugins/scripts-n-styles/faq/" target="_blank">Frequently Asked Questions</a>', 'scripts-n-styles' ) ) . '</p>'
+			. '<p>' . wp_kses_post( __( '<a href="https://github.com/unFocus/Scripts-n-Styles" target="_blank">Source on github</a>', 'scripts-n-styles' ) ) . '</p>'
+			. '<p>' . wp_kses_post( __( '<a href="https://wordpress.org/tags/scripts-n-styles" target="_blank">Support Forums</a>', 'scripts-n-styles' ) ) . '</p>'
+			. '<p>' . wp_kses_post( __( '<a href="https://twitter.com/wraithkenny1" target="_blank">Ask me on Twitter</a>', 'scripts-n-styles' ) ) . '</p>';
+
 	$screen = get_current_screen();
 	$screen->add_help_tab( [
-		'title' => __( 'Scripts n Styles', 'scripts-n-styles' ),
-		'id' => 'scripts-n-styles',
+		'title'   => __( 'Scripts n Styles', 'scripts-n-styles' ),
+		'id'      => 'scripts-n-styles',
 		'content' => $help,
 	] );
-	if ( 'post' != $screen->id ) {
+	if ( 'post' !== $screen->id ) {
 		$screen->set_help_sidebar( $sidebar );
 	}
 }

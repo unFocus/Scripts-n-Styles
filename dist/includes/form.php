@@ -143,11 +143,11 @@ function take_action() {
 	}
 
 	// Handle menu-redirected update message.
-	if ( ! empty( $_REQUEST['message'] ) ) {
+	if ( ! empty( $_REQUEST['message'] ) ) { // Input var okay.
 		add_settings_error( $page, 'settings_updated', esc_html__( 'Settings saved.', 'scripts-n-styles' ), 'updated' );
 	}
 
-	if ( ! isset( $_REQUEST['action'], $_REQUEST['option_page'], $_REQUEST['page'] ) ) {
+	if ( ! isset( $_REQUEST['action'], $_REQUEST['option_page'], $_REQUEST['page'] ) ) { // Input var okay.
 		return;
 	}
 

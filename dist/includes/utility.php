@@ -37,7 +37,7 @@ function upgrade() {
 		// Convert Hoops widget to Text.
 		$sidebars_widgets = get_option( 'sidebars_widgets' );
 		$widget_sns_hoops = get_option( 'widget_sns_hoops' );
-		$widget_text = get_option( 'widget_text' );
+		$widget_text      = get_option( 'widget_text' );
 
 		foreach ( $sidebars_widgets as $name => $sidebar ) {
 			if ( ! is_array( $sidebar ) ) {
@@ -46,7 +46,7 @@ function upgrade() {
 			foreach ( $sidebar as $key => $widget_name ) {
 				// widget_name is widget array name ("sns_hoops"), a "-", and it's index in the widget array.
 				if ( stripos( $widget_name, 'sns_hoops-' ) !== false ) {
-					$sns_index = substr( $widget_name, strlen( 'sns_hoops-' ) );
+					$sns_index  = substr( $widget_name, strlen( 'sns_hoops-' ) );
 					$sns_widget = $widget_sns_hoops[ $sns_index ];
 
 					$sns_widget['visual'] = true; // Upgrade.

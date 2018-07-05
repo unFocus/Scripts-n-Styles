@@ -27,7 +27,9 @@ add_action( 'wp_ajax_sns_open_theme_panels', function () {
 
 	$open_theme_panels = json_decode( get_user_option( 'sns_open_theme_panels', $user ), true );
 	$open_theme_panels = is_array( $open_theme_panels ) ? $open_theme_panels : [];
+
 	$open_theme_panels[ $name ] = $collapsed;
+
 	$open_theme_panels = json_encode( $open_theme_panels );
 	update_user_option( $user, 'sns_open_theme_panels', $open_theme_panels );
 
@@ -59,8 +61,8 @@ add_action( 'wp_ajax_sns_tinymce_styles', function () {
 	$post_id = absint( $_REQUEST['post_id'] );
 
 	$options = get_option( 'SnS_options' );
-	$sns = get_post_meta( $post_id, '_SnS', true );
-	$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
+	$sns     = get_post_meta( $post_id, '_SnS', true );
+	$styles  = isset( $sns['styles'] ) ? $sns['styles'] : [];
 
 	header( 'Content-Type: text/css; charset=UTF-8' );
 
@@ -90,9 +92,9 @@ add_action( 'wp_ajax_sns_classes', function () {
 	}
 
 	$post_id = absint( $_REQUEST['post_id'] );
-	$sns = get_post_meta( $post_id, '_SnS', true );
-	$sns = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8.
-	$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
+	$sns     = get_post_meta( $post_id, '_SnS', true );
+	$sns     = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8.
+	$styles  = isset( $sns['styles'] ) ? $sns['styles'] : [];
 
 	$styles = maybe_set( $styles, 'classes_body' );
 	$styles = maybe_set( $styles, 'classes_post' );
@@ -129,8 +131,8 @@ add_action( 'wp_ajax_sns_scripts', function () {
 	}
 
 	$post_id = absint( $_REQUEST['post_id'] );
-	$sns = get_post_meta( $post_id, '_SnS', true );
-	$sns = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8.
+	$sns     = get_post_meta( $post_id, '_SnS', true );
+	$sns     = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8.
 	$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : [];
 
 	$scripts = maybe_set( $scripts, 'scripts_in_head' );
@@ -147,7 +149,7 @@ add_action( 'wp_ajax_sns_scripts', function () {
 
 	header( 'Content-Type: application/json; charset=UTF-8' );
 	echo json_encode( [
-		'scripts' => $_REQUEST['scripts'],
+		'scripts'         => $_REQUEST['scripts'],
 		'scripts_in_head' => $_REQUEST['scripts_in_head'],
 	] );
 
@@ -168,9 +170,9 @@ add_action( 'wp_ajax_sns_styles', function () {
 	}
 
 	$post_id = absint( $_REQUEST['post_id'] );
-	$sns = get_post_meta( $post_id, '_SnS', true );
-	$sns = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8.
-	$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
+	$sns     = get_post_meta( $post_id, '_SnS', true );
+	$sns     = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8.
+	$styles  = isset( $sns['styles'] ) ? $sns['styles'] : [];
 
 	$styles = maybe_set( $styles, 'styles' );
 
@@ -219,8 +221,8 @@ add_action( 'wp_ajax_sns_dropdown', function () {
 	}
 	$post_id = absint( $_REQUEST['post_id'] );
 
-	$sns = get_post_meta( $post_id, '_SnS', true );
-	$sns = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8 .
+	$sns    = get_post_meta( $post_id, '_SnS', true );
+	$sns    = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8 .
 	$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
 
 	if ( ! isset( $styles['classes_mce'] ) ) {
@@ -251,9 +253,9 @@ add_action( 'wp_ajax_sns_delete_class', function () {
 		exit( 'Bad post ID.' );
 	}
 	$post_id = absint( $_REQUEST['post_id'] );
-	$sns = get_post_meta( $post_id, '_SnS', true );
-	$sns = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8.
-	$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
+	$sns     = get_post_meta( $post_id, '_SnS', true );
+	$sns     = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8.
+	$styles  = isset( $sns['styles'] ) ? $sns['styles'] : [];
 
 	$title = $_REQUEST['delete'];
 
@@ -307,14 +309,14 @@ add_action( 'wp_ajax_sns_shortcodes', function () {
 		exit( 'unknown directive' );
 	}
 
-	$post_id = absint( $_REQUEST['post_id'] );
-	$sns = get_post_meta( $post_id, '_SnS', true );
-	$sns = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8.
+	$post_id    = absint( $_REQUEST['post_id'] );
+	$sns        = get_post_meta( $post_id, '_SnS', true );
+	$sns        = is_array( $sns ) ? $sns : []; // Something changed in PHP 7/WP 4.8.
 	$shortcodes = isset( $sns['shortcodes'] ) ? $sns['shortcodes'] : [];
-	$message = '';
-	$code = 0;
-	$key = '';
-	$value = '';
+	$message    = '';
+	$code       = 0;
+	$key        = '';
+	$value      = '';
 
 	if ( isset( $_REQUEST['name'] ) ) {
 		$key = $_REQUEST['name'];
@@ -346,6 +348,7 @@ add_action( 'wp_ajax_sns_shortcodes', function () {
 			}
 
 			$code = 1;
+
 			$shortcodes[ $key ] = $value;
 			break;
 
@@ -354,7 +357,7 @@ add_action( 'wp_ajax_sns_shortcodes', function () {
 				if ( isset( $shortcodes[ $key ] ) ) {
 					unset( $shortcodes[ $key ] );
 				}
-				$code = 3;
+				$code    = 3;
 				$message = $key;
 			} else {
 				$value = $_REQUEST['shortcode'];
@@ -363,7 +366,7 @@ add_action( 'wp_ajax_sns_shortcodes', function () {
 				} else {
 					exit( 'wrong key.' );
 				}
-				$code = 2;
+				$code    = 2;
 				$message = 'updated ' . $key;
 			}
 			break;
@@ -374,7 +377,7 @@ add_action( 'wp_ajax_sns_shortcodes', function () {
 			} else {
 				exit( 'bad key.' );
 			}
-			$code = 3;
+			$code    = 3;
 			$message = $key;
 			break;
 	}
@@ -391,8 +394,8 @@ add_action( 'wp_ajax_sns_shortcodes', function () {
 	if ( 1 < $code ) {
 		header( 'Content-Type: application/json; charset=UTF-8' );
 		echo json_encode( [
-			'message'      => $message,
-			'code'       => $code,
+			'message' => $message,
+			'code'    => $code,
 		] );
 	} else {
 		header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );

@@ -37,15 +37,15 @@ add_action( 'admin_menu', function() {
 
 		add_screen_option(
 			'per_page', [
-				'label' => __( 'Per Page', 'scripts-n-styles' ),
+				'label'   => __( 'Per Page', 'scripts-n-styles' ),
 				'default' => 20,
 			]
 		);
 
 		add_filter( 'set-screen-option', function( $false, $option, $value ) {
-			$screen_id = get_current_screen()->id;
+			$screen_id   = get_current_screen()->id;
 			$this_option = "{$screen_id}_per_page";
-			if ( $this_option != $option ) {
+			if ( $this_option !== $option ) {
 				return false;
 			}
 

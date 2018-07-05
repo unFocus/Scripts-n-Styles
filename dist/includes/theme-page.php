@@ -38,7 +38,7 @@ add_action( 'admin_menu', function() {
 	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
 	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
-		$options = get_option( 'SnS_options' );
+		$options  = get_option( 'SnS_options' );
 		$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
 
 		wp_enqueue_style( 'sns-options' );
@@ -63,93 +63,100 @@ add_action( 'admin_menu', function() {
 		add_settings_section(
 			'theme',
 			__( 'Scripts n Styles Theme Files', 'scripts-n-styles' ),
-			function() {
-				$files = [];
-				$support_files = get_theme_support( 'scripts-n-styles' );
-
-				if ( is_child_theme() ) {
-					$root = get_stylesheet_directory();
-				} else {
-					$root = get_template_directory();
-				}
-
-				foreach ( $support_files[0] as $file ) {
-					if ( is_file( $root . $file ) ) {
-						$files[] = $root . $file;
-					}
-				}
-
-				$slug = get_stylesheet();
-				$options = get_option( 'SnS_options' );
-				// Stores data on a theme by theme basis.
-				$theme = isset( $options['themes'][ $slug ] ) ? $options['themes'][ $slug ] : [];
-				$stored = isset( $theme['less'] ) ? $theme['less'] : []; // is an array of stored imported less file data.
-				$compiled = isset( $theme['compiled'] ) ? $theme['compiled'] : ''; // the complete compiled down css.
-				$slug = esc_attr( $slug );
-
-				$open_theme_panels = json_decode( get_user_option( 'sns_open_theme_panels', get_current_user_id() ), true );
-
-				?>
-				<div style="overflow: hidden">
-				<div id="less_area" style="width: 49%; float: left; overflow: hidden; margin-right: 2%;">
-					<?php
-					foreach ( $files as $file ) {
-						$name = basename( $file );
-						$raw = file_get_contents( $file );
-						if ( isset( $stored[ $name ] ) ) {
-							$source = $stored[ $name ];
-							$less = isset( $source ) ? $source : '';
-							$compiled = isset( $compiled ) ? $compiled : '';
-						} else {
-							$less = $raw;
-							$compiled = '';
-						}
-						$name = esc_attr( $name );
-						$lead_break = 0 == strpos( $less, PHP_EOL ) ? PHP_EOL : '';
-						if ( isset( $open_theme_panels[ $name ] ) ) {
-							$collapse = 'yes' == $open_theme_panels[ $name ] ? 'sns-collapsed ' : '';
-						} else {
-							$collapse = $less == $raw ? 'sns-collapsed ' : '';
-						}
-						?>
-						<div class="sns-less-ide" style="overflow: hidden">
-						<div class="widget"><div class="<?php echo esc_attr( $collapse ); ?>inside">
-						<span class="sns-collapsed-btn"></span>
-						<label style="margin-bottom: 0;"><?php echo esc_html( $name ); ?></label>
-						<textarea data-file-name="<?php echo esc_attr( $name ); ?>" data-raw="<?php echo esc_attr( $raw ); ?>"
-						name="SnS_options[themes][<?php echo esc_attr( $slug ); ?>][less][<?php echo esc_attr( $name ); ?>]"
-						style="min-width: 250px; width:47%;"
-						class="code less" rows="5" cols="40"><?php echo esc_attr( $lead_break ) . esc_textarea( $less ); ?></textarea>
-						<div class="sns-ajax-wrap">
-						<a class="sns-ajax-load button" href="#">Load Source File</a>
-						<a class="sns-ajax-save button" href="#">Save All Changes</a>
-						<span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>
-						<div class="single-status"><div class="updated settings-error below-h2"></div></div>
-						</div>
-						</div></div>
-						</div>
-						<?php
-					}
-					?>
-				</div>
-				<div id="css_area" class="sns-less-ide" style="width: 49%; float: left; overflow: hidden;">
-					<div id="compile_status" style="display: none" class="updated settings-error below-h2">
-						<p><span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>
-						<span class="status-text">Keystokes detected. 1 second delay, then compiling...</span></p>
-					</div>
-					<div class="widget"><div class="sns-collapsed inside">
-						<span class="sns-collapsed-btn"></span>
-						<label style="margin-bottom: 0;">Preview Window</label>
-						<textarea
-							name="SnS_options[themes][<?php echo esc_attr( $slug ); ?>][compiled]"
-							style="min-width: 250px; width:47%;"
-							class="code css" rows="5" cols="40"><?php echo esc_textarea( $compiled ); ?></textarea>
-					</div></div>
-					<div id="compiled_error" class="error settings-error below-h2"></div>
-				</div>
-				<?php
-			},
+			'unFocus\SnS\theme_section',
 			ADMIN_MENU_SLUG
 		);
 	} );
 } );
+
+/**
+ * Theme Section Markup.
+ */
+function theme_section() {
+	$files         = [];
+	$support_files = get_theme_support( 'scripts-n-styles' );
+
+	if ( is_child_theme() ) {
+		$root = get_stylesheet_directory();
+	} else {
+		$root = get_template_directory();
+	}
+
+	foreach ( $support_files[0] as $file ) {
+		if ( is_file( $root . $file ) ) {
+			$files[] = $root . $file;
+		}
+	}
+
+	$slug    = get_stylesheet();
+	$options = get_option( 'SnS_options' );
+	// Stores data on a theme by theme basis.
+	$theme    = isset( $options['themes'][ $slug ] ) ? $options['themes'][ $slug ] : [];
+	$stored   = isset( $theme['less'] ) ? $theme['less'] : []; // is an array of stored imported less file data.
+	$compiled = isset( $theme['compiled'] ) ? $theme['compiled'] : ''; // the complete compiled down css.
+	$slug     = esc_attr( $slug );
+
+	$open_theme_panels = json_decode( get_user_option( 'sns_open_theme_panels', get_current_user_id() ), true );
+
+	?>
+	<div style="overflow: hidden">
+	<div id="less_area" style="width: 49%; float: left; overflow: hidden; margin-right: 2%;">
+		<?php
+		foreach ( $files as $file ) {
+			$name = basename( $file );
+			$raw  = file_get_contents( $file );
+			$f    = fopen( $file, 'r' );
+			$raw  = fread( $f, filesize( $file ) );
+			if ( isset( $stored[ $name ] ) ) {
+				$source   = $stored[ $name ];
+				$less     = isset( $source ) ? $source : '';
+				$compiled = isset( $compiled ) ? $compiled : '';
+			} else {
+				$less     = $raw;
+				$compiled = '';
+			}
+			$name       = esc_attr( $name );
+			$lead_break = 0 === strpos( $less, PHP_EOL ) ? PHP_EOL : '';
+			if ( isset( $open_theme_panels[ $name ] ) ) {
+				$collapse = 'yes' === $open_theme_panels[ $name ] ? 'sns-collapsed ' : '';
+			} else {
+				$collapse = $less === $raw ? 'sns-collapsed ' : '';
+			}
+			?>
+			<div class="sns-less-ide" style="overflow: hidden">
+			<div class="widget"><div class="<?php echo esc_attr( $collapse ); ?>inside">
+			<span class="sns-collapsed-btn"></span>
+			<label style="margin-bottom: 0;"><?php echo esc_html( $name ); ?></label>
+			<textarea data-file-name="<?php echo esc_attr( $name ); ?>" data-raw="<?php echo esc_attr( $raw ); ?>"
+			name="SnS_options[themes][<?php echo esc_attr( $slug ); ?>][less][<?php echo esc_attr( $name ); ?>]"
+			style="min-width: 250px; width:47%;"
+			class="code less" rows="5" cols="40"><?php echo esc_attr( $lead_break ) . esc_textarea( $less ); ?></textarea>
+			<div class="sns-ajax-wrap">
+			<a class="sns-ajax-load button" href="#">Load Source File</a>
+			<a class="sns-ajax-save button" href="#">Save All Changes</a>
+			<span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>
+			<div class="single-status"><div class="updated settings-error below-h2"></div></div>
+			</div>
+			</div></div>
+			</div>
+			<?php
+		}
+		?>
+	</div>
+	<div id="css_area" class="sns-less-ide" style="width: 49%; float: left; overflow: hidden;">
+		<div id="compile_status" style="display: none" class="updated settings-error below-h2">
+			<p><span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span>
+			<span class="status-text">Keystokes detected. 1 second delay, then compiling...</span></p>
+		</div>
+		<div class="widget"><div class="sns-collapsed inside">
+			<span class="sns-collapsed-btn"></span>
+			<label style="margin-bottom: 0;">Preview Window</label>
+			<textarea
+				name="SnS_options[themes][<?php echo esc_attr( $slug ); ?>][compiled]"
+				style="min-width: 250px; width:47%;"
+				class="code css" rows="5" cols="40"><?php echo esc_textarea( $compiled ); ?></textarea>
+		</div></div>
+		<div id="compiled_error" class="error settings-error below-h2"></div>
+	</div>
+	<?php
+}

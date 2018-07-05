@@ -71,7 +71,7 @@ if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) :
 	 */
 	define( 'SNS_FILE', __FILE__ );
 
-	require_once( 'includes/bootstrap.php' );
+	require_once 'includes/bootstrap.php';
 
 else :
 	/**

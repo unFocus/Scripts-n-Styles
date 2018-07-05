@@ -15,7 +15,7 @@ if ( version_compare( $GLOBALS['wp_version'], '4.7-alpha', '<' ) ) {
 
 	add_action( 'after_switch_theme', function() {
 		switch_theme( WP_DEFAULT_THEME );
-		unset( $_GET['activated'] );
+		unset( $_GET['activated'] ); // Input var okay.
 		add_action( 'admin_notices', function() {
 			printf( '<div class="error"><p>%s</p></div>', esc_html( $message ) );
 		} );
@@ -32,7 +32,7 @@ if ( version_compare( $GLOBALS['wp_version'], '4.7-alpha', '<' ) ) {
 	} );
 
 	add_action( 'template_redirect', function() {
-		if ( isset( $_GET['preview'] ) ) {
+		if ( isset( $_GET['preview'] ) ) { // Input var okay.
 			wp_die( esc_html( $message ) );
 		}
 	} );
@@ -127,7 +127,7 @@ add_action( 'after_setup_theme', function() {
 
 	// Define and register starter content to showcase the theme on new sites.
 	add_theme_support( 'starter-content', [
-		'widgets' => [
+		'widgets'     => [
 			// Place three core-defined widgets in the sidebar area.
 			'sidebar-1' => [
 				'text_business_info',
@@ -148,15 +148,15 @@ add_action( 'after_setup_theme', function() {
 		],
 
 		// Specify the core-defined pages to create and add custom thumbnails to some of them.
-		'posts' => [
+		'posts'       => [
 			'home',
-			'about' => [
+			'about'            => [
 				'thumbnail' => '{{image-sandwich}}',
 			],
-			'contact' => [
+			'contact'          => [
 				'thumbnail' => '{{image-espresso}}',
 			],
-			'blog' => [
+			'blog'             => [
 				'thumbnail' => '{{image-coffee}}',
 			],
 			'homepage-section' => [
@@ -168,27 +168,27 @@ add_action( 'after_setup_theme', function() {
 		'attachments' => [
 			'image-espresso' => [
 				'post_title' => _x( 'Espresso', 'Theme starter content', 'scripts-n-styles' ),
-				'file' => 'assets/images/espresso.jpg', // URL relative to the template directory.
+				'file'       => 'assets/images/espresso.jpg', // URL relative to the template directory.
 			],
 			'image-sandwich' => [
 				'post_title' => _x( 'Sandwich', 'Theme starter content', 'scripts-n-styles' ),
-				'file' => 'assets/images/sandwich.jpg',
+				'file'       => 'assets/images/sandwich.jpg',
 			],
-			'image-coffee' => [
+			'image-coffee'   => [
 				'post_title' => _x( 'Coffee', 'Theme starter content', 'scripts-n-styles' ),
-				'file' => 'assets/images/coffee.jpg',
+				'file'       => 'assets/images/coffee.jpg',
 			],
 		],
 
 		// Default to a static front page and assign the front and posts pages.
-		'options' => [
-			'show_on_front' => 'page',
-			'page_on_front' => '{{home}}',
+		'options'     => [
+			'show_on_front'  => 'page',
+			'page_on_front'  => '{{home}}',
 			'page_for_posts' => '{{blog}}',
 		],
 
 		// Set the front page section theme mods to the IDs of the core-registered pages.
-		'theme_mods' => [
+		'theme_mods'  => [
 			'panel_1' => '{{homepage-section}}',
 			'panel_2' => '{{about}}',
 			'panel_3' => '{{blog}}',
@@ -196,10 +196,10 @@ add_action( 'after_setup_theme', function() {
 		],
 
 		// Set up nav menus for each of the two areas registered in the theme.
-		'nav_menus' => [
+		'nav_menus'   => [
 			// Assign a menu to the "top" location.
-			'top' => [
-				'name' => __( 'Top Menu', 'scripts-n-styles' ),
+			'top'    => [
+				'name'  => __( 'Top Menu', 'scripts-n-styles' ),
 				'items' => [
 					'link_home', // Note that the core "home" page is actually a link in case a static front page is not used.
 					'page_about',
@@ -210,7 +210,7 @@ add_action( 'after_setup_theme', function() {
 
 			// Assign a menu to the "social" location.
 			'social' => [
-				'name' => __( 'Social Links Menu', 'scripts-n-styles' ),
+				'name'  => __( 'Social Links Menu', 'scripts-n-styles' ),
 				'items' => [
 					'link_yelp',
 					'link_facebook',
