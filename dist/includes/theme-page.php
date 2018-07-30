@@ -43,8 +43,14 @@ add_action( 'admin_menu', function() {
 
 		wp_enqueue_style( 'sns-options' );
 
+		wp_enqueue_script( 'csslint' );
+		wp_enqueue_code_editor( [ 'type' => 'css' ] );
+
 		wp_enqueue_script( 'sns-theme-page' );
-		wp_localize_script( 'sns-theme-page', '_SnSOptions', [ 'theme' => $cm_theme ] );
+		wp_localize_script( 'sns-theme-page', '_SnSOptions', [
+			'theme' => $cm_theme,
+			'root'  => plugins_url( '/', BASENAME ),
+		] );
 	} );
 
 	/**

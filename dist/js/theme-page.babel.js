@@ -1,16 +1,21 @@
 // Options JavaScript
 import less from 'less';
-import * as $ from 'jquery';
+import $ from 'jquery';
 import postcss from 'postcss';
 import autoprefixer from 'autoprefixer';
 
 let CodeMirror = wp.CodeMirror;
-console.log( 'hello' );
+
+if ( CodeMirror ) {
+	CodeMirror.modeURL = _SnSOptions.root + 'vendor/codemirror/mode/%N/%N.js';
+}
+
 $( function() {
- 'use strict';
-	var collection = [],
+
+	let collection = [],
 		context = '#less_area',
 		theme = _SnSOptions.theme ? _SnSOptions.theme : 'default',
+		defaultSettings = $.extend({}, wp.codeEditor.defaultSettings ),
 		timeout = _SnSOptions.timeout || 1000,
 		loaded = false,
 		preview = false,
@@ -60,7 +65,9 @@ $( function() {
 			endChars: 0,
 			errorLine: null,
 			errorText: null,
-			cm: CodeMirror.fromTextArea( $text.get( 0 ), config )
+			cm: wp.codeEditor.initialize( $text.get( 0 ), $.extend({}, defaultSettings, {
+				codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'text/x-less' })
+			}) ).codemirror
 		};
 		ide.cm.on( 'change', onChange );
 		if ( $text.parent().hasClass( 'sns-collapsed' ) ) {
@@ -86,7 +93,9 @@ $( function() {
 		if ( collapsed ) {
 			thisIDE.cm.toTextArea();
 		} else {
-			thisIDE.cm = CodeMirror.fromTextArea( thisIDE.$text.get( 0 ), config );
+			thisIDE.cm = wp.codeEditor.initialize( thisIDE.$text.get( 0 ), $.extend({}, defaultSettings, {
+				codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'text/html' })
+			}) ).codemirror;
 			thisIDE.cm.on( 'change', onChange );
 		}
 		$.post( ajaxurl, {
