@@ -31,9 +31,9 @@ add_action( 'admin_menu', function() {
 		wp_add_inline_script(
 			'code-editor',
 			'jQuery(function( $ ) {'
-				. "var sns = wp.codeEditor.initialize( $( '#codemirror_demo' ) );"
-				. "$('input[name=\"SnS_options[cm_theme]\"]').change( function(){"
-					. 'sns.codemirror.setOption(\"theme\", $(this).val());'
+				. 'var sns = wp.codeEditor.initialize( $( \'#codemirror_demo\' ) );'
+				. '$(\'input[name="SnS_options[cm_theme]"]\').change( function(){'
+					. 'sns.codemirror.setOption( "theme", $(this).val() );'
 				. '});'
 			. '});'
 		);

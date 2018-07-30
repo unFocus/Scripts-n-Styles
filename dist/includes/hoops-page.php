@@ -33,8 +33,16 @@ add_action( 'admin_menu', function() {
 
 		wp_enqueue_style( 'sns-options' );
 
+		wp_enqueue_script( 'csslint' );
+		wp_enqueue_script( 'jshint' );
+		wp_enqueue_script( 'jsonlint' );
+		wp_enqueue_code_editor( [ 'type' => 'html' ] );
+
 		wp_enqueue_script( 'sns-hoops-page' );
-		wp_localize_script( 'sns-hoops-page', '_SnSOptions', [ 'theme' => $cm_theme ] );
+		wp_localize_script( 'sns-hoops-page', '_SnSOptions', [
+			'theme' => $cm_theme,
+			'root'  => plugins_url( '/', BASENAME ),
+		] );
 	} );
 
 	/**
@@ -115,13 +123,13 @@ add_action( 'admin_menu', function() {
 			__( 'The Hoops Shortcodes', 'scripts-n-styles' ),
 			function() {
 				echo '<div style="max-width: 55em;">';
-				echo esc_html__( '<p>"Hoops" are shortcodes invented to get around some limitations of vanilla WordPress.</p>', 'scripts-n-styles' )
-				. esc_html__(
+				echo wp_kses_post( __( '<p>"Hoops" are shortcodes invented to get around some limitations of vanilla WordPress.</p>', 'scripts-n-styles' ) )
+				. wp_kses_post( __(
 					'<p> Normally, certain HTML is very problematic to use in the Post Editor, because it either gets jumbled during Switching between HTML and Visual Tabs, stripped out by WPAutoP (rare) or stripped out because the User doesn&#8217;t have the proper Permissions.</p>', 'scripts-n-styles'
-				)
-				. esc_html__(
+				) )
+				. wp_kses_post( __(
 					'<p>With Hoops, an Admin user (who has `unfiltered_html` and `manage_options` capablilities) can write and approve snippets of HTML for other users to use via Shortcodes.</p>', 'scripts-n-styles'
-				);
+				) );
 				echo '</div>';
 
 				$options = get_option( 'SnS_options' );
