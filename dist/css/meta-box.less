@@ -11,13 +11,18 @@
 	border: 1px solid #dfdfdf;
 }
 
-.autoheight .CodeMirror {
-	height: auto;
-}
+.autoheight {
 
-.autoheight .CodeMirror-scroll {
-	overflow-x: auto;
-	overflow-y: hidden;
+	.CodeMirror {
+		height: auto;
+	}
+
+	.autoheight .CodeMirror-scroll {
+		overflow-x: auto;
+		overflow-y: hidden;
+		min-height: 200px;
+		max-height: calc(100vh - 100px);
+	}
 }
 
 .style,
@@ -29,6 +34,10 @@
 	margin: 8px 0;
 	background-clip: padding-box;
 	font-family: "Courier New", Courier, monospace;
+
+	textarea {
+		width: 100%;
+	}
 
 	&::before,
 	&::after {

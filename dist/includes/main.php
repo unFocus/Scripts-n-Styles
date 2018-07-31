@@ -115,6 +115,7 @@ function legacy_scripts() {
 	wp_register_script( 'html5shiv-printshiv', $vendor . 'html5shiv-printshiv.js', [], '3.7.3' );
 }
 add_action( 'wp_enqueue_scripts', '\unFocus\SnS\legacy_scripts' );
+add_action( 'admin_enqueue_scripts', '\unFocus\SnS\legacy_scripts' );
 
 
 /**
@@ -127,13 +128,14 @@ function register_scripts() {
 	wp_register_script( 'sns-global-page', $js . 'global-page.min.js', [], VERSION, true );
 	wp_register_script( 'sns-theme-page', $js . 'theme-page.min.js', [ 'code-editor' ], VERSION, true );
 	wp_register_script( 'sns-hoops-page', $js . 'hoops-page.min.js', [ 'code-editor' ], VERSION, true );
-	wp_register_script( 'sns-meta-box', $js . 'meta-box.min.js', [ 'editor', 'jquery-ui-tabs', 'chosen' ], VERSION, true );
+	wp_register_script( 'sns-meta-box', $js . 'meta-box.min.js', [ 'editor', 'jquery-ui-tabs', 'chosen', 'code-editor' ], VERSION, true );
 
+	// Use a correctly bundled version of CodeMirror.
 	wp_deregister_script( 'wp-codemirror' );
 	wp_register_script( 'wp-codemirror', $dir . 'vendor/codemirror/codemirror.min.js', [], '5.36.0', true );
 
 	$css = $dir . 'css/';
-	wp_register_style( 'sns-codemirror', $css . 'codemirror-themes.css', [], '5.36.0' );
+	wp_register_style( 'sns-codemirror', $css . 'codemirror-themes.css', [ 'code-editor' ], '5.36.0' );
 	wp_register_style( 'sns-options', $css . 'options-styles.css', [ 'sns-codemirror' ], VERSION );
 	wp_register_style( 'sns-meta-box', $css . 'meta-box.css', [ 'sns-codemirror' ], VERSION );
 }

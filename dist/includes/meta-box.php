@@ -227,7 +227,7 @@ add_action( 'add_meta_boxes', function() {
 		$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
 
 		wp_enqueue_script( 'sns-meta-box' );
-		wp_localize_script( 'sns-meta-box', 'codemirrorOptions', [
+		wp_localize_script( 'sns-meta-box', '_SnSOptions', [
 			'theme' => $cm_theme,
 			'root'  => plugins_url( '/', BASENAME ),
 		] );

@@ -1,23 +1,37 @@
  /* eslint-disable camelcase */
-jQuery( document ).ready( function( $ ) {
+import $ from 'jquery';
 
-	var context = '#SnS_meta_box',
+let CodeMirror = wp.CodeMirror;
+
+if ( CodeMirror ) {
+	CodeMirror.modeURL = _SnSOptions.root + 'vendor/codemirror/mode/%N/%N.js';
+}
+console.log( 'asdf' );
+$( function() {
+	if ( ! CodeMirror ) {
+
+		// Temp bailout.
+		return;
+	}
+
+	let context = '#SnS_meta_box',
 		currentCodeMirror = [],
 		keys = [],
 		nonce = $( '#scripts_n_styles_noncename' ).val(),
-		theme = codemirrorOptions.theme ? codemirrorOptions.theme : 'default';
+		defaultSettings = $.extend({}, wp.codeEditor.defaultSettings ),
+		theme = _SnSOptions.theme ? _SnSOptions.theme : 'default';
 
 	// For CPTs that don't have an editor, prevent "tinyMCEPreInit is 'undefined'"
-	var initDatas = ( 'undefined' !== typeof tinyMCEPreInit && tinyMCEPreInit.mceInit ) ? tinyMCEPreInit.mceInit : false;
+	let initDatas = ( 'undefined' !== typeof tinyMCEPreInit && tinyMCEPreInit.mceInit ) ? tinyMCEPreInit.mceInit : false;
 	for ( let prop in initDatas ) {
 		keys.push( prop );
 	}
 
 	let mceBodyClass = getMCEBodyClasses();
 
-	$( '#SnS_enqueue_scripts' ).data( 'placeholder', 'Enqueue Registered Scripts...' ).chosen({ width: '356px' });
-	$( '.chosen-container-multi .chosen-choices .search-field input' ).height( '26px' );
-	$( '.chosen-container .chosen-results' ).css( 'max-height', '176px' );
+	// $( '#SnS_enqueue_scripts' ).data( 'placeholder', 'Enqueue Registered Scripts...' ).chosen({ width: '356px' });
+	// $( '.chosen-container-multi .chosen-choices .search-field input' ).height( '26px' );
+	// $( '.chosen-container .chosen-results' ).css( 'max-height', '176px' );
 
 	//$('textarea', context).attr('autocomplete','off');
 
@@ -72,7 +86,7 @@ jQuery( document ).ready( function( $ ) {
 		args.styles = $( '#SnS_styles' ).val();
 
 		$.post( ajaxurl, args, function() {
-		refreshMCE();
+			refreshMCE();
 		});
 	});
 
@@ -448,7 +462,10 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// initialize and store active codemirrors
-			currentCodeMirror.push( CodeMirror.fromTextArea( this, settings ) );
+			let cm = wp.codeEditor.initialize( this, $.extend({}, defaultSettings, {
+				codemirror: $.extend({}, defaultSettings.codemirror, settings )
+			}) ).codemirror;
+			currentCodeMirror.push( cm );
 		});
 	}
 
