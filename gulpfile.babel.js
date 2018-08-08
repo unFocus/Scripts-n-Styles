@@ -240,9 +240,9 @@ function copyCodeMirrorStandalone() {
 function copyCodeMirrorCSS() {
 	return gulp.src([
 		dir + 'lib/**/*.css',
-		dir + 'theme/**/*.css',
 		dir + 'mode/**/*.css',
-		dir + 'addon/**/*.css'
+		dir + 'addon/**/*.css',
+		dir + 'theme/**/*.css'
 	], { base: './node_modules' })
 		.pipe( concat( 'codemirror.min.css' ) )
 		.pipe( postcss() )
