@@ -31,12 +31,8 @@ add_action( 'admin_menu', function() {
 		$options  = get_option( 'SnS_options' );
 		$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
 
-		wp_enqueue_style( 'sns-options' );
-
-		wp_enqueue_script( 'csslint' );
-		wp_enqueue_script( 'jshint' );
-		wp_enqueue_script( 'jsonlint' );
 		wp_enqueue_code_editor( [ 'type' => 'html' ] );
+		wp_enqueue_style( 'sns-options' );
 
 		wp_enqueue_script( 'sns-hoops-page' );
 		wp_localize_script( 'sns-hoops-page', '_SnSOptions', [

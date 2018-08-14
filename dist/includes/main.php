@@ -126,18 +126,21 @@ function register_scripts() {
 
 	$js = $dir . 'js/';
 	wp_register_script( 'sns-global-page', $js . 'global-page.min.js', [], VERSION, true );
-	wp_register_script( 'sns-theme-page', $js . 'theme-page.min.js', [ 'code-editor' ], VERSION, true );
-	wp_register_script( 'sns-hoops-page', $js . 'hoops-page.min.js', [ 'code-editor' ], VERSION, true );
-	wp_register_script( 'sns-meta-box', $js . 'meta-box.min.js', [ 'editor', 'jquery-ui-tabs', 'chosen', 'code-editor' ], VERSION, true );
+	wp_register_script( 'sns-theme-page', $js . 'theme-page.min.js', [], VERSION, true );
+	wp_register_script( 'sns-hoops-page', $js . 'hoops-page.min.js', [], VERSION, true );
+	wp_register_script( 'sns-meta-box', $js . 'meta-box.min.js', [ 'editor', 'jquery-ui-tabs' ], VERSION, true );
 
 	// Use a correctly bundled version of CodeMirror.
 	wp_deregister_script( 'wp-codemirror' );
-	wp_register_script( 'wp-codemirror', $dir . 'vendor/codemirror/codemirror.min.js', [], '5.36.0', true );
+	wp_register_script( 'wp-codemirror', $dir . 'vendor/codemirror/codemirror.min.js', [], '5.39.2', true );
+
+	// // Add Themes to bundled version of CodeMirror.
+	wp_deregister_style( 'wp-codemirror' );
+	wp_register_style( 'wp-codemirror', $dir . 'vendor/codemirror/codemirror.min.css', [], '5.39.2' );
 
 	$css = $dir . 'css/';
-	wp_register_style( 'sns-codemirror', $css . 'codemirror-themes.css', [ 'code-editor' ], '5.36.0' );
-	wp_register_style( 'sns-options', $css . 'options-styles.css', [ 'sns-codemirror' ], VERSION );
-	wp_register_style( 'sns-meta-box', $css . 'meta-box.css', [ 'sns-codemirror' ], VERSION );
+	wp_register_style( 'sns-options', $css . 'options-styles.css', [], VERSION );
+	wp_register_style( 'sns-meta-box', $css . 'meta-box.css', [], VERSION );
 }
 add_action( 'wp_enqueue_scripts', '\unFocus\SnS\register_scripts' );
 add_action( 'admin_enqueue_scripts', '\unFocus\SnS\register_scripts' );

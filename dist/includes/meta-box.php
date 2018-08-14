@@ -38,7 +38,6 @@ add_action( 'current_screen', function() {
 	 * Enqueues the CSS for admin styling of the Meta Box.
 	 */
 	add_action( 'admin_print_styles', function() {
-		// wp_enqueue_style( 'chosen' );
 		wp_enqueue_style( 'sns-meta-box' );
 	} );
 
@@ -50,13 +49,14 @@ add_action( 'current_screen', function() {
 		$options  = get_option( 'SnS_options' );
 		$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
 
+		wp_enqueue_code_editor( [ 'type' => 'php' ] );
+
 		wp_enqueue_script( 'sns-meta-box' );
 		wp_localize_script( 'sns-meta-box', '_SnSOptions', [
 			'theme' => $cm_theme,
 			'root'  => plugins_url( '/', BASENAME ),
 		] );
 	} );
-
 
 	/**
 	 * Admin Action: 'add_meta_boxes'
