@@ -4,6 +4,7 @@ _notes/dwsync.xml
 *.LCK
 .DS_Store
 vendor
+/dist/codemirror
 node_modules
 /html
 /dist/js/**/*.min.js

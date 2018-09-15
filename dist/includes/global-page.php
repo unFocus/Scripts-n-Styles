@@ -28,16 +28,10 @@ add_action( 'admin_menu', function() {
 	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
 	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
-		$options  = get_option( 'SnS_options' );
-		$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
-
 		wp_enqueue_code_editor( [ 'type' => 'php' ] );
-		wp_enqueue_style( 'sns-options' );
-
 		wp_enqueue_script( 'sns-global-page' );
 		wp_localize_script( 'sns-global-page', '_SnSOptions', [
-			'theme' => $cm_theme,
-			'root'  => plugins_url( '/', BASENAME ),
+			'root' => plugins_url( '/', BASENAME ),
 		] );
 	} );
 

@@ -1,10 +1,11 @@
 // Options JavaScript
 import $ from 'jquery';
+import '../css/options-styles.less';
 
 let CodeMirror = wp.CodeMirror;
 
 if ( CodeMirror ) {
-	CodeMirror.modeURL = _SnSOptions.root + 'vendor/codemirror/mode/%N/%N.js';
+	CodeMirror.modeURL = _SnSOptions.root + 'codemirror/mode/%N/%N.js';
 }
 
 $( function() {
@@ -15,14 +16,12 @@ $( function() {
 	}
 	let collection = [],
 		context = '#sns-shortcodes',
-		theme = _SnSOptions.theme ? _SnSOptions.theme : 'default',
 		defaultSettings = $.extend({}, wp.codeEditor.defaultSettings ),
 		$form,
 		config;
 
 	config = {
 		mode: 'text/html',
-		theme: theme,
 		lineNumbers: true,
 		tabMode: 'shift',
 		indentUnit: 4,

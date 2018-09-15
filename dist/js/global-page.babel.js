@@ -1,22 +1,34 @@
 // Options JavaScript
-import less from 'less';
 import $ from 'jquery';
+import less from 'less';
 import CoffeeScript from 'coffeescript';
+import 'chosen-js';
+import 'chosen-js/chosen.css';
+import '../css/options-styles.less';
 
-let CodeMirror = wp.CodeMirror;
+const { CodeEditor } = wp.components;
+const { apiFetch } = wp;
+
+console.log( CodeEditor );
+// let CodeMirror = wp.CodeMirror;
 
 if ( CodeMirror ) {
-	CodeMirror.modeURL = _SnSOptions.root + 'vendor/codemirror/mode/%N/%N.js';
+	CodeMirror.modeURL = _SnSOptions.root + 'codemirror/mode/%N/%N.js';
+	console.log( 'true' );
+} else {
+	console.log( 'false' );
 }
 
 $( function() {
+	$( '#enqueue_scripts' ).chosen({ width: '300px' });
+
 	if ( ! CodeMirror ) {
 
 		// Temp bailout.
 		return;
 	}
-	let compiled, source,
-		theme = _SnSOptions.theme ? _SnSOptions.theme : 'default',
+	let compiled,
+		source,
 		lessMirror,
 		lessOutput,
 		errorLine,
@@ -30,33 +42,33 @@ $( function() {
 		lessMirrorConfig = {
 			gutters: [ 'note-gutter', 'CodeMirror-linenumbers' ],
 			mode: 'text/x-less',
-			indentWithTabs: true
+			indentWithTabs: true, viewportMargin: Infinity
 		},
 		coffeeMirrorConfig = {
-			mode: 'text/coffeescript'
+			mode: 'text/coffeescript', viewportMargin: Infinity
 		};
 
 	//CodeMirror.commands.save = saveLessMirror;
 
 	$( 'textarea.js' ).not( '#coffee_compiled' ).each( function() {
 		wp.codeEditor.initialize( this, $.extend({}, defaultSettings, {
-			codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'javascript' })
+			codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'javascript', viewportMargin: Infinity })
 		}) );
 	});
 
 	$( 'textarea.css' ).not( '#compiled' ).each( function() {
 		wp.codeEditor.initialize( this, $.extend({}, defaultSettings, {
-			codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'css' })
+			codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'css', viewportMargin: Infinity })
 		}) );
 	});
 
 
 	lessOutput = wp.codeEditor.initialize( 'compiled', $.extend({}, defaultSettings, {
-		codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'css', readOnly: true })
+		codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'css', readOnly: true, viewportMargin: Infinity })
 	}) ).codemirror;
 
 	coffeeOutput = wp.codeEditor.initialize( 'coffee_compiled', $.extend({}, defaultSettings, {
-		codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'javascript', readOnly: true })
+		codemirror: $.extend({}, defaultSettings.codemirror, { mode: 'javascript', readOnly: true, viewportMargin: Infinity })
 	}) ).codemirror;
 
 	$( 'textarea.less' ).each( function() {

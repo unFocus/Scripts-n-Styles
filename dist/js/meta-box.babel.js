@@ -1,12 +1,15 @@
  /* eslint-disable camelcase */
 import $ from 'jquery';
+import 'chosen-js';
+import 'chosen-js/chosen.css';
+import '../css/meta-box.less';
 
 let CodeMirror = wp.CodeMirror;
 
 if ( CodeMirror ) {
-	CodeMirror.modeURL = _SnSOptions.root + 'vendor/codemirror/mode/%N/%N.js';
+	CodeMirror.modeURL = _SnSOptions.root + 'codemirror/mode/%N/%N.js';
 }
-console.log( 'asdf' );
+
 $( function() {
 	if ( ! CodeMirror ) {
 
@@ -18,8 +21,7 @@ $( function() {
 		currentCodeMirror = [],
 		keys = [],
 		nonce = $( '#scripts_n_styles_noncename' ).val(),
-		defaultSettings = $.extend({}, wp.codeEditor.defaultSettings ),
-		theme = _SnSOptions.theme ? _SnSOptions.theme : 'default';
+		defaultSettings = $.extend({}, wp.codeEditor.defaultSettings );
 
 	// For CPTs that don't have an editor, prevent "tinyMCEPreInit is 'undefined'"
 	let initDatas = ( 'undefined' !== typeof tinyMCEPreInit && tinyMCEPreInit.mceInit ) ? tinyMCEPreInit.mceInit : false;

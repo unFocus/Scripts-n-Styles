@@ -5,19 +5,10 @@ import BrowserSync from 'browser-sync';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import postcss from 'gulp-postcss';
-import autoprefixer from 'autoprefixer';
-import cssnano from 'cssnano';
-import sourcemaps from 'gulp-sourcemaps';
-import gulpSass from 'gulp-sass';
-import nodeSass from 'node-sass';
-import gulpLess from 'gulp-less';
 import header from 'gulp-header';
 import footer from 'gulp-footer';
 import concat from 'gulp-concat';
 import uglify from 'gulp-uglify-es';
-
-// Use package's node-sass instead of gulp-sass bundled (out-of-date) version.
-gulpSass.compiler = nodeSass;
 
 // let uglify = uglifyES.default;
 
@@ -36,9 +27,32 @@ rules.push({
 		}
 	}
 });
+rules.push({
+	test: /\.css$/,
+	use: [ 'style-loader', 'css-loader' ]
+});
+rules.push({
+	test: /\.(jpe?g|png|ttf|eot|svg|woff(2)?)$/,
+	use: 'base64-inline-loader'
+});
+rules.push({
+	test: /\.less$/,
+	use: [ {
+		loader: 'style-loader'
+	}, {
+		loader: 'css-loader', options: {
+			sourceMap: true
+		}
+	}, {
+		loader: 'less-loader', options: {
+			sourceMap: true
+		}
+	} ]
+});
 
 let config = {
 	entry: {
+		'js/settings-page.min': [ './dist/js/settings-page.babel.js' ],
 		'js/global-page.min': [ './dist/js/global-page.babel.js' ],
 		'js/hoops-page.min': [ './dist/js/hoops-page.babel.js' ],
 		'js/meta-box.min': [ './dist/js/meta-box.babel.js' ],
@@ -65,6 +79,7 @@ let config = {
 };
 let devConfig = {
 	entry: {
+		'js/settings-page.min': [ ...devServer, './dist/js/settings-page.babel.js' ],
 		'js/global-page.min': [ ...devServer, './dist/js/global-page.babel.js' ],
 		'js/hoops-page.min': [ ...devServer, './dist/js/hoops-page.babel.js' ],
 		'js/meta-box.min': [ ...devServer, './dist/js/meta-box.babel.js' ],
@@ -74,7 +89,7 @@ let devConfig = {
 	context: config.context,
 	module: config.module,
 	mode: 'development',
-	devtool: 'cheap-module-eval-source-map',
+	devtool: 'eval',
 	plugins: [
 		...config.plugins,
 		new webpack.HotModuleReplacementPlugin()
@@ -113,20 +128,7 @@ function serve( done ) {
 
 function watch( done ) {
 	gulp.watch([ 'dist/**/*.php' ], reload );
-	gulp.watch( 'dist/css/**/*.less', less );
 	done();
-}
-
-function less() {
-	return gulp.src( 'dist/css/**/*.less', { base: '.' })
-		.pipe( sourcemaps.init() )
-		.pipe( gulpLess({
-			paths: [ path.join( __dirname, 'node_modules' ) ]
-		}) )
-		.pipe( postcss() )
-		.pipe( sourcemaps.write() )
-		.pipe( gulp.dest( '.' ) )
-		.pipe( server.stream() );
 }
 
 let dir = 'node_modules/codemirror/';
@@ -221,36 +223,50 @@ function copyCodeMirrorJS() {
 		.pipe( header( top ) )
 		.pipe( footer( bottom ) )
 		.pipe( uglify() )
-		.pipe( gulp.dest( 'dist/vendor/codemirror' ) );
+		.pipe( gulp.dest( 'dist/codemirror' ) );
 }
 function copyCodeMirrorModes() {
 	return gulp.src([
 		dir + 'mode/**/*.js'
 	], { base: './node_modules' })
 		.pipe( uglify() )
-		.pipe( gulp.dest( 'dist/vendor' ) );
+		.pipe( gulp.dest( 'dist' ) );
+}
+function copyCodeMirrorThemes() {
+	return gulp.src([
+		dir + 'theme/**/*.css'
+	], { base: './node_modules' })
+		.pipe( gulp.dest( 'dist' ) );
 }
 function copyCodeMirrorStandalone() {
 	return gulp.src([
 		dir + 'addon/runmode/runmode-standalone.js'
 	])
 		.pipe( uglify() )
-		.pipe( gulp.dest( 'dist/vendor/codemirror' ) );
+		.pipe( gulp.dest( 'dist/codemirror' ) );
 }
 function copyCodeMirrorCSS() {
 	return gulp.src([
-		dir + 'lib/**/*.css',
-		dir + 'mode/**/*.css',
-		dir + 'addon/**/*.css',
-		dir + 'theme/**/*.css'
+		dir + 'lib/codemirror.css',
+		dir + 'mode/tiddlywiki/tiddlywiki.css',
+		dir + 'mode/tiki/tiki.css',
+		dir + 'addon/hint/show-hint.css',
+		dir + 'addon/lint/lint.css',
+		dir + 'addon/dialog/dialog.css',
+		dir + 'addon/display/fullscreen.css',
+		dir + 'addon/fold/foldgutter.css',
+		dir + 'addon/merge/merge.css',
+		dir + 'addon/scroll/simplescrollbars.css',
+		dir + 'addon/search/matchesonscrollbar.css',
+		dir + 'addon/tern/tern.css'
 	], { base: './node_modules' })
 		.pipe( concat( 'codemirror.min.css' ) )
 		.pipe( postcss() )
-		.pipe( gulp.dest( 'dist/vendor/codemirror' ) );
+		.pipe( gulp.dest( 'dist/codemirror' ) );
 }
 
-const copyCodeMirror = gulp.series( copyCodeMirrorModes, copyCodeMirrorJS, copyCodeMirrorCSS, copyCodeMirrorStandalone );
-const build = gulp.series( compile, less );
+const copyCodeMirror = gulp.series( copyCodeMirrorModes, copyCodeMirrorJS, copyCodeMirrorCSS, copyCodeMirrorStandalone, copyCodeMirrorThemes );
+const build = gulp.series( compile );
 const buildFull = gulp.series( copyCodeMirror, build );
 const dev = gulp.series( build, serve, watch );
 
@@ -261,7 +277,7 @@ export {
 	copyCodeMirrorJS,
 	copyCodeMirrorCSS,
 	copyCodeMirrorStandalone,
-	less,
+	copyCodeMirrorThemes,
 	compile,
 	serve,
 	reload,

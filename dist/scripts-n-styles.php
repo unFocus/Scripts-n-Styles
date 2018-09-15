@@ -5,13 +5,13 @@
  * Description: Allows WordPress admin users the ability to add custom CSS and JavaScript directly to individual Post, Pages or custom post types.
  * Author: unFocus Projects
  * Author URI: http://www.unfocus.com/
- * Version: 4.0.0-alpha-2
+ * Version: 4.0.0-alpha-3
  * License: GPLv3 or later
  * Text Domain: scripts-n-styles
  *
  * @package   Scripts_N_Styles
  * @author    Kenneth Newman <username@example.com>
- * @copyright 2010 - 2017, Kenneth Newman
+ * @copyright 2010 - 2018, Kenneth Newman
  * @license   http://opensource.org/licenses/gpl-license.php GNU Public License
  * @link      http://www.unfocus.com/projects/scripts-n-styles/ Plugin URI
  * @link      http://www.unfocus.com/ Author URI
@@ -26,7 +26,7 @@
 
 /*
 The Scripts n Styles WordPress Plugin
-Copyright (c) 2010-2017  Kenneth Newman  <http://www.unfocus.com/>
+Copyright (c) 2010-2018  Kenneth Newman  <http://www.unfocus.com/>
 Copyright (c) 2012  Kevin Newman  <http://www.unfocus.com/>
 Copyright (c) 2012-2013  adcSTUDIO LLC <http://www.adcstudio.com/>
 
@@ -64,7 +64,7 @@ This file incorporates work covered by other licenses and permissions.
  * not deal with granting any capabilities.
  */
 
-if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) :
+if ( version_compare( PHP_VERSION, '5.6', '>=' ) ) :
 	/**
 	 * This utility function is location specific.
 	 * Use in places where __FILE__ would otherwise be used.
@@ -80,7 +80,7 @@ else :
 	function sns_disable_message() {
 		?>
 		<div class="notice notice-success is-dismissible"><p>
-		<?php esc_html_e( 'Sorry, Scripts n Styles doesn\'t work with PHP versions below 5.4. Please contact your host.', 'scripts-n-styles' ); ?>
+		<?php esc_html_e( 'Sorry, Scripts n Styles doesn\'t work with PHP versions below 5.6. Please contact your host.', 'scripts-n-styles' ); ?>
 		</p></div>
 		<?php
 	}

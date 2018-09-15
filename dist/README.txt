@@ -1,8 +1,9 @@
 === Scripts n Styles ===
 Contributors: WraithKenny, CaptainN
 Tags: admin, CSS, javascript, code, custom, Style
-Requires at least: 4.7.2
-Tested up to: 4.7.3
+Requires at least: 5.0.0
+Tested up to: 5.0.0
+Requires PHP: 5.6
 Stable tag: 3.4.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -27,7 +28,7 @@ Because only well trusted users should ever be allowed to insert JavaScript dire
 
 = Contact: =
 
-You'll have better luck contacting the other if you try me on [Twitter](http://twitter.com/WraithKenny) and [Github](https://github.com/unFocus/Scripts-n-Styles/issues). If that fails, I have an [open thread](http://wordpress.org/support/topic/contacting-scripts-n-styles-author "Contacting Scripts n Styles' author") on the support forums that will trigger an email.
+You'll have better luck contacting the other if you try me on [Twitter](http://twitter.com/WraithKenny1) and [Github](https://github.com/unFocus/Scripts-n-Styles/issues). If that fails, I have an [open thread](http://wordpress.org/support/topic/contacting-scripts-n-styles-author "Contacting Scripts n Styles' author") on the support forums that will trigger an email.
 
 == Installation ==
 

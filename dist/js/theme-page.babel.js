@@ -1,20 +1,20 @@
 // Options JavaScript
-import less from 'less';
 import $ from 'jquery';
+import less from 'less';
+import '../css/options-styles.less';
 import postcss from 'postcss';
 import autoprefixer from 'autoprefixer';
 
 let CodeMirror = wp.CodeMirror;
 
 if ( CodeMirror ) {
-	CodeMirror.modeURL = _SnSOptions.root + 'vendor/codemirror/mode/%N/%N.js';
+	CodeMirror.modeURL = _SnSOptions.root + 'codemirror/mode/%N/%N.js';
 }
 
 $( function() {
 
 	let collection = [],
 		context = '#less_area',
-		theme = _SnSOptions.theme ? _SnSOptions.theme : 'default',
 		defaultSettings = $.extend({}, wp.codeEditor.defaultSettings ),
 		timeout = _SnSOptions.timeout || 1000,
 		loaded = false,
@@ -40,7 +40,6 @@ $( function() {
 		gutters: [ 'note-gutter', 'CodeMirror-linenumbers' ],
 		lineNumbers: true,
 		mode: 'text/x-less',
-		theme: theme,
 		indentWithTabs: true,
 		tabSize: 4,
 		indentUnit: 4
@@ -176,7 +175,7 @@ $( function() {
 	function createCSSEditor() {
 		return CodeMirror.fromTextArea(
 			$css.get( 0 ),
-			{ lineNumbers: true, mode: 'css', theme: theme, indentWithTabs: true, tabSize: 4, indentUnit: 4 }
+			{ lineNumbers: true, mode: 'css', indentWithTabs: true, tabSize: 4, indentUnit: 4 }
 		);
 	}
 	function compile() {
