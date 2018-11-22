@@ -1,50 +1,46 @@
 version: '3'
+
 services:
-  wordpress:
-    container_name: wordpress
-    image: wordpress:php7.1
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - database
-    environment:
-      WORDPRESS_DB_HOST: database:3306
-      WORDPRESS_DB_PASSWORD: wp
-      WORDPRESS_DEBUG: 1
-    volumes:
-      - ./html/:/var/www/html/
-      - ./dist/:/var/www/html/wp-content/plugins/scripts-n-styles/
-    networks:
-      - network
-  database:
-    container_name: database
+
+  mysql:
     image: mariadb
     restart: always
     ports:
-      - "3306:3306"
+      - 3306:3306
     volumes:
       - ./initdb:/docker-entrypoint-initdb.d
-      - data:/var/lib/mysql
+      - database:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: wp
-    networks:
-      - network
-  phpmyadmin:
-    container_name: phpmyadmin
+      MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+
+  wordpress:
+    image: wordpress:$WP_IMAGE_VERSION
     depends_on:
-      - database
+      - mysql
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      WORDPRESS_DB_PASSWORD: $DB_PASSWORD
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_DEBUG_DISPLAY', false );
+        define( 'WP_DEBUG_LOG', true );
+        define( 'SAVEQUERIES', true );
+    volumes:
+      - ./html/:/var/www/html/
+      - ./dist/:/var/www/html/wp-content/plugins/$PLUGIN_SLUG/
+
+  phpmyadmin:
     image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
     restart: always
     ports:
       - 8080:80
     environment:
-      PMA_HOST: database
-      MYSQL_ROOT_PASSWORD: wp
-    networks:
-      - network
-networks:
-  network:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+
 volumes:
-  data:
+  database:
