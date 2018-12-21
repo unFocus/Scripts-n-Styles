@@ -28,11 +28,7 @@
 
 	<!-- Include the WordPress ruleset, with exclusions. -->
 	<rule ref="WordPress">
-		<!--
-		<exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact" />
-		<exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" />
-		<exclude name="PEAR.Functions.FunctionCallSignature.Indent" />
-		-->
+		<exclude name="PEAR.Functions.FunctionCallSignature"/>
 	</rule>
 
 	<!-- Verify that the text_domain is set to the desired text-domain.
@@ -56,11 +52,11 @@
 		version  as set in the "Requires at least" tag in the readme.txt file. -->
 	<rule ref="WordPress.WP.DeprecatedFunctions">
 		<properties>
-			<property name="minimum_supported_version" value="4.9" />
+			<property name="minimum_supported_version" value="5.0" />
 		</properties>
 	</rule>
 
 	<!-- Include sniffs for PHP cross-version compatibility. -->
-	<config name="testVersion" value="5.4-7.2"/>
+	<config name="testVersion" value="7.2-"/>
 	<rule ref="PHPCompatibility"/>
 </ruleset>

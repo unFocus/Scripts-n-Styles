@@ -127,9 +127,10 @@ function register_scripts() {
 	$js = $dir . 'js/';
 	wp_register_script( 'sns-settings-page', $js . 'settings-page.min.js', [], VERSION, true );
 	wp_register_script( 'sns-global-page', $js . 'global-page.min.js', [], VERSION, true );
-	wp_register_script( 'sns-theme-page', $js . 'theme-page.min.js', [], VERSION, true );
-	wp_register_script( 'sns-hoops-page', $js . 'hoops-page.min.js', [], VERSION, true );
-	wp_register_script( 'sns-meta-box', $js . 'meta-box.min.js', [ 'editor', 'jquery-ui-tabs' ], VERSION, true );
+	wp_register_script( 'sns-theme-page', $js . 'theme-page.min.js', [ 'code-editor' ], VERSION, true );
+	wp_register_script( 'sns-hoops-page', $js . 'hoops-page.min.js', [ 'code-editor' ], VERSION, true );
+	wp_register_script( 'sns-meta-box', $js . 'meta-box.min.js', [ 'editor', 'jquery-ui-tabs', 'chosen', 'code-editor' ], VERSION, true );
+	wp_register_script( 'sns-rest', $js . 'rest.min.js', [ 'wp-api', 'code-editor' ], VERSION, true );
 
 	// Use a correctly bundled version of CodeMirror.
 	wp_deregister_script( 'wp-codemirror' );

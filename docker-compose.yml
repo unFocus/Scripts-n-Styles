@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 services:
 
@@ -14,7 +14,7 @@ services:
       MYSQL_ROOT_PASSWORD: $DB_PASSWORD
 
   wordpress:
-    image: wordpress:$WP_IMAGE_VERSION
+    image: wordpress
     depends_on:
       - mysql
     restart: always
@@ -29,7 +29,7 @@ services:
         define( 'SAVEQUERIES', true );
     volumes:
       - ./html/:/var/www/html/
-      - ./dist/:/var/www/html/wp-content/plugins/$PLUGIN_SLUG/
+      - ./dist/:/var/www/html/wp-content/plugins/scripts-n-styles/
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin

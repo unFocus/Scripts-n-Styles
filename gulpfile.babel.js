@@ -9,6 +9,7 @@ import header from 'gulp-header';
 import footer from 'gulp-footer';
 import concat from 'gulp-concat';
 import uglify from 'gulp-uglify-es';
+import VueLoaderPlugin from 'vue-loader/lib/plugin';
 
 // let uglify = uglifyES.default;
 
@@ -16,9 +17,14 @@ import uglify from 'gulp-uglify-es';
 const devServer = [ 'webpack/hot/dev-server', 'webpack-hot-middleware/client?reload=true' ];
 
 let rules = [];
+
+rules.push({
+	test: /\.vue$/,
+	loader: 'vue-loader'
+});
+
 rules.push({
 	test: /\.babel.js$/,
-
 	exclude: /(node_modules|bower_components)/,
 	use: {
 		loader: 'babel-loader',
@@ -27,27 +33,36 @@ rules.push({
 		}
 	}
 });
+
 rules.push({
 	test: /\.css$/,
-	use: [ 'style-loader', 'css-loader' ]
+	use: [
+		'vue-style-loader',
+		'css-loader'
+	]
 });
+
 rules.push({
 	test: /\.(jpe?g|png|ttf|eot|svg|woff(2)?)$/,
 	use: 'base64-inline-loader'
 });
+
 rules.push({
 	test: /\.less$/,
-	use: [ {
-		loader: 'style-loader'
-	}, {
-		loader: 'css-loader', options: {
-			sourceMap: true
-		}
-	}, {
-		loader: 'less-loader', options: {
-			sourceMap: true
-		}
-	} ]
+	use: [
+		'vue-style-loader',
+		'css-loader',
+		'less-loader'
+	]
+});
+
+rules.push({
+	test: /\.scss$/,
+	use: [
+		'vue-style-loader',
+		'css-loader',
+		'sass-loader'
+	]
 });
 
 let config = {
@@ -56,7 +71,8 @@ let config = {
 		'js/global-page.min': [ './dist/js/global-page.babel.js' ],
 		'js/hoops-page.min': [ './dist/js/hoops-page.babel.js' ],
 		'js/meta-box.min': [ './dist/js/meta-box.babel.js' ],
-		'js/theme-page.min': [ './dist/js/theme-page.babel.js' ]
+		'js/theme-page.min': [ './dist/js/theme-page.babel.js' ],
+		'js/rest.min': [ './dist/js/rest.babel.js' ]
 	},
 	output: {
 		filename: '[name].js',
@@ -67,13 +83,20 @@ let config = {
 	module: {
 		rules: rules
 	},
+	resolve: {
+		extensions: [ '*', '.js', '.vue', '.json' ]
+	},
+	externals: {
+		wpjquery: 'jQuery'
+	},
 	plugins: [
 		new webpack.ProvidePlugin({
 			$: 'jquery',
 			jQuery: 'jquery',
-			'window.jQuery': 'jquery',
-			'window.$': 'jquery'
-		})
+			'window.jQuery': 'wpjquery',
+			'window.$': 'wpjquery'
+		}),
+		new VueLoaderPlugin()
 	],
 	mode: 'production'
 };
@@ -83,10 +106,13 @@ let devConfig = {
 		'js/global-page.min': [ ...devServer, './dist/js/global-page.babel.js' ],
 		'js/hoops-page.min': [ ...devServer, './dist/js/hoops-page.babel.js' ],
 		'js/meta-box.min': [ ...devServer, './dist/js/meta-box.babel.js' ],
-		'js/theme-page.min': [ ...devServer, './dist/js/theme-page.babel.js' ]
+		'js/theme-page.min': [ ...devServer, './dist/js/theme-page.babel.js' ],
+		'js/rest.min': [ ...devServer, './dist/js/rest.babel.js' ]
 	},
 	output: config.output,
 	context: config.context,
+	externals: config.externals,
+	resolve: config.resolve,
 	module: config.module,
 	mode: 'development',
 	devtool: 'eval',

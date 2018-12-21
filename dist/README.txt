@@ -2,8 +2,8 @@
 Contributors: WraithKenny, CaptainN
 Tags: admin, CSS, javascript, code, custom, Style
 Requires at least: 5.0.0
-Tested up to: 5.0.0
-Requires PHP: 5.6
+Tested up to: 5.0.2
+Requires PHP: 7.2
 Stable tag: 3.4.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html

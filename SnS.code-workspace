@@ -1,0 +1,30 @@
+{
+	"folders": [
+		{
+			"path": ".",
+			"name": "Root"
+		},
+		{
+			"path": "dist",
+			"name": "Plugin"
+		}
+	],
+	"settings": {
+		"editor.rulers": [
+			85
+		],
+		"search.exclude": {
+			"**/node_modules": true,
+			"**/bower_components": true,
+			"**/svn/*": true
+		},
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/svn/*": true
+		}
+	}
+}

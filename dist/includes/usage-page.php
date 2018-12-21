@@ -69,7 +69,7 @@ add_action( 'admin_menu', function() {
 					<p><?php esc_html_e( 'The following table shows content that utilizes Scripts n Styles.', 'scripts-n-styles' ); ?></p>
 				</div>
 				<?php
-				require_once( 'class-list-usage.php' );
+				require_once 'class-list-usage.php';
 				$usage_table = new List_Usage();
 				$usage_table->prepare_items();
 				$usage_table->display();

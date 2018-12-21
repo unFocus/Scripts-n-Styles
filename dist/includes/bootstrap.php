@@ -17,7 +17,7 @@ const NONCE_NAME      = 'scripts_n_styles_noncename';
 
 require_once __DIR__ . '/main.php';
 require_once __DIR__ . '/utility.php';
-
+require_once __DIR__ . '/rest.php';
 
 if ( is_admin() && ! ( defined( 'DISALLOW_UNFILTERED_HTML' ) && DISALLOW_UNFILTERED_HTML ) ) {
 	/*
@@ -35,4 +35,5 @@ if ( is_admin() && ! ( defined( 'DISALLOW_UNFILTERED_HTML' ) && DISALLOW_UNFILTE
 	require_once __DIR__ . '/theme-page.php';
 	require_once __DIR__ . '/ajax.php';
 	require_once __DIR__ . '/form.php';
+	require_once __DIR__ . '/rest-page.php';
 }

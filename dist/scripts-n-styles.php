@@ -6,6 +6,7 @@
  * Author: unFocus Projects
  * Author URI: http://www.unfocus.com/
  * Version: 4.0.0-alpha-3
+ * Requires PHP: 7.2
  * License: GPLv3 or later
  * Text Domain: scripts-n-styles
  *
@@ -64,7 +65,7 @@ This file incorporates work covered by other licenses and permissions.
  * not deal with granting any capabilities.
  */
 
-if ( version_compare( PHP_VERSION, '5.6', '>=' ) ) :
+if ( version_compare( PHP_VERSION, '7.2', '>=' ) ) :
 	/**
 	 * This utility function is location specific.
 	 * Use in places where __FILE__ would otherwise be used.
@@ -84,6 +85,6 @@ else :
 		</p></div>
 		<?php
 	}
-	add_action( 'admin_notices', 'SnS_disable_message' );
+	add_action( 'admin_notices', 'sns_disable_message' );
 
 endif;
