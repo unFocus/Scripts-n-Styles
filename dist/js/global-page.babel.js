@@ -6,17 +6,10 @@ import 'chosen-js';
 import 'chosen-js/chosen.css';
 import '../css/options-styles.less';
 
-const { CodeEditor } = wp.components;
-const { apiFetch } = wp;
-
-console.log( CodeEditor );
-// let CodeMirror = wp.CodeMirror;
+const { CodeEditor, CodeMirror, apiFetch } = wp;
 
 if ( CodeMirror ) {
 	CodeMirror.modeURL = _SnSOptions.root + 'codemirror/mode/%N/%N.js';
-	console.log( 'true' );
-} else {
-	console.log( 'false' );
 }
 
 $( function() {
