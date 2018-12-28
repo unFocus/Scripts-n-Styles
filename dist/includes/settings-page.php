@@ -20,11 +20,11 @@ add_action( 'admin_menu', function() {
 		__( 'Settings', 'scripts-n-styles' ),
 		'unfiltered_html',
 		ADMIN_MENU_SLUG . '_settings',
-		'\unFocus\SnS\page'
+		__NAMESPACE__ . '\page'
 	);
 
-	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
-	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
+	add_action( "load-$hook_suffix", __NAMESPACE__ . '\help' );
+	add_action( "load-$hook_suffix", __NAMESPACE__ . '\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
 		wp_enqueue_code_editor( [ 'type' => 'php' ] );
 		wp_enqueue_script( 'sns-settings-page' );
@@ -82,7 +82,7 @@ add_action( 'admin_menu', function() {
 		add_settings_field(
 			'cm_theme',
 			__( '<strong>Theme</strong>: ', 'scripts-n-styles' ),
-			'\unFocus\SnS\radio',
+			__NAMESPACE__ . '\radio',
 			ADMIN_MENU_SLUG,
 			'demo',
 			[
@@ -154,7 +154,7 @@ add_action( 'admin_menu', function() {
 		add_settings_field(
 			'delete_data_uninstall',
 			__( '<strong>Delete Data When Uninstalling</strong>: ', 'scripts-n-styles' ),
-			'\unFocus\SnS\radio',
+			__NAMESPACE__ . '\radio',
 			ADMIN_MENU_SLUG,
 			'settings',
 			[

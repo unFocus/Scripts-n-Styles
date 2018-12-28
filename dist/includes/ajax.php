@@ -52,6 +52,28 @@ add_action( 'wp_ajax_sns_update_tab', function () {
 } );
 
 // TinyMCE requests a css file.
+add_action( 'wp_ajax_nopriv_sns_tinymce_styles', function () {
+	if ( empty( $_REQUEST['post_id'] ) ) {
+		exit( 'Bad post ID.' );
+	}
+	$post_id = absint( $_REQUEST['post_id'] );
+
+	$options = get_option( 'SnS_options' );
+	$sns     = get_post_meta( $post_id, '_SnS', true );
+	$styles  = isset( $sns['styles'] ) ? $sns['styles'] : [];
+
+	header( 'Content-Type: text/css; charset=UTF-8' );
+
+	if ( ! empty( $options['styles'] ) ) {
+		echo $options['styles']; // WPCS: XSS OK.
+	}
+
+	if ( ! empty( $styles['styles'] ) ) {
+		echo $styles['styles']; // WPCS: XSS OK.
+	}
+
+	exit();
+} );
 add_action( 'wp_ajax_sns_tinymce_styles', function () {
 	check_ajax_referer( 'sns_tinymce_styles' );
 

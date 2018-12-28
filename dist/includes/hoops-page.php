@@ -22,11 +22,11 @@ add_action( 'admin_menu', function() {
 		__( 'Hoops', 'scripts-n-styles' ),
 		'unfiltered_html',
 		ADMIN_MENU_SLUG . '_hoops',
-		'\unFocus\SnS\page'
+		__NAMESPACE__ . '\page'
 	);
 
-	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
-	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
+	add_action( "load-$hook_suffix", __NAMESPACE__ . '\help' );
+	add_action( "load-$hook_suffix", __NAMESPACE__ . '\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
 		wp_enqueue_code_editor( [ 'type' => 'html' ] );
 		wp_enqueue_script( 'sns-hoops-page' );

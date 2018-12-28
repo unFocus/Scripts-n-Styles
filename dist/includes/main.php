@@ -57,8 +57,8 @@ function theme_css() {
 	echo $compiled; // WPCS: XSS OK.
 	die();
 }
-add_action( 'wp_ajax_sns_theme_css', '\unFocus\SnS\theme_css' );
-add_action( 'wp_ajax_nopriv_sns_theme_css', '\unFocus\SnS\theme_css' );
+add_action( 'wp_ajax_sns_theme_css', __NAMESPACE__ . '\theme_css' );
+add_action( 'wp_ajax_nopriv_sns_theme_css', __NAMESPACE__ . '\theme_css' );
 
 /**
  * The Hoops shortcode
@@ -94,8 +94,8 @@ function hoops_shortcode( $atts, $content = null, $tag ) {
 	return $output;
 }
 add_action( 'plugins_loaded', function() {
-	add_shortcode( 'sns_shortcode', '\unFocus\SnS\hoops_shortcode' );
-	add_shortcode( 'hoops', '\unFocus\SnS\hoops_shortcode' );
+	add_shortcode( 'sns_shortcode', __NAMESPACE__ . '\hoops_shortcode' );
+	add_shortcode( 'hoops', __NAMESPACE__ . '\hoops_shortcode' );
 } );
 
 /**
@@ -114,8 +114,8 @@ function legacy_scripts() {
 	wp_register_script( 'html5shiv', $vendor . 'html5shiv.js', [], '3.7.3' );
 	wp_register_script( 'html5shiv-printshiv', $vendor . 'html5shiv-printshiv.js', [], '3.7.3' );
 }
-add_action( 'wp_enqueue_scripts', '\unFocus\SnS\legacy_scripts' );
-add_action( 'admin_enqueue_scripts', '\unFocus\SnS\legacy_scripts' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\legacy_scripts' );
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\legacy_scripts' );
 
 
 /**
@@ -150,8 +150,8 @@ function register_scripts() {
 		wp_enqueue_style( 'sns-codemirror-theme', $dir . 'codemirror/theme/' . $theme . '.css', [], '5.39.2' );
 	} );
 }
-add_action( 'wp_enqueue_scripts', '\unFocus\SnS\register_scripts' );
-add_action( 'admin_enqueue_scripts', '\unFocus\SnS\register_scripts' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_scripts' );
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\register_scripts' );
 
 /**
  * Theme Action: 'wp_head()'
@@ -193,22 +193,14 @@ add_action( 'wp_footer', function() {
 	// Global output.
 	$options = get_option( 'SnS_options' );
 	if ( ! empty( $options ) && ! empty( $options['scripts'] ) ) {
-		?>
-		<script type="text/javascript" id="sns_global_scripts">
-		<?php
+		echo '<script type="text/javascript" id="sns_global_scripts">';
 		echo $options['scripts']; // WPCS: XSS OK.
-		?>
-		</script>
-		<?php
+		echo '</script>';
 	}
 	if ( ! empty( $options ) && ! empty( $options['coffee_compiled'] ) ) {
-		?>
-		<script type="text/javascript" id="sns_global_coffee_compiled">
-		<?php
+		echo '<script type="text/javascript" id="sns_global_coffee_compiled">';
 		echo $options['coffee_compiled']; // WPCS: XSS OK.
-		?>
-		</script>
-		<?php
+		echo '</script>';
 	}
 
 	if ( ! is_singular() ) {
@@ -219,13 +211,9 @@ add_action( 'wp_footer', function() {
 	$sns     = get_post_meta( $post->ID, '_SnS', true );
 	$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : [];
 	if ( ! empty( $scripts ) && ! empty( $scripts['scripts'] ) ) {
-		?>
-		<script type="text/javascript" id="sns_scripts">
-		<?php
+		echo '<script type="text/javascript" id="sns_scripts">';
 		echo $scripts['scripts']; // WPCS: XSS OK.
-		?>
-		</script>
-		<?php
+		echo '</script>';
 	}
 }, 11 );
 
@@ -237,13 +225,9 @@ add_action( 'wp_head', function() {
 	// Global ouput.
 	$options = get_option( 'SnS_options' );
 	if ( ! empty( $options ) && ! empty( $options['scripts_in_head'] ) ) {
-		?>
-		<script type="text/javascript" id="sns_global_scripts_in_head">
-		<?php
+		echo '<script type="text/javascript" id="sns_global_scripts_in_head">';
 		echo $options['scripts_in_head']; // WPCS: XSS OK.
-		?>
-		</script>
-		<?php
+		echo '</script>';
 	}
 
 	if ( ! is_singular() ) {
@@ -254,13 +238,9 @@ add_action( 'wp_head', function() {
 	$sns     = get_post_meta( $post->ID, '_SnS', true );
 	$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : [];
 	if ( ! empty( $scripts ) && ! empty( $scripts['scripts_in_head'] ) ) {
-		?>
-		<script type="text/javascript" id="sns_scripts_in_head">
-		<?php
+		echo '<script type="text/javascript" id="sns_scripts_in_head">';
 		echo $scripts['scripts_in_head']; // WPCS: XSS OK.
-		?>
-		</script>
-		<?php
+		echo '</script>';
 	}
 }, 11 );
 

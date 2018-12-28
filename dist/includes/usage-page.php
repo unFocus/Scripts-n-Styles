@@ -20,10 +20,10 @@ add_action( 'admin_menu', function() {
 		__( 'Usage', 'scripts-n-styles' ),
 		'unfiltered_html',
 		ADMIN_MENU_SLUG . '_usage',
-		'\unFocus\SnS\page'
+		__NAMESPACE__ . '\page'
 	);
 
-	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
+	add_action( "load-$hook_suffix", __NAMESPACE__ . '\help' );
 	add_action( "admin_print_styles-$hook_suffix", function() {
 		wp_enqueue_style( 'sns-options' );
 	} );

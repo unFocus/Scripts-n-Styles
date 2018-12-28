@@ -22,11 +22,11 @@ add_action( 'admin_menu', function() {
 		__( 'Global', 'scripts-n-styles' ),
 		'unfiltered_html',
 		ADMIN_MENU_SLUG,
-		'\unFocus\SnS\page'
+		__NAMESPACE__ . '\page'
 	);
 
-	add_action( "load-$hook_suffix", '\unFocus\SnS\help' );
-	add_action( "load-$hook_suffix", '\unFocus\SnS\take_action', 49 );
+	add_action( "load-$hook_suffix", __NAMESPACE__ . '\help' );
+	add_action( "load-$hook_suffix", __NAMESPACE__ . '\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
 		wp_enqueue_code_editor( [ 'type' => 'php' ] );
 		wp_enqueue_script( 'sns-global-page' );
@@ -121,7 +121,7 @@ add_action( 'admin_menu', function() {
 		add_settings_field(
 			'styles',
 			__( '<strong>CSS Styles:</strong> ', 'scripts-n-styles' ),
-			'\unFocus\SnS\textarea',
+			__NAMESPACE__ . '\textarea',
 			ADMIN_MENU_SLUG,
 			'global_styles',
 			[
@@ -136,7 +136,7 @@ add_action( 'admin_menu', function() {
 		add_settings_field(
 			'scripts_in_head',
 			__( '<strong>Scripts</strong><br />(for the <code>head</code> element): ', 'scripts-n-styles' ),
-			'\unFocus\SnS\textarea',
+			__NAMESPACE__ . '\textarea',
 			ADMIN_MENU_SLUG,
 			'global_scripts',
 			[
@@ -151,7 +151,7 @@ add_action( 'admin_menu', function() {
 		add_settings_field(
 			'scripts',
 			wp_kses_post( __( '<strong>Scripts</strong><br />(end of the <code>body</code> tag):', 'scripts-n-styles' ) ),
-			'\unFocus\SnS\textarea',
+			__NAMESPACE__ . '\textarea',
 			ADMIN_MENU_SLUG,
 			'global_scripts',
 			[
@@ -166,7 +166,7 @@ add_action( 'admin_menu', function() {
 		add_settings_field(
 			'enqueue_scripts',
 			__( '<strong>Enqueue Scripts</strong>: ', 'scripts-n-styles' ),
-			'\unFocus\SnS\select',
+			__NAMESPACE__ . '\select',
 			ADMIN_MENU_SLUG,
 			'global_scripts',
 			[
