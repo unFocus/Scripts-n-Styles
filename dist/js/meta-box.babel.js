@@ -424,7 +424,6 @@ $( function() {
 			if ( $( this ).hasClass( 'js' ) ) {
 				settings = {
 					mode: 'text/javascript',
-					theme: theme,
 					lineNumbers: true,
 					tabMode: 'shift',
 					indentUnit: 4,
@@ -433,7 +432,6 @@ $( function() {
 			} else if ( $( this ).hasClass( 'css' ) ) {
 				settings = {
 					mode: 'text/css',
-					theme: theme,
 					lineNumbers: true,
 					tabMode: 'shift',
 					indentUnit: 4,
@@ -442,7 +440,6 @@ $( function() {
 			} else if ( $( this ).hasClass( 'less' ) ) {
 				settings = {
 					mode: 'text/x-less',
-					theme: theme,
 					lineNumbers: true,
 					tabMode: 'shift',
 					indentUnit: 4,
@@ -451,7 +448,6 @@ $( function() {
 			} else if ( $( this ).hasClass( 'htmlmixed' ) ) {
 				settings = {
 					mode: 'text/html',
-					theme: theme,
 					lineNumbers: true,
 					tabMode: 'shift',
 					indentUnit: 4,
@@ -601,7 +597,6 @@ $( function() {
 				let codemirrorNew = $( '.codemirror-new' ).removeClass( 'codemirror-new' ).addClass( 'codemirror' ).get( 0 );
 				currentCodeMirror.push( CodeMirror.fromTextArea( codemirrorNew, {
 					mode: 'text/html',
-					theme: theme,
 					lineNumbers: true,
 					tabMode: 'shift',
 					indentUnit: 4,
