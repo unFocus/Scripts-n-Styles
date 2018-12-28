@@ -142,9 +142,9 @@ add_action( 'current_screen', function() {
 							<p class="sns-mce-type">
 								<label for="SnS_classes_mce_type"><?php esc_html_e( 'Type:', 'scripts-n-styles' ); ?></label>
 								<select name="SnS_classes_mce_type" id="SnS_classes_mce_type" style="width: 80px;">
-									<option value="inline"><?php esc_html_x( 'Inline', 'css type', 'scripts-n-styles' ); ?></option>
-									<option value="block"><?php esc_html_x( 'Block', 'css type', 'scripts-n-styles' ); ?></option>
-									<option value="selector"><?php esc_html_x( 'Selector:', 'css type', 'scripts-n-styles' ); ?></option>
+									<option value="inline"><?php echo esc_html_x( 'Inline', 'css type', 'scripts-n-styles' ); ?></option>
+									<option value="block"><?php echo esc_html_x( 'Block', 'css type', 'scripts-n-styles' ); ?></option>
+									<option value="selector"><?php echo esc_html_x( 'Selector:', 'css type', 'scripts-n-styles' ); ?></option>
 								</select>
 							</p>
 							<p class="sns-mce-element">
@@ -241,81 +241,80 @@ add_action( 'current_screen', function() {
 			'high'
 		);
 
-		add_filter( 'contextual_help', '\unFocus\SnS\help' );
+		add_filter( 'contextual_help', __NAMESPACE__ . '\help' );
 
-		/**
-		 * Adds the "Format" dropdown.
-		 */
-		add_filter( 'mce_buttons_2', function( $buttons ) {
-			global $post;
-			$sns    = get_post_meta( $post->ID, '_SnS', true );
-			$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
+	} );
 
-			if ( ! empty( $styles['classes_mce'] ) ) {
-				array_unshift( $buttons, 'styleselect' );
+	/**
+	 * Adds the "Format" dropdown.
+	 */
+	add_filter( 'mce_buttons_2', function( $buttons ) {
+		global $post;
+		$sns    = get_post_meta( $post->ID, '_SnS', true );
+		$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
+
+		if ( ! empty( $styles['classes_mce'] ) ) {
+			array_unshift( $buttons, 'styleselect' );
+		}
+		return $buttons;
+	} );
+
+	/**
+	 * Populates the "Format" dropdown.
+	 */
+	add_filter( 'tiny_mce_before_init', function( $init ) {
+		global $post;
+		$sns    = get_post_meta( $post->ID, '_SnS', true );
+		$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
+
+		// Add div as a format option, should probably use a string replace thing here.
+		// Better yet, a setting for adding these. Postpone for now.
+		// $init['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div"; .
+		if ( ( ! empty( $styles['classes_body'] ) || ! empty( $styles['classes_post'] ) ) && ! isset( $init['body_class'] ) ) {
+			$init['body_class'] = '';
+		}
+
+		// Add body_class (and/or maybe post_class) values... somewhat problematic.
+		if ( ! empty( $styles['classes_body'] ) ) {
+			$init['body_class'] .= ' ' . $styles['classes_body'];
+		}
+		if ( ! empty( $styles['classes_post'] ) ) {
+			$init['body_class'] .= ' ' . $styles['classes_post'];
+		}
+
+		// In case Themes or plugins have added style_formats, not tested.
+		if ( isset( $init['style_formats'] ) ) {
+			$style_formats = json_decode( $init['style_formats'], true );
+		} else {
+			$style_formats = [];
+		}
+
+		if ( ! empty( $styles['classes_mce'] ) ) {
+			foreach ( $styles['classes_mce'] as $format ) {
+				$style_formats[] = $format;
 			}
+		}
 
-			return $buttons;
-		} );
+		if ( ! empty( $style_formats ) ) {
+			$init['style_formats'] = wp_json_encode( $style_formats );
+		}
 
-		/**
-		 * Populates the "Format" dropdown.
-		 */
-		add_filter( 'tiny_mce_before_init', function( $init ) {
-			global $post;
-			$sns    = get_post_meta( $post->ID, '_SnS', true );
-			$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
+		return $init;
+	} );
 
-			// Add div as a format option, should probably use a string replace thing here.
-			// Better yet, a setting for adding these. Postpone for now.
-			// $init['theme_advanced_blockformats'] = "p,address,pre,h1,h2,h3,h4,h5,h6,div"; .
-			if ( ( ! empty( $styles['classes_body'] ) || ! empty( $styles['classes_post'] ) ) && ! isset( $init['body_class'] ) ) {
-				$init['body_class'] = '';
-			}
+	/**
+	 * Admin Action: 'replace_editor'
+	 * Adds a styles sheet to TinyMCE via ajax that contains the current styles data.
+	 */
+	add_filter( 'replace_editor', function( $return ) {
+		$url = admin_url( 'admin-ajax.php' );
+		$url = wp_nonce_url( $url, 'sns_tinymce_styles' );
+		$url = add_query_arg( 'post_id', get_the_ID(), $url );
+		$url = add_query_arg( 'action', 'sns_tinymce_styles', $url );
+		add_theme_support( 'editor-styles' );
+		add_editor_style( $url );
 
-			// Add body_class (and/or maybe post_class) values... somewhat problematic.
-			if ( ! empty( $styles['classes_body'] ) ) {
-				$init['body_class'] .= ' ' . $styles['classes_body'];
-			}
-			if ( ! empty( $styles['classes_post'] ) ) {
-				$init['body_class'] .= ' ' . $styles['classes_post'];
-			}
-
-			// In case Themes or plugins have added style_formats, not tested.
-			if ( isset( $init['style_formats'] ) ) {
-				$style_formats = json_decode( $init['style_formats'], true );
-			} else {
-				$style_formats = [];
-			}
-
-			if ( ! empty( $styles['classes_mce'] ) ) {
-				foreach ( $styles['classes_mce'] as $format ) {
-					$style_formats[] = $format;
-				}
-			}
-
-			if ( ! empty( $style_formats ) ) {
-				$init['style_formats'] = wp_json_encode( $style_formats );
-			}
-
-			return $init;
-		} );
-
-		/**
-		 * Admin Action: 'mce_css'
-		 * Adds a styles sheet to TinyMCE via ajax that contains the current styles data.
-		 */
-		add_filter( 'mce_css', function( $mce_css ) {
-			global $post;
-			$url = admin_url( 'admin-ajax.php' );
-			$url = wp_nonce_url( $url, 'sns_tinymce_styles' );
-			$url = add_query_arg( 'post_id', $post->ID, $url );
-			$url = add_query_arg( 'action', 'sns_tinymce_styles', $url );
-
-			$mce_css .= ',' . $url;
-			return $mce_css;
-		} );
-
+		return $return;
 	} );
 
 	/**
