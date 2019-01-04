@@ -29,6 +29,7 @@ services:
         define( 'SAVEQUERIES', true );
     volumes:
       - ./html/:/var/www/html/
+      # - ../svn/trunk/:/var/www/html/wp-content/plugins/scripts-n-styles/
       - ./dist/:/var/www/html/wp-content/plugins/scripts-n-styles/
 
   phpmyadmin:

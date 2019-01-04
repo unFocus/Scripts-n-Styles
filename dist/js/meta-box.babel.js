@@ -19,14 +19,28 @@ $( function() {
 
 	let context = '#SnS_meta_box',
 		currentCodeMirror = [],
-		keys = [],
+		contentEditors = [],
+		gutenMCE = false,
 		nonce = $( '#scripts_n_styles_noncename' ).val(),
 		defaultSettings = $.extend({}, wp.codeEditor.defaultSettings );
 
+	if ( window.wpEditorL10n && wpEditorL10n.tinymce && wpEditorL10n.tinymce.settings ) {
+		gutenMCE = wpEditorL10n.tinymce.settings;
+	}
+
+	if ( gutenMCE ) {
+		console.log( 'yep' );
+	} else {
+		console.log( 'nope' );
+	}
+
 	// For CPTs that don't have an editor, prevent "tinyMCEPreInit is 'undefined'"
 	let initDatas = ( 'undefined' !== typeof tinyMCEPreInit && tinyMCEPreInit.mceInit ) ? tinyMCEPreInit.mceInit : false;
-	for ( let prop in initDatas ) {
-		keys.push( prop );
+
+	for ( let contentEditor in initDatas ) {
+
+		// contentEditors are tinyMCE instances, because there can be more than one.
+		contentEditors.push( contentEditor );
 	}
 
 	let mceBodyClass = getMCEBodyClasses();
@@ -52,6 +66,17 @@ $( function() {
 
 	refreshDeleteBtns();
 
+	if ( wp.data && wp.data.select ) {
+		let editPost = wp.data.select( 'core/edit-post' );
+		wp.data.subscribe( function() {
+			if ( ! editPost.isSavingMetaBoxes() ) {
+				return;
+			}
+			$( currentCodeMirror ).each( function() {
+				this.save();
+			});
+		});
+	}
 
 	$( '#sns-ajax-update-scripts' ).click( function( event ) {
 		event.preventDefault();
@@ -264,8 +289,13 @@ $( function() {
 	 */
 	function getMCEBodyClasses() {
 		var t = [],
-			a = [];
-		$( keys ).each( function( index, element ) {
+			a = [],
+			b = [],
+			c = [];
+		if ( gutenMCE.body_class ) {
+			b = gutenMCE.body_class.trim().split( ' ' );
+		}
+		$( contentEditors ).each( function( index, element ) {
 			var data = initDatas[element];
 			if ( data.body_class ) {
 				t = data.body_class.split( ' ' );
@@ -290,7 +320,8 @@ $( function() {
 
 			a[element] = t;
 		});
-		return a;
+		c = a.concat( b );
+		return c;
 	}
 
 	/*
@@ -471,104 +502,116 @@ $( function() {
 	 * Refresh after AJAX.
 	 */
 	function refreshDeleteBtns() {
-		$( keys ).each( function( index, key ) {
-			var initData = initDatas[key];
 
-			// responsible for clearing out Delete Buttons, and Adding new ones.
-			// initData should always contain the latest settings.
+		// responsible for clearing out Delete Buttons, and Adding new ones.
+		// initData should always contain the latest settings.
+		var formats = [];
+
+		$( contentEditors ).each( function( index, key ) {
+			var initData = initDatas[key];
 			if ( initData.style_formats && initData.style_formats.length ) {
-				$( '#delete-mce-dropdown-names .sns-ajax-delete-p' ).remove();
-				$( '#delete-mce-dropdown-names', context ).show();
-				let formats = initData.style_formats;
-				for ( let i = 0; i < formats.length; i++ ) {
-					let deleteBtn = {};
-					if ( formats[i].inline ) {
-						deleteBtn.element =  formats[i].inline;
-						deleteBtn.wrapper = '';
-					} else if ( formats[i].block ) {
-						deleteBtn.element =  formats[i].block;
-						if ( formats[i].wrapper ) {
-							deleteBtn.wrapper = ' (wrapper)';
-						} else {
-							deleteBtn.wrapper = '';
-						}
-					} else if ( formats[i].selector ) {
-						deleteBtn.element =  formats[i].selector;
-						deleteBtn.wrapper = '';
-					} else {
-						console.warn( 'ERROR!' );
-					}
-					deleteBtn.title = formats[i].title;
-					deleteBtn.classes = formats[i].classes;
-					$( '#instructions-mce-dropdown-names', context ).after(
-						'<p class="sns-ajax-delete-p"><a title="delete" class="sns-ajax-delete" id="' +
-						deleteBtn.title + '">X</a> "' +
-						deleteBtn.title + '" <code>&lt;' +
-						deleteBtn.element + ' class="' +
-						deleteBtn.classes + '"&gt;</code>' +
-						deleteBtn.wrapper + '</p>'
-					);
-				}
-			} else {
-				$( '#delete-mce-dropdown-names', context ).hide();
+				formats = initData.style_formats;
 			}
 		});
+		if ( gutenMCE.style_formats && gutenMCE.style_formats.length ) {
+			formats = gutenMCE.style_formats;
+		}
+
+		if ( ! formats.length ) {
+			$( '#delete-mce-dropdown-names', context ).hide();
+			return;
+		}
+
+		$( '#delete-mce-dropdown-names .sns-ajax-delete-p' ).remove();
+		$( '#delete-mce-dropdown-names', context ).show();
+
+		for ( let i = 0; i < formats.length; i++ ) {
+			let deleteBtn = {};
+			if ( formats[i].inline ) {
+				deleteBtn.element =  formats[i].inline;
+				deleteBtn.wrapper = '';
+			} else if ( formats[i].block ) {
+				deleteBtn.element =  formats[i].block;
+				if ( formats[i].wrapper ) {
+					deleteBtn.wrapper = ' (wrapper)';
+				} else {
+					deleteBtn.wrapper = '';
+				}
+			} else if ( formats[i].selector ) {
+				deleteBtn.element =  formats[i].selector;
+				deleteBtn.wrapper = '';
+			} else {
+				console.warn( 'ERROR!' );
+			}
+			deleteBtn.title = formats[i].title;
+			deleteBtn.classes = formats[i].classes;
+			$( '#instructions-mce-dropdown-names', context ).after(
+				'<p class="sns-ajax-delete-p"><a title="delete" class="sns-ajax-delete" id="' +
+				deleteBtn.title + '">X</a> "' +
+				deleteBtn.title + '" <code>&lt;' +
+				deleteBtn.element + ' class="' +
+				deleteBtn.classes + '"&gt;</code>' +
+				deleteBtn.wrapper + '</p>'
+			);
+		}
 	}
 	function refreshBodyClass( data ) {
-		$( keys ).each( function( index, key ) {
+		$( contentEditors ).each( function( index, key ) {
 			initDatas[key].body_class = mceBodyClass[key] + ' ' + data.classes_body + ' ' + data.classes_post;
 		});
 		refreshMCE();
 	}
 	function refreshStyleFormats( data ) {
-		$( keys ).each( function( index, key ) {
-			var initData = initDatas[key];
-
-			// error check
-			//console.log(data.classes_mce);
-			if ( 'undefined' === typeof data.classes_mce ) {
-				console.warn( data );
-
-				/*$( '.sns-ajax-loading' ).hide();
-				return;*/ // Don't block
-			} else if ( data.classes_mce.length && 'Empty' != data.classes_mce ) {
-				let style_formats = [];
-
-				for ( let i = 0; i < data.classes_mce.length; i++ ) { // loop returned classes_mce
-					let format = {};
-					format.title = data.classes_mce[i].title;
-
-					if ( data.classes_mce[i].inline ) {
-						format.inline = data.classes_mce[i].inline;
-					} else if ( data.classes_mce[i].block ) {
-						format.block = data.classes_mce[i].block;
-						if ( data.classes_mce[i].wrapper ) {
-							format.wrapper = true;
-						}
-					} else if ( data.classes_mce[i].selector ) {
-						format.selector = data.classes_mce[i].selector;
-					} else {
-						console.warn( 'dropdown format has bad type.' );
-					}
-
-					format.classes = data.classes_mce[i].classes;
-					style_formats.push( format );
-				}
-				initData.style_formats = style_formats;
-
-				if ( -1 == initData.toolbar2.indexOf( 'styleselect' ) ) {
-					let tempString = 'styleselect,';
-					initData.toolbar2 = tempString.concat( initData.toolbar2 );
-				}
-
-				$( '#delete-mce-dropdown-names', context ).show();
-			} else {
-				delete initData.style_formats;
-				initData.toolbar2 = initData.toolbar2.replace( 'styleselect,', '' );
-
-				$( '#delete-mce-dropdown-names', context ).hide();
-			}
+		var initData = false;
+		$( contentEditors ).each( function( index, key ) {
+			initData = initDatas[key];
 		});
+
+		// error check
+		//console.log(data.classes_mce);
+		if ( 'undefined' === typeof data.classes_mce ) {
+			console.warn( data );
+
+			/*$( '.sns-ajax-loading' ).hide();
+			return;*/ // Don't block
+		} else if ( data.classes_mce.length && 'Empty' != data.classes_mce ) {
+			let style_formats = [];
+
+			for ( let i = 0; i < data.classes_mce.length; i++ ) { // loop returned classes_mce
+				let format = {};
+				format.title = data.classes_mce[i].title;
+
+				if ( data.classes_mce[i].inline ) {
+					format.inline = data.classes_mce[i].inline;
+				} else if ( data.classes_mce[i].block ) {
+					format.block = data.classes_mce[i].block;
+					if ( data.classes_mce[i].wrapper ) {
+						format.wrapper = true;
+					}
+				} else if ( data.classes_mce[i].selector ) {
+					format.selector = data.classes_mce[i].selector;
+				} else {
+					console.warn( 'dropdown format has bad type.' );
+				}
+
+				format.classes = data.classes_mce[i].classes;
+				style_formats.push( format );
+			}
+			initData.style_formats = style_formats;
+
+			if ( -1 == initData.toolbar2.indexOf( 'styleselect' ) ) {
+				let tempString = 'styleselect,';
+				initData.toolbar2 = tempString.concat( initData.toolbar2 );
+			}
+
+			$( '#delete-mce-dropdown-names', context ).show();
+		} else {
+			delete initData.style_formats;
+			initData.toolbar2 = initData.toolbar2.replace( 'styleselect,', '' );
+
+			$( '#delete-mce-dropdown-names', context ).hide();
+		}
+
 		refreshDeleteBtns();
 		refreshMCE();
 	}
@@ -652,6 +695,9 @@ $( function() {
 		$( '.sns-ajax-loading' ).hide();
 	}
 	function refreshMCEhelper( ed ) {
+		if ( gutenMCE ) {
+			return;
+		}
 		ed.save();
 		ed.destroy();
 		ed.remove();
