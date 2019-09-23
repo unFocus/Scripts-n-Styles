@@ -2,24 +2,14 @@ version: '3.7'
 
 services:
 
-  mysql:
-    image: mariadb
-    restart: always
-    ports:
-      - 3306:3306
-    volumes:
-      - ./initdb:/docker-entrypoint-initdb.d
-      - database:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: $DB_PASSWORD
-
   wordpress:
     image: wordpress
     depends_on:
       - mysql
     restart: always
     ports:
-      - 80:80
+      - "80:80"
+      - "443:443"
     environment:
       WORDPRESS_DB_PASSWORD: $DB_PASSWORD
       WORDPRESS_DEBUG: 1
@@ -29,8 +19,24 @@ services:
         define( 'SAVEQUERIES', true );
     volumes:
       - ./html/:/var/www/html/
-      # - ../svn/trunk/:/var/www/html/wp-content/plugins/scripts-n-styles/
-      - ./dist/:/var/www/html/wp-content/plugins/scripts-n-styles/
+      # - ../svn/trunk/:/var/www/html/wp-content/plugins/${COMPOSE_PROJECT_NAME}/
+      - ./dist/:/var/www/html/wp-content/plugins/${COMPOSE_PROJECT_NAME}/
+      - ./ssl/localhost.crt:/etc/apache2/ssl/localhost.crt
+      - ./ssl/localhost.key:/etc/apache2/ssl/localhost.key
+      - ./ssl/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./ssl/ssl.load:/etc/apache2/mods-enabled/ssl.load
+
+  mysql:
+    image: mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+      - data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+      MYSQL_DATABASE: wordpress
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -44,4 +50,4 @@ services:
       MYSQL_ROOT_PASSWORD: $DB_PASSWORD
 
 volumes:
-  database:
+  data:

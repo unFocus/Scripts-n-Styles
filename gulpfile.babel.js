@@ -138,9 +138,13 @@ function compile( done ) {
 function serve( done ) {
 	server.init({
 
-		proxy: 'scriptsnstyles.test',
+		proxy: 'https://scriptsnstyles.test',
 		host: 'scriptsnstyles.test',
 		open: 'external',
+		https: {
+			key: './ssl/localhost.key',
+			cert: './ssl/localhost.crt'
+		},
 
 		middleware: [
 			webpackDevMiddleware( devCompiler, {

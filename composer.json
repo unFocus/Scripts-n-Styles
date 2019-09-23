@@ -5,5 +5,24 @@
 		"wp-coding-standards/wpcs": "*",
 		"dealerdirect/phpcodesniffer-composer-installer": "*",
 		"phpcompatibility/php-compatibility": "*"
-	}
+	},
+  "require": {
+    "composer/installers": "*",
+    "wpackagist-plugin/wordpress-seo": "*",
+    "wpackagist-plugin/classic-editor": "*",
+    "wpackagist-plugin/debug-bar": "*",
+    "wpackagist-plugin/gutenberg": "*"
+  },
+  "extra": {
+    "installer-paths": {
+      "html/wp-content/plugins/{$name}/": ["type:wordpress-plugin"],
+      "html/wp-content/themes/{$name}/": ["type:wordpress-theme"]
+    }
+  },
+  "repositories":[
+    {
+      "type":"composer",
+      "url":"https://wpackagist.org"
+    }
+  ]
 }
