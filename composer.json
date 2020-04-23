@@ -1,5 +1,5 @@
 {
-	"name": "unFocus/Scripts-n-Styles",
+	"name": "un-focus/scripts-n-styles",
 	"description": "Scripts n Styles development environment.",
 	"require-dev": {
 		"wp-coding-standards/wpcs": "*",
