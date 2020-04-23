@@ -10,3 +10,7 @@ node_modules
 /dist/js/**/*.min.js
 /dist/css/*.css
 .env
+
+/ssl/localhost.crt
+/ssl/localhost.csr
+/ssl/localhost.key
