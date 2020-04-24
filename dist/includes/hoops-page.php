@@ -59,7 +59,7 @@ add_action( 'admin_menu', function() {
 				}
 			}
 
-			// Add new (if not empty).
+			// Add new code (if not empty).
 			if ( ! empty( $new['code'] ) ) {
 				$name = empty( $new['name'] ) ? '' : $new['name'];
 
@@ -142,16 +142,16 @@ add_action( 'admin_menu', function() {
 					<h4><?php esc_html_e( 'Existing Codes:', 'scripts-n-styles' ); ?> </h4>
 					<div id="sns-shortcodes-wrap">
 						<?php if ( ! empty( $shortcodes ) ) { ?>
-						<?php foreach ( $shortcodes as $key => $value ) { ?>
+							<?php foreach ( $shortcodes as $key => $value ) { ?>
 
-						<div class="sns-less-ide" style="overflow: hidden">
-							<div class="widget sns-shortcodes"><div class="sns-collapsed inside">
-								<span class="sns-collapsed-btn"></span>
-								<p style="margin-bottom: 0;">[hoops name="<?php echo esc_attr( $key ); ?>"]</p>
-								<textarea class="code htmlmixed" data-sns-shortcode-key="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $meta_name ) . '[shortcodes][' . esc_attr( $key ) . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
-							</div></div>
-						</div>
-						<?php } ?>
+							<div class="sns-less-ide" style="overflow: hidden">
+								<div class="widget sns-shortcodes"><div class="sns-collapsed inside">
+									<span class="sns-collapsed-btn"></span>
+									<p style="margin-bottom: 0;">[hoops name="<?php echo esc_attr( $key ); ?>"]</p>
+									<textarea class="code htmlmixed" data-sns-shortcode-key="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $meta_name ) . '[shortcodes][' . esc_attr( $key ) . ']'; ?>" rows="5" cols="40" style="width: 98%;"><?php echo esc_textarea( $value ); ?></textarea>
+								</div></div>
+							</div>
+							<?php } ?>
 						<?php } ?>
 					</div>
 					<?php } ?>

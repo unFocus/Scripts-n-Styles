@@ -436,12 +436,12 @@ add_action( 'current_screen', function() {
 		if ( ! is_array( $o ) ) {
 			return [];
 		}
-		if ( empty( $_REQUEST[ $p . $i ] ) ) {
+		if ( empty( $_REQUEST[ $p . $i ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( isset( $o[ $i ] ) ) {
 				unset( $o[ $i ] );
 			}
 		} else {
-			$o[ $i ] = $_REQUEST[ $p . $i ];
+			$o[ $i ] = $_REQUEST[ $p . $i ]; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 		return $o;
 	}

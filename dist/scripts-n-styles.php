@@ -1,14 +1,6 @@
 <?php
 /**
- * Plugin Name: Scripts n Styles
- * Plugin URI: http://www.unfocus.com/projects/scripts-n-styles/
- * Description: Allows WordPress admin users the ability to add custom CSS and JavaScript directly to individual Post, Pages or custom post types.
- * Author: unFocus Projects
- * Author URI: http://www.unfocus.com/
- * Version: 4.0.0-alpha-3
- * Requires PHP: 7.2
- * License: GPLv3 or later
- * Text Domain: scripts-n-styles
+ * Scripts n Styles
  *
  * @package   Scripts_N_Styles
  * @author    Kenneth Newman <username@example.com>
@@ -23,6 +15,19 @@
  * @todo Create shortcode registration on Options page to make those snippets available on edit screens.
  * @todo Add Error messaging.
  * @todo Clean up tiny_mce_before_init in SnS_Admin_Meta_Box.
+ *
+ * @wordpress-plugin
+ * Plugin Name: Scripts n Styles
+ * Plugin URI: http://www.unfocus.com/projects/scripts-n-styles/
+ * Description: Allows WordPress admin users the ability to add custom CSS and JavaScript directly to individual Post, Pages or custom post types.
+ * Version: 4.0.0-alpha-3
+ * Requires at least: 5.4
+ * Requires PHP: 7.2
+ * Author: unFocus Projects
+ * Author URI: http://www.unfocus.com/
+ * License: GPLv3 or later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
+ * Text Domain: scripts-n-styles
  */
 
 /*

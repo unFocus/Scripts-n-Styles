@@ -8,6 +8,7 @@
 namespace unFocus\SnS;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
+	// phpcs:ignore WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound
 	require_once \ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
@@ -138,7 +139,7 @@ class List_Usage extends \WP_List_Table {
 			'meta_key'       => '_SnS', // WPCS: slow query ok.
 		] );
 
-		$this->items = $this->_add_meta_data( $query->posts );
+		$this->items = $this->add_meta_data( $query->posts );
 
 		$this->set_pagination_args( [
 			'total_items' => $query->found_posts,
@@ -158,7 +159,7 @@ class List_Usage extends \WP_List_Table {
 	 *
 	 * @param array $posts An array of $post objects.
 	 */
-	public function _add_meta_data( $posts ) {
+	private function add_meta_data( $posts ) {
 		foreach ( $posts as $post ) {
 			$sns     = get_post_meta( $post->ID, '_SnS', true );
 			$styles  = isset( $sns['styles'] ) ? $sns['styles'] : [];

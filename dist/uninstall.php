@@ -16,7 +16,7 @@ if ( empty( $options['delete_data_uninstall'] ) || 'yes' !== $options['delete_da
 	return;
 }
 
-$posts = get_posts( [
+$sposts = get_posts( [
 	'numberposts' => -1,
 	'post_type'   => 'any',
 	'post_status' => 'any',
@@ -24,8 +24,8 @@ $posts = get_posts( [
 	'meta_key'    => '_SnS', // WPCS: slow query ok.
 ] );
 
-foreach ( $posts as $post ) {
-	delete_post_meta( $post->ID, '_SnS' );
+foreach ( $sposts as $spost ) {
+	delete_post_meta( $spost->ID, '_SnS' );
 }
 delete_option( 'SnS_options' );
 

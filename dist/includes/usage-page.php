@@ -14,6 +14,7 @@ add_action( 'admin_menu', function() {
 		return;
 	}
 
+	// phpcs:ignore WPThemeReview.PluginTerritory.NoAddAdminPages.add_menu_pages_add_submenu_page
 	$hook_suffix = add_submenu_page(
 		ADMIN_MENU_SLUG,
 		__( 'Scripts n Styles', 'scripts-n-styles' ),
@@ -69,6 +70,7 @@ add_action( 'admin_menu', function() {
 					<p><?php esc_html_e( 'The following table shows content that utilizes Scripts n Styles.', 'scripts-n-styles' ); ?></p>
 				</div>
 				<?php
+				// phpcs:ignore WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound
 				require_once 'class-list-usage.php';
 				$usage_table = new List_Usage();
 				$usage_table->prepare_items();

@@ -8,20 +8,20 @@
 
 namespace unFocus\SnS\Theme;
 
-if ( version_compare( $GLOBALS['wp_version'], '4.7-alpha', '<' ) ) {
+if ( version_compare( $GLOBALS['wp_version'], '5.4', '<' ) ) {
 
 	// translators: Update Software message.
-	$message = sprintf( __( 'Scripts n Styles Theme requires at least WordPress version 4.7. You are running version %s. Please upgrade and try again.', 'scripts-n-styles' ), $GLOBALS['wp_version'] );
+	$message = sprintf( __( 'Scripts n Styles Theme requires at least WordPress version 5.4. You are running version %s. Please upgrade and try again.', 'scripts-n-styles' ), $GLOBALS['wp_version'] );
 
-	add_action( 'after_switch_theme', function() {
+	add_action( 'after_switch_theme', function() use ( $message ) {
 		switch_theme( WP_DEFAULT_THEME );
-		unset( $_GET['activated'] ); // Input var okay.
-		add_action( 'admin_notices', function() {
+		unset( $_GET['activated'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		add_action( 'admin_notices', function() use ( $message ) {
 			printf( '<div class="error"><p>%s</p></div>', esc_html( $message ) );
 		} );
 	} );
 
-	add_action( 'load-customize.php', function() {
+	add_action( 'load-customize.php', function() use ( $message ) {
 		wp_die(
 			esc_html( $message ),
 			'',
@@ -31,8 +31,8 @@ if ( version_compare( $GLOBALS['wp_version'], '4.7-alpha', '<' ) ) {
 		);
 	} );
 
-	add_action( 'template_redirect', function() {
-		if ( isset( $_GET['preview'] ) ) { // Input var okay.
+	add_action( 'template_redirect', function() use ( $message ) {
+		if ( isset( $_GET['preview'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			wp_die( esc_html( $message ) );
 		}
 	} );
@@ -41,31 +41,20 @@ if ( version_compare( $GLOBALS['wp_version'], '4.7-alpha', '<' ) ) {
 }
 
 add_action( 'after_setup_theme', function() {
-	add_theme_support( 'admin-bar', [
-		'callback' => function() {
-			// @codingStandardsIgnoreStart
-			?><style id="admin-bar-style">
-			#wpadminbar {
-				opacity: 0.25;
-				-webkit-transform: translateY(-50%);
-					-ms-transform: translateY(-50%);
-						transform: translateY(-50%);
-				-webkit-transition: opacity .3s, -webkit-transform .3s;
-						transition: opacity .3s, -webkit-transform .3s;
-						transition: opacity .3s, transform .3s;
-						transition: opacity .3s, transform .3s, -webkit-transform .3s;
-			}
-			#wpadminbar:hover {
-				opacity: 1;
-				-webkit-transform: translateY(0%);
-					-ms-transform: translateY(0%);
-				transform: translateY(0%);
-			}
-			</style>
-			<?php
-			// @codingStandardsIgnoreEnd
-		},
-	] );
+	// phpcs:disable
+	add_theme_support( 'admin-bar', [ 'callback' => function() {
+		?><style id="admin-bar-style">
+		#wpadminbar {
+			opacity: 0.25;
+			transition: opacity .3s, transform .3s;
+		}
+		#wpadminbar:hover {
+			opacity: 1;
+			transform: translateY(0%);
+		}
+		</style><?php
+	} ] );
+	// phpcs:enable
 
 	add_theme_support( 'scripts-n-styles', [
 		'/less/variables.less',

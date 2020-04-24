@@ -7,6 +7,10 @@
 		{
 			"path": "dist",
 			"name": "Plugin"
+		},
+		{
+			"path": "dist/theme/scripts-n-styles",
+			"name": "Theme"
 		}
 	],
 	"settings": {
@@ -25,6 +29,7 @@
 			"**/CVS": true,
 			"**/.DS_Store": true,
 			"**/svn/*": true
-		}
+		},
+		"phpcs.showSources": true
 	}
 }

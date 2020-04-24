@@ -57,7 +57,7 @@ then
 else
     echo -e "${RED}✗${NC} 'localhostCA.pem' not found..."
     echo -e "Creating 'localhostCA.pem' ..."
-    openssl req -x509 -config ./ssl/ca-opts.conf -new -nodes -key ~/.localssl/localhostCA.key -sha256 -days 1825 -out ~/.localssl/localhostCA.pem
+    openssl req -x509 -config ./ssl/ca-opts.conf -new -nodes -key ~/.localssl/localhostCA.key -sha256 -days 825 -out ~/.localssl/localhostCA.pem
     echo -e "${GREEN}✓${NC} 'localhostCA.pem' created."
     echo -e "Attempting to Trust the CA..."
     sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/.localssl/localhostCA.pem
@@ -95,7 +95,7 @@ then
 else
     echo -e "${RED}✗${NC} 'localhost.crt' not found..."
     echo -e "Creating 'localhost.crt' ..."
-    openssl x509 -req -in ./ssl/localhost.csr -CA ~/.localssl/localhostCA.pem -CAkey ~/.localssl/localhostCA.key -CAcreateserial -out ./ssl/localhost.crt -days 1825 -sha256 -extfile ./ssl/localhost.ext
+    openssl x509 -req -in ./ssl/localhost.csr -CA ~/.localssl/localhostCA.pem -CAkey ~/.localssl/localhostCA.key -CAcreateserial -out ./ssl/localhost.crt -days 825 -sha256 -extfile ./ssl/localhost.ext
     echo -e "${GREEN}✓${NC} 'localhost.crt' created."
 fi
 

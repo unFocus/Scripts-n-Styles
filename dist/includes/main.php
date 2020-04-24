@@ -40,7 +40,7 @@ add_action( 'wp_print_styles', function() {
 
 	if ( ! empty( $options['themes'][ $slug ]['compiled'] ) ) {
 		wp_deregister_style( 'theme_style' );
-		wp_enqueue_style( 'theme_style', add_query_arg( [ 'action' => 'sns_theme_css' ], admin_url( 'admin-ajax.php' ) ) );
+		wp_enqueue_style( 'theme_style', add_query_arg( [ 'action' => 'sns_theme_css' ], admin_url( 'admin-ajax.php' ) ), [], time() );
 	}
 } );
 
@@ -54,7 +54,7 @@ function theme_css() {
 	header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + 864000 ) . ' GMT' );
 	header( 'Cache-Control: public, max-age=864000' );
 	header( 'Content-Type: text/css; charset=UTF-8' );
-	echo $compiled; // WPCS: XSS OK.
+	echo $compiled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	die();
 }
 add_action( 'wp_ajax_sns_theme_css', __NAMESPACE__ . '\theme_css' );
@@ -94,8 +94,8 @@ function hoops_shortcode( $atts, $content = null, $tag ) {
 	return $output;
 }
 add_action( 'plugins_loaded', function() {
-	add_shortcode( 'sns_shortcode', __NAMESPACE__ . '\hoops_shortcode' );
-	add_shortcode( 'hoops', __NAMESPACE__ . '\hoops_shortcode' );
+	add_shortcode( 'sns_shortcode', __NAMESPACE__ . '\hoops_shortcode' ); // phpcs:ignore WPThemeReview.PluginTerritory.ForbiddenFunctions.plugin_territory_add_shortcode
+	add_shortcode( 'hoops', __NAMESPACE__ . '\hoops_shortcode' ); // phpcs:ignore WPThemeReview.PluginTerritory.ForbiddenFunctions.plugin_territory_add_shortcode
 } );
 
 /**
@@ -106,13 +106,13 @@ add_action( 'plugins_loaded', function() {
 function legacy_scripts() {
 	$dir    = plugins_url( '/', BASENAME );
 	$vendor = $dir . 'legacy/';
-	wp_register_script( 'clean-css', $vendor . 'cleancss-browser.js', [], '3.4.21-min' );
-	wp_register_script( 'less.js', $vendor . 'less.min.js', [], '2.7.1-min' );
-	wp_register_script( 'coffeescript', $vendor . 'coffee-script.js', [], '1.12.1-min' );
+	wp_register_script( 'clean-css', $vendor . 'cleancss-browser.js', [], '3.4.21-min', false );
+	wp_register_script( 'less.js', $vendor . 'less.min.js', [], '2.7.1-min', false );
+	wp_register_script( 'coffeescript', $vendor . 'coffee-script.js', [], '1.12.1-min', false );
 	wp_register_script( 'chosen', $vendor . 'chosen/chosen.jquery.min.js', [ 'jquery' ], '1.0.0', true );
-	wp_register_style( 'chosen', $vendor . 'chosen/chosen.min.css', [], '1.0.0' );
-	wp_register_script( 'html5shiv', $vendor . 'html5shiv.js', [], '3.7.3' );
-	wp_register_script( 'html5shiv-printshiv', $vendor . 'html5shiv-printshiv.js', [], '3.7.3' );
+	wp_register_style( 'chosen', $vendor . 'chosen/chosen.min.css', [], '1.0.0', false );
+	wp_register_script( 'html5shiv', $vendor . 'html5shiv.js', [], '3.7.3', false );
+	wp_register_script( 'html5shiv-printshiv', $vendor . 'html5shiv-printshiv.js', [], '3.7.3', false );
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\legacy_scripts' );
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\legacy_scripts' );
@@ -162,12 +162,12 @@ add_action( 'wp_head', function() {
 	$options = get_option( 'SnS_options' );
 	if ( ! empty( $options ) && ! empty( $options['styles'] ) ) {
 		echo '<style type="text/css" id="sns_global_styles">';
-		echo $options['styles']; // WPCS: XSS OK.
+		echo $options['styles']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</style>';
 	}
 	if ( ! empty( $options ) && ! empty( $options['compiled'] ) ) {
 		echo '<style type="text/css" id="sns_global_less_compiled">';
-		echo $options['compiled']; // WPCS: XSS OK.
+		echo $options['compiled']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</style>';
 	}
 
@@ -180,7 +180,7 @@ add_action( 'wp_head', function() {
 	$styles = isset( $sns['styles'] ) ? $sns['styles'] : [];
 	if ( ! empty( $styles ) && ! empty( $styles['styles'] ) ) {
 		echo '<style type="text/css" id="sns_styles">';
-		echo $styles['styles']; // WPCS: XSS OK.
+		echo $styles['styles']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</style>';
 	}
 }, 11 );
@@ -194,12 +194,12 @@ add_action( 'wp_footer', function() {
 	$options = get_option( 'SnS_options' );
 	if ( ! empty( $options ) && ! empty( $options['scripts'] ) ) {
 		echo '<script type="text/javascript" id="sns_global_scripts">';
-		echo $options['scripts']; // WPCS: XSS OK.
+		echo $options['scripts']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</script>';
 	}
 	if ( ! empty( $options ) && ! empty( $options['coffee_compiled'] ) ) {
 		echo '<script type="text/javascript" id="sns_global_coffee_compiled">';
-		echo $options['coffee_compiled']; // WPCS: XSS OK.
+		echo $options['coffee_compiled']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</script>';
 	}
 
@@ -212,7 +212,7 @@ add_action( 'wp_footer', function() {
 	$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : [];
 	if ( ! empty( $scripts ) && ! empty( $scripts['scripts'] ) ) {
 		echo '<script type="text/javascript" id="sns_scripts">';
-		echo $scripts['scripts']; // WPCS: XSS OK.
+		echo $scripts['scripts']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</script>';
 	}
 }, 11 );
@@ -226,7 +226,7 @@ add_action( 'wp_head', function() {
 	$options = get_option( 'SnS_options' );
 	if ( ! empty( $options ) && ! empty( $options['scripts_in_head'] ) ) {
 		echo '<script type="text/javascript" id="sns_global_scripts_in_head">';
-		echo $options['scripts_in_head']; // WPCS: XSS OK.
+		echo $options['scripts_in_head']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</script>';
 	}
 
@@ -239,7 +239,7 @@ add_action( 'wp_head', function() {
 	$scripts = isset( $sns['scripts'] ) ? $sns['scripts'] : [];
 	if ( ! empty( $scripts ) && ! empty( $scripts['scripts_in_head'] ) ) {
 		echo '<script type="text/javascript" id="sns_scripts_in_head">';
-		echo $scripts['scripts_in_head']; // WPCS: XSS OK.
+		echo $scripts['scripts_in_head']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</script>';
 	}
 }, 11 );

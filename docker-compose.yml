@@ -22,8 +22,8 @@ services:
         define( 'JETPACK_DEV_DEBUG', true );
     volumes:
       - ./html/:/var/www/html/
-      # - ../svn/trunk/:/var/www/html/wp-content/plugins/${COMPOSE_PROJECT_NAME}/
-      - ./dist/:/var/www/html/wp-content/plugins/${COMPOSE_PROJECT_NAME}/
+      # - ../svn/trunk/:/var/www/html/wp-content/plugins/scripts-n-styles/
+      - ./dist/:/var/www/html/wp-content/plugins/scripts-n-styles/
       - ./ssl/localhost.crt:/etc/apache2/ssl/localhost.crt
       - ./ssl/localhost.key:/etc/apache2/ssl/localhost.key
       - ./ssl/000-default.conf:/etc/apache2/sites-enabled/000-default.conf

@@ -68,7 +68,7 @@ add_action( 'admin_menu', function() {
 						. '<p>The program says <?= hello("World") ?>.</p>' . PHP_EOL
 						. '<script>' . PHP_EOL
 						. '	alert("And here is some JS code"); // also colored' . PHP_EOL
-						. '</script>'
+						. '</script>';
 				?>
 				<div style="max-width: 55em;">
 					<textarea id="codemirror_demo" name="code" style="min-width: 500px; width:97%;"

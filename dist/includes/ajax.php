@@ -30,7 +30,7 @@ add_action( 'wp_ajax_sns_open_theme_panels', function () {
 
 	$open_theme_panels[ $name ] = $collapsed;
 
-	$open_theme_panels = json_encode( $open_theme_panels );
+	$open_theme_panels = wp_json_encode( $open_theme_panels );
 	update_user_option( $user, 'sns_open_theme_panels', $open_theme_panels );
 
 	exit();
@@ -53,10 +53,11 @@ add_action( 'wp_ajax_sns_update_tab', function () {
 
 // TinyMCE requests a css file.
 add_action( 'wp_ajax_nopriv_sns_tinymce_styles', function () {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if ( empty( $_REQUEST['post_id'] ) ) {
 		exit( 'Bad post ID.' );
 	}
-	$post_id = absint( $_REQUEST['post_id'] );
+	$post_id = absint( $_REQUEST['post_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 	$options = get_option( 'SnS_options' );
 	$sns     = get_post_meta( $post_id, '_SnS', true );
@@ -65,11 +66,11 @@ add_action( 'wp_ajax_nopriv_sns_tinymce_styles', function () {
 	header( 'Content-Type: text/css; charset=UTF-8' );
 
 	if ( ! empty( $options['styles'] ) ) {
-		echo $options['styles']; // WPCS: XSS OK.
+		echo $options['styles']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	if ( ! empty( $styles['styles'] ) ) {
-		echo $styles['styles']; // WPCS: XSS OK.
+		echo $styles['styles']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	exit();
@@ -89,11 +90,11 @@ add_action( 'wp_ajax_sns_tinymce_styles', function () {
 	header( 'Content-Type: text/css; charset=UTF-8' );
 
 	if ( ! empty( $options['styles'] ) ) {
-		echo $options['styles']; // WPCS: XSS OK.
+		echo $options['styles']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	if ( ! empty( $styles['styles'] ) ) {
-		echo $styles['styles']; // WPCS: XSS OK.
+		echo $styles['styles']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	exit();
@@ -131,7 +132,7 @@ add_action( 'wp_ajax_sns_classes', function () {
 	maybe_update( $post_id, '_SnS', $sns );
 
 	header( 'Content-Type: application/json; charset=UTF-8' );
-	echo json_encode( [
+	echo wp_json_encode( [
 		'classes_post' => $_REQUEST['classes_post'],
 		'classes_body' => $_REQUEST['classes_body'],
 	] );
@@ -170,7 +171,7 @@ add_action( 'wp_ajax_sns_scripts', function () {
 	maybe_update( $post_id, '_SnS', $sns );
 
 	header( 'Content-Type: application/json; charset=UTF-8' );
-	echo json_encode( [
+	echo wp_json_encode( [
 		'scripts'         => $_REQUEST['scripts'],
 		'scripts_in_head' => $_REQUEST['scripts_in_head'],
 	] );
@@ -208,7 +209,7 @@ add_action( 'wp_ajax_sns_styles', function () {
 	maybe_update( $post_id, '_SnS', $sns );
 
 	header( 'Content-Type: application/json; charset=UTF-8' );
-	echo json_encode( [
+	echo wp_json_encode( [
 		'styles' => $_REQUEST['styles'],
 	] );
 
@@ -258,7 +259,7 @@ add_action( 'wp_ajax_sns_dropdown', function () {
 	update_post_meta( $post_id, '_SnS', $sns );
 
 	header( 'Content-Type: application/json; charset=UTF-8' );
-	echo json_encode( [
+	echo wp_json_encode( [
 		'classes_mce' => array_values( $styles['classes_mce'] ),
 	] );
 
@@ -305,7 +306,7 @@ add_action( 'wp_ajax_sns_delete_class', function () {
 	}
 
 	header( 'Content-Type: application/json; charset=UTF-8' );
-	echo json_encode( [
+	echo wp_json_encode( [
 		'classes_mce' => array_values( $styles['classes_mce'] ),
 	] );
 
@@ -325,7 +326,7 @@ add_action( 'wp_ajax_sns_shortcodes', function () {
 		exit( 'missing directive' );
 	}
 
-	if ( in_array( $_REQUEST['subaction'], [ 'add', 'update', 'delete' ] ) ) {
+	if ( in_array( $_REQUEST['subaction'], [ 'add', 'update', 'delete' ], true ) ) {
 		$subaction = $_REQUEST['subaction'];
 	} else {
 		exit( 'unknown directive' );
@@ -346,7 +347,7 @@ add_action( 'wp_ajax_sns_shortcodes', function () {
 		exit( 'bad directive.' );
 	}
 
-	if ( '' == $key ) {
+	if ( '' === $key ) {
 		$key = count( $shortcodes );
 		while ( isset( $shortcodes[ $key ] ) ) {
 			$key++;
@@ -415,21 +416,21 @@ add_action( 'wp_ajax_sns_shortcodes', function () {
 
 	if ( 1 < $code ) {
 		header( 'Content-Type: application/json; charset=UTF-8' );
-		echo json_encode( [
+		echo wp_json_encode( [
 			'message' => $message,
 			'code'    => $code,
 		] );
 	} else {
 		header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
 		?><div class="sns-shortcode widget">
-		<div class="inside">
-			<p>[hoops name="<?php echo esc_attr( $key ); ?>"]</p>
-			<textarea style="width: 98%;" cols="40" rows="5" name="SnS_shortcodes[existing][<?php echo esc_attr( $key ); ?>]"
-				data-sns-shortcode-key="<?php echo esc_attr( $key ); ?>" class="codemirror-new htmlmixed"><?php echo esc_textarea( stripslashes( $value ) ); ?></textarea>
-			<div class="sns-ajax-wrap"><a href="#" class="sns-ajax-delete-shortcode button">Delete</a> &nbsp; <a href="#" class="sns-ajax-update-shortcode button">Update</a> <span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span></div>
+			<div class="inside">
+				<p>[hoops name="<?php echo esc_attr( $key ); ?>"]</p>
+				<textarea style="width: 98%;" cols="40" rows="5" name="SnS_shortcodes[existing][<?php echo esc_attr( $key ); ?>]"
+					data-sns-shortcode-key="<?php echo esc_attr( $key ); ?>" class="codemirror-new htmlmixed"><?php echo esc_textarea( stripslashes( $value ) ); ?></textarea>
+				<div class="sns-ajax-wrap"><a href="#" class="sns-ajax-delete-shortcode button">Delete</a> &nbsp; <a href="#" class="sns-ajax-update-shortcode button">Update</a> <span class="sns-ajax-loading"><span class="spinner" style="display: inline-block;"></span></span></div>
+			</div>
 		</div>
-	</div>
-	<?php
+		<?php
 	}
 	exit();
 } );
@@ -445,12 +446,12 @@ function maybe_set( $o, $i ) {
 	if ( ! is_array( $o ) ) {
 		return [];
 	}
-	if ( empty( $_REQUEST[ $i ] ) ) {
+	if ( empty( $_REQUEST[ $i ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( isset( $o[ $i ] ) ) {
 			unset( $o[ $i ] );
 		}
 	} else {
-		$o[ $i ] = $_REQUEST[ $i ];
+		$o[ $i ] = $_REQUEST[ $i ]; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 	return $o;
 }

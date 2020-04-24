@@ -102,9 +102,9 @@ function theme_section() {
 		<?php
 		foreach ( $files as $file ) {
 			$name = basename( $file );
-			$raw  = file_get_contents( $file );
-			$f    = fopen( $file, 'r' );
-			$raw  = fread( $f, filesize( $file ) );
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen,WordPress.WP.AlternativeFunctions.file_system_read_fread
+			$raw = fread( fopen( $file, 'r' ), filesize( $file ) );
+			fclose( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
 			if ( isset( $stored[ $name ] ) ) {
 				$source   = $stored[ $name ];
 				$less     = isset( $source ) ? $source : '';

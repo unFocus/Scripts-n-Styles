@@ -216,8 +216,8 @@ function page() {
  * Nav Tabs
  */
 function nav() {
-	$options = get_option( 'SnS_options' );
-	$page    = ! empty( $_REQUEST['page'] ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['page'] ) ) : '';
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$page = ! empty( $_REQUEST['page'] ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['page'] ) ) : '';
 	?>
 	<h2><?php esc_html_e( 'Scripts n Styles', 'scripts-n-styles' ); ?></h2>
 	<?php settings_errors(); ?>

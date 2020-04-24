@@ -4,7 +4,9 @@
 	"require-dev": {
 		"wp-coding-standards/wpcs": "*",
 		"dealerdirect/phpcodesniffer-composer-installer": "*",
-		"phpcompatibility/php-compatibility": "*"
+		"phpcompatibility/php-compatibility": "*",
+    "sirbrillig/phpcs-variable-analysis": "*",
+    "wptrt/wpthemereview": "*"
 	},
   "require": {
     "composer/installers": "*",

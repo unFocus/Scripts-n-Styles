@@ -26,18 +26,19 @@
 					<header>
 						<?php
 						the_title();
-						echo the_tags();
+						the_tags();
 						the_category();
 						?>
-								</header>
-								<?php
-									the_post_thumbnail();
-									the_content();
-									wp_link_pages();
-								?>
-								<?php
-								if ( is_singular() ) {
-									comments_template();}
+					</header>
+					<?php
+						the_post_thumbnail();
+						the_content();
+						wp_link_pages();
+					?>
+					<?php
+					if ( is_singular() ) {
+						comments_template();
+					}
 					?>
 				</article>
 				<?php
@@ -50,15 +51,15 @@
 			next_posts_link();
 		} if ( get_previous_posts_link() ) {
 			previous_posts_link();}
-?>
-</nav>
+		?>
+		</nav>
 	</main>
 	<aside>
 	<?php
 	if ( is_active_sidebar( 'sidebar-1' ) ) {
 		dynamic_sidebar( 'sidebar-1' );}
-?>
-</aside>
+	?>
+	</aside>
 	<footer role="contentinfo"></footer>
 	</div>
 	<?php wp_footer(); ?>

@@ -33,7 +33,7 @@ add_action( 'rest_api_init', function() {
 			},
 			// 'args' is schema.
 			'args'                 => [],
-			'callback'             => function( \WP_REST_Request $request ) {
+			'callback'             => function() {
 				return rest_ensure_response( get_sns_settings() );
 			},
 		],
@@ -43,7 +43,7 @@ add_action( 'rest_api_init', function() {
 /**
  * Get defaults.
  */
-function get_sns_defaults() : array {
+function get_sns_defaults() {
 	return array();
 }
 
