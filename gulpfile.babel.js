@@ -246,6 +246,7 @@ function copyCodeMirrorJS() {
 		dir + 'mode/sass/sass.js',
 		dir + 'mode/shell/shell.js',
 		dir + 'mode/sql/sql.js',
+		dir + 'mode/wast/wast.js',
 		dir + 'mode/xml/xml.js',
 		dir + 'mode/yaml/yaml.js'
 	], { base: './node_modules' })

@@ -3,8 +3,8 @@
  * Scripts n Styles
  *
  * @package   Scripts_N_Styles
- * @author    Kenneth Newman <username@example.com>
- * @copyright 2010 - 2018, Kenneth Newman
+ * @author    Kenneth Newman <http://www.unfocus.com>
+ * @copyright 2010 - 2020, Kenneth Newman
  * @license   http://opensource.org/licenses/gpl-license.php GNU Public License
  * @link      http://www.unfocus.com/projects/scripts-n-styles/ Plugin URI
  * @link      http://www.unfocus.com/ Author URI
@@ -86,7 +86,7 @@ else :
 	function sns_disable_message() {
 		?>
 		<div class="notice notice-success is-dismissible"><p>
-		<?php esc_html_e( 'Sorry, Scripts n Styles doesn\'t work with PHP versions below 5.6. Please contact your host.', 'scripts-n-styles' ); ?>
+		<?php esc_html_e( 'Sorry, Scripts n Styles doesn\'t work with PHP versions below 7.2. Please contact your host.', 'scripts-n-styles' ); ?>
 		</p></div>
 		<?php
 	}

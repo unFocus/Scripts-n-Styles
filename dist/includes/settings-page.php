@@ -94,6 +94,8 @@ add_action( 'admin_menu', function() {
 					'3024-night',
 					'abcdef',
 					'ambiance',
+					'ayu-dark',
+					'ayu-mirage',
 					'base16-dark',
 					'base16-light',
 					'bespin',

@@ -134,11 +134,11 @@ function register_scripts() {
 
 	// Use a correctly bundled version of CodeMirror.
 	wp_deregister_script( 'wp-codemirror' );
-	wp_register_script( 'wp-codemirror', $dir . 'codemirror/codemirror.min.js', [], '5.39.2', true );
+	wp_register_script( 'wp-codemirror', $dir . 'codemirror/codemirror.min.js', [], '5.53.2', true );
 
 	// Rebundled version of CodeMirror.
 	wp_deregister_style( 'wp-codemirror' );
-	wp_register_style( 'wp-codemirror', $dir . 'codemirror/codemirror.min.css', [], '5.39.2' );
+	wp_register_style( 'wp-codemirror', $dir . 'codemirror/codemirror.min.css', [], '5.53.2' );
 
 	// Enqueue theme after CodeMirror.
 	add_action( 'wp_enqueue_code_editor', function( $settings ) {
@@ -147,7 +147,7 @@ function register_scripts() {
 			return;
 		}
 		$dir = plugins_url( '/', BASENAME );
-		wp_enqueue_style( 'sns-codemirror-theme', $dir . 'codemirror/theme/' . $theme . '.css', [], '5.39.2' );
+		wp_enqueue_style( 'sns-codemirror-theme', $dir . 'codemirror/theme/' . $theme . '.css', [], '5.53.2' );
 	} );
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_scripts' );
