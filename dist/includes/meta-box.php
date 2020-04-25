@@ -22,6 +22,7 @@ add_action( 'current_screen', function() {
 		return;
 	}
 
+	// Don't show for private types, or types without UI.
 	if ( ! in_array(
 		get_current_screen()->post_type,
 		get_post_types( [
@@ -30,6 +31,11 @@ add_action( 'current_screen', function() {
 		] ),
 		true
 	) ) {
+		return;
+	}
+
+	// Don't show for Media Library.
+	if ( 'upload' === get_current_screen()->base ) {
 		return;
 	}
 
@@ -241,8 +247,7 @@ add_action( 'current_screen', function() {
 			'high'
 		);
 
-		add_filter( 'contextual_help', __NAMESPACE__ . '\help' );
-
+		help();
 	} );
 
 	/**
