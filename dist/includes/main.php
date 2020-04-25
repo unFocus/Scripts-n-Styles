@@ -94,8 +94,8 @@ function hoops_shortcode( $atts, $content = null, $tag ) {
 	return $output;
 }
 add_action( 'plugins_loaded', function() {
-	add_shortcode( 'sns_shortcode', __NAMESPACE__ . '\hoops_shortcode' ); // phpcs:ignore WPThemeReview.PluginTerritory.ForbiddenFunctions.plugin_territory_add_shortcode
-	add_shortcode( 'hoops', __NAMESPACE__ . '\hoops_shortcode' ); // phpcs:ignore WPThemeReview.PluginTerritory.ForbiddenFunctions.plugin_territory_add_shortcode
+	add_shortcode( 'sns_shortcode', __NAMESPACE__ . '\hoops_shortcode' );
+	add_shortcode( 'hoops', __NAMESPACE__ . '\hoops_shortcode' );
 } );
 
 /**

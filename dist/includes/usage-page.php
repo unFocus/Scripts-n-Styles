@@ -14,7 +14,6 @@ add_action( 'admin_menu', function() {
 		return;
 	}
 
-	// phpcs:ignore WPThemeReview.PluginTerritory.NoAddAdminPages.add_menu_pages_add_submenu_page
 	$hook_suffix = add_submenu_page(
 		ADMIN_MENU_SLUG,
 		__( 'Scripts n Styles', 'scripts-n-styles' ),
