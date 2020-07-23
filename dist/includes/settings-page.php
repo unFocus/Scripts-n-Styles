@@ -26,10 +26,14 @@ add_action( 'admin_menu', function() {
 	add_action( "load-$hook_suffix", __NAMESPACE__ . '\help' );
 	add_action( "load-$hook_suffix", __NAMESPACE__ . '\take_action', 49 );
 	add_action( "admin_print_styles-$hook_suffix", function() {
+		$options  = get_option( 'SnS_options' );
+		$cm_theme = isset( $options['cm_theme'] ) ? $options['cm_theme'] : 'default';
+
 		wp_enqueue_code_editor( [ 'type' => 'php' ] );
 		wp_enqueue_script( 'sns-settings-page' );
 		wp_localize_script( 'sns-settings-page', '_SnSOptions', [
-			'root' => plugins_url( '/', BASENAME ),
+			'theme' => $cm_theme,
+			'root'  => plugins_url( '/', BASENAME ),
 		] );
 	} );
 
@@ -117,14 +121,19 @@ add_action( 'admin_menu', function() {
 					'lesser-dark',
 					'liquibyte',
 					'lucario',
+					'material-darker',
+					'material-ocean',
+					'material-palenight',
 					'material',
 					'mbo',
 					'mdn-like',
 					'midnight',
 					'monokai',
+					'moxer',
 					'neat',
 					'neo',
 					'night',
+					'nord',
 					'oceanic-next',
 					'panda-syntax',
 					'paraiso-dark',
@@ -145,6 +154,7 @@ add_action( 'admin_menu', function() {
 					'xq-dark',
 					'xq-light',
 					'yeti',
+					'yonce',
 					'zenburn',
 				],
 				'default'     => 'default',

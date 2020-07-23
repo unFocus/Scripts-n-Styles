@@ -19,7 +19,7 @@ add_action( 'admin_enqueue_scripts', function() {
 		wp_enqueue_style( 'sns-codemirror' );
 	}
 } );
-add_filter( 'wp_code_editor_settings', function( $settings, $args ) {
+add_filter( 'wp_code_editor_settings', function( $settings ) {
 	$options = get_option( 'SnS_options' );
 
 	if ( ! empty( $options['cm_theme'] ) ) {
@@ -28,6 +28,16 @@ add_filter( 'wp_code_editor_settings', function( $settings, $args ) {
 
 	return $settings;
 }, 10, 2 );
+
+// Enqueue theme after CodeMirror.
+add_action( 'wp_enqueue_code_editor', function( $settings ) {
+	$theme = ! empty( $settings['codemirror']['theme'] ) ? $settings['codemirror']['theme'] : 'default';
+	if ( 'default' === $theme ) {
+		return;
+	}
+	$dir = plugins_url( '/', BASENAME );
+	wp_enqueue_style( 'sns-codemirror-theme', $dir . 'codemirror/theme/' . $theme . '.css', [], '5.56.0' );
+} );
 
 
 /**
