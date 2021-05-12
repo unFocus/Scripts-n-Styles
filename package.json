@@ -90,7 +90,7 @@
     "@babel/runtime": "^7.10.5",
     "chosen-js": "^1.8.7",
     "clean-css": "^4.2.3",
-    "codemirror": "^5.56.0",
+    "codemirror": "^5.58.2",
     "coffeescript": "^2.5.1",
     "core-js": "^3.6.5",
     "glob": "^7.1.6",
