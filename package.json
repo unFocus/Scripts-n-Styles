@@ -136,7 +136,7 @@
     "less": "^3.12.2",
     "less-loader": "^6.2.0",
     "node-sass": "^4.14.1",
-    "postcss": "^7.0.32",
+    "postcss": "^8.2.10",
     "postcss-loader": "^3.0.0",
     "sass-loader": "^9.0.2",
     "script-loader": "^0.7.2",
